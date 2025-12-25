@@ -23,6 +23,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
 
+    <!-- Cloudinary Upload Widget -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
     <style>
         /* Material Design 3 Color System with Enhanced Blue/Green - MATCHING REVERBIT */
         :root {
@@ -442,6 +445,20 @@
         .profile-avatar-button:active {
             transform: scale(0.95);
         }
+
+        .profile-avatar-button.uploading::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            border-top-color: var(--md-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            pointer-events: none;
+        }
         
         .profile-avatar-img {
             width: 100%;
@@ -657,6 +674,7 @@
             padding: var(--md-spacing-xl);
             background: var(--md-surface-variant);
             text-align: center;
+            position: relative;
         }
 
         .profile-avatar-large {
@@ -664,6 +682,7 @@
             width: 160px;
             height: 160px;
             margin: 0 auto var(--md-spacing-lg);
+            cursor: pointer;
         }
 
         .profile-avatar-large-img {
@@ -681,6 +700,17 @@
             border-color: var(--md-primary);
         }
 
+        .profile-avatar-large:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+
         .avatar-upload {
             position: absolute;
             bottom: 10px;
@@ -696,6 +726,14 @@
             cursor: pointer;
             box-shadow: var(--md-elevation-2);
             transition: var(--md-transition);
+            z-index: 2;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .profile-avatar-large:hover .avatar-upload {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .avatar-upload:hover {
@@ -981,6 +1019,24 @@
             border: 3px solid var(--md-surface-variant);
             background: var(--md-gradient-1);
             padding: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .profile-popup-avatar:hover::after {
+            content: 'Change';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
         
         .profile-popup-avatar img {
@@ -1103,6 +1159,64 @@
             font-weight: 600;
             font-size: 1rem;
             text-transform: uppercase;
+        }
+
+        /* Cloudinary Upload Widget Styling */
+        .cloudinary-upload-widget {
+            cursor: pointer;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: var(--md-spacing-lg);
+            right: var(--md-spacing-lg);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            box-shadow: var(--md-elevation-3);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--md-primary);
+            font-size: 1.25rem;
+        }
+
+        /* Loading overlay for upload */
+        .upload-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+        }
+
+        .upload-loading .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
         }
 
         /* Responsive Design */
@@ -1315,42 +1429,25 @@
             background: var(--md-on-surface-variant);
         }
 
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: var(--md-spacing-lg);
-            right: var(--md-spacing-lg);
-            background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-md) var(--md-spacing-lg);
-            box-shadow: var(--md-elevation-3);
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+        /* Avatar Preview */
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto var(--md-spacing-lg);
+            overflow: hidden;
+            border: 4px solid var(--md-surface);
+            box-shadow: var(--md-elevation-2);
+            position: relative;
         }
 
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast i {
-            color: var(--md-primary);
-            font-size: 1.25rem;
-        }
-
-        /* Enhanced Dashboard Features */
-        .usage-chart {
+        .avatar-preview img {
             width: 100%;
-            height: 200px;
-            margin: var(--md-spacing-lg) 0;
+            height: 100%;
+            object-fit: cover;
         }
 
+        /* Recent Activity */
         .recent-activity {
             display: flex;
             flex-direction: column;
@@ -1381,6 +1478,31 @@
             justify-content: center;
             color: var(--md-on-primary);
             margin-right: var(--md-spacing-sm);
+        }
+
+        /* Upload Instructions */
+        .upload-instructions {
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            padding: var(--md-spacing-md);
+            margin-top: var(--md-spacing-md);
+        }
+
+        .upload-instructions ul {
+            padding-left: var(--md-spacing-lg);
+            margin-top: var(--md-spacing-sm);
+        }
+
+        .upload-instructions li {
+            margin-bottom: var(--md-spacing-xs);
+            color: var(--md-on-surface-variant);
+        }
+
+        /* Enhanced Dashboard Features */
+        .usage-chart {
+            width: 100%;
+            height: 200px;
+            margin: var(--md-spacing-lg) 0;
         }
 
         /* Achievement Badges */
@@ -1414,22 +1536,44 @@
             margin-bottom: var(--md-spacing-sm);
         }
 
-        /* Avatar Preview */
-        .avatar-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto var(--md-spacing-lg);
-            overflow: hidden;
-            border: 4px solid var(--md-surface);
-            box-shadow: var(--md-elevation-2);
-            position: relative;
+        /* Avatar Upload Button */
+        .avatar-upload-button {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            background: var(--md-primary-container);
+            color: var(--md-primary);
+            border: 1px solid var(--md-primary);
+            border-radius: var(--md-radius-medium);
+            cursor: pointer;
+            transition: var(--md-transition);
+            font-weight: 500;
+            margin-top: var(--md-spacing-md);
+            justify-content: center;
         }
 
-        .avatar-preview img {
+        .avatar-upload-button:hover {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Upload Progress */
+        .upload-progress {
             width: 100%;
+            height: 4px;
+            background: var(--md-outline);
+            border-radius: var(--md-radius-pill);
+            overflow: hidden;
+            margin-top: var(--md-spacing-sm);
+        }
+
+        .upload-progress-fill {
             height: 100%;
-            object-fit: cover;
+            background: var(--md-gradient-1);
+            border-radius: var(--md-radius-pill);
+            transition: width 0.3s ease;
         }
     </style>
 </head>
@@ -1438,6 +1582,12 @@
     <div class="loading" id="loading">
         <div class="loader"></div>
         <p style="color: var(--md-on-surface-variant);">Loading your dashboard...</p>
+    </div>
+
+    <!-- Upload Loading Overlay -->
+    <div class="upload-loading" id="uploadLoading" style="display: none;">
+        <div class="loader"></div>
+        <p style="margin-top: var(--md-spacing-md);">Uploading your profile picture...</p>
     </div>
 
     <!-- Mobile Header -->
@@ -1594,11 +1744,10 @@
                 
                 <div class="profile-section">
                     <div class="profile-header">
-                        <div class="profile-avatar-large">
+                        <div class="profile-avatar-large" onclick="openCloudinaryUploadWidget()">
                             <img id="profileAvatarImg" src="" alt="Profile" class="profile-avatar-large-img" onerror="handleLargeAvatarError(this)">
-                            <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                            <div class="avatar-upload" onclick="event.stopPropagation(); openCloudinaryUploadWidget();">
                                 <i class="fas fa-camera"></i>
-                                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
                             </div>
                         </div>
                         <div class="profile-info">
@@ -1609,7 +1758,22 @@
                                 <span class="status-dot online"></span>
                                 <span>Active now</span>
                             </div>
+                            
+                            <button class="avatar-upload-button" onclick="openCloudinaryUploadWidget()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Upload New Profile Picture
+                            </button>
                         </div>
+                    </div>
+
+                    <div class="upload-instructions">
+                        <p style="font-weight: 600; color: var(--md-on-surface);">Profile Picture Guidelines:</p>
+                        <ul>
+                            <li>Supported formats: JPG, PNG, WebP</li>
+                            <li>Maximum file size: 10MB</li>
+                            <li>Recommended dimensions: 400x400 pixels</li>
+                            <li>Your image will be automatically optimized</li>
+                        </ul>
                     </div>
 
                     <form id="profileForm" class="form-grid">
@@ -1891,23 +2055,34 @@
                                 <p class="card-subtitle">Your recent interactions</p>
                             </div>
                         </div>
-                        <div style="color: var(--md-on-surface-variant);">
-                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-circle" style="color: var(--md-primary); font-size: 0.5rem; margin-right: 8px;"></i>
-                                Last active: <span id="lastActive" style="margin-left: auto;">Today</span>
-                            </p>
-                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-circle" style="color: var(--md-secondary); font-size: 0.5rem; margin-right: 8px;"></i>
-                                Apps used this week: <span id="appsUsedCount" style="margin-left: auto;">3</span>
-                            </p>
-                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-circle" style="color: #ea4335; font-size: 0.5rem; margin-right: 8px;"></i>
-                                Profile completion: <span id="profileCompletionValue" style="margin-left: auto;">60%</span>
-                            </p>
-                            <p style="display: flex; align-items: center;">
-                                <i class="fas fa-circle" style="color: #fbbc05; font-size: 0.5rem; margin-right: 8px;"></i>
-                                Current streak: <span id="currentStreak" style="margin-left: auto;">0 days</span>
-                            </p>
+                        <div class="recent-activity">
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-user-edit"></i>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600; color: var(--md-on-surface);">Profile Updated</p>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">Just now</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600; color: var(--md-on-surface);">Time Logged</p>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">Today, 12:30 PM</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600; color: var(--md-on-surface);">Usage Analytics</p>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">Updated 2 hours ago</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1968,6 +2143,15 @@
     </div>
 
     <script>
+        // Cloudinary Configuration - USING YOUR DETAILS
+        const cloudinaryConfig = {
+            cloudName: 'reverbit_unsigned11',
+            uploadPreset: 'unsigned',
+            folder: 'reverbit/user',
+            apiKey: '', // Leave empty for unsigned uploads
+            apiSecret: '' // Leave empty for unsigned uploads
+        };
+
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
@@ -1989,11 +2173,122 @@
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const navItems = document.querySelectorAll('.nav-item');
         const profilePopup = document.getElementById('profilePopup');
+        const uploadLoading = document.getElementById('uploadLoading');
 
         // Profile avatar elements
         const desktopProfileAvatar = document.getElementById('desktopProfileAvatar');
         const mobileProfileAvatar = document.getElementById('mobileProfileAvatar');
         const sidebarProfileAvatar = document.getElementById('sidebarProfileAvatar');
+
+        // Global variables
+        let currentUser = null;
+        let currentUserProfile = null;
+        let auth, db;
+
+        // Cloudinary Upload Widget
+        function openCloudinaryUploadWidget() {
+            // Show loading overlay
+            uploadLoading.style.display = 'flex';
+            
+            // Initialize Cloudinary widget
+            const myWidget = cloudinary.createUploadWidget(
+                {
+                    cloudName: cloudinaryConfig.cloudName,
+                    uploadPreset: cloudinaryConfig.uploadPreset,
+                    folder: cloudinaryConfig.folder,
+                    sources: ['local', 'url', 'camera'],
+                    cropping: true,
+                    croppingAspectRatio: 1,
+                    croppingDefaultSelectionRatio: 1,
+                    croppingShowDimensions: true,
+                    multiple: false,
+                    maxFileSize: 10485760, // 10MB
+                    clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    showAdvancedOptions: false,
+                    styles: {
+                        palette: {
+                            window: "#FFFFFF",
+                            windowBorder: "#90A0B3",
+                            tabIcon: "#1a73e8",
+                            menuIcons: "#5A616A",
+                            textDark: "#000000",
+                            textLight: "#FFFFFF",
+                            link: "#1a73e8",
+                            action: "#FF620C",
+                            inactiveTabIcon: "#0E2F5A",
+                            error: "#F44235",
+                            inProgress: "#1a73e8",
+                            complete: "#0d8a72",
+                            sourceBg: "#F8F9FA"
+                        }
+                    }
+                },
+                (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        console.log('Cloudinary upload result:', result.info);
+                        uploadImageToDatabase(result.info);
+                    } else if (error) {
+                        console.error('Cloudinary upload error:', error);
+                        showToast('Upload failed. Please try again.');
+                        uploadLoading.style.display = 'none';
+                    }
+                    
+                    // Hide loading when done
+                    if (result && result.event === "close") {
+                        uploadLoading.style.display = 'none';
+                    }
+                }
+            );
+
+            // Open the widget
+            myWidget.open();
+        }
+
+        // Upload image to Firebase
+        async function uploadImageToDatabase(imageInfo) {
+            try {
+                showToast('Processing your image...');
+                
+                const imageUrl = imageInfo.secure_url;
+                const publicId = imageInfo.public_id;
+                
+                // Update Firebase user profile
+                const userRef = db.collection('users').doc(currentUser.uid);
+                await userRef.set({
+                    photoURL: imageUrl,
+                    cloudinaryImageId: publicId,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                
+                // Update Firebase Auth
+                await currentUser.updateProfile({
+                    photoURL: imageUrl
+                });
+                
+                // Update local user profile
+                currentUserProfile.photoURL = imageUrl;
+                currentUserProfile.cloudinaryImageId = publicId;
+                
+                // Update UI
+                updateProfileAvatars(imageUrl);
+                
+                // Hide loading
+                uploadLoading.style.display = 'none';
+                
+                showToast('Profile picture updated successfully!');
+                
+                // Refresh profile popup if open
+                if (profilePopup.style.display === 'block') {
+                    profilePopup.innerHTML = createProfilePopup(currentUserProfile);
+                    attachPopupEventListeners();
+                }
+                
+            } catch (error) {
+                console.error('Error uploading image to database:', error);
+                uploadLoading.style.display = 'none';
+                showToast('Error saving profile picture');
+            }
+        }
 
         // Avatar error handler
         function handleAvatarError(img) {
@@ -2096,7 +2391,7 @@
             return `
                 <div class="profile-popup-container">
                     <div class="profile-popup-header">
-                        <div class="profile-popup-avatar">
+                        <div class="profile-popup-avatar" onclick="openCloudinaryUploadWidget()">
                             <img src="${photoURL}" alt="${displayName}" onerror="this.parentElement.innerHTML = '<div class=\'avatar-fallback\'>${displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)}</div>'">
                         </div>
                         <div class="profile-popup-info">
@@ -2135,6 +2430,15 @@
                             <span class="profile-popup-menu-text">Analytics</span>
                         </a>
                         
+                        <button class="profile-popup-menu-item" onclick="showUploadWidgetFromPopup()">
+                            <span class="profile-popup-menu-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                </svg>
+                            </span>
+                            <span class="profile-popup-menu-text">Change Photo</span>
+                        </button>
+                        
                         <button class="profile-popup-menu-item" onclick="logout()">
                             <span class="profile-popup-menu-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -2156,10 +2460,28 @@
             `;
         }
 
+        function showUploadWidgetFromPopup() {
+            hideProfilePopup();
+            openCloudinaryUploadWidget();
+        }
+
+        function attachPopupEventListeners() {
+            const changePhotoBtn = profilePopup.querySelector('.profile-popup-menu-item:nth-child(4)');
+            if (changePhotoBtn) {
+                changePhotoBtn.onclick = showUploadWidgetFromPopup;
+            }
+            
+            const avatarClick = profilePopup.querySelector('.profile-popup-avatar');
+            if (avatarClick) {
+                avatarClick.onclick = showUploadWidgetFromPopup;
+            }
+        }
+
         function showProfilePopup() {
             if (!currentUserProfile) return;
             
             profilePopup.innerHTML = createProfilePopup(currentUserProfile);
+            attachPopupEventListeners();
             profilePopup.style.display = 'block';
             
             // Position the popup
@@ -2279,11 +2601,6 @@
             }, 3000);
         }
 
-        // Firebase variables
-        let auth, db, storage;
-        let currentUser = null;
-        let currentUserProfile = null;
-
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -2297,7 +2614,6 @@
                 
                 auth = firebase.auth();
                 db = firebase.firestore();
-                storage = firebase.storage();
 
                 // Check authentication state
                 auth.onAuthStateChanged(async (user) => {
@@ -2376,6 +2692,8 @@
                 let avatarUrl;
                 if (user.photoURL) {
                     avatarUrl = user.photoURL;
+                } else if (userDoc.exists && userDoc.data().photoURL) {
+                    avatarUrl = userDoc.data().photoURL;
                 } else {
                     avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
                 }
@@ -2586,51 +2904,6 @@
             } catch (error) {
                 console.error('Error updating profile:', error);
                 showToast('Error updating profile');
-            }
-        });
-
-        // Handle avatar upload
-        document.getElementById('avatarInput').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file');
-                return;
-            }
-            
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('Image must be less than 5MB');
-                return;
-            }
-            
-            try {
-                showToast('Uploading profile picture...');
-                
-                // Upload to Firebase Storage
-                const storageRef = storage.ref();
-                const avatarRef = storageRef.child(`avatars/${currentUser.uid}/${Date.now()}_${file.name}`);
-                const uploadTask = await avatarRef.put(file);
-                const downloadURL = await uploadTask.ref.getDownloadURL();
-                
-                // Update user profile with new photo URL
-                await currentUser.updateProfile({
-                    photoURL: downloadURL
-                });
-                
-                // Update Firestore
-                await db.collection('users').doc(currentUser.uid).set({
-                    photoURL: downloadURL,
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-                
-                // Update UI
-                updateProfileAvatars(downloadURL);
-                
-                showToast('Profile picture updated!');
-            } catch (error) {
-                console.error('Error uploading avatar:', error);
-                showToast('Error uploading image');
             }
         });
 
