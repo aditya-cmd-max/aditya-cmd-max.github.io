@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverbit - Dashboard</title>
+    <meta name="description" content="Your Reverbit Dashboard - Manage all your AI tools in one place">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+    <style>
+        /* Material Design 3 Color System - Matching Ecosystem */
+        :root {
+            /* Primary Colors - Blue Theme */
+            --md-primary: #1a73e8;
+            --md-primary-light: #4285f4;
+            --md-primary-dark: #0d47a1;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #d2e3fc;
+            --md-on-primary-container: #001d3d;
+            
+            /* Secondary Colors - Green Theme */
+            --md-secondary: #0d8a72;
+            --md-secondary-light: #34a853;
+            --md-secondary-dark: #0a5c42;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #b8f2e6;
+            --md-on-secondary-container: #00201a;
+            
+            /* Surface Colors */
+            --md-surface: #FFFFFF;
+            --md-on-surface: #202124;
+            --md-surface-variant: #F8F9FA;
+            --md-on-surface-variant: #5f6368;
+            
+            /* Background Colors */
+            --md-background: #FFFFFF;
+            --md-on-background: #202124;
+            
+            /* Outline Colors */
+            --md-outline: #DADCE0;
+            --md-outline-variant: #E8EAED;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-extra-large: 28px;
+            --md-radius-pill: 9999px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            --md-spacing-xxl: 48px;
+            
+            /* Typography */
+            --md-font-logo: 'Playfair Display', serif;
+            --md-font-heading: 'Inter', sans-serif;
+            --md-font-body: 'Lora', serif;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #202124;
+            --md-on-surface: #FFFFFF;
+            --md-surface-variant: #303134;
+            --md-on-surface-variant: #E8EAED;
+            --md-background: #202124;
+            --md-on-background: #FFFFFF;
+            --md-primary: #8ab4f8;
+            --md-primary-light: #aecbfa;
+            --md-primary-container: #174ea6;
+            --md-on-primary-container: #E8EAED;
+            --md-secondary: #81c995;
+            --md-secondary-light: #a8dab5;
+            --md-secondary-container: #0d8a72;
+            --md-on-secondary-container: #E8EAED;
+            --md-outline: #3C4043;
+            --md-outline-variant: #5F6368;
+            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--md-font-body);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--md-surface);
+            border-right: 1px solid var(--md-outline);
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--md-transition);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-lg);
+            border-bottom: 1px solid var(--md-outline);
+        }
+
+        .sidebar-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+        }
+
+        .sidebar-title {
+            font-family: var(--md-font-logo);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-section {
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .nav-title {
+            font-family: var(--md-font-heading);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--md-on-surface-variant);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            color: var(--md-on-surface);
+            text-decoration: none;
+            border-radius: var(--md-radius-medium);
+            transition: var(--md-transition);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .nav-item:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .nav-item.active {
+            background: var(--md-primary-container);
+            color: var(--md-primary);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--md-spacing-xl);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-lg);
+            border-bottom: 1px solid var(--md-outline);
+        }
+
+        .page-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--md-outline);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--md-spacing-lg);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-lg);
+            border: 1px solid var(--md-outline);
+            transition: var(--md-transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .card-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .profile-avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .profile-avatar-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--md-primary-container);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--md-primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .profile-info h1 {
+            font-family: var(--md-font-heading);
+            font-size: 2rem;
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .profile-info .email {
+            color: var(--md-on-surface-variant);
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--md-spacing-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        .form-label {
+            font-family: var(--md-font-heading);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--md-on-surface);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: var(--md-background);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            font-family: var(--md-font-body);
+            font-size: 1rem;
+            color: var(--md-on-surface);
+            transition: var(--md-transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--md-primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        /* Apps Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--md-spacing-lg);
+        }
+
+        .app-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-lg);
+            border: 1px solid var(--md-outline);
+            text-align: center;
+            transition: var(--md-transition);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--md-primary);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--md-spacing-md);
+            border-radius: var(--md-radius-large);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .app-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .app-stats {
+            color: var(--md-on-surface-variant);
+            font-size: 0.875rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
+            border-radius: var(--md-radius-pill);
+            border: none;
+            font-family: var(--md-font-heading);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            text-decoration: none;
+        }
+
+        .btn-filled {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+        }
+
+        .btn-outlined {
+            background: transparent;
+            color: var(--md-primary);
+            border: 1px solid var(--md-outline);
+        }
+
+        .btn-outlined:hover {
+            background: var(--md-primary-container);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <div class="sidebar-title">Reverbit</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Dashboard</div>
+                <a href="#profile" class="nav-item active">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+                <a href="#apps" class="nav-item">
+                    <i class="fas fa-th-large"></i>
+                    My Apps
+                </a>
+                <a href="#usage" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Usage Analytics
+                </a>
+                <a href="#settings" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Reverbit Apps</div>
+                <a href="https://aditya-cmd-max.github.io/cloverai/" class="nav-item">
+                    <i class="fas fa-leaf"></i>
+                    Clover AI
+                </a>
+                <a href="https://aditya-cmd-max.github.io/mindscribe/" class="nav-item">
+                    <i class="fas fa-brain"></i>
+                    MindScribe
+                </a>
+                <a href="https://aditya-cmd-max.github.io/Peo/" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Peo
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-item">
+                    <i class="fas fa-network-wired"></i>
+                    All Apps
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <button class="btn btn-filled" onclick="logout()" style="width: 100%;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sign Out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title">My Dashboard</h1>
+                <div class="user-menu">
+                    <button class="btn btn-outlined" onclick="window.location.href='https://aditya-cmd-max.github.io/reverbit/'">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </button>
+                    <div class="user-avatar" onclick="toggleUserMenu()">
+                        <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <section id="profile" class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-img">
+                        <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                            <i class="fas fa-camera"></i>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h1 id="userName">Loading...</h1>
+                        <p class="email" id="userEmail">Loading...</p>
+                        <p class="member-since" id="memberSince">Member since: Loading...</p>
+                    </div>
+                </div>
+
+                <form id="profileForm" class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="email" class="form-input" placeholder="Enter your email" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea id="bio" class="form-input" rows="3" placeholder="Tell us about yourself"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Country</label>
+                        <select id="country" class="form-input form-select">
+                            <option value="">Select Country</option>
+                            <option value="IN">India</option>
+                            <option value="US">United States</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                            <option value="AU">Australia</option>
+                            <!-- Add more countries -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" id="dob" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select id="gender" class="form-input form-select">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <button type="submit" class="btn btn-filled">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Apps Usage Section -->
+            <section id="apps" style="margin-top: var(--md-spacing-xxl);">
+                <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">My Reverbit Apps</h2>
+                <div class="apps-grid">
+                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
+                        <div class="app-icon" style="background: linear-gradient(135deg, #34a853, #0d8a72);">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="app-title">Clover AI</div>
+                        <div class="app-stats">
+                            <span id="cloverTime">0 mins</span> this week
+                        </div>
+                    </a>
+                    
+                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
+                        <div class="app-icon" style="background: linear-gradient(135deg, #ea4335, #d93025);">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="app-title">MindScribe</div>
+                        <div class="app-stats">
+                            <span id="mindscribeTime">0 mins</span> this week
+                        </div>
+                    </a>
+                    
+                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
+                        <div class="app-icon" style="background: linear-gradient(135deg, #4285f4, #1a73e8);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="app-title">Peo</div>
+                        <div class="app-stats">
+                            <span id="peoTime">0 mins</span> this week
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Usage Analytics -->
+            <section id="usage" style="margin-top: var(--md-spacing-xxl);">
+                <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Usage Analytics</h2>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Total Time Spent</h3>
+                            <div class="card-icon" style="background: var(--md-primary-container); color: var(--md-primary);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div style="font-size: 2rem; font-weight: 700;" id="totalTime">0 hours</div>
+                        <div style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-xs);">Across all apps</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Most Used App</h3>
+                            <div class="card-icon" style="background: var(--md-secondary-container); color: var(--md-secondary);">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div style="font-size: 1.5rem; font-weight: 700;" id="mostUsedApp">Loading...</div>
+                        <div style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-xs);" id="mostUsedTime">0 hours</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Active Streak</h3>
+                            <div class="card-icon" style="background: var(--md-primary-container); color: var(--md-primary);">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                        </div>
+                        <div style="font-size: 2rem; font-weight: 700;" id="streak">0 days</div>
+                        <div style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-xs);">Consecutive days</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Sign Out</h2>
+            <p style="margin-bottom: var(--md-spacing-xl);">Are you sure you want to sign out?</p>
+            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
+                <button class="btn btn-outlined" onclick="closeModal('logoutModal')">Cancel</button>
+                <button class="btn btn-filled" onclick="confirmLogout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
+
+        // Initialize Firebase
+        let auth, db, storage;
+        let currentUser = null;
+
+        // Initialize app on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                auth = firebase.auth();
+                db = firebase.firestore();
+                storage = firebase.storage();
+
+                // Check authentication state
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        await loadUserData(user);
+                        await loadUsageData(user.uid);
+                        setupAuthCookies(user);
+                    } else {
+                        // Redirect to signin if not authenticated
+                        window.location.href = 'https://aditya-cmd-max.github.io/signin';
+                    }
+                });
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                alert('Error initializing app. Please refresh the page.');
+            }
+        });
+
+        // Load user data from Firestore
+        async function loadUserData(user) {
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                // Update UI with user data
+                document.getElementById('userName').textContent = user.displayName || 'User';
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userAvatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff`;
+                document.getElementById('profileAvatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&size=120`;
+                
+                // Calculate member since
+                const joinDate = user.metadata.creationTime;
+                const formattedDate = new Date(joinDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                document.getElementById('memberSince').textContent = `Member since: ${formattedDate}`;
+                
+                // Populate form fields
+                document.getElementById('fullName').value = user.displayName || '';
+                document.getElementById('email').value = user.email || '';
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    document.getElementById('bio').value = userData.bio || '';
+                    document.getElementById('country').value = userData.country || '';
+                    document.getElementById('dob').value = userData.dob || '';
+                    document.getElementById('gender').value = userData.gender || '';
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // Load usage data
+        async function loadUsageData(userId) {
+            try {
+                const usageDoc = await db.collection('usage').doc(userId).get();
+                
+                if (usageDoc.exists) {
+                    const usageData = usageDoc.data();
+                    
+                    // Update app times
+                    document.getElementById('cloverTime').textContent = `${usageData.cloverAI || 0} mins`;
+                    document.getElementById('mindscribeTime').textContent = `${usageData.mindscribe || 0} mins`;
+                    document.getElementById('peoTime').textContent = `${usageData.peo || 0} mins`;
+                    
+                    // Calculate total time
+                    const totalMinutes = (usageData.cloverAI || 0) + (usageData.mindscribe || 0) + (usageData.peo || 0);
+                    const totalHours = (totalMinutes / 60).toFixed(1);
+                    document.getElementById('totalTime').textContent = `${totalHours} hours`;
+                    
+                    // Find most used app
+                    const apps = [
+                        { name: 'Clover AI', time: usageData.cloverAI || 0 },
+                        { name: 'MindScribe', time: usageData.mindscribe || 0 },
+                        { name: 'Peo', time: usageData.peo || 0 }
+                    ];
+                    
+                    const mostUsed = apps.reduce((prev, current) => 
+                        prev.time > current.time ? prev : current
+                    );
+                    
+                    document.getElementById('mostUsedApp').textContent = mostUsed.name;
+                    document.getElementById('mostUsedTime').textContent = `${mostUsed.time} minutes`;
+                    
+                    // Update streak
+                    document.getElementById('streak').textContent = `${usageData.streak || 0} days`;
+                }
+            } catch (error) {
+                console.error('Error loading usage data:', error);
+            }
+        }
+
+        // Setup authentication cookies for SSO
+        function setupAuthCookies(user) {
+            // Create a session token
+            const sessionToken = btoa(JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                timestamp: Date.now()
+            }));
+            
+            // Set cookie that works across all subdirectories
+            document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+            
+            // Also store in localStorage for easier access
+            localStorage.setItem('reverbit_auth', sessionToken);
+            localStorage.setItem('reverbit_user', JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            }));
+        }
+
+        // Handle profile form submission
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) return;
+            
+            try {
+                const userData = {
+                    fullName: document.getElementById('fullName').value,
+                    bio: document.getElementById('bio').value,
+                    country: document.getElementById('country').value,
+                    dob: document.getElementById('dob').value,
+                    gender: document.getElementById('gender').value,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).set(userData, { merge: true });
+                
+                // Update user profile in Firebase Auth
+                await currentUser.updateProfile({
+                    displayName: userData.fullName
+                });
+                
+                alert('Profile updated successfully!');
+                location.reload();
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile. Please try again.');
+            }
+        });
+
+        // Handle avatar upload
+        document.getElementById('avatarInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image must be less than 5MB');
+                return;
+            }
+            
+            try {
+                // Upload to Firebase Storage
+                const storageRef = storage.ref();
+                const avatarRef = storageRef.child(`avatars/${currentUser.uid}/${Date.now()}_${file.name}`);
+                const uploadTask = await avatarRef.put(file);
+                const downloadURL = await uploadTask.ref.getDownloadURL();
+                
+                // Update user profile with new photo URL
+                await currentUser.updateProfile({
+                    photoURL: downloadURL
+                });
+                
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).set({
+                    photoURL: downloadURL,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                
+                // Update UI
+                document.getElementById('userAvatar').src = downloadURL;
+                document.getElementById('profileAvatar').src = downloadURL;
+                
+                alert('Profile picture updated successfully!');
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                alert('Error uploading image. Please try again.');
+            }
+        });
+
+        // Logout function
+        function logout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        async function confirmLogout() {
+            try {
+                await auth.signOut();
+                // Clear cookies and localStorage
+                document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                localStorage.removeItem('reverbit_auth');
+                localStorage.removeItem('reverbit_user');
+                
+                // Redirect to signin
+                window.location.href = 'https://aditya-cmd-max.github.io/signin';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+
+        // Utility functions
+        function toggleUserMenu() {
+            // Implement user menu dropdown if needed
+        }
+    </script>
+</body>
+</html>
