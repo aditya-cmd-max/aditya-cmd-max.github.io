@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GS6V9ZCN0K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GS6V9ZCN0K');
+    </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverbit - Sign Up</title>
+    <meta name="description" content="Create your Reverbit account to join our complete ecosystem of AI-powered tools.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+    <style>
+        /* Material Design 3 Color System - Matching Ecosystem */
+        :root {
+            /* Primary Colors - Blue Theme */
+            --md-primary: #1a73e8;
+            --md-primary-light: #4285f4;
+            --md-primary-dark: #0d47a1;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #d2e3fc;
+            --md-on-primary-container: #001d3d;
+            
+            /* Secondary Colors - Green Theme */
+            --md-secondary: #0d8a72;
+            --md-secondary-light: #34a853;
+            --md-secondary-dark: #0a5c42;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #b8f2e6;
+            --md-on-secondary-container: #00201a;
+            
+            /* Surface Colors */
+            --md-surface: #FFFFFF;
+            --md-on-surface: #202124;
+            --md-surface-variant: #F8F9FA;
+            --md-on-surface-variant: #5f6368;
+            
+            /* Background Colors */
+            --md-background: #FFFFFF;
+            --md-on-background: #202124;
+            
+            /* Outline Colors */
+            --md-outline: #DADCE0;
+            --md-outline-variant: #E8EAED;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-extra-large: 28px;
+            --md-radius-pill: 9999px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            --md-spacing-xxl: 48px;
+            
+            /* Typography */
+            --md-font-logo: 'Playfair Display', serif;
+            --md-font-heading: 'Inter', sans-serif;
+            --md-font-body: 'Lora', serif;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #202124;
+            --md-on-surface: #FFFFFF;
+            --md-surface-variant: #303134;
+            --md-on-surface-variant: #E8EAED;
+            --md-background: #202124;
+            --md-on-background: #FFFFFF;
+            --md-primary: #8ab4f8;
+            --md-primary-light: #aecbfa;
+            --md-primary-container: #174ea6;
+            --md-on-primary-container: #E8EAED;
+            --md-secondary: #81c995;
+            --md-secondary-light: #a8dab5;
+            --md-secondary-container: #0d8a72;
+            --md-on-secondary-container: #E8EAED;
+            --md-outline: #3C4043;
+            --md-outline-variant: #5F6368;
+            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--md-font-body);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Enhanced Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            overflow: hidden;
+        }
+
+        .gradient-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(26, 115, 232, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(13, 138, 114, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(66, 133, 244, 0.1) 0%, transparent 50%);
+            animation: gradientMove 20s ease infinite alternate;
+        }
+
+        .mesh-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, transparent 95%, rgba(26, 115, 232, 0.05) 100%),
+                linear-gradient(transparent 95%, rgba(13, 138, 114, 0.05) 100%);
+            background-size: 50px 50px;
+            animation: meshFloat 40s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                transform: translate(0%, 0%) scale(1);
+            }
+            100% {
+                transform: translate(-2%, -2%) scale(1.1);
+            }
+        }
+
+        @keyframes meshFloat {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* Modern Floating Pill Navbar */
+        .floating-navbar {
+            position: fixed;
+            top: var(--md-spacing-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--md-radius-pill);
+            padding: var(--md-spacing-sm) var(--md-spacing-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--md-spacing-md);
+            z-index: 1000;
+            box-shadow: var(--md-elevation-4);
+            transition: var(--md-transition);
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        .dark-theme .floating-navbar {
+            background: rgba(32, 33, 36, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .nav-logo {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-primary);
+            font-weight: 700;
+            transition: var(--md-transition);
+            flex-shrink: 0;
+        }
+
+        .nav-logo:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .nav-logo img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-name {
+            font-family: var(--md-font-logo);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+
+        .nav-link {
+            color: var(--md-on-surface);
+            text-decoration: none;
+            font-family: var(--md-font-heading);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-pill);
+            transition: var(--md-transition);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background: var(--md-surface-variant);
+            color: var(--md-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .nav-link.active {
+            color: var(--md-primary);
+            font-weight: 700;
+            background: var(--md-primary-container);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-pill);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            flex-shrink: 0;
+            background: var(--md-surface-variant);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            flex-shrink: 0;
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--md-surface-variant);
+            transform: rotate(90deg);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--md-surface);
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: var(--md-spacing-xxl) var(--md-spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+            overflow-y: auto;
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-lg);
+            border-bottom: 1px solid var(--md-outline);
+        }
+
+        .mobile-nav-close {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .mobile-nav-close:hover {
+            background: var(--md-surface-variant);
+            transform: rotate(90deg);
+        }
+
+        .mobile-nav-link {
+            color: var(--md-on-surface);
+            text-decoration: none;
+            font-family: var(--md-font-heading);
+            font-size: 1.25rem;
+            font-weight: 500;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            border-radius: var(--md-radius-medium);
+            transition: var(--md-transition);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: var(--md-surface-variant);
+            color: var(--md-primary);
+            transform: translateX(8px);
+        }
+
+        .mobile-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Mobile Theme Toggle */
+        .mobile-theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            margin-top: var(--md-spacing-xl);
+        }
+
+        .mobile-theme-toggle span {
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        .mobile-theme-btn {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Signup Container */
+        .signup-container {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md-spacing-xxl) var(--md-spacing-xl);
+            margin-top: 80px;
+        }
+
+        .signup-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--md-spacing-xl);
+            align-items: center;
+        }
+
+        /* Signup Left Side */
+        .signup-left {
+            padding: var(--md-spacing-xl);
+        }
+
+        .signup-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .signup-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-large);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-size: 1.75rem;
+        }
+
+        .signup-logo img {
+            width: 36px;
+            height: 36px;
+            filter: brightness(0) invert(1);
+        }
+
+        .signup-title {
+            font-family: var(--md-font-logo);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-sm);
+            line-height: 1.2;
+        }
+
+        .signup-subtitle {
+            font-family: var(--md-font-heading);
+            font-size: 1.125rem;
+            color: var(--md-on-surface-variant);
+            margin-bottom: var(--md-spacing-xl);
+            line-height: 1.6;
+        }
+
+        .signup-features {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-lg);
+            margin-top: var(--md-spacing-xl);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--md-spacing-md);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-primary);
+            font-size: 1.25rem;
+        }
+
+        .feature-content h4 {
+            font-family: var(--md-font-heading);
+            font-size: 1.125rem;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .feature-content p {
+            font-size: 0.95rem;
+            color: var(--md-on-surface-variant);
+            line-height: 1.5;
+        }
+
+        /* Signup Right Side */
+        .signup-right {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+            box-shadow: var(--md-elevation-3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .form-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .form-subtitle {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+        }
+
+        /* Form Styles */
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        .form-label {
+            font-family: var(--md-font-heading);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--md-on-surface);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            font-family: var(--md-font-body);
+            font-size: 1rem;
+            color: var(--md-on-surface);
+            transition: var(--md-transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--md-primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: var(--md-spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            padding: var(--md-spacing-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--md-radius-small);
+            transition: var(--md-transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--md-primary);
+            background: var(--md-surface-variant);
+        }
+
+        /* Terms Checkbox */
+        .terms-group {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--md-spacing-sm);
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .terms-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--md-primary);
+            cursor: pointer;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .terms-group label {
+            font-size: 0.95rem;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .terms-link {
+            color: var(--md-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--md-transition);
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
+            border-radius: var(--md-radius-pill);
+            border: none;
+            font-family: var(--md-font-heading);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-filled {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .btn-filled:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .btn-outlined {
+            background: transparent;
+            color: var(--md-primary);
+            border: 1px solid var(--md-outline);
+        }
+
+        .btn-outlined:hover {
+            background: var(--md-primary-container);
+            border-color: var(--md-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--md-outline);
+        }
+
+        .divider-text {
+            color: var(--md-on-surface-variant);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0 var(--md-spacing-sm);
+        }
+
+        /* Social Signup */
+        .social-signup {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-surface);
+            font-family: var(--md-font-heading);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .social-btn:hover {
+            background: var(--md-surface-variant);
+            transform: translateY(-2px);
+            border-color: var(--md-primary);
+        }
+
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Signin Link */
+        .signin-link {
+            text-align: center;
+            margin-top: var(--md-spacing-xl);
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+        }
+
+        .signin-link a {
+            color: var(--md-primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: var(--md-spacing-xs);
+        }
+
+        .signin-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--md-on-primary);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: var(--md-spacing-sm);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Password Strength */
+        .password-strength {
+            margin-top: var(--md-spacing-xs);
+        }
+
+        .strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--md-outline);
+            overflow: hidden;
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-text {
+            font-size: 0.875rem;
+            color: var(--md-on-surface-variant);
+        }
+
+        /* Footer */
+        .footer {
+            padding: var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-top: 1px solid var(--md-outline);
+            margin-top: auto;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: var(--md-font-logo);
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .footer-copyright {
+            color: var(--md-on-surface-variant);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .signup-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .signup-left {
+                text-align: center;
+            }
+            
+            .signup-brand {
+                justify-content: center;
+            }
+            
+            .feature-item {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .floating-navbar {
+                width: 95%;
+                padding: var(--md-spacing-xs) var(--md-spacing-md);
+                top: var(--md-spacing-md);
+                justify-content: space-between;
+            }
+            
+            .nav-name {
+                font-size: 1.125rem;
+            }
+            
+            .signup-container {
+                padding: var(--md-spacing-xl) var(--md-spacing-md);
+                margin-top: 70px;
+            }
+            
+            .signup-title {
+                font-size: 2rem;
+            }
+            
+            .signup-subtitle {
+                font-size: 1rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+            
+            .mobile-nav {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .mobile-nav-link {
+                font-size: 1.125rem;
+                padding: var(--md-spacing-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup-title {
+                font-size: 1.75rem;
+            }
+            
+            .signup-subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .nav-name {
+                display: none;
+            }
+            
+            .nav-brand {
+                gap: 0;
+            }
+            
+            .form-input {
+                padding: var(--md-spacing-md);
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Enhanced Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-bg"></div>
+        <div class="mesh-overlay"></div>
+    </div>
+
+    <!-- Modern Floating Pill Navbar -->
+    <nav class="floating-navbar">
+        <!-- Left side: Logo and Brand -->
+        <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
+            <div class="nav-logo">
+                <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='R';">
+            </div>
+            <span class="nav-name">Reverbit</span>
+        </a>
+
+        <!-- Desktop Navigation Links (Right side) -->
+        <div class="desktop-nav">
+            <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-link">
+                <i class="fas fa-home" style="font-size: 0.9rem; margin-right: 4px;"></i>
+                Home
+            </a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="nav-link">
+                <i class="fas fa-blog" style="font-size: 0.9rem; margin-right: 4px;"></i>
+                Blogs
+            </a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/about/" class="nav-link">
+                <i class="fas fa-bullseye" style="font-size: 0.9rem; margin-right: 4px;"></i>
+                The Creator
+            </a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-link">
+                <i class="fas fa-network-wired" style="font-size: 0.9rem; margin-right: 4px;"></i>
+                Ecosystem
+            </a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html" class="nav-link">
+                <i class="fas fa-sign-in-alt" style="font-size: 0.9rem; margin-right: 4px;"></i>
+                Sign In
+            </a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signup.html" class="nav-link active">
+                <i class="fas fa-user-plus" style="font-size: 0.9rem; margin-right: 4px;"></i>
+                Sign Up
+            </a>
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <span class="material-icons-round">menu</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <div class="nav-brand">
+                <div class="nav-logo">
+                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='R';">
+                </div>
+                <span class="nav-name">Reverbit</span>
+            </div>
+            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        
+        <a href="https://aditya-cmd-max.github.io/reverbit/" class="mobile-nav-link">
+            <i class="fas fa-home"></i>
+            Home
+        </a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="mobile-nav-link">
+            <i class="fas fa-blog"></i>
+            Blogs
+        </a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/about" class="mobile-nav-link">
+            <i class="fas fa-bullseye"></i>
+            The Creator
+        </a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="mobile-nav-link">
+            <i class="fas fa-network-wired"></i>
+            Ecosystem
+        </a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html" class="mobile-nav-link">
+            <i class="fas fa-sign-in-alt"></i>
+            Sign In
+        </a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signup.html" class="mobile-nav-link active">
+            <i class="fas fa-user-plus"></i>
+            Sign Up
+        </a>
+        
+        <!-- Mobile Theme Toggle -->
+        <div class="mobile-theme-toggle">
+            <span>Theme</span>
+            <button class="mobile-theme-btn" id="mobileThemeToggle" aria-label="Toggle theme">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Signup Container -->
+    <div class="signup-container">
+        <div class="signup-wrapper">
+            <!-- Left Side: Brand & Features -->
+            <div class="signup-left">
+                <div class="signup-brand">
+                    <div class="signup-logo">
+                        <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
+                    </div>
+                    <div>
+                        <h1 class="signup-title">Join Reverbit</h1>
+                        <p class="signup-subtitle">Create your account to unlock the complete AI-powered ecosystem</p>
+                    </div>
+                </div>
+
+                <div class="signup-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Access All Products</h4>
+                            <p>Get instant access to Clover AI, SkyCast Pro, MindScribe, and 10+ other AI tools</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Seamless Sync</h4>
+                            <p>Your data and preferences sync automatically across all Reverbit products</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Personalized Experience</h4>
+                            <p>AI-powered recommendations tailored to your learning and productivity needs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Join Our Community</h4>
+                            <p>Connect with thousands of innovators, creators, and learners</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Signup Form -->
+            <div class="signup-right">
+                <div class="form-header">
+                    <h2 class="form-title">Create Your Account</h2>
+                    <p class="form-subtitle">Fill in your details to get started</p>
+                </div>
+
+                <form class="signup-form" id="signup-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText">Password strength: Weak</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirm Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password" required>
+                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="strength-text" id="passwordMatch"></div>
+                    </div>
+
+                    <div class="terms-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-filled">
+                        <span>Create Account</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <div class="loading" id="submitLoading"></div>
+                    </button>
+
+                    <div class="divider">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">Or sign up with</span>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="social-signup">
+                        <button type="button" class="social-btn" onclick="googleSignIn()">
+                            <img src="https://brandlogo.org/wp-content/uploads/2025/05/Google-G-Icon-2025.png.webp" alt="Google">
+                            <span>Continue with Google</span>
+                        </button>
+                    </div>
+
+                    <p class="signin-link">
+                        Already have an account?
+                        <a href="https://aditya-cmd-max.github.io/signin/">Sign in</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">Reverbit</div>
+            <p class="footer-copyright">
+                Made with <i class="fas fa-heart" style="color: #ff4444;"></i> and <i class="fas fa-code"></i> by Aditya Jha.
+                <br>
+                &copy; 2025 Reverbit Innovations. All Rights Reserved
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+        const themeIcons = document.querySelectorAll('.theme-toggle .material-icons-round, .mobile-theme-btn .material-icons-round');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        const mobileNav = document.getElementById('mobileNav');
+        const signupForm = document.getElementById('signup-form');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirm-password');
+        const submitLoading = document.getElementById('submitLoading');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+        const passwordMatch = document.getElementById('passwordMatch');
+
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcons.forEach(icon => icon.textContent = 'light_mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcons.forEach(icon => icon.textContent = 'dark_mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        mobileThemeToggle.addEventListener('click', toggleTheme);
+
+        // Load saved theme preference
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+                themeIcons.forEach(icon => icon.textContent = 'light_mode');
+            } else {
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+                themeIcons.forEach(icon => icon.textContent = 'dark_mode');
+            }
+        }
+
+        // Mobile Navigation
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        mobileNavClose.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close mobile nav when clicking on links
+        mobileNav.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Toggle password visibility
+        function setupPasswordToggle(buttonId, fieldId) {
+            const toggleButton = document.getElementById(buttonId);
+            const field = document.getElementById(fieldId);
+            
+            toggleButton.addEventListener('click', () => {
+                const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+                field.setAttribute('type', type);
+                toggleButton.innerHTML = type === 'password' ? 
+                    '<i class="fas fa-eye"></i>' : 
+                    '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+
+        setupPasswordToggle('togglePassword', 'password');
+        setupPasswordToggle('toggleConfirmPassword', 'confirm-password');
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            let strength = '';
+            let color = '';
+            let width = 0;
+            
+            switch(score) {
+                case 0:
+                case 1:
+                    strength = 'Very Weak';
+                    color = '#ff4444';
+                    width = 20;
+                    break;
+                case 2:
+                    strength = 'Weak';
+                    color = '#ff8800';
+                    width = 40;
+                    break;
+                case 3:
+                    strength = 'Good';
+                    color = '#ffbb33';
+                    width = 60;
+                    break;
+                case 4:
+                    strength = 'Strong';
+                    color = '#00C851';
+                    width = 80;
+                    break;
+                case 5:
+                    strength = 'Very Strong';
+                    color = '#007E33';
+                    width = 100;
+                    break;
+            }
+            
+            return { strength, color, width };
+        }
+
+        // Check password match
+        function checkPasswordMatch() {
+            const password = passwordField.value;
+            const confirm = confirmPasswordField.value;
+            
+            if (!confirm) {
+                passwordMatch.textContent = '';
+                return;
+            }
+            
+            if (password === confirm) {
+                passwordMatch.textContent = '✓ Passwords match';
+                passwordMatch.style.color = 'var(--md-secondary)';
+            } else {
+                passwordMatch.textContent = '✗ Passwords do not match';
+                passwordMatch.style.color = '#ff4444';
+            }
+        }
+
+        // Update password strength and match in real-time
+        passwordField.addEventListener('input', () => {
+            const password = passwordField.value;
+            const strength = checkPasswordStrength(password);
+            
+            strengthFill.style.width = strength.width + '%';
+            strengthFill.style.background = strength.color;
+            strengthText.textContent = 'Password strength: ' + strength.strength;
+            
+            checkPasswordMatch();
+        });
+        
+        confirmPasswordField.addEventListener('input', checkPasswordMatch);
+
+        // Form submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                alert("Passwords don't match!");
+                return;
+            }
+            
+            // Validate password strength
+            const strength = checkPasswordStrength(password);
+            if (strength.strength === 'Very Weak' || strength.strength === 'Weak') {
+                const confirmWeak = confirm("Your password is weak. Are you sure you want to continue?");
+                if (!confirmWeak) return;
+            }
+            
+            // Show loading state
+            submitLoading.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.querySelector('span').textContent = 'Creating account...';
+            
+            try {
+                // Initialize Firebase
+                const firebaseConfig = {
+  apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+  authDomain: "reverbit11.firebaseapp.com",
+  projectId: "reverbit11",
+  storageBucket: "reverbit11.firebasestorage.app",
+  messagingSenderId: "607495314412",
+  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+  measurementId: "G-DMWMRM1M47"
+};
+
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                const auth = firebase.auth();
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                
+                // Update user profile with name
+                await userCredential.user.updateProfile({
+                    displayName: name
+                });
+                
+                // Success state
+                submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
+                submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
+                
+                // Simulate redirect
+                setTimeout(() => {
+                    alert('Account created successfully! Welcome to Reverbit, ' + name + '!');
+                    // In a real app, you would redirect to dashboard or welcome page
+                    // window.location.href = 'https://aditya-cmd-max.github.io/reverbit/dashboard';
+                }, 1500);
+                
+            } catch (error) {
+                // Error state
+                submitBtn.querySelector('span').textContent = 'Create Account';
+                submitLoading.style.display = 'none';
+                submitBtn.disabled = false;
+                
+                // Show error message
+                let errorMessage = 'Signup failed. Please try again.';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'This email is already registered. Please sign in instead.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Email/password accounts are not enabled.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Password is too weak. Please choose a stronger password.';
+                        break;
+                }
+                
+                alert(errorMessage);
+            }
+        });
+
+        // Google Sign In
+        window.googleSignIn = function() {
+            try {
+                const firebaseConfig = {
+  apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+  authDomain: "reverbit11.firebaseapp.com",
+  projectId: "reverbit11",
+  storageBucket: "reverbit11.firebasestorage.app",
+  messagingSenderId: "607495314412",
+  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+  measurementId: "G-DMWMRM1M47"
+};
+
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                const auth = firebase.auth();
+                const provider = new firebase.auth.GoogleAuthProvider();
+                
+                auth.signInWithPopup(provider)
+                    .then(result => {
+                        alert(`Welcome, ${result.user.displayName}! Your account has been created successfully.`);
+                        // In a real app, you would redirect to dashboard
+                        // window.location.href = 'https://aditya-cmd-max.github.io/reverbit/dashboard';
+                    })
+                    .catch(error => {
+                        alert('Google sign up failed: ' + error.message);
+                    });
+            } catch (error) {
+                alert('Error initializing Google sign up. Please try again.');
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            loadThemePreference();
+            
+            // Add subtle animation to form
+            const formElements = document.querySelectorAll('.signup-right *');
+            formElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 + index * 50);
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024 && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            if (window.innerWidth <= 768) {
+                document.querySelector('.floating-navbar').style.padding = 'var(--md-spacing-xs) var(--md-spacing-md)';
+            } else {
+                document.querySelector('.floating-navbar').style.padding = 'var(--md-spacing-sm) var(--md-spacing-lg)';
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            if (e.shiftKey && e.key === 'T') {
+                toggleTheme();
+            }
+        });
+    </script>
+</body>
+</html>
