@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverbit - My Profile</title>
+    <meta name="description" content="Your Reverbit Profile - Manage your account and preferences">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+    <style>
+        /* Material Design 3 Color System with Enhanced Blue/Green - MATCHING REVERBIT */
+        :root {
+            /* Primary Colors - Blue Theme */
+            --md-primary: #1a73e8;
+            --md-primary-light: #4285f4;
+            --md-primary-dark: #0d47a1;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #d2e3fc;
+            --md-on-primary-container: #001d3d;
+            
+            /* Secondary Colors - Green Theme */
+            --md-secondary: #0d8a72;
+            --md-secondary-light: #34a853;
+            --md-secondary-dark: #0a5c42;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #b8f2e6;
+            --md-on-secondary-container: #00201a;
+            
+            /* Surface Colors */
+            --md-surface: #FFFFFF;
+            --md-on-surface: #202124;
+            --md-surface-variant: #F8F9FA;
+            --md-on-surface-variant: #5f6368;
+            
+            /* Background Colors */
+            --md-background: #FFFFFF;
+            --md-on-background: #202124;
+            
+            /* Outline Colors */
+            --md-outline: #DADCE0;
+            --md-outline-variant: #E8EAED;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-extra-large: 28px;
+            --md-radius-pill: 9999px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            --md-spacing-xxl: 48px;
+            
+            /* Typography */
+            --md-font-logo: 'Playfair Display', serif;
+            --md-font-heading: 'Inter', sans-serif;
+            --md-font-body: 'Lora', serif;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #202124;
+            --md-on-surface: #FFFFFF;
+            --md-surface-variant: #303134;
+            --md-on-surface-variant: #E8EAED;
+            --md-background: #202124;
+            --md-on-background: #FFFFFF;
+            --md-primary: #8ab4f8;
+            --md-primary-light: #aecbfa;
+            --md-primary-container: #174ea6;
+            --md-on-primary-container: #E8EAED;
+            --md-secondary: #81c995;
+            --md-secondary-light: #a8dab5;
+            --md-secondary-container: #0d8a72;
+            --md-on-secondary-container: #E8EAED;
+            --md-outline: #3C4043;
+            --md-outline-variant: #5F6368;
+            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--md-font-body);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+        }
+
+        /* Profile Layout */
+        .profile-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--md-surface);
+            border-right: 1px solid var(--md-outline);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: var(--md-transition);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-header {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            border-bottom: 1px solid var(--md-outline);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-primary);
+            font-weight: 700;
+            transition: var(--md-transition);
+        }
+
+        .nav-logo:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .nav-name {
+            font-family: var(--md-font-logo);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-nav {
+            padding: var(--md-spacing-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xs);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            border-radius: var(--md-radius-pill);
+            transition: var(--md-transition);
+            font-family: var(--md-font-heading);
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--md-surface-variant);
+            color: var(--md-primary);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: var(--md-spacing-lg);
+            border-top: 1px solid var(--md-outline);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--md-spacing-lg);
+            min-height: 100vh;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--md-spacing-lg) var(--md-spacing-lg) var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            margin-bottom: var(--md-spacing-xl);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .welcome-section h1 {
+            font-family: var(--md-font-heading);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-xs);
+            color: var(--md-on-surface);
+        }
+
+        .welcome-section p {
+            color: var(--md-on-surface-variant);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
+            border-radius: var(--md-radius-pill);
+            border: none;
+            font-family: var(--md-font-heading);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-filled {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .btn-filled:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .btn-outlined {
+            background: transparent;
+            color: var(--md-primary);
+            border: 1px solid var(--md-outline);
+        }
+
+        .btn-outlined:hover {
+            background: var(--md-primary-container);
+            border-color: var(--md-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            background: var(--md-surface-variant);
+        }
+
+        .theme-toggle:hover {
+            background: var(--md-primary-container);
+            transform: rotate(15deg);
+        }
+
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .user-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid var(--md-outline);
+            transition: var(--md-transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            border-color: var(--md-primary);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            overflow: hidden;
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .profile-header {
+            padding: var(--md-spacing-xl);
+            background: var(--md-surface-variant);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto var(--md-spacing-lg);
+        }
+
+        .profile-avatar-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--md-surface);
+            box-shadow: var(--md-elevation-3);
+            transition: var(--md-transition);
+        }
+
+        .profile-avatar:hover .profile-avatar-img {
+            transform: scale(1.05);
+            border-color: var(--md-primary);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            cursor: pointer;
+            box-shadow: var(--md-elevation-2);
+            transition: var(--md-transition);
+        }
+
+        .avatar-upload:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .profile-info h2 {
+            font-family: var(--md-font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .profile-info .email {
+            color: var(--md-on-surface-variant);
+            font-size: 1.125rem;
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        /* Form */
+        .form-grid {
+            padding: var(--md-spacing-xl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--md-spacing-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        .form-label {
+            font-family: var(--md-font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: var(--md-background);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            font-family: var(--md-font-body);
+            font-size: 1rem;
+            color: var(--md-on-surface);
+            transition: var(--md-transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--md-primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--md-spacing-lg);
+            margin-top: var(--md-spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-lg);
+            border: 1px solid var(--md-outline);
+            text-align: center;
+            transition: var(--md-transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-size: 1.5rem;
+            margin: 0 auto var(--md-spacing-md);
+        }
+
+        .stat-value {
+            font-family: var(--md-font-logo);
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .stat-label {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--md-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--md-surface-variant);
+            border-top: 4px solid var(--md-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--md-outline);
+            position: relative;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: var(--md-spacing-md);
+            }
+            
+            .top-header {
+                flex-direction: column;
+                gap: var(--md-spacing-md);
+                text-align: center;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+                position: fixed;
+                top: var(--md-spacing-md);
+                left: var(--md-spacing-md);
+                z-index: 101;
+                background: var(--md-primary);
+                color: var(--md-on-primary);
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                align-items: center;
+                justify-content: center;
+                box-shadow: var(--md-elevation-2);
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: var(--md-font-logo);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-lg);
+            position: relative;
+            padding-bottom: var(--md-spacing-sm);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: 2px;
+        }
+
+        /* Password Change Section */
+        .password-change {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+            margin-top: var(--md-spacing-xl);
+        }
+
+        .danger-zone {
+            background: linear-gradient(135deg, rgba(234, 67, 53, 0.1), rgba(234, 67, 53, 0.05));
+            border: 1px solid rgba(234, 67, 53, 0.2);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            margin-top: var(--md-spacing-xl);
+        }
+
+        .danger-zone h3 {
+            color: #ea4335;
+            font-family: var(--md-font-heading);
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: var(--md-spacing-xl);
+            right: var(--md-spacing-xl);
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            border-radius: var(--md-radius-medium);
+            box-shadow: var(--md-elevation-3);
+            border-left: 4px solid var(--md-primary);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--md-transition);
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Profile Completion */
+        .profile-completion {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .completion-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-pill);
+            overflow: hidden;
+            margin: var(--md-spacing-md) 0;
+        }
+
+        .completion-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-pill);
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
+                    <div class="nav-logo">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <span class="nav-name">Reverbit</span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="https://aditya-cmd-max.github.io/reverbit/dashboard" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#profile" class="nav-item active">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/dashboard#apps" class="nav-item">
+                    <i class="fas fa-th-large"></i>
+                    <span>My Apps</span>
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/dashboard#analytics" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-item">
+                    <i class="fas fa-network-wired"></i>
+                    <span>All Tools</span>
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-item">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Home</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">
+                        <img id="userAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                    </div>
+                    <div>
+                        <h3 id="sidebarUserName" style="font-size: 1rem; font-weight: 600; margin-bottom: 2px;">User</h3>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">View Profile</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="welcome-section">
+                    <h1 id="greeting">My Profile <span id="userName"></span></h1>
+                    <p>Manage your account settings and preferences</p>
+                </div>
+
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <span class="material-icons-round">dark_mode</span>
+                    </button>
+                    <button class="btn btn-outlined" onclick="window.location.href='https://aditya-cmd-max.github.io/reverbit/dashboard'">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <button class="btn btn-filled" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                </div>
+            </header>
+
+            <!-- Profile Completion -->
+            <div class="profile-completion">
+                <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-sm);">Profile Completion</h3>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">Complete your profile to get personalized recommendations</p>
+                <div class="completion-bar">
+                    <div class="completion-progress" id="completionProgress" style="width: 0%"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="completionText">0% Complete</span>
+                    <button class="btn btn-filled" onclick="scrollToForm()">
+                        <i class="fas fa-edit"></i>
+                        Complete Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <section id="profile">
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-img">
+                            <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                                <i class="fas fa-camera"></i>
+                                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profileUserName">Loading...</h2>
+                            <p class="email" id="userEmail">Loading...</p>
+                            <p class="member-since" id="memberSince">Member since: Loading...</p>
+                            <p class="user-id" id="userId" style="font-size: 0.875rem; color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm);">User ID: Loading...</p>
+                        </div>
+                    </div>
+
+                    <form id="profileForm" class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="email" class="form-input" placeholder="Enter your email" disabled>
+                            <small style="color: var(--md-on-surface-variant); margin-top: 4px;">Email cannot be changed</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 123-4567">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea id="bio" class="form-input" rows="3" placeholder="Tell us about yourself (max 250 characters)" maxlength="250"></textarea>
+                            <small style="color: var(--md-on-surface-variant); margin-top: 4px;"><span id="charCount">0</span>/250 characters</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select id="country" class="form-input">
+                                <option value="">Select Country</option>
+                                <option value="IN">India</option>
+                                <option value="US">United States</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="DE">Germany</option>
+                                <option value="FR">France</option>
+                                <option value="JP">Japan</option>
+                                <option value="SG">Singapore</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" id="dob" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select id="gender" class="form-input">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="non-binary">Non-binary</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Website</label>
+                            <input type="url" id="website" class="form-input" placeholder="https://example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn Profile</label>
+                            <input type="url" id="linkedin" class="form-input" placeholder="https://linkedin.com/in/username">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Twitter Handle</label>
+                            <input type="text" id="twitter" class="form-input" placeholder="@username">
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1; display: flex; gap: var(--md-spacing-md); margin-top: var(--md-spacing-md);">
+                            <button type="submit" class="btn btn-filled">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                            <button type="button" class="btn btn-outlined" onclick="resetForm()">
+                                <i class="fas fa-undo"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Password Change Section -->
+                <div class="password-change">
+                    <h3 class="section-title">Security Settings</h3>
+                    <form id="passwordForm" class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" id="newPassword" class="form-input" placeholder="Enter new password">
+                            <small style="color: var(--md-on-surface-variant); margin-top: 4px;">Minimum 8 characters with letters and numbers</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password">
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <button type="submit" class="btn btn-filled">
+                                <i class="fas fa-key"></i>
+                                Change Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="totalUsage">0h</div>
+                        <div class="stat-label">Total Usage</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-value" id="streak">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-th-large"></i>
+                        </div>
+                        <div class="stat-value" id="appsUsed">0</div>
+                        <div class="stat-label">Apps Used</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-value" id="daysActive">0</div>
+                        <div class="stat-label">Days Active</div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="danger-zone">
+                    <h3>⚠️ Danger Zone</h3>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">These actions are irreversible. Please proceed with caution.</p>
+                    
+                    <div style="display: flex; gap: var(--md-spacing-md); flex-wrap: wrap;">
+                        <button class="btn btn-outlined" onclick="exportData()" style="border-color: #ea4335; color: #ea4335;">
+                            <i class="fas fa-download"></i>
+                            Export My Data
+                        </button>
+                        
+                        <button class="btn btn-outlined" onclick="deleteAccount()" style="border-color: #ea4335; color: #ea4335;">
+                            <i class="fas fa-trash"></i>
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Sign Out</h2>
+            <p style="margin-bottom: var(--md-spacing-xl); color: var(--md-on-surface);">Are you sure you want to sign out?</p>
+            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
+                <button class="btn btn-outlined" onclick="closeModal('logoutModal')">Cancel</button>
+                <button class="btn btn-filled" onclick="confirmLogout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg); color: #ea4335;">Delete Account</h2>
+            <p style="margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">This action cannot be undone. All your data will be permanently deleted.</p>
+            <p style="margin-bottom: var(--md-spacing-xl); color: var(--md-on-surface-variant); font-size: 0.95rem;">Please type <strong>DELETE</strong> to confirm:</p>
+            <input type="text" id="deleteConfirmation" class="form-input" placeholder="Type DELETE here" style="margin-bottom: var(--md-spacing-lg);">
+            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
+                <button class="btn btn-outlined" onclick="closeModal('deleteAccountModal')">Cancel</button>
+                <button class="btn btn-filled" onclick="confirmDeleteAccount()" style="background: linear-gradient(135deg, #ea4335, #d93025);">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
+
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('.material-icons-round');
+        const loadingScreen = document.getElementById('loading');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const toast = document.getElementById('toast');
+
+        // Firebase instances
+        let auth, db, storage;
+        let currentUser = null;
+        let originalFormData = {};
+
+        // Initialize Firebase
+        function initializeFirebase() {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            auth = firebase.auth();
+            db = firebase.firestore();
+            storage = firebase.storage();
+        }
+
+        // Theme Management
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+                themeIcon.textContent = 'light_mode';
+            } else {
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+                themeIcon.textContent = 'dark_mode';
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'info') {
+            toast.textContent = message;
+            toast.style.borderLeftColor = type === 'success' ? '#34a853' : 
+                                          type === 'error' ? '#ea4335' : 
+                                          type === 'warning' ? '#fbbc05' : 
+                                          '#1a73e8';
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Mobile Menu
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('mobile-open');
+        });
+
+        // Character Counter
+        document.getElementById('bio').addEventListener('input', (e) => {
+            document.getElementById('charCount').textContent = e.target.value.length;
+        });
+
+        // Scroll to Form
+        function scrollToForm() {
+            document.getElementById('profileForm').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Calculate Profile Completion
+        function calculateProfileCompletion(userData) {
+            let completion = 0;
+            const fields = [
+                { field: 'fullName', weight: 20 },
+                { field: 'email', weight: 15 },
+                { field: 'bio', weight: 15 },
+                { field: 'country', weight: 15 },
+                { field: 'dob', weight: 10 },
+                { field: 'gender', weight: 10 },
+                { field: 'phone', weight: 5 },
+                { field: 'website', weight: 5 },
+                { field: 'linkedin', weight: 3 },
+                { field: 'twitter', weight: 2 }
+            ];
+
+            fields.forEach(({ field, weight }) => {
+                if (userData[field] && userData[field].trim().length > 0) {
+                    completion += weight;
+                }
+            });
+
+            // Update UI
+            document.getElementById('completionProgress').style.width = `${completion}%`;
+            document.getElementById('completionText').textContent = `${completion}% Complete`;
+            
+            return completion;
+        }
+
+        // Load User Data
+        async function loadUserData(user) {
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                let userData = userDoc.exists ? userDoc.data() : {};
+
+                // Set user info
+                const displayName = user.displayName || userData.fullName || 'User';
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('sidebarUserName').textContent = displayName;
+                document.getElementById('profileUserName').textContent = displayName;
+                
+                // Email
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('email').value = user.email || '';
+                
+                // Member since
+                const joinDate = new Date(user.metadata.creationTime);
+                document.getElementById('memberSince').textContent = `Member since: ${joinDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}`;
+                
+                // User ID
+                document.getElementById('userId').textContent = `User ID: ${user.uid.substring(0, 8)}...`;
+
+                // Avatar
+                const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+                document.getElementById('userAvatarImg').src = avatarUrl;
+                document.getElementById('profileAvatarImg').src = avatarUrl.replace('&size=120', '') + '&size=160';
+
+                // Populate form
+                document.getElementById('fullName').value = displayName || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('bio').value = userData.bio || '';
+                document.getElementById('charCount').textContent = userData.bio?.length || 0;
+                document.getElementById('country').value = userData.country || '';
+                document.getElementById('dob').value = userData.dob || '';
+                document.getElementById('gender').value = userData.gender || '';
+                document.getElementById('website').value = userData.website || '';
+                document.getElementById('linkedin').value = userData.linkedin || '';
+                document.getElementById('twitter').value = userData.twitter || '';
+
+                // Store original data
+                originalFormData = {
+                    fullName: displayName || '',
+                    phone: userData.phone || '',
+                    bio: userData.bio || '',
+                    country: userData.country || '',
+                    dob: userData.dob || '',
+                    gender: userData.gender || '',
+                    website: userData.website || '',
+                    linkedin: userData.linkedin || '',
+                    twitter: userData.twitter || ''
+                };
+
+                // Calculate and update profile completion
+                calculateProfileCompletion({ ...userData, fullName: displayName, email: user.email });
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showToast('Error loading profile data', 'error');
+            }
+        }
+
+        // Load Usage Stats
+        async function loadUsageStats(userId) {
+            try {
+                const usageDoc = await db.collection('usage').doc(userId).get();
+                if (usageDoc.exists) {
+                    const usageData = usageDoc.data();
+                    
+                    // Calculate total usage in hours
+                    const totalMinutes = (usageData.cloverAI || 0) + (usageData.mindscribe || 0) + (usageData.peo || 0);
+                    const totalHours = (totalMinutes / 60).toFixed(1);
+                    
+                    // Update stats
+                    document.getElementById('totalUsage').textContent = `${totalHours}h`;
+                    document.getElementById('streak').textContent = usageData.streak || 0;
+                    
+                    // Calculate apps used
+                    const appsUsed = [
+                        usageData.cloverAI > 0 ? 1 : 0,
+                        usageData.mindscribe > 0 ? 1 : 0,
+                        usageData.peo > 0 ? 1 : 0
+                    ].reduce((a, b) => a + b, 0);
+                    document.getElementById('appsUsed').textContent = appsUsed;
+                    
+                    // Calculate days active (simplified - you can improve this)
+                    const daysActive = usageData.lastActive ? 
+                        Math.floor((new Date() - new Date(usageData.lastActive)) / (1000 * 60 * 60 * 24)) : 0;
+                    document.getElementById('daysActive').textContent = Math.min(daysActive, 365);
+                }
+            } catch (error) {
+                console.error('Error loading usage stats:', error);
+            }
+        }
+
+        // Handle Profile Form Submission
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) return;
+            
+            try {
+                const userData = {
+                    fullName: document.getElementById('fullName').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    bio: document.getElementById('bio').value.trim(),
+                    country: document.getElementById('country').value,
+                    dob: document.getElementById('dob').value,
+                    gender: document.getElementById('gender').value,
+                    website: document.getElementById('website').value.trim(),
+                    linkedin: document.getElementById('linkedin').value.trim(),
+                    twitter: document.getElementById('twitter').value.trim().replace('@', ''),
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Update Firebase Auth display name
+                if (userData.fullName !== currentUser.displayName) {
+                    await currentUser.updateProfile({
+                        displayName: userData.fullName
+                    });
+                }
+
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).set(userData, { merge: true });
+
+                // Update UI
+                document.getElementById('profileUserName').textContent = userData.fullName;
+                document.getElementById('sidebarUserName').textContent = userData.fullName;
+                
+                // Update avatar with new name
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.fullName)}&background=1a73e8&color=fff&bold=true`;
+                document.getElementById('userAvatarImg').src = avatarUrl;
+                document.getElementById('profileAvatarImg').src = avatarUrl.replace('&size=120', '') + '&size=160';
+
+                // Update completion
+                calculateProfileCompletion({ ...userData, email: currentUser.email });
+
+                showToast('Profile updated successfully!', 'success');
+
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Error updating profile. Please try again.', 'error');
+            }
+        });
+
+        // Handle Avatar Upload
+        document.getElementById('avatarInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image must be less than 5MB', 'error');
+                return;
+            }
+            
+            try {
+                // Create preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('profileAvatarImg').src = e.target.result;
+                    document.getElementById('userAvatarImg').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                // Upload to Firebase Storage
+                const storageRef = storage.ref();
+                const avatarRef = storageRef.child(`avatars/${currentUser.uid}/${Date.now()}_${file.name}`);
+                const uploadTask = await avatarRef.put(file);
+                const downloadURL = await uploadTask.ref.getDownloadURL();
+                
+                // Update user profile
+                await currentUser.updateProfile({
+                    photoURL: downloadURL
+                });
+                
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).set({
+                    photoURL: downloadURL,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                
+                showToast('Profile picture updated successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                showToast('Error uploading image. Please try again.', 'error');
+            }
+        });
+
+        // Handle Password Change
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('Please fill in all password fields', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('New passwords do not match', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showToast('Password must be at least 8 characters', 'error');
+                return;
+            }
+            
+            try {
+                // Reauthenticate user
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    currentUser.email, 
+                    currentPassword
+                );
+                
+                await currentUser.reauthenticateWithCredential(credential);
+                
+                // Update password
+                await currentUser.updatePassword(newPassword);
+                
+                // Clear form
+                document.getElementById('passwordForm').reset();
+                
+                showToast('Password updated successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error updating password:', error);
+                if (error.code === 'auth/wrong-password') {
+                    showToast('Current password is incorrect', 'error');
+                } else if (error.code === 'auth/weak-password') {
+                    showToast('Password is too weak. Use a stronger password.', 'error');
+                } else {
+                    showToast('Error updating password. Please try again.', 'error');
+                }
+            }
+        });
+
+        // Reset Form
+        function resetForm() {
+            document.getElementById('fullName').value = originalFormData.fullName;
+            document.getElementById('phone').value = originalFormData.phone;
+            document.getElementById('bio').value = originalFormData.bio;
+            document.getElementById('charCount').textContent = originalFormData.bio?.length || 0;
+            document.getElementById('country').value = originalFormData.country;
+            document.getElementById('dob').value = originalFormData.dob;
+            document.getElementById('gender').value = originalFormData.gender;
+            document.getElementById('website').value = originalFormData.website;
+            document.getElementById('linkedin').value = originalFormData.linkedin;
+            document.getElementById('twitter').value = originalFormData.twitter;
+            
+            showToast('Form reset to original values', 'info');
+        }
+
+        // Export Data
+        async function exportData() {
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const usageDoc = await db.collection('usage').doc(currentUser.uid).get();
+                
+                const exportData = {
+                    user: {
+                        uid: currentUser.uid,
+                        email: currentUser.email,
+                        displayName: currentUser.displayName,
+                        photoURL: currentUser.photoURL,
+                        metadata: {
+                            creationTime: currentUser.metadata.creationTime,
+                            lastSignInTime: currentUser.metadata.lastSignInTime
+                        }
+                    },
+                    profile: userDoc.exists ? userDoc.data() : {},
+                    usage: usageDoc.exists ? usageDoc.data() : {},
+                    exportDate: new Date().toISOString()
+                };
+                
+                // Create and download JSON file
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `reverbit-data-${currentUser.uid}-${Date.now()}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                showToast('Data exported successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                showToast('Error exporting data. Please try again.', 'error');
+            }
+        }
+
+        // Delete Account
+        function deleteAccount() {
+            document.getElementById('deleteAccountModal').style.display = 'flex';
+        }
+
+        async function confirmDeleteAccount() {
+            const confirmation = document.getElementById('deleteConfirmation').value;
+            
+            if (confirmation !== 'DELETE') {
+                showToast('Please type DELETE to confirm', 'error');
+                return;
+            }
+            
+            try {
+                // Delete user data from Firestore
+                await db.collection('users').doc(currentUser.uid).delete();
+                await db.collection('usage').doc(currentUser.uid).delete();
+                
+                // Delete user from Firebase Auth
+                await currentUser.delete();
+                
+                // Clear local data
+                document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                localStorage.clear();
+                
+                showToast('Account deleted successfully. Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                showToast('Error deleting account. Please try again.', 'error');
+                closeModal('deleteAccountModal');
+            }
+        }
+
+        // Modal Functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Logout Functions
+        function logout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        async function confirmLogout() {
+            try {
+                await auth.signOut();
+                document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                localStorage.removeItem('reverbit_auth');
+                localStorage.removeItem('reverbit_user');
+                
+                window.location.href = 'https://aditya-cmd-max.github.io/signin';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showToast('Error signing out. Please try again.', 'error');
+            }
+        }
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Hide loading screen
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                }, 800);
+                
+                // Initialize UI
+                loadThemePreference();
+                themeToggle.addEventListener('click', toggleTheme);
+                
+                // Initialize Firebase
+                initializeFirebase();
+                
+                // Check authentication
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        await loadUserData(user);
+                        await loadUsageStats(user.uid);
+                        
+                        // Setup auth cookies for SSO
+                        const sessionToken = btoa(JSON.stringify({
+                            uid: user.uid,
+                            email: user.email,
+                            timestamp: Date.now()
+                        }));
+                        
+                        document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+                        localStorage.setItem('reverbit_auth', sessionToken);
+                        
+                    } else {
+                        // Redirect to signin if not authenticated
+                        window.location.href = 'https://aditya-cmd-max.github.io/signin';
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                loadingScreen.classList.add('hidden');
+                showToast('Error loading application. Please refresh.', 'error');
+            }
+        });
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Theme toggle: Shift + T
+            if (e.shiftKey && e.key === 'T') {
+                toggleTheme();
+            }
+            
+            // Toggle menu: Shift + M (mobile only)
+            if (e.shiftKey && e.key === 'M' && window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+            }
+            
+            // Save profile: Ctrl/Cmd + S
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('profileForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                e.target !== mobileMenuToggle &&
+                !mobileMenuToggle.contains(e.target)) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+    </script>
+</body>
+</html>
