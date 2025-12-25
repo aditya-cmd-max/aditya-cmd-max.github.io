@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1267,78 +1268,125 @@
         });
 
         // Form submission
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            
-            // Show loading state
-            submitLoading.style.display = 'block';
-            submitBtn.disabled = true;
-            submitBtn.querySelector('span').textContent = 'Signing in...';
-            
-            try {
-                // Initialize Firebase
-                 const firebaseConfig = {
-  apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-  authDomain: "reverbit11.firebaseapp.com",
-  projectId: "reverbit11",
-  storageBucket: "reverbit11.firebasestorage.app",
-  messagingSenderId: "607495314412",
-  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-  measurementId: "G-DMWMRM1M47"
-};
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitLoading.style.display = 'block';
+    submitBtn.disabled = true;
+    submitBtn.querySelector('span').textContent = 'Signing in...';
+    
+    try {
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
 
-
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                
-                const auth = firebase.auth();
-                await auth.signInWithEmailAndPassword(email, password);
-                
-                // Success state
-                submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
-                submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
-                
-                // Simulate redirect
-                setTimeout(() => {
-                    alert('Login successful! Welcome to Reverbit.');
-                    // In a real app, you would redirect to dashboard
-                    // window.location.href = 'https://aditya-cmd-max.github.io/reverbit/dashboard';
-                }, 1500);
-                
-            } catch (error) {
-                // Error state
-                submitBtn.querySelector('span').textContent = 'Sign In';
-                submitLoading.style.display = 'none';
-                submitBtn.disabled = false;
-                
-                // Show error message
-                let errorMessage = 'Login failed. Please try again.';
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address.';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage = 'This account has been disabled.';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage = 'No account found with this email.';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect password. Please try again.';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Too many attempts. Please try again later.';
-                        break;
-                }
-                
-                alert(errorMessage);
-            }
-        });
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        const user = result.user;
+        
+        // Success state
+        submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
+        submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
+        
+        // Store user data in localStorage for SSO
+        localStorage.setItem('reverbit_user', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL
+        }));
+        
+        // Set session cookie for all subdomains
+        const sessionToken = btoa(JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            timestamp: Date.now()
+        }));
+        
+        document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+        localStorage.setItem('reverbit_auth', sessionToken);
+        
+        // Initialize Firestore and create user profile if needed
+        const db = firebase.firestore();
+        const userRef = db.collection('users').doc(user.uid);
+        const userDoc = await userRef.get();
+        
+        if (!userDoc.exists) {
+            // Create user profile if it doesn't exist
+            await userRef.set({
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName || '',
+                photoURL: user.photoURL || '',
+                bio: '',
+                country: '',
+                streak: 0,
+                joinedAt: user.metadata.creationTime,
+                lastActive: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+        }
+        
+        // Create initial usage record
+        const usageRef = db.collection('usage').doc(user.uid);
+        await usageRef.set({
+            cloverAI: 0,
+            mindscribe: 0,
+            peo: 0,
+            lastUsed: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        }, { merge: true });
+        
+        // Redirect to dashboard after 1 second
+        setTimeout(() => {
+            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+        }, 1000);
+        
+    } catch (error) {
+        // Error state
+        submitBtn.querySelector('span').textContent = 'Sign In';
+        submitLoading.style.display = 'none';
+        submitBtn.disabled = false;
+        
+        // Show error message
+        let errorMessage = 'Login failed. Please try again.';
+        switch (error.code) {
+            case 'auth/invalid-email':
+                errorMessage = 'Invalid email address.';
+                break;
+            case 'auth/user-disabled':
+                errorMessage = 'This account has been disabled.';
+                break;
+            case 'auth/user-not-found':
+                errorMessage = 'No account found with this email.';
+                break;
+            case 'auth/wrong-password':
+                errorMessage = 'Incorrect password. Please try again.';
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = 'Too many attempts. Please try again later.';
+                break;
+        }
+        
+        alert(errorMessage);
+    }
+});
 
         // Google Sign In
        window.googleSignIn = function() {
@@ -1394,28 +1442,6 @@
             });
         });
 
-// After successful login in signin.html
-function redirectToDashboard(user) {
-    // Store user data in localStorage for SSO
-    localStorage.setItem('reverbit_user', JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL
-    }));
-    
-    // Set session cookie for all subdomains
-    const sessionToken = btoa(JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        timestamp: Date.now()
-    }));
-    
-    document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
-    
-    // Redirect to dashboard
-    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-}
 
         
         // Handle window resize
