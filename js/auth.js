@@ -260,9 +260,9 @@ class ReverbitAuth {
                 
                 <div class="profile-footer">
                     <div class="privacy-link">
-                        <a href="https://aditya-cmd-max.github.io/privacy" target="_blank">Privacy Policy</a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank">Privacy Policy</a>
                         •
-                        <a href="https://aditya-cmd-max.github.io/terms" target="_blank">Terms of Service</a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank">Terms of Service</a>
                     </div>
                 </div>
             </div>
@@ -706,7 +706,7 @@ class ReverbitAuth {
             
             // Redirect to home page
             setTimeout(() => {
-                window.location.href = 'https://aditya-cmd-max.github.io/';
+                window.location.href = 'https://aditya-cmd-max.github.io/signin';
             }, 300);
             
             return true;
