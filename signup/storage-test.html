@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Storage Test</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase Storage Test</h1>
+    <button onclick="testSetup()">Test Firebase Setup</button>
+    <button onclick="createStorageBucket()">Create Storage Bucket</button>
+    <button onclick="testUpload()">Test Upload</button>
+    <div id="result" style="margin-top: 20px; padding: 20px; background: #f0f0f0;"></div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
+
+        let app, auth, storage, db;
+
+        function testSetup() {
+            try {
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    app = firebase.initializeApp(firebaseConfig);
+                    console.log('Firebase initialized');
+                } else {
+                    app = firebase.app();
+                    console.log('Firebase already initialized');
+                }
+                
+                auth = firebase.auth();
+                storage = firebase.storage();
+                db = firebase.firestore();
+                
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: green;">✅ Firebase initialized successfully!</p>' +
+                    '<p>Project: reverbit11</p>' +
+                    '<p>Storage Bucket: reverbit11.firebasestorage.app</p>';
+                    
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<p style="color: red;">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function createStorageBucket() {
+            try {
+                // First, let's try to sign in anonymously
+                await auth.signInAnonymously();
+                console.log('Signed in anonymously');
+                
+                // Try to create a simple text file
+                const testRef = storage.ref().child('test-file.txt');
+                const content = 'This is a test file created at ' + new Date().toISOString();
+                const blob = new Blob([content], { type: 'text/plain' });
+                
+                console.log('Attempting upload...');
+                const snapshot = await testRef.put(blob);
+                console.log('Upload successful!');
+                
+                const url = await snapshot.ref.getDownloadURL();
+                
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: green;">✅ Storage bucket is working!</p>' +
+                    `<p>File uploaded successfully.</p>` +
+                    `<p>Download URL: <a href="${url}" target="_blank">${url}</a></p>`;
+                    
+            } catch (error) {
+                console.error('Storage error:', error);
+                document.getElementById('result').innerHTML = 
+                    `<p style="color: red;">❌ Storage Error: ${error.message}</p>` +
+                    `<p>Error code: ${error.code}</p>` +
+                    '<p><strong>Possible issues:</strong></p>' +
+                    '<ul>' +
+                    '<li>Storage bucket not created in Firebase Console</li>' +
+                    '<li>Wrong storage bucket name</li>' +
+                    '<li>Incorrect region setup</li>' +
+                    '<li>Missing storage rules</li>' +
+                    '</ul>';
+            }
+        }
+
+        async function testUpload() {
+            try {
+                // Create a test image
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#4285f4';
+                ctx.fillRect(0, 0, 100, 100);
+                ctx.fillStyle = '#fff';
+                ctx.font = '20px Arial';
+                ctx.fillText('Test', 30, 55);
+                
+                // Convert to blob
+                canvas.toBlob(async (blob) => {
+                    try {
+                        const storageRef = storage.ref();
+                        const imageRef = storageRef.child(`test-image-${Date.now()}.png`);
+                        
+                        const uploadTask = imageRef.put(blob);
+                        
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                console.log('Upload progress: ' + progress + '%');
+                            },
+                            (error) => {
+                                console.error('Upload error:', error);
+                                document.getElementById('result').innerHTML = 
+                                    `<p style="color: red;">❌ Upload failed: ${error.message}</p>`;
+                            },
+                            async () => {
+                                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                                document.getElementById('result').innerHTML = 
+                                    '<p style="color: green;">✅ Image uploaded successfully!</p>' +
+                                    `<img src="${downloadURL}" style="max-width: 200px; margin: 10px 0;">` +
+                                    `<p>URL: <a href="${downloadURL}" target="_blank">${downloadURL}</a></p>`;
+                            }
+                        );
+                        
+                    } catch (error) {
+                        document.getElementById('result').innerHTML = 
+                            `<p style="color: red;">❌ Error: ${error.message}</p>`;
+                    }
+                }, 'image/png');
+                
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<p style="color: red;">❌ Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
