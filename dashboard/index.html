@@ -379,6 +379,41 @@
             gap: var(--md-spacing-md);
         }
 
+        /* Google-style Profile Avatar */
+        .profile-avatar-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            flex-shrink: 0;
+            margin: 0 8px;
+            position: relative;
+        }
+        
+        .profile-avatar-button:hover {
+            transform: scale(1.05);
+            box-shadow: var(--md-elevation-2);
+            border-color: rgba(66, 133, 244, 0.3);
+        }
+        
+        .profile-avatar-button:active {
+            transform: scale(0.95);
+        }
+        
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: var(--md-surface-variant);
+        }
+
         /* Buttons */
         .btn {
             display: inline-flex;
@@ -459,35 +494,6 @@
         .theme-toggle:hover {
             background: var(--md-primary-container);
             transform: rotate(15deg);
-        }
-
-        /* User Menu */
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-        }
-
-        .user-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            overflow: hidden;
-            cursor: pointer;
-            border: 3px solid var(--md-outline);
-            transition: var(--md-transition);
-            position: relative;
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.1);
-            border-color: var(--md-primary);
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         /* Dashboard Content Grid */
@@ -615,14 +621,14 @@
             text-align: center;
         }
 
-        .profile-avatar {
+        .profile-avatar-large {
             position: relative;
             width: 160px;
             height: 160px;
             margin: 0 auto var(--md-spacing-lg);
         }
 
-        .profile-avatar-img {
+        .profile-avatar-large-img {
             width: 160px;
             height: 160px;
             border-radius: 50%;
@@ -632,7 +638,7 @@
             transition: var(--md-transition);
         }
 
-        .profile-avatar:hover .profile-avatar-img {
+        .profile-avatar-large:hover .profile-avatar-large-img {
             transform: scale(1.05);
             border-color: var(--md-primary);
         }
@@ -893,6 +899,159 @@
             opacity: 1;
         }
 
+        /* Google-style Profile Popup Styles */
+        .reverbit-profile-popup {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            box-shadow: var(--md-elevation-5);
+            min-width: 320px;
+            max-width: 360px;
+            z-index: 9999;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            border: 1px solid var(--md-outline);
+            font-family: var(--md-font-heading);
+        }
+        
+        .reverbit-profile-popup.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .profile-popup-container {
+            padding: var(--md-spacing-lg);
+        }
+        
+        .profile-popup-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding-bottom: var(--md-spacing-md);
+        }
+        
+        .profile-popup-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 3px solid var(--md-surface-variant);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            padding: 3px;
+        }
+        
+        .profile-popup-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--md-surface);
+        }
+        
+        .profile-popup-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .profile-popup-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            line-height: 1.5;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .profile-popup-email {
+            font-size: 14px;
+            color: var(--md-on-surface-variant);
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .profile-popup-divider {
+            height: 1px;
+            background: var(--md-outline);
+            margin: var(--md-spacing-md) calc(-1 * var(--md-spacing-lg));
+        }
+        
+        .profile-popup-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .profile-popup-menu-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            text-decoration: none;
+            color: var(--md-on-surface);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .profile-popup-menu-item:hover {
+            background-color: var(--md-surface-variant);
+        }
+        
+        .profile-popup-menu-item:active {
+            background-color: var(--md-outline-variant);
+        }
+        
+        .profile-popup-menu-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-surface-variant);
+            flex-shrink: 0;
+        }
+        
+        .profile-popup-menu-text {
+            flex: 1;
+        }
+        
+        .profile-popup-footer {
+            margin-top: var(--md-spacing-md);
+            padding-top: var(--md-spacing-md);
+            border-top: 1px solid var(--md-outline);
+        }
+        
+        .profile-popup-privacy-link {
+            font-size: 12px;
+            color: var(--md-on-surface-variant);
+            text-align: center;
+        }
+        
+        .profile-popup-privacy-link a {
+            color: var(--md-primary);
+            text-decoration: none;
+            padding: 0 4px;
+        }
+        
+        .profile-popup-privacy-link a:hover {
+            text-decoration: underline;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .sidebar {
@@ -968,6 +1127,23 @@
             
             .sidebar-overlay {
                 display: block;
+            }
+            
+            /* Profile Popup Mobile Styles */
+            .reverbit-profile-popup {
+                position: fixed;
+                top: 50% !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translate(-50%, -50%) !important;
+                width: calc(100vw - 32px);
+                max-width: 360px;
+                max-height: calc(100vh - 32px);
+                overflow-y: auto;
+            }
+            
+            .reverbit-profile-popup.active {
+                transform: translate(-50%, -50%) !important;
             }
         }
 
@@ -1136,15 +1312,17 @@
             <span class="nav-name">Reverbit</span>
         </a>
         
-        <div class="user-menu">
-            <div class="user-avatar" id="mobileUserAvatar">
-                <img id="mobileUserAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
-            </div>
-        </div>
+        <!-- Mobile Profile Avatar -->
+        <button class="profile-avatar-button" id="mobileProfileAvatar">
+            <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+        </button>
     </header>
 
     <!-- Overlay for mobile menu -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Profile Popup -->
+    <div class="reverbit-profile-popup" id="profilePopup"></div>
 
     <!-- Dashboard Container -->
     <div class="dashboard-container">
@@ -1203,8 +1381,8 @@
 
             <div class="sidebar-footer">
                 <div class="user-menu">
-                    <div class="user-avatar" id="userAvatar">
-                        <img id="userAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                    <div class="profile-avatar-button" id="sidebarProfileAvatar">
+                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
                     </div>
                     <div>
                         <h3 id="sidebarUserName" style="font-size: 1rem; font-weight: 600; margin-bottom: 2px;">User</h3>
@@ -1230,10 +1408,15 @@
                 </div>
 
                 <div class="header-actions">
+                    <!-- Desktop Profile Avatar -->
+                    <button class="profile-avatar-button" id="desktopProfileAvatar">
+                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                    </button>
+                    
                     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
                         <span class="material-icons-round">dark_mode</span>
                     </button>
-                    <button class="btn btn-filled" onclick="logout()">
+                    <button class="btn btn-filled" id="signoutButton">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
                     </button>
@@ -1270,8 +1453,8 @@
                 
                 <div class="profile-section">
                     <div class="profile-header">
-                        <div class="profile-avatar">
-                            <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-img">
+                        <div class="profile-avatar-large">
+                            <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-large-img">
                             <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
                                 <i class="fas fa-camera"></i>
                                 <input type="file" id="avatarInput" accept="image/*" style="display: none;">
@@ -1664,6 +1847,12 @@
         const sidebarClose = document.getElementById('sidebarClose');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const navItems = document.querySelectorAll('.nav-item');
+        const profilePopup = document.getElementById('profilePopup');
+
+        // Profile avatar elements
+        const desktopProfileAvatar = document.getElementById('desktopProfileAvatar');
+        const mobileProfileAvatar = document.getElementById('mobileProfileAvatar');
+        const sidebarProfileAvatar = document.getElementById('sidebarProfileAvatar');
 
         // Theme Toggle
         function toggleTheme() {
@@ -1723,6 +1912,154 @@
             });
         });
 
+        // Profile Popup Functions
+        let isProfilePopupVisible = false;
+
+        function createProfilePopup(userProfile) {
+            if (!userProfile) return '';
+            
+            const displayName = userProfile.displayName || 'User';
+            const email = userProfile.email || '';
+            const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
+            
+            return `
+                <div class="profile-popup-container">
+                    <div class="profile-popup-header">
+                        <div class="profile-popup-avatar">
+                            <img src="${photoURL}" alt="${displayName}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff'">
+                        </div>
+                        <div class="profile-popup-info">
+                            <div class="profile-popup-name">${displayName}</div>
+                            <div class="profile-popup-email">${email}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-popup-divider"></div>
+                    
+                    <div class="profile-popup-menu">
+                        <a href="#profile" class="profile-popup-menu-item" onclick="showSection('profile'); hideProfilePopup();">
+                            <span class="profile-popup-menu-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                            </span>
+                            <span class="profile-popup-menu-text">Edit Profile</span>
+                        </a>
+                        
+                        <a href="#overview" class="profile-popup-menu-item" onclick="showSection('overview'); hideProfilePopup();">
+                            <span class="profile-popup-menu-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                                </svg>
+                            </span>
+                            <span class="profile-popup-menu-text">Dashboard</span>
+                        </a>
+                        
+                        <a href="#analytics" class="profile-popup-menu-item" onclick="showSection('analytics'); hideProfilePopup();">
+                            <span class="profile-popup-menu-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                </svg>
+                            </span>
+                            <span class="profile-popup-menu-text">Analytics</span>
+                        </a>
+                        
+                        <button class="profile-popup-menu-item" onclick="logout()">
+                            <span class="profile-popup-menu-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                </svg>
+                            </span>
+                            <span class="profile-popup-menu-text">Sign out</span>
+                        </button>
+                    </div>
+                    
+                    <div class="profile-popup-footer">
+                        <div class="profile-popup-privacy-link">
+                            <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank">Privacy Policy</a>
+                            •
+                            <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank">Terms of Service</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showProfilePopup() {
+            if (!currentUserProfile) return;
+            
+            profilePopup.innerHTML = createProfilePopup(currentUserProfile);
+            profilePopup.style.display = 'block';
+            
+            // Position the popup
+            const desktopAvatarRect = desktopProfileAvatar.getBoundingClientRect();
+            const mobileAvatarRect = mobileProfileAvatar.getBoundingClientRect();
+            const popupRect = profilePopup.getBoundingClientRect();
+            
+            // Use desktop avatar position on larger screens, mobile on smaller
+            let avatarRect;
+            if (window.innerWidth > 768) {
+                avatarRect = desktopAvatarRect;
+            } else {
+                avatarRect = mobileAvatarRect;
+            }
+            
+            let top = avatarRect.bottom + 8;
+            let right = window.innerWidth - avatarRect.right;
+            
+            // Adjust if goes off screen
+            if (top + popupRect.height > window.innerHeight) {
+                top = avatarRect.top - popupRect.height - 8;
+            }
+            
+            if (right - popupRect.width < 0) {
+                right = 8;
+            }
+            
+            profilePopup.style.top = `${top}px`;
+            profilePopup.style.right = `${right}px`;
+            
+            // Add active class for animation
+            setTimeout(() => {
+                profilePopup.classList.add('active');
+                isProfilePopupVisible = true;
+            }, 10);
+            
+            // Add click outside listener
+            setTimeout(() => {
+                document.addEventListener('click', handleClickOutsideProfilePopup);
+            }, 100);
+        }
+
+        function hideProfilePopup() {
+            profilePopup.classList.remove('active');
+            setTimeout(() => {
+                profilePopup.style.display = 'none';
+                isProfilePopupVisible = false;
+            }, 200);
+            
+            document.removeEventListener('click', handleClickOutsideProfilePopup);
+        }
+
+        function toggleProfilePopup() {
+            if (isProfilePopupVisible) {
+                hideProfilePopup();
+            } else {
+                showProfilePopup();
+            }
+        }
+
+        function handleClickOutsideProfilePopup(event) {
+            const isPopupClick = profilePopup.contains(event.target);
+            const isDesktopAvatarClick = desktopProfileAvatar.contains(event.target);
+            const isMobileAvatarClick = mobileProfileAvatar.contains(event.target);
+            const isSidebarAvatarClick = sidebarProfileAvatar.contains(event.target);
+            
+            if (!isPopupClick && !isDesktopAvatarClick && !isMobileAvatarClick && !isSidebarAvatarClick) {
+                hideProfilePopup();
+            }
+        }
+
         // Navigation functionality
         function showSection(sectionId) {
             // Hide all sections
@@ -1771,6 +2108,11 @@
             }, 3000);
         }
 
+        // Firebase variables
+        let auth, db, storage;
+        let currentUser = null;
+        let currentUserProfile = null;
+
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -1800,6 +2142,9 @@
                         await loadUsageData(user.uid);
                         setupAuthCookies(user);
                         showToast(`Welcome back, ${user.displayName || 'User'}!`);
+                        
+                        // Setup profile popup click handlers
+                        setupProfilePopupHandlers();
                     } else {
                         window.location.href = 'https://aditya-cmd-max.github.io/signin';
                     }
@@ -1822,6 +2167,24 @@
             }
         });
 
+        // Setup profile popup click handlers
+        function setupProfilePopupHandlers() {
+            desktopProfileAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleProfilePopup();
+            });
+            
+            mobileProfileAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleProfilePopup();
+            });
+            
+            sidebarProfileAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleProfilePopup();
+            });
+        }
+
         // Load user data from Firestore
         async function loadUserData(user) {
             try {
@@ -1840,9 +2203,7 @@
                 
                 // Update avatar
                 const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
-                document.getElementById('userAvatarImg').src = avatarUrl;
-                document.getElementById('mobileUserAvatarImg').src = avatarUrl;
-                document.getElementById('profileAvatarImg').src = avatarUrl.replace('&size=120', '') + '&size=120';
+                updateProfileAvatars(avatarUrl);
                 
                 // Calculate member since
                 const joinDate = user.metadata.creationTime;
@@ -1858,6 +2219,13 @@
                 
                 if (userDoc.exists) {
                     const userData = userDoc.data();
+                    currentUserProfile = {
+                        displayName: displayName,
+                        email: user.email,
+                        photoURL: avatarUrl,
+                        ...userData
+                    };
+                    
                     document.getElementById('bio').value = userData.bio || '';
                     document.getElementById('country').value = userData.country || '';
                     document.getElementById('dob').value = userData.dob || '';
@@ -1877,10 +2245,31 @@
                     document.getElementById('profileCompletionOverview').textContent = `${completion}%`;
                     document.getElementById('profileCompletionValue').textContent = `${completion}%`;
                     document.getElementById('profileProgressBar').style.width = `${completion}%`;
+                } else {
+                    currentUserProfile = {
+                        displayName: displayName,
+                        email: user.email,
+                        photoURL: avatarUrl
+                    };
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
                 showToast('Error loading user data');
+            }
+        }
+
+        // Update all profile avatars
+        function updateProfileAvatars(avatarUrl) {
+            const avatarElements = document.querySelectorAll('.profile-avatar-img');
+            avatarElements.forEach(img => {
+                img.src = avatarUrl;
+                img.alt = currentUser?.displayName || 'User';
+            });
+            
+            // Update profile section avatar
+            const profileAvatarImg = document.getElementById('profileAvatarImg');
+            if (profileAvatarImg) {
+                profileAvatarImg.src = avatarUrl.replace('&size=120', '') + '&size=120';
             }
         }
 
@@ -1994,10 +2383,10 @@
                     displayName: userData.fullName
                 });
                 
+                // Reload user data
+                await loadUserData(currentUser);
+                
                 showToast('Profile updated successfully!');
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
             } catch (error) {
                 console.error('Error updating profile:', error);
                 showToast('Error updating profile');
@@ -2040,9 +2429,7 @@
                 }, { merge: true });
                 
                 // Update UI
-                document.getElementById('userAvatarImg').src = downloadURL;
-                document.getElementById('mobileUserAvatarImg').src = downloadURL;
-                document.getElementById('profileAvatarImg').src = downloadURL;
+                updateProfileAvatars(downloadURL);
                 
                 showToast('Profile picture updated!');
             } catch (error) {
@@ -2088,9 +2475,10 @@
                 toggleMobileMenu();
             }
             
-            // Close modals with Escape
+            // Close modals and popups with Escape
             if (e.key === 'Escape') {
                 closeModal('logoutModal');
+                hideProfilePopup();
                 if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
                     toggleMobileMenu();
                 }
@@ -2107,6 +2495,9 @@
                 document.body.style.overflow = 'auto';
             }
         });
+
+        // Update signout button
+        document.getElementById('signoutButton').addEventListener('click', logout);
     </script>
 </body>
 </html>
