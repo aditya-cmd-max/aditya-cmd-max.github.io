@@ -1554,6 +1554,32 @@
             });
         });
 
+       
+        
+        // After successful login in signin.html
+function redirectToDashboard(user) {
+    // Store user data in localStorage for SSO
+    localStorage.setItem('reverbit_user', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+    }));
+    
+    // Set session cookie for all subdomains
+    const sessionToken = btoa(JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        timestamp: Date.now()
+    }));
+    
+    document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+    
+    // Redirect to dashboard
+    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+}
+        
+        
         // Handle window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth > 1024 && mobileNav.classList.contains('active')) {
