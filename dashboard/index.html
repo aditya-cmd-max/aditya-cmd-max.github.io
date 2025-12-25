@@ -130,165 +130,32 @@
             transition: var(--md-transition);
         }
 
-        /* NEW: Interactive cursor effect */
-        .interactive-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            mix-blend-mode: difference;
-            background: var(--md-primary);
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background 0.3s;
-        }
-
-        .cursor-dot {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            background: var(--md-secondary);
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-        }
-
-        /* Enhanced Animated Background */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -3;
-            overflow: hidden;
-        }
-
-        .gradient-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(26, 115, 232, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(13, 138, 114, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(66, 133, 244, 0.1) 0%, transparent 50%);
-            animation: gradientMove 20s ease infinite alternate;
-        }
-
-        .mesh-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(90deg, transparent 95%, rgba(26, 115, 232, 0.05) 100%),
-                linear-gradient(transparent 95%, rgba(13, 138, 114, 0.05) 100%);
-            background-size: 50px 50px;
-            animation: meshFloat 40s linear infinite;
-        }
-
-        @keyframes gradientMove {
-            0% {
-                transform: translate(0%, 0%) scale(1);
-            }
-            100% {
-                transform: translate(-2%, -2%) scale(1.1);
-            }
-        }
-
-        @keyframes meshFloat {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(50px, 50px);
-            }
-        }
-
-        /* Floating SVG Elements */
-        .floating-element {
-            position: fixed;
-            z-index: -2;
-            pointer-events: none;
-            opacity: 0.4;
-        }
-
-        .floating-element-1 {
-            top: 10%;
-            left: 5%;
-            width: 150px;
-            height: 150px;
-            animation: floatElement 20s infinite ease-in-out;
-        }
-
-        .floating-element-2 {
-            top: 70%;
-            right: 10%;
-            width: 120px;
-            height: 120px;
-            animation: floatElement 25s infinite ease-in-out reverse;
-        }
-
-        .floating-element-3 {
-            bottom: 20%;
-            left: 15%;
-            width: 100px;
-            height: 100px;
-            animation: floatElement 30s infinite ease-in-out;
-        }
-
-        .floating-element-4 {
-            top: 30%;
-            right: 5%;
-            width: 80px;
-            height: 80px;
-            animation: floatElement 35s infinite ease-in-out reverse;
-        }
-
-        @keyframes floatElement {
-            0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            33% {
-                transform: translate(20px, -20px) rotate(5deg);
-            }
-            66% {
-                transform: translate(-10px, 10px) rotate(-5deg);
-            }
-        }
-
-        /* Modern Floating Pill Navbar */
-        .floating-navbar {
-            position: fixed;
-            top: var(--md-spacing-lg);
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--md-radius-pill);
-            padding: var(--md-spacing-sm) var(--md-spacing-lg);
+        /* Dashboard Layout */
+        .dashboard-container {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: var(--md-spacing-md);
-            z-index: 1000;
-            box-shadow: var(--md-elevation-4);
-            transition: var(--md-transition);
-            max-width: 1200px;
-            width: 90%;
+            min-height: 100vh;
+            position: relative;
         }
 
-        .dark-theme .floating-navbar {
-            background: rgba(32, 33, 36, 0.98);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--md-surface);
+            border-right: 1px solid var(--md-outline);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: var(--md-transition);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-header {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            border-bottom: 1px solid var(--md-outline);
         }
 
         .nav-brand {
@@ -296,12 +163,11 @@
             align-items: center;
             gap: var(--md-spacing-sm);
             text-decoration: none;
-            flex-shrink: 0;
         }
 
         .nav-logo {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -310,7 +176,6 @@
             color: var(--md-on-primary);
             font-weight: 700;
             transition: var(--md-transition);
-            flex-shrink: 0;
         }
 
         .nav-logo:hover {
@@ -319,11 +184,93 @@
 
         .nav-name {
             font-family: var(--md-font-logo);
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--md-on-surface);
             letter-spacing: -0.5px;
-            white-space: nowrap;
+        }
+
+        .sidebar-nav {
+            padding: var(--md-spacing-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xs);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            border-radius: var(--md-radius-pill);
+            transition: var(--md-transition);
+            font-family: var(--md-font-heading);
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--md-surface-variant);
+            color: var(--md-primary);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: var(--md-spacing-lg);
+            border-top: 1px solid var(--md-outline);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--md-spacing-lg);
+            min-height: 100vh;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--md-spacing-lg) var(--md-spacing-lg) var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            margin-bottom: var(--md-spacing-xl);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .welcome-section h1 {
+            font-family: var(--md-font-heading);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-xs);
+            color: var(--md-on-surface);
+        }
+
+        .welcome-section p {
+            color: var(--md-on-surface-variant);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
         }
 
         /* Buttons */
@@ -367,89 +314,74 @@
             transform: translateY(-2px);
         }
 
-        /* Dashboard Layout */
-        .dashboard-container {
-            padding-top: 120px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 120px var(--md-spacing-xl) var(--md-spacing-xxl);
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            background: var(--md-surface-variant);
         }
 
-        /* Hero Section */
-        .dashboard-hero {
-            padding: var(--md-spacing-xxl) 0;
-            text-align: center;
-            margin-bottom: var(--md-spacing-xxl);
+        .theme-toggle:hover {
+            background: var(--md-primary-container);
+            transform: rotate(15deg);
         }
 
-        .dashboard-hero h1 {
-            font-family: var(--md-font-logo);
-            font-size: clamp(3.5rem, 8vw, 4.5rem);
-            font-weight: 800;
-            margin-bottom: var(--md-spacing-lg);
-            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 50%, var(--md-primary-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-            letter-spacing: -1px;
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
         }
 
-        .dashboard-hero p {
-            font-family: var(--md-font-heading);
-            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-            color: var(--md-on-surface-variant);
-            max-width: 700px;
-            margin: 0 auto var(--md-spacing-xl);
-            line-height: 1.5;
+        .user-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid var(--md-outline);
+            transition: var(--md-transition);
         }
 
-        /* Section Common Styles */
-        .section {
-            margin-bottom: var(--md-spacing-xxl);
-            position: relative;
+        .user-avatar:hover {
+            transform: scale(1.1);
+            border-color: var(--md-primary);
         }
 
-        .section-header {
-            text-align: center;
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dashboard Content Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--md-spacing-lg);
             margin-bottom: var(--md-spacing-xl);
         }
 
-        .section-title {
-            font-family: var(--md-font-logo);
-            font-size: clamp(2.75rem, 5vw, 3.5rem);
-            font-weight: 800;
-            color: var(--md-on-surface);
-            margin-bottom: var(--md-spacing-md);
-            position: relative;
-            display: inline-block;
-            letter-spacing: -0.5px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 5px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            border-radius: 3px;
-        }
-
-        /* Profile Card */
-        .profile-card {
+        .dashboard-card {
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
-            overflow: hidden;
+            padding: var(--md-spacing-xl);
             border: 1px solid var(--md-outline);
             transition: var(--md-transition);
             position: relative;
-            margin-bottom: var(--md-spacing-xl);
+            overflow: hidden;
         }
 
-        .profile-card::before {
+        .dashboard-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -459,27 +391,84 @@
             background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
 
-        .profile-card:hover {
+        .dashboard-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--md-elevation-3);
         }
 
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--md-radius-medium);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        .card-subtitle {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+        }
+
+        /* Stats */
+        .stat-number {
+            font-family: var(--md-font-logo);
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .stat-label {
+            color: var(--md-on-surface-variant);
+            font-size: 1rem;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            overflow: hidden;
+            margin-bottom: var(--md-spacing-xl);
+        }
+
         .profile-header {
             padding: var(--md-spacing-xl);
-            text-align: center;
             background: var(--md-surface-variant);
+            text-align: center;
         }
 
         .profile-avatar {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             margin: 0 auto var(--md-spacing-lg);
         }
 
         .profile-avatar-img {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--md-surface);
@@ -487,7 +476,7 @@
             transition: var(--md-transition);
         }
 
-        .profile-card:hover .profile-avatar-img {
+        .profile-avatar:hover .profile-avatar-img {
             transform: scale(1.05);
             border-color: var(--md-primary);
         }
@@ -496,8 +485,8 @@
             position: absolute;
             bottom: 10px;
             right: 10px;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             border-radius: 50%;
             display: flex;
@@ -513,9 +502,9 @@
             transform: scale(1.1) rotate(15deg);
         }
 
-        .profile-info h1 {
+        .profile-info h2 {
             font-family: var(--md-font-heading);
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: var(--md-spacing-xs);
         }
@@ -523,15 +512,15 @@
         .profile-info .email {
             color: var(--md-on-surface-variant);
             font-size: 1.125rem;
-            margin-bottom: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-sm);
         }
 
-        /* Form Grid */
+        /* Form */
         .form-grid {
             padding: var(--md-spacing-xl);
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--md-spacing-xl);
+            gap: var(--md-spacing-lg);
         }
 
         .form-group {
@@ -565,75 +554,10 @@
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
         }
 
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
-            padding-right: var(--md-spacing-xl);
-        }
-
-        textarea.form-input {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-xl);
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: var(--md-spacing-xl);
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            border: 1px solid var(--md-outline-variant);
-            transition: var(--md-transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--md-elevation-3);
-        }
-
-        .stat-number {
-            font-family: var(--md-font-logo);
-            font-size: clamp(2.5rem, 4vw, 3rem);
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--md-spacing-sm);
-        }
-
-        .stat-label {
-            color: var(--md-on-surface);
-            font-size: clamp(1rem, 1.5vw, 1.125rem);
-            font-weight: 500;
-        }
-
         /* Apps Grid */
         .apps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: var(--md-spacing-lg);
             margin-bottom: var(--md-spacing-xl);
         }
@@ -660,13 +584,13 @@
         }
 
         .app-card:hover {
-            transform: translateY(-12px) scale(1.02);
+            transform: translateY(-8px);
             box-shadow: var(--md-elevation-3);
         }
 
         .app-icon {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             margin: var(--md-spacing-xl) auto var(--md-spacing-lg);
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             border-radius: var(--md-radius-large);
@@ -674,7 +598,7 @@
             align-items: center;
             justify-content: center;
             color: var(--md-on-primary);
-            font-size: 2rem;
+            font-size: 1.75rem;
             box-shadow: var(--md-elevation-2);
             transition: var(--md-transition);
         }
@@ -690,7 +614,7 @@
 
         .app-title {
             font-family: var(--md-font-heading);
-            font-size: 1.5rem;
+            font-size: 1.375rem;
             font-weight: 700;
             margin-bottom: var(--md-spacing-sm);
             color: var(--md-on-surface);
@@ -699,27 +623,6 @@
         .app-stats {
             color: var(--md-on-surface-variant);
             font-size: 1.125rem;
-        }
-
-        /* NEW: Hover glow effect */
-        .hover-glow {
-            transition: var(--md-transition);
-        }
-
-        .hover-glow:hover {
-            box-shadow: 0 0 20px rgba(26, 115, 232, 0.3);
-        }
-
-        /* NEW: Scroll progress indicator */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            z-index: 1001;
-            transition: width 0.1s ease;
         }
 
         /* Loading Animation */
@@ -754,104 +657,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* Animations */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .animate-on-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Footer */
-        .footer {
-            padding: var(--md-spacing-xxl) var(--md-spacing-xl);
-            background: var(--md-surface);
-            border-top: 1px solid var(--md-outline);
-            margin-top: var(--md-spacing-xxl);
-            position: relative;
-        }
-
-        .footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .footer-brand {
-            margin-bottom: var(--md-spacing-xxl);
-        }
-
-        .footer-logo {
-            font-family: var(--md-font-logo);
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--md-spacing-sm);
-        }
-
-        .footer-tagline {
-            color: var(--md-on-surface-variant);
-            font-size: 1.25rem;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--md-outline);
-            padding-top: var(--md-spacing-xl);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: var(--md-spacing-md);
-        }
-
-        .footer-copyright {
-            color: var(--md-on-surface-variant);
-            font-size: 0.875rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: var(--md-spacing-sm);
-        }
-
-        .social-link {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--md-surface-variant);
-            color: var(--md-on-surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: var(--md-transition);
-        }
-
-        .social-link:hover {
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            color: var(--md-on-primary);
-            transform: translateY(-4px) rotate(10deg);
         }
 
         /* Modal */
@@ -891,447 +696,502 @@
             background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            background: transparent;
-            border: none;
-            color: var(--md-on-surface);
-            cursor: pointer;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--md-transition);
-            flex-shrink: 0;
-            background: var(--md-surface-variant);
-        }
-
-        .theme-toggle:hover {
-            background: var(--md-primary-container);
-            transform: rotate(15deg);
-        }
-
-        /* User Menu */
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-        }
-
-        .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            overflow: hidden;
-            cursor: pointer;
-            border: 2px solid var(--md-outline);
-            transition: var(--md-transition);
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.1);
-            border-color: var(--md-primary);
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .floating-navbar {
-                width: 95%;
+            .sidebar {
+                width: 240px;
             }
             
-            .dashboard-container {
-                padding: 100px var(--md-spacing-lg) var(--md-spacing-xxl);
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
+            .main-content {
+                margin-left: 240px;
             }
         }
 
         @media (max-width: 768px) {
-            .floating-navbar {
-                padding: var(--md-spacing-xs) var(--md-spacing-md);
-                top: var(--md-spacing-md);
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
             }
             
-            .nav-name {
-                font-size: 1.125rem;
+            .sidebar.mobile-open {
+                transform: translateX(0);
             }
             
-            .dashboard-hero h1 {
-                font-size: 2.75rem;
+            .main-content {
+                margin-left: 0;
+                padding: var(--md-spacing-md);
             }
             
-            .dashboard-hero p {
-                font-size: 1.125rem;
+            .top-header {
+                flex-direction: column;
+                gap: var(--md-spacing-md);
+                text-align: center;
             }
             
-            .section-title {
-                font-size: 2.5rem;
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
             }
             
-            .stats-grid,
+            .dashboard-grid,
             .apps-grid {
                 grid-template-columns: 1fr;
             }
             
-            .profile-avatar {
-                width: 140px;
-                height: 140px;
-            }
-            
-            .profile-avatar-img {
-                width: 140px;
-                height: 140px;
-            }
-            
-            .floating-element {
-                display: none;
-            }
-            
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-                gap: var(--md-spacing-lg);
+            .mobile-menu-toggle {
+                display: flex;
+                position: fixed;
+                top: var(--md-spacing-md);
+                left: var(--md-spacing-md);
+                z-index: 101;
+                background: var(--md-primary);
+                color: var(--md-on-primary);
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                align-items: center;
+                justify-content: center;
+                box-shadow: var(--md-elevation-2);
             }
         }
 
-        @media (max-width: 480px) {
-            .dashboard-hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .dashboard-hero p {
-                font-size: 1rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .nav-name {
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
                 display: none;
             }
-            
-            .nav-brand {
-                gap: 0;
-            }
-            
-            .profile-info h1 {
-                font-size: 2rem;
-            }
-            
-            .profile-avatar {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .profile-avatar-img {
-                width: 120px;
-                height: 120px;
-            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: var(--md-font-logo);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-lg);
+            position: relative;
+            padding-bottom: var(--md-spacing-sm);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: 2px;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--md-spacing-lg);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .quick-stat-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-lg);
+            border: 1px solid var(--md-outline);
+            transition: var(--md-transition);
+        }
+
+        .quick-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-2);
         }
     </style>
 </head>
 <body class="light-theme">
-    <!-- NEW: Interactive cursor elements -->
-    <div class="interactive-cursor" id="cursor"></div>
-    <div class="cursor-dot" id="cursorDot"></div>
-    
-    <!-- NEW: Scroll progress indicator -->
-    <div class="scroll-progress" id="scrollProgress"></div>
-    
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="loader"></div>
     </div>
 
-    <!-- Enhanced Animated Background -->
-    <div class="animated-bg">
-        <div class="gradient-bg"></div>
-        <div class="mesh-overlay"></div>
-    </div>
-
-    <!-- Floating SVG Elements -->
-    <svg class="floating-element floating-element-1" viewBox="0 0 277 301" fill="none">
-        <path d="M108.103 8.24078C126.954 -2.64276 150.179 -2.64276 169.03 8.24078L246.169 52.7773C265.02 63.6609 276.633 83.7745 276.633 105.542V194.615C276.633 216.382 265.02 236.495 246.169 247.379L169.03 291.915C150.179 302.799 126.954 302.799 108.103 291.915L30.9635 247.379C12.1126 236.495 0.5 216.382 0.5 194.615V105.542C0.5 83.7745 12.1126 63.6609 30.9635 52.7773L108.103 8.24078Z" fill="url(#grad1)" fill-rule="evenodd" clip-rule="evenodd"/>
-        <defs>
-            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:var(--md-primary);stop-opacity:0.3" />
-                <stop offset="100%" style="stop-color:var(--md-secondary);stop-opacity:0.3" />
-            </linearGradient>
-        </defs>
-    </svg>
-
-    <svg class="floating-element floating-element-2" viewBox="0 0 282 281" fill="none">
-        <path d="M75.9469 280.078C91.5033 280.078 105.96 275.398 117.97 267.376C130.585 258.951 151.308 258.951 163.924 267.376C175.934 275.398 190.39 280.078 205.947 280.078C247.615 280.078 281.394 246.499 281.394 205.078C281.394 189.768 276.779 175.529 268.856 163.661C260.282 150.817 260.282 129.339 268.856 116.496C276.779 104.628 281.394 90.3887 281.394 75.0781C281.394 33.6568 247.615 0.078125 205.947 0.078125C190.39 0.078125 175.934 4.75843 163.924 12.7798C151.308 21.2056 130.585 21.2056 117.97 12.7798C105.96 4.75843 91.5033 0.078125 75.9469 0.078125C34.2787 0.078125 0.5 33.6568 0.5 75.0781C0.5 90.3887 5.11505 104.628 13.0377 116.496C21.6119 129.339 21.6119 150.817 13.0377 163.661C5.11505 175.529 0.5 189.768 0.5 205.078C0.5 246.499 34.2787 280.078 75.9469 280.078Z" fill="url(#grad2)" fill-rule="evenodd" clip-rule="evenodd"/>
-        <defs>
-            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:var(--md-primary-light);stop-opacity:0.25" />
-                <stop offset="100%" style="stop-color:var(--md-secondary-light);stop-opacity:0.25" />
-            </linearGradient>
-        </defs>
-    </svg>
-
-    <!-- Modern Floating Pill Navbar -->
-    <nav class="floating-navbar">
-        <!-- Left side: Logo and Brand -->
-        <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
-            <div class="nav-logo">
-                <i class="fas fa-infinity"></i>
-            </div>
-            <span class="nav-name">Reverbit</span>
-        </a>
-
-        <!-- Desktop Navigation Links -->
-        <div class="desktop-nav" style="display: flex; align-items: center; gap: var(--md-spacing-md);">
-            <a href="#profile" class="nav-link active" style="color: var(--md-on-surface); text-decoration: none; padding: var(--md-spacing-sm) var(--md-spacing-md); border-radius: var(--md-radius-pill); transition: var(--md-transition);">
-                <i class="fas fa-user" style="margin-right: 4px;"></i>
-                Profile
-            </a>
-            <a href="#apps" class="nav-link" style="color: var(--md-on-surface); text-decoration: none; padding: var(--md-spacing-sm) var(--md-spacing-md); border-radius: var(--md-radius-pill); transition: var(--md-transition);">
-                <i class="fas fa-th-large" style="margin-right: 4px;"></i>
-                My Apps
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-link" style="color: var(--md-on-surface); text-decoration: none; padding: var(--md-spacing-sm) var(--md-spacing-md); border-radius: var(--md-radius-pill); transition: var(--md-transition);">
-                <i class="fas fa-network-wired" style="margin-right: 4px;"></i>
-                All Tools
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-link" style="color: var(--md-on-surface); text-decoration: none; padding: var(--md-spacing-sm) var(--md-spacing-md); border-radius: var(--md-radius-pill); transition: var(--md-transition);">
-                <i class="fas fa-home" style="margin-right: 4px;"></i>
-                Home
-            </a>
-            <!-- Theme Toggle Button -->
-            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-                <span class="material-icons-round">dark_mode</span>
-            </button>
-            <!-- User Avatar -->
-            <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">
-                <img id="userAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
-            </div>
-        </div>
-    </nav>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <!-- Dashboard Container -->
     <div class="dashboard-container">
-        <!-- Hero Section -->
-        <section class="dashboard-hero">
-            <h1 class="hero-title">Welcome Back!</h1>
-            <p class="hero-subtitle">Your personal dashboard for all Reverbit AI tools and analytics</p>
-            <div class="hero-cta">
-                <a href="#profile" class="btn btn-filled hover-glow">
-                    <i class="fas fa-user-edit" style="margin-right: 8px;"></i>
-                    Edit Profile
-                </a>
-                <a href="#apps" class="btn btn-outlined hover-glow">
-                    <i class="fas fa-rocket" style="margin-right: 8px;"></i>
-                    Launch Apps
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
+                    <div class="nav-logo">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <span class="nav-name">Reverbit</span>
                 </a>
             </div>
-        </section>
 
-        <!-- Profile Section -->
-        <section class="section" id="profile">
-            <div class="section-header">
-                <h2 class="section-title">Your Profile</h2>
-                <p class="section-subtitle" style="color: var(--md-on-surface-variant); font-size: 1.25rem; max-width: 700px; margin: 0 auto;">Manage your personal information and preferences</p>
-            </div>
-            
-            <div class="profile-card animate-on-scroll hover-glow">
-                <div class="profile-header">
-                    <div class="profile-avatar">
-                        <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-img">
-                        <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
-                            <i class="fas fa-camera"></i>
-                            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-                        </div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#profile" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="#apps" class="nav-item">
+                    <i class="fas fa-th-large"></i>
+                    <span>My Apps</span>
+                </a>
+                <a href="#analytics" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-item">
+                    <i class="fas fa-network-wired"></i>
+                    <span>All Tools</span>
+                </a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-item">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Home</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">
+                        <img id="userAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
                     </div>
-                    <div class="profile-info">
-                        <h1 id="userName">Loading...</h1>
-                        <p class="email" id="userEmail">Loading...</p>
-                        <p class="member-since" id="memberSince" style="color: var(--md-on-surface-variant);">Member since: Loading...</p>
+                    <div>
+                        <h3 id="sidebarUserName" style="font-size: 1rem; font-weight: 600; margin-bottom: 2px;">User</h3>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">View Profile</p>
                     </div>
                 </div>
-
-                <form id="profileForm" class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="email" class="form-input" placeholder="Enter your email" disabled>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Bio</label>
-                        <textarea id="bio" class="form-input" rows="3" placeholder="Tell us about yourself"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Country</label>
-                        <select id="country" class="form-input form-select">
-                            <option value="">Select Country</option>
-                            <option value="IN">India</option>
-                            <option value="US">United States</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="CA">Canada</option>
-                            <option value="AU">Australia</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Date of Birth</label>
-                        <input type="date" id="dob" class="form-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Gender</label>
-                        <select id="gender" class="form-input form-select">
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                            <option value="prefer-not-to-say">Prefer not to say</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group" style="grid-column: 1 / -1; display: flex; gap: var(--md-spacing-md); margin-top: var(--md-spacing-md);">
-                        <button type="submit" class="btn btn-filled">
-                            <i class="fas fa-save"></i>
-                            Save Changes
-                        </button>
-                        <button type="button" class="btn btn-outlined" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Sign Out
-                        </button>
-                    </div>
-                </form>
             </div>
-        </section>
+        </aside>
 
-        <!-- Usage Analytics -->
-        <section class="section" id="usage">
-            <div class="section-header">
-                <h2 class="section-title">Usage Analytics</h2>
-                <p class="section-subtitle" style="color: var(--md-on-surface-variant); font-size: 1.25rem; max-width: 700px; margin: 0 auto;">Track your activity across Reverbit tools</p>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card animate-on-scroll hover-glow">
-                    <div class="stat-number" id="totalTime">0 hours</div>
-                    <div class="stat-label">Total Time Spent</div>
-                    <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Across all Reverbit apps</p>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="welcome-section">
+                    <h1 id="greeting">Hi, <span id="userName">User</span>! 👋</h1>
+                    <p>Welcome back to your Reverbit Dashboard</p>
                 </div>
-                
-                <div class="stat-card animate-on-scroll hover-glow">
+
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <span class="material-icons-round">dark_mode</span>
+                    </button>
+                    <button class="btn btn-filled" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                </div>
+            </header>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="quick-stat-card">
+                    <div class="stat-number" id="totalTime">0h</div>
+                    <div class="stat-label">Total Usage</div>
+                </div>
+                <div class="quick-stat-card">
                     <div class="stat-number" id="streak">0 days</div>
                     <div class="stat-label">Active Streak</div>
-                    <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Consecutive days using Reverbit</p>
                 </div>
-                
-                <div class="stat-card animate-on-scroll hover-glow">
-                    <div class="stat-number" id="mostUsedApp">Loading...</div>
-                    <div class="stat-label">Most Used App</div>
-                    <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;" id="mostUsedTime">0 minutes</p>
+                <div class="quick-stat-card">
+                    <div class="stat-number" id="appsUsed">3</div>
+                    <div class="stat-label">Apps Used</div>
+                </div>
+                <div class="quick-stat-card">
+                    <div class="stat-number" id="mostUsedTime">0m</div>
+                    <div class="stat-label">Most Used</div>
                 </div>
             </div>
-        </section>
 
-        <!-- Apps Section -->
-        <section class="section" id="apps">
-            <div class="section-header">
+            <!-- Profile Section -->
+            <section id="profile" style="display: none;">
+                <h2 class="section-title">My Profile</h2>
+                
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-img">
+                            <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                                <i class="fas fa-camera"></i>
+                                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profileUserName">Loading...</h2>
+                            <p class="email" id="userEmail">Loading...</p>
+                            <p class="member-since" id="memberSince">Member since: Loading...</p>
+                        </div>
+                    </div>
+
+                    <form id="profileForm" class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="email" class="form-input" placeholder="Enter your email" disabled>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea id="bio" class="form-input" rows="3" placeholder="Tell us about yourself"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select id="country" class="form-input">
+                                <option value="">Select Country</option>
+                                <option value="IN">India</option>
+                                <option value="US">United States</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" id="dob" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select id="gender" class="form-input">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1; display: flex; gap: var(--md-spacing-md); margin-top: var(--md-spacing-md);">
+                            <button type="submit" class="btn btn-filled">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                            <button type="button" class="btn btn-outlined" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Sign Out
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Apps Section -->
+            <section id="apps" style="display: none;">
                 <h2 class="section-title">My Reverbit Apps</h2>
-                <p class="section-subtitle" style="color: var(--md-on-surface-variant); font-size: 1.25rem; max-width: 700px; margin: 0 auto;">Access all your AI-powered tools in one place</p>
-            </div>
-            
-            <div class="apps-grid">
-                <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card animate-on-scroll hover-glow">
-                    <div class="app-icon">
-                        <i class="fas fa-leaf"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3 class="app-title">Clover AI</h3>
-                        <p class="app-stats" id="cloverTime">0 mins this week</p>
-                        <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Intelligent tutoring system with personalized learning</p>
-                    </div>
-                </a>
                 
-                <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card animate-on-scroll hover-glow">
-                    <div class="app-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3 class="app-title">MindScribe</h3>
-                        <p class="app-stats" id="mindscribeTime">0 mins this week</p>
-                        <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">AI-powered note-taking and organization</p>
-                    </div>
-                </a>
-                
-                <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card animate-on-scroll hover-glow">
-                    <div class="app-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3 class="app-title">Peo</h3>
-                        <p class="app-stats" id="peoTime">0 mins this week</p>
-                        <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Natural text-to-speech with emotion</p>
-                    </div>
-                </a>
-                
-                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card animate-on-scroll hover-glow">
-                    <div class="app-icon" style="background: linear-gradient(135deg, #ea4335, #d93025);">
-                        <i class="fas fa-network-wired"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3 class="app-title">All Tools</h3>
-                        <p class="app-stats">Explore more</p>
-                        <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Complete Reverbit ecosystem</p>
-                    </div>
-                </a>
-            </div>
-        </section>
-    </div>
+                <div class="apps-grid">
+                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="app-content">
+                            <h3 class="app-title">Clover AI</h3>
+                            <p class="app-stats" id="cloverTime">0 mins this week</p>
+                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Intelligent tutoring system with personalized learning</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="app-content">
+                            <h3 class="app-title">MindScribe</h3>
+                            <p class="app-stats" id="mindscribeTime">0 mins this week</p>
+                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">AI-powered note-taking and organization</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="app-content">
+                            <h3 class="app-title">Peo</h3>
+                            <p class="app-stats" id="peoTime">0 mins this week</p>
+                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Natural text-to-speech with emotion</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card">
+                        <div class="app-icon" style="background: linear-gradient(135deg, #ea4335, #d93025);">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div class="app-content">
+                            <h3 class="app-title">All Tools</h3>
+                            <p class="app-stats">Explore more</p>
+                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Complete Reverbit ecosystem</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <h2 class="footer-logo">Reverbit</h2>
-                <p class="footer-tagline">For every Bit - Dashboard</p>
-            </div>
-            
-            <div class="footer-bottom">
-                <div class="footer-copyright">
-                    Made with <i class="fas fa-heart" style="color: #ff4444;"></i> and <i class="fas fa-code"></i> by Aditya Jha.
-                </div>
+            <!-- Analytics Section -->
+            <section id="analytics" style="display: none;">
+                <h2 class="section-title">Usage Analytics</h2>
                 
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" class="social-link">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://github.com/aditya-cmd-max/" class="social-link">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://youtube.com/@Reverbit/" class="social-link">
-                        <i class="fab fa-youtube"></i>
-                    </a>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Usage Overview</h3>
+                                <p class="card-subtitle">Time spent across all apps</p>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="detailedTotalTime">0 hours</div>
+                        <div class="stat-label">Total Time Spent</div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Activity Streak</h3>
+                                <p class="card-subtitle">Consecutive days using Reverbit</p>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="detailedStreak">0 days</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Most Used App</h3>
+                                <p class="card-subtitle">Your favorite Reverbit tool</p>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="mostUsedApp">Loading...</div>
+                        <div class="stat-label" id="mostUsedTimeLabel">0 minutes</div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Weekly Activity</h3>
+                                <p class="card-subtitle">This week's usage pattern</p>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="weeklyTotal">0 mins</div>
+                        <div class="stat-label">Total this week</div>
+                    </div>
                 </div>
-            </div>
-            <div class="footer-copyright" style="margin-top: var(--md-spacing-md);">
-                &copy; 2025 Reverbit Innovations. All Rights Reserved
-            </div>
-        </div>
-    </footer>
+            </section>
+
+            <!-- Overview Section (Default) -->
+            <section id="overview">
+                <h2 class="section-title">Dashboard Overview</h2>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Profile Status</h3>
+                                <p class="card-subtitle">Manage your personal information</p>
+                            </div>
+                        </div>
+                        <p style="color: var(--md-on-surface); margin-bottom: var(--md-spacing-lg);">Complete your profile to get personalized recommendations and better experience.</p>
+                        <a href="#profile" class="btn btn-filled" style="width: 100%;" onclick="showSection('profile')">
+                            <i class="fas fa-user-edit"></i>
+                            Edit Profile
+                        </a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Quick Launch</h3>
+                                <p class="card-subtitle">Access your favorite tools</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: var(--md-spacing-sm); margin-bottom: var(--md-spacing-lg);">
+                            <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined" style="justify-content: start;">
+                                <i class="fas fa-leaf"></i>
+                                Clover AI
+                            </a>
+                            <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined" style="justify-content: start;">
+                                <i class="fas fa-brain"></i>
+                                MindScribe
+                            </a>
+                            <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined" style="justify-content: start;">
+                                <i class="fas fa-users"></i>
+                                Peo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Recent Activity</h3>
+                                <p class="card-subtitle">Your recent interactions</p>
+                            </div>
+                        </div>
+                        <div style="color: var(--md-on-surface-variant);">
+                            <p><i class="fas fa-circle" style="color: var(--md-primary); font-size: 0.5rem; margin-right: 8px;"></i> Last active: <span id="lastActive">Today</span></p>
+                            <p><i class="fas fa-circle" style="color: var(--md-secondary); font-size: 0.5rem; margin-right: 8px;"></i> Apps used this week: <span id="appsUsedCount">3</span></p>
+                            <p><i class="fas fa-circle" style="color: #ea4335; font-size: 0.5rem; margin-right: 8px;"></i> Profile completion: <span id="profileCompletion">60%</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Notifications</h3>
+                                <p class="card-subtitle">Latest updates</p>
+                            </div>
+                        </div>
+                        <div style="color: var(--md-on-surface-variant);">
+                            <p>🎯 Complete your profile</p>
+                            <p>🚀 New features in Clover AI</p>
+                            <p>📱 Mobile app coming soon</p>
+                            <p>💡 Tip: Use keyboard shortcuts</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <!-- Logout Modal -->
     <div id="logoutModal" class="modal">
@@ -1361,12 +1221,9 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
         const loadingScreen = document.getElementById('loading');
-        const animateElements = document.querySelectorAll('.animate-on-scroll');
-        const floatingNavbar = document.querySelector('.floating-navbar');
-        const cursor = document.getElementById('cursor');
-        const cursorDot = document.getElementById('cursorDot');
-        const scrollProgress = document.getElementById('scrollProgress');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const navItems = document.querySelectorAll('.nav-item');
 
         // Initialize Firebase
         let auth, db, storage;
@@ -1402,123 +1259,43 @@
             }
         }
 
-        // NEW: Interactive cursor
-        function initInteractiveCursor() {
-            let mouseX = 0;
-            let mouseY = 0;
-            let cursorX = 0;
-            let cursorY = 0;
-            let cursorDotX = 0;
-            let cursorDotY = 0;
-            
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+        // Mobile menu toggle
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('mobile-open');
+        });
+
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(section => {
+                section.style.display = 'none';
             });
             
-            function animateCursor() {
-                cursorX += (mouseX - cursorX) * 0.1;
-                cursorY += (mouseY - cursorY) * 0.1;
-                cursor.style.left = cursorX + 'px';
-                cursor.style.top = cursorY + 'px';
-                
-                cursorDotX += (mouseX - cursorDotX) * 0.3;
-                cursorDotY += (mouseY - cursorDotY) * 0.3;
-                cursorDot.style.left = cursorDotX + 'px';
-                cursorDot.style.top = cursorDotY + 'px';
-                
-                requestAnimationFrame(animateCursor);
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Update active nav item
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === `#${sectionId}`) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Close mobile menu on selection
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-open');
             }
-            
-            animateCursor();
-            
-            const interactiveElements = document.querySelectorAll('a, button, .app-card, .stat-card, .profile-card');
-            
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.style.width = '40px';
-                    cursor.style.height = '40px';
-                    cursor.style.background = 'var(--md-secondary)';
-                });
-                
-                el.addEventListener('mouseleave', () => {
-                    cursor.style.width = '20px';
-                    cursor.style.height = '20px';
-                    cursor.style.background = 'var(--md-primary)';
-                });
-            });
         }
 
-        // NEW: Scroll progress indicator
-        function initScrollProgress() {
-            window.addEventListener('scroll', () => {
-                const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (window.scrollY / windowHeight) * 100;
-                scrollProgress.style.width = scrolled + '%';
+        // Set up nav item click handlers
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = item.getAttribute('href').substring(1);
+                showSection(sectionId);
             });
-        }
-
-        // Initialize animations on scroll
-        function initScrollAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            animateElements.forEach(element => {
-                observer.observe(element);
-            });
-        }
-
-        // Set active nav link based on scroll position
-        function setActiveNavLink() {
-            const sections = document.querySelectorAll('section[id]');
-            const scrollPos = window.scrollY + 100;
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                const sectionId = section.getAttribute('id');
-                
-                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                    current = sectionId;
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                const href = link.getAttribute('href');
-                if (href === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-
-        // Smooth scroll for anchor links
-        function initSmoothScroll() {
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 100,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        }
+        });
 
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1531,14 +1308,6 @@
                 
                 // Initialize UI components
                 loadThemePreference();
-                initInteractiveCursor();
-                initScrollProgress();
-                initScrollAnimations();
-                initSmoothScroll();
-                
-                // Set active nav link on scroll
-                window.addEventListener('scroll', setActiveNavLink);
-                setActiveNavLink();
                 
                 // Initialize Firebase
                 if (!firebase.apps.length) {
@@ -1571,11 +1340,21 @@
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 
-                // Update UI with user data
-                document.getElementById('userName').textContent = user.displayName || 'User';
+                // Update greeting
+                const displayName = user.displayName || 'User';
+                document.getElementById('greeting').innerHTML = `Hi, <span id="userName">${displayName}</span>! 👋`;
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('sidebarUserName').textContent = displayName;
+                document.getElementById('profileUserName').textContent = displayName;
+                
+                // Update email
                 document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userAvatarImg').src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff`;
-                document.getElementById('profileAvatarImg').src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&size=120`;
+                document.getElementById('email').value = user.email || '';
+                
+                // Update avatar
+                const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
+                document.getElementById('userAvatarImg').src = avatarUrl;
+                document.getElementById('profileAvatarImg').src = avatarUrl.replace('&size=120', '') + '&size=120';
                 
                 // Calculate member since
                 const joinDate = user.metadata.creationTime;
@@ -1587,8 +1366,7 @@
                 document.getElementById('memberSince').textContent = `Member since: ${formattedDate}`;
                 
                 // Populate form fields
-                document.getElementById('fullName').value = user.displayName || '';
-                document.getElementById('email').value = user.email || '';
+                document.getElementById('fullName').value = displayName || '';
                 
                 if (userDoc.exists) {
                     const userData = userDoc.data();
@@ -1596,6 +1374,17 @@
                     document.getElementById('country').value = userData.country || '';
                     document.getElementById('dob').value = userData.dob || '';
                     document.getElementById('gender').value = userData.gender || '';
+                    
+                    // Calculate profile completion
+                    let completion = 0;
+                    if (displayName) completion += 20;
+                    if (user.email) completion += 20;
+                    if (userData.bio) completion += 20;
+                    if (userData.country) completion += 20;
+                    if (userData.dob) completion += 10;
+                    if (userData.gender) completion += 10;
+                    
+                    document.getElementById('profileCompletion').textContent = `${completion}%`;
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -1618,7 +1407,10 @@
                     // Calculate total time
                     const totalMinutes = (usageData.cloverAI || 0) + (usageData.mindscribe || 0) + (usageData.peo || 0);
                     const totalHours = (totalMinutes / 60).toFixed(1);
-                    document.getElementById('totalTime').textContent = `${totalHours} hours`;
+                    
+                    // Update all total time displays
+                    document.getElementById('totalTime').textContent = `${totalHours}h`;
+                    document.getElementById('detailedTotalTime').textContent = `${totalHours} hours`;
                     
                     // Find most used app
                     const apps = [
@@ -1632,10 +1424,20 @@
                     );
                     
                     document.getElementById('mostUsedApp').textContent = mostUsed.name;
-                    document.getElementById('mostUsedTime').textContent = `${mostUsed.time} minutes`;
+                    document.getElementById('mostUsedTime').textContent = `${mostUsed.time}m`;
+                    document.getElementById('mostUsedTimeLabel').textContent = `${mostUsed.time} minutes`;
                     
                     // Update streak
                     document.getElementById('streak').textContent = `${usageData.streak || 0} days`;
+                    document.getElementById('detailedStreak').textContent = `${usageData.streak || 0} days`;
+                    
+                    // Update weekly total
+                    document.getElementById('weeklyTotal').textContent = `${totalMinutes} mins`;
+                    
+                    // Update apps used count
+                    const appsUsedCount = apps.filter(app => app.time > 0).length;
+                    document.getElementById('appsUsed').textContent = appsUsedCount;
+                    document.getElementById('appsUsedCount').textContent = appsUsedCount;
                 }
             } catch (error) {
                 console.error('Error loading usage data:', error);
@@ -1761,16 +1563,16 @@
             }
         }
 
-        // Utility functions
-        function toggleUserMenu() {
-            // Implement user menu dropdown if needed
-        }
-
-        // Keyboard navigation improvements
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             // Theme toggle with Shift+T
             if (e.shiftKey && e.key === 'T') {
                 toggleTheme();
+            }
+            
+            // Toggle mobile menu with Shift+M
+            if (e.shiftKey && e.key === 'M' && window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
             }
         });
     </script>
