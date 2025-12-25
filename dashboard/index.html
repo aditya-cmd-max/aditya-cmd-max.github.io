@@ -87,6 +87,11 @@
             --md-font-logo: 'Playfair Display', serif;
             --md-font-heading: 'Inter', sans-serif;
             --md-font-body: 'Lora', serif;
+            
+            /* Gradient Colors */
+            --md-gradient-1: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            --md-gradient-2: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            --md-gradient-3: linear-gradient(135deg, #1a73e8, #34a853);
         }
 
         /* Dark Theme */
@@ -179,7 +184,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             border-radius: var(--md-radius-medium);
             color: var(--md-on-primary);
             font-weight: 700;
@@ -248,7 +253,7 @@
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             color: var(--md-on-primary);
             box-shadow: var(--md-elevation-1);
         }
@@ -274,6 +279,39 @@
         .sidebar-footer {
             padding: var(--md-spacing-lg);
             border-top: 1px solid var(--md-outline);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            width: 100%;
+        }
+
+        .user-menu-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-menu-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-menu-email {
+            font-size: 0.8rem;
+            color: var(--md-on-surface-variant);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Main Content Area */
@@ -379,14 +417,14 @@
             gap: var(--md-spacing-md);
         }
 
-        /* Google-style Profile Avatar */
+        /* Profile Avatar */
         .profile-avatar-button {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: 2px solid transparent;
             padding: 2px;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
@@ -453,7 +491,7 @@
         }
 
         .btn-filled {
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             color: var(--md-on-primary);
             box-shadow: var(--md-elevation-2);
         }
@@ -539,7 +577,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-2);
         }
 
         .dashboard-card:hover {
@@ -558,7 +596,7 @@
             width: 56px;
             height: 56px;
             border-radius: var(--md-radius-medium);
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -588,7 +626,7 @@
             font-family: var(--md-font-logo);
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -649,7 +687,7 @@
             right: 10px;
             width: 44px;
             height: 44px;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -749,7 +787,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-2);
         }
 
         .app-card:hover {
@@ -761,7 +799,7 @@
             width: 64px;
             height: 64px;
             margin: var(--md-spacing-xl) auto var(--md-spacing-lg);
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             border-radius: var(--md-radius-large);
             display: flex;
             align-items: center;
@@ -877,7 +915,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-2);
         }
 
         /* Overlay for mobile menu */
@@ -941,7 +979,7 @@
             overflow: hidden;
             flex-shrink: 0;
             border: 3px solid var(--md-surface-variant);
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-1);
             padding: 3px;
         }
         
@@ -1050,6 +1088,21 @@
         
         .profile-popup-privacy-link a:hover {
             text-decoration: underline;
+        }
+
+        /* Avatar Error Handling */
+        .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            background: var(--md-gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
         }
 
         /* Responsive Design */
@@ -1176,7 +1229,7 @@
             left: 0;
             width: 60px;
             height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-2);
             border-radius: 2px;
         }
 
@@ -1221,7 +1274,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            background: var(--md-gradient-2);
             border-radius: var(--md-radius-pill);
             transition: width 0.5s ease;
         }
@@ -1290,6 +1343,94 @@
             color: var(--md-primary);
             font-size: 1.25rem;
         }
+
+        /* Enhanced Dashboard Features */
+        .usage-chart {
+            width: 100%;
+            height: 200px;
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .recent-activity {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: var(--md-spacing-sm);
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            transition: var(--md-transition);
+        }
+
+        .activity-item:hover {
+            background: var(--md-primary-container);
+            transform: translateX(4px);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--md-gradient-1);
+            border-radius: var(--md-radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            margin-right: var(--md-spacing-sm);
+        }
+
+        /* Achievement Badges */
+        .achievement-badge {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--md-spacing-md);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-large);
+            transition: var(--md-transition);
+            text-align: center;
+        }
+
+        .achievement-badge:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .badge-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--md-gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-size: 1.5rem;
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        /* Avatar Preview */
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto var(--md-spacing-lg);
+            overflow: hidden;
+            border: 4px solid var(--md-surface);
+            box-shadow: var(--md-elevation-2);
+            position: relative;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -1314,7 +1455,7 @@
         
         <!-- Mobile Profile Avatar -->
         <button class="profile-avatar-button" id="mobileProfileAvatar">
-            <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+            <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
         </button>
     </header>
 
@@ -1382,11 +1523,11 @@
             <div class="sidebar-footer">
                 <div class="user-menu">
                     <div class="profile-avatar-button" id="sidebarProfileAvatar">
-                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
                     </div>
-                    <div>
-                        <h3 id="sidebarUserName" style="font-size: 1rem; font-weight: 600; margin-bottom: 2px;">User</h3>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">View Profile</p>
+                    <div class="user-menu-info">
+                        <h3 id="sidebarUserName" class="user-menu-name">User</h3>
+                        <p class="user-menu-email">View Profile</p>
                     </div>
                 </div>
             </div>
@@ -1410,7 +1551,7 @@
                 <div class="header-actions">
                     <!-- Desktop Profile Avatar -->
                     <button class="profile-avatar-button" id="desktopProfileAvatar">
-                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
                     </button>
                     
                     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
@@ -1454,7 +1595,7 @@
                 <div class="profile-section">
                     <div class="profile-header">
                         <div class="profile-avatar-large">
-                            <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff&size=120" alt="Profile" class="profile-avatar-large-img">
+                            <img id="profileAvatarImg" src="" alt="Profile" class="profile-avatar-large-img" onerror="handleLargeAvatarError(this)">
                             <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
                                 <i class="fas fa-camera"></i>
                                 <input type="file" id="avatarInput" accept="image/*" style="display: none;">
@@ -1854,6 +1995,36 @@
         const mobileProfileAvatar = document.getElementById('mobileProfileAvatar');
         const sidebarProfileAvatar = document.getElementById('sidebarProfileAvatar');
 
+        // Avatar error handler
+        function handleAvatarError(img) {
+            console.log('Avatar image failed to load, using fallback');
+            const displayName = currentUser?.displayName || 'User';
+            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            // Create fallback div
+            const fallbackDiv = document.createElement('div');
+            fallbackDiv.className = 'avatar-fallback';
+            fallbackDiv.textContent = initials;
+            
+            // Replace image with fallback
+            img.style.display = 'none';
+            img.parentNode.appendChild(fallbackDiv);
+        }
+
+        function handleLargeAvatarError(img) {
+            console.log('Large avatar image failed to load');
+            const displayName = currentUser?.displayName || 'User';
+            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            // Create fallback for large avatar
+            img.style.display = 'none';
+            img.parentNode.innerHTML = `
+                <div style="width: 160px; height: 160px; border-radius: 50%; background: var(--md-gradient-1); display: flex; align-items: center; justify-content: center; color: var(--md-on-primary); font-size: 3rem; font-weight: 700;">
+                    ${initials}
+                </div>
+            `;
+        }
+
         // Theme Toggle
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
@@ -1926,7 +2097,7 @@
                 <div class="profile-popup-container">
                     <div class="profile-popup-header">
                         <div class="profile-popup-avatar">
-                            <img src="${photoURL}" alt="${displayName}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff'">
+                            <img src="${photoURL}" alt="${displayName}" onerror="this.parentElement.innerHTML = '<div class=\'avatar-fallback\'>${displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)}</div>'">
                         </div>
                         <div class="profile-popup-info">
                             <div class="profile-popup-name">${displayName}</div>
@@ -2116,12 +2287,6 @@
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Hide loading screen
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                }, 800);
-                
                 // Initialize UI components
                 loadThemePreference();
                 
@@ -2145,6 +2310,12 @@
                         
                         // Setup profile popup click handlers
                         setupProfilePopupHandlers();
+                        
+                        // Hide loading screen
+                        setTimeout(() => {
+                            loadingScreen.classList.add('hidden');
+                            document.body.style.overflow = 'auto';
+                        }, 500);
                     } else {
                         window.location.href = 'https://aditya-cmd-max.github.io/signin';
                     }
@@ -2201,8 +2372,14 @@
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('email').value = user.email || '';
                 
-                // Update avatar
-                const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
+                // Update avatar - FIXED: Get proper photoURL
+                let avatarUrl;
+                if (user.photoURL) {
+                    avatarUrl = user.photoURL;
+                } else {
+                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
+                }
+                
                 updateProfileAvatars(avatarUrl);
                 
                 // Calculate member since
@@ -2260,16 +2437,30 @@
 
         // Update all profile avatars
         function updateProfileAvatars(avatarUrl) {
+            console.log('Updating avatars with URL:', avatarUrl);
+            
+            // Update all small avatars
             const avatarElements = document.querySelectorAll('.profile-avatar-img');
             avatarElements.forEach(img => {
                 img.src = avatarUrl;
                 img.alt = currentUser?.displayName || 'User';
+                img.onerror = function() {
+                    handleAvatarError(this);
+                };
             });
             
             // Update profile section avatar
             const profileAvatarImg = document.getElementById('profileAvatarImg');
             if (profileAvatarImg) {
-                profileAvatarImg.src = avatarUrl.replace('&size=120', '') + '&size=120';
+                // For UI Avatars, adjust size parameter
+                if (avatarUrl.includes('ui-avatars.com')) {
+                    profileAvatarImg.src = avatarUrl + '&size=160';
+                } else {
+                    profileAvatarImg.src = avatarUrl;
+                }
+                profileAvatarImg.onerror = function() {
+                    handleLargeAvatarError(this);
+                };
             }
         }
 
@@ -2366,22 +2557,27 @@
             if (!currentUser) return;
             
             try {
+                const fullName = document.getElementById('fullName').value.trim();
                 const userData = {
-                    fullName: document.getElementById('fullName').value,
-                    bio: document.getElementById('bio').value,
+                    bio: document.getElementById('bio').value.trim(),
                     country: document.getElementById('country').value,
                     dob: document.getElementById('dob').value,
                     gender: document.getElementById('gender').value,
                     updatedAt: new Date().toISOString()
                 };
                 
+                // Only update displayName if it's different
+                if (fullName && fullName !== currentUser.displayName) {
+                    userData.fullName = fullName;
+                    
+                    // Update Firebase Auth display name
+                    await currentUser.updateProfile({
+                        displayName: fullName
+                    });
+                }
+                
                 // Update Firestore
                 await db.collection('users').doc(currentUser.uid).set(userData, { merge: true });
-                
-                // Update user profile in Firebase Auth
-                await currentUser.updateProfile({
-                    displayName: userData.fullName
-                });
                 
                 // Reload user data
                 await loadUserData(currentUser);
