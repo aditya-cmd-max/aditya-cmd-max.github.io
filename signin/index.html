@@ -1196,6 +1196,48 @@
     </footer>
 
     <script>
+
+        
+        
+        // Minimal version - Add this at the beginning of your script
+async function checkAndRedirect() {
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        
+        // Check if user is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User is already signed in. Redirecting to dashboard...');
+                // Small delay to ensure page is loaded
+                setTimeout(() => {
+                    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+                }, 500);
+            }
+        });
+    } catch (error) {
+        console.error('Error checking auth status:', error);
+    }
+}
+
+// Call this at the very beginning of your script
+checkAndRedirect();
+        
+        
+        
         // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
         const mobileThemeToggle = document.getElementById('mobileThemeToggle');
