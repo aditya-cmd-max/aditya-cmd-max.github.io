@@ -1152,7 +1152,7 @@
                             <input type="checkbox" id="remember-me">
                             <label for="remember-me">Remember me</label>
                         </div>
-                        <a href="https://reverbit11.firebaseapp.com/__/auth/action?mode=action&oobCode=code" class="forgot-link">Forgot password?</a>
+                        <a href="resetPassword()" class="forgot-link">Forgot password?</a>
                     </div>
 
                     <button type="submit" class="btn btn-filled">
@@ -1579,6 +1579,31 @@ checkAndRedirect();
                 toggleTheme();
             }
         });
-    </script>
+    </script
+
+<script>   
+        
+        function resetPassword() {
+  const email = document.getElementById("email").value;
+
+  if (!email) {
+    alert("Enter your email first");
+    return;
+  }
+
+  firebase.auth().sendPasswordResetEmail(email)
+    .then(() => {
+      alert("Password reset link sent to your email");
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+}
+
+        
+        
+        </script>
+
+        
 </body>
 </html>
