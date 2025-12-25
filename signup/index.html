@@ -34,6 +34,7 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
     <style>
         /* Material Design 3 Color System - Matching Ecosystem */
@@ -1228,7 +1229,7 @@
 
                     <p class="signin-link">
                         Already have an account?
-                        <a href="https://aditya-cmd-max.github.io/signin/">Sign in</a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html">Sign in</a>
                     </p>
                 </form>
             </div>
@@ -1410,7 +1411,7 @@
         
         confirmPasswordField.addEventListener('input', checkPasswordMatch);
 
-        // Form submission
+        // Form submission - UPDATED WITH DASHBOARD REDIRECTION
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -1441,37 +1442,82 @@
             try {
                 // Initialize Firebase
                 const firebaseConfig = {
-  apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-  authDomain: "reverbit11.firebaseapp.com",
-  projectId: "reverbit11",
-  storageBucket: "reverbit11.firebasestorage.app",
-  messagingSenderId: "607495314412",
-  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-  measurementId: "G-DMWMRM1M47"
-};
-
+                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+                    authDomain: "reverbit11.firebaseapp.com",
+                    projectId: "reverbit11",
+                    storageBucket: "reverbit11.firebasestorage.app",
+                    messagingSenderId: "607495314412",
+                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+                    measurementId: "G-DMWMRM1M47"
+                };
 
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
                 }
                 
                 const auth = firebase.auth();
+                const db = firebase.firestore();
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
                 
                 // Update user profile with name
-                await userCredential.user.updateProfile({
+                await user.updateProfile({
                     displayName: name
                 });
+                
+                // Send email verification
+                await user.sendEmailVerification();
+                
+                // Store user data in localStorage for SSO
+                localStorage.setItem('reverbit_user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: name,
+                    photoURL: user.photoURL
+                }));
+                
+                // Set session cookie for all subdomains
+                const sessionToken = btoa(JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    timestamp: Date.now()
+                }));
+                
+                document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+                localStorage.setItem('reverbit_auth', sessionToken);
+                
+                // Create user profile in Firestore
+                const userRef = db.collection('users').doc(user.uid);
+                await userRef.set({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: name,
+                    photoURL: user.photoURL || '',
+                    bio: '',
+                    country: '',
+                    streak: 0,
+                    joinedAt: user.metadata.creationTime,
+                    lastActive: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Create usage record
+                const usageRef = db.collection('usage').doc(user.uid);
+                await usageRef.set({
+                    lastUsed: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
                 
                 // Success state
                 submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
                 submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
                 
-                // Simulate redirect
+                // Show welcome message
+                console.log('Account created successfully! Redirecting to dashboard...');
+                
+                // Redirect to dashboard after 1.5 seconds
                 setTimeout(() => {
-                    alert('Account created successfully! Welcome to Reverbit, ' + name + '!');
-                    // In a real app, you would redirect to dashboard or welcome page
-                    // window.location.href = 'https://aditya-cmd-max.github.io/reverbit/dashboard';
+                    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
                 }, 1500);
                 
             } catch (error) {
@@ -1501,37 +1547,102 @@
             }
         });
 
-        // Google Sign In
+        // Google Sign In - UPDATED WITH DASHBOARD REDIRECTION
         window.googleSignIn = function() {
             try {
                 const firebaseConfig = {
-  apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-  authDomain: "reverbit11.firebaseapp.com",
-  projectId: "reverbit11",
-  storageBucket: "reverbit11.firebasestorage.app",
-  messagingSenderId: "607495314412",
-  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-  measurementId: "G-DMWMRM1M47"
-};
-
+                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+                    authDomain: "reverbit11.firebaseapp.com",
+                    projectId: "reverbit11",
+                    storageBucket: "reverbit11.firebasestorage.app",
+                    messagingSenderId: "607495314412",
+                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+                    measurementId: "G-DMWMRM1M47"
+                };
 
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
                 }
-                
+              
                 const auth = firebase.auth();
+                const db = firebase.firestore();
                 const provider = new firebase.auth.GoogleAuthProvider();
                 
                 auth.signInWithPopup(provider)
-                    .then(result => {
-                        alert(`Welcome, ${result.user.displayName}! Your account has been created successfully.`);
-                        // In a real app, you would redirect to dashboard
-                        // window.location.href = 'https://aditya-cmd-max.github.io/reverbit/dashboard';
+                    .then(async (result) => {
+                        const user = result.user;
+                        
+                        // Store user data in localStorage for SSO
+                        localStorage.setItem('reverbit_user', JSON.stringify({
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: user.displayName,
+                            photoURL: user.photoURL
+                        }));
+                        
+                        // Set session cookie for all subdomains
+                        const sessionToken = btoa(JSON.stringify({
+                            uid: user.uid,
+                            email: user.email,
+                            timestamp: Date.now()
+                        }));
+                        
+                        document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+                        localStorage.setItem('reverbit_auth', sessionToken);
+                        
+                        // Create user profile if needed
+                        const userRef = db.collection('users').doc(user.uid);
+                        const userDoc = await userRef.get();
+                        
+                        if (!userDoc.exists) {
+                            await userRef.set({
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName || '',
+                                photoURL: user.photoURL || '',
+                                bio: '',
+                                country: '',
+                                streak: 0,
+                                joinedAt: user.metadata.creationTime,
+                                lastActive: new Date().toISOString(),
+                                updatedAt: new Date().toISOString()
+                            });
+                        } else {
+                            // Update last active time
+                            await userRef.set({
+                                lastActive: new Date().toISOString(),
+                                updatedAt: new Date().toISOString()
+                            }, { merge: true });
+                        }
+                        
+                        // Create or update usage record
+                        const usageRef = db.collection('usage').doc(user.uid);
+                        await usageRef.set({
+                            lastUsed: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true });
+                        
+                        // Show success message
+                        console.log('Google sign up successful! Redirecting to dashboard...');
+                        
+                        // Show brief success message
+                        const submitBtn = document.querySelector('.btn-filled');
+                        const originalText = submitBtn.querySelector('span').textContent;
+                        submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
+                        submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
+                        
+                        // Redirect to dashboard after 1.5 seconds
+                        setTimeout(() => {
+                            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+                        }, 1500);
+                        
                     })
                     .catch(error => {
+                        console.error('Google sign up error:', error);
                         alert('Google sign up failed: ' + error.message);
                     });
             } catch (error) {
+                console.error('Error initializing Google sign up:', error);
                 alert('Error initializing Google sign up. Please try again.');
             }
         }
@@ -1553,32 +1664,6 @@
                 }, 100 + index * 50);
             });
         });
-
-       
-        
-        // After successful login in signin.html
-function redirectToDashboard(user) {
-    // Store user data in localStorage for SSO
-    localStorage.setItem('reverbit_user', JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL
-    }));
-    
-    // Set session cookie for all subdomains
-    const sessionToken = btoa(JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        timestamp: Date.now()
-    }));
-    
-    document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
-    
-    // Redirect to dashboard
-    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-}
-        
         
         // Handle window resize
         window.addEventListener('resize', () => {
