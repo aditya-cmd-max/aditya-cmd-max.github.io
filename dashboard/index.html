@@ -61,10 +61,12 @@
             --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
             --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
             --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --md-elevation-5: 0 8px 24px rgba(0, 0, 0, 0.15);
             
             /* Animation */
             --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
             --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-slow: all 0.5s cubic-bezier(0.2, 0, 0, 1);
             
             /* Border Radius */
             --md-radius-small: 8px;
@@ -108,6 +110,7 @@
             --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
             --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
             --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         /* Base Styles */
@@ -150,12 +153,16 @@
             bottom: 0;
             z-index: 100;
             transition: var(--md-transition);
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--md-elevation-2);
+            transform: translateX(0);
         }
 
         .sidebar-header {
             padding: var(--md-spacing-xl) var(--md-spacing-lg);
             border-bottom: 1px solid var(--md-outline);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .nav-brand {
@@ -163,6 +170,7 @@
             align-items: center;
             gap: var(--md-spacing-sm);
             text-decoration: none;
+            flex: 1;
         }
 
         .nav-logo {
@@ -190,12 +198,33 @@
             letter-spacing: -0.5px;
         }
 
+        /* Sidebar Close Button */
+        .sidebar-close {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--md-radius-small);
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .sidebar-close:hover {
+            background: var(--md-surface-variant);
+            color: var(--md-primary);
+        }
+
         .sidebar-nav {
             padding: var(--md-spacing-lg);
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-xs);
+            overflow-y: auto;
         }
 
         .nav-item {
@@ -205,10 +234,11 @@
             padding: var(--md-spacing-md) var(--md-spacing-lg);
             color: var(--md-on-surface-variant);
             text-decoration: none;
-            border-radius: var(--md-radius-pill);
+            border-radius: var(--md-radius-large);
             transition: var(--md-transition);
             font-family: var(--md-font-heading);
             font-weight: 500;
+            position: relative;
         }
 
         .nav-item:hover {
@@ -221,6 +251,18 @@
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: var(--md-on-primary);
             box-shadow: var(--md-elevation-1);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: var(--md-primary);
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
         }
 
         .nav-item i {
@@ -240,6 +282,58 @@
             margin-left: 280px;
             padding: var(--md-spacing-lg);
             min-height: 100vh;
+            transition: var(--md-transition);
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: var(--md-surface);
+            border-bottom: 1px solid var(--md-outline);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .mobile-header .nav-brand {
+            padding: 0;
+            border-bottom: none;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--md-radius-medium);
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            position: relative;
+            z-index: 101;
+        }
+
+        .hamburger-menu:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .hamburger-icon {
+            font-size: 1.5rem;
+            transition: var(--md-transition);
+        }
+
+        .hamburger-menu.active .hamburger-icon {
+            transform: rotate(90deg);
         }
 
         /* Top Header */
@@ -247,11 +341,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--md-spacing-lg) var(--md-spacing-lg) var(--md-spacing-xl);
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
             margin-bottom: var(--md-spacing-xl);
             box-shadow: var(--md-elevation-1);
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .welcome-section h1 {
@@ -289,6 +395,26 @@
             transition: var(--md-transition);
             text-decoration: none;
             min-height: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-filled {
@@ -298,7 +424,7 @@
         }
 
         .btn-filled:hover {
-            transform: translateY(-2px) scale(1.05);
+            transform: translateY(-2px);
             box-shadow: var(--md-elevation-3);
         }
 
@@ -350,6 +476,7 @@
             cursor: pointer;
             border: 3px solid var(--md-outline);
             transition: var(--md-transition);
+            position: relative;
         }
 
         .user-avatar:hover {
@@ -379,6 +506,24 @@
             transition: var(--md-transition);
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+        .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+        .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+        .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dashboard-card::before {
@@ -393,7 +538,7 @@
 
         .dashboard-card:hover {
             transform: translateY(-8px);
-            box-shadow: var(--md-elevation-3);
+            box-shadow: var(--md-elevation-4);
         }
 
         .card-header {
@@ -413,6 +558,11 @@
             justify-content: center;
             color: var(--md-on-primary);
             font-size: 1.5rem;
+            transition: var(--md-transition);
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform: rotate(15deg) scale(1.1);
         }
 
         .card-title {
@@ -451,6 +601,12 @@
             border: 1px solid var(--md-outline);
             overflow: hidden;
             margin-bottom: var(--md-spacing-xl);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .profile-header {
@@ -551,7 +707,7 @@
         .form-input:focus {
             outline: none;
             border-color: var(--md-primary);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+            box-shadow: 0 0 0 3px var(--md-primary-container);
         }
 
         /* Apps Grid */
@@ -571,7 +727,14 @@
             text-decoration: none;
             color: inherit;
             position: relative;
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
         }
+
+        .app-card:nth-child(1) { animation-delay: 0.1s; }
+        .app-card:nth-child(2) { animation-delay: 0.2s; }
+        .app-card:nth-child(3) { animation-delay: 0.3s; }
+        .app-card:nth-child(4) { animation-delay: 0.4s; }
 
         .app-card::before {
             content: '';
@@ -585,7 +748,7 @@
 
         .app-card:hover {
             transform: translateY(-8px);
-            box-shadow: var(--md-elevation-3);
+            box-shadow: var(--md-elevation-4);
         }
 
         .app-icon {
@@ -634,6 +797,7 @@
             height: 100%;
             background: var(--md-background);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
@@ -652,6 +816,7 @@
             border-top: 4px solid var(--md-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-bottom: var(--md-spacing-lg);
         }
 
         @keyframes spin {
@@ -672,6 +837,7 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
@@ -684,6 +850,18 @@
             overflow-y: auto;
             border: 1px solid var(--md-outline);
             position: relative;
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-content::before {
@@ -696,36 +874,76 @@
             background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
 
+        /* Overlay for mobile menu */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .sidebar {
-                width: 240px;
+                width: 260px;
             }
             
             .main-content {
-                margin-left: 240px;
+                margin-left: 260px;
+                padding: var(--md-spacing-md);
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                width: 280px;
+                width: 320px;
+                box-shadow: var(--md-elevation-4);
             }
             
             .sidebar.mobile-open {
                 transform: translateX(0);
             }
             
+            .sidebar-header {
+                padding: var(--md-spacing-lg);
+            }
+            
+            .sidebar-close {
+                display: flex;
+            }
+            
+            .mobile-header {
+                display: flex;
+            }
+            
+            .hamburger-menu {
+                display: flex;
+            }
+            
             .main-content {
                 margin-left: 0;
                 padding: var(--md-spacing-md);
+                padding-top: 80px; /* Account for fixed mobile header */
             }
             
             .top-header {
                 flex-direction: column;
-                gap: var(--md-spacing-md);
+                gap: var(--md-spacing-lg);
                 text-align: center;
+                padding: var(--md-spacing-lg);
+                margin-top: var(--md-spacing-sm);
             }
             
             .header-actions {
@@ -733,25 +951,23 @@
                 width: 100%;
             }
             
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
             .dashboard-grid,
             .apps-grid {
                 grid-template-columns: 1fr;
             }
             
-            .mobile-menu-toggle {
-                display: flex;
-                position: fixed;
-                top: var(--md-spacing-md);
-                left: var(--md-spacing-md);
-                z-index: 101;
-                background: var(--md-primary);
-                color: var(--md-on-primary);
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                align-items: center;
-                justify-content: center;
-                box-shadow: var(--md-elevation-2);
+            .form-grid {
+                grid-template-columns: 1fr;
+                padding: var(--md-spacing-lg);
+            }
+            
+            .sidebar-overlay {
+                display: block;
             }
         }
 
@@ -759,11 +975,10 @@
             .mobile-menu-toggle {
                 display: none;
             }
-        }
-
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
+            
+            .sidebar-overlay {
+                display: none !important;
+            }
         }
 
         /* Section Titles */
@@ -775,6 +990,7 @@
             margin-bottom: var(--md-spacing-lg);
             position: relative;
             padding-bottom: var(--md-spacing-sm);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .section-title::after {
@@ -802,11 +1018,101 @@
             padding: var(--md-spacing-lg);
             border: 1px solid var(--md-outline);
             transition: var(--md-transition);
+            text-align: center;
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
         }
+
+        .quick-stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .quick-stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .quick-stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .quick-stat-card:nth-child(4) { animation-delay: 0.4s; }
 
         .quick-stat-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--md-elevation-2);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--md-outline);
+            border-radius: var(--md-radius-pill);
+            overflow: hidden;
+            margin-top: var(--md-spacing-sm);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-pill);
+            transition: width 0.5s ease;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--md-spacing-xs) var(--md-spacing-sm);
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-radius: var(--md-radius-pill);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-left: var(--md-spacing-sm);
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-xs);
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--md-secondary);
+        }
+
+        .status-dot.online {
+            background: var(--md-secondary);
+        }
+
+        .status-dot.offline {
+            background: var(--md-on-surface-variant);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: var(--md-spacing-lg);
+            right: var(--md-spacing-lg);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            box-shadow: var(--md-elevation-3);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--md-primary);
+            font-size: 1.25rem;
         }
     </style>
 </head>
@@ -814,12 +1120,31 @@
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="loader"></div>
+        <p style="color: var(--md-on-surface-variant);">Loading your dashboard...</p>
     </div>
 
-    <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle">
-        <i class="fas fa-bars"></i>
-    </button>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-menu" id="hamburgerMenu">
+            <i class="fas fa-bars hamburger-icon"></i>
+        </button>
+        
+        <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
+            <div class="nav-logo">
+                <i class="fas fa-infinity"></i>
+            </div>
+            <span class="nav-name">Reverbit</span>
+        </a>
+        
+        <div class="user-menu">
+            <div class="user-avatar" id="mobileUserAvatar">
+                <img id="mobileUserAvatarImg" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User">
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay for mobile menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Dashboard Container -->
     <div class="dashboard-container">
@@ -832,6 +1157,9 @@
                     </div>
                     <span class="nav-name">Reverbit</span>
                 </a>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
             <nav class="sidebar-nav">
@@ -842,6 +1170,7 @@
                 <a href="#profile" class="nav-item">
                     <i class="fas fa-user"></i>
                     <span>My Profile</span>
+                    <span class="badge">Update</span>
                 </a>
                 <a href="#apps" class="nav-item">
                     <i class="fas fa-th-large"></i>
@@ -854,11 +1183,22 @@
                 <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-item">
                     <i class="fas fa-network-wired"></i>
                     <span>All Tools</span>
+                    <span class="badge">New</span>
                 </a>
                 <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-item">
                     <i class="fas fa-external-link-alt"></i>
                     <span>Home</span>
                 </a>
+                
+                <div style="margin-top: auto; padding-top: var(--md-spacing-lg); border-top: 1px solid var(--md-outline);">
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span>Online</span>
+                    </div>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
+                        Last sync: <span id="lastSync">Just now</span>
+                    </p>
+                </div>
             </nav>
 
             <div class="sidebar-footer">
@@ -881,6 +1221,12 @@
                 <div class="welcome-section">
                     <h1 id="greeting">Hi, <span id="userName">User</span>! 👋</h1>
                     <p>Welcome back to your Reverbit Dashboard</p>
+                    <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
+                        <div class="progress-fill" style="width: 60%;"></div>
+                    </div>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
+                        Profile completion: <span id="profileCompletion">60%</span>
+                    </p>
                 </div>
 
                 <div class="header-actions">
@@ -899,18 +1245,22 @@
                 <div class="quick-stat-card">
                     <div class="stat-number" id="totalTime">0h</div>
                     <div class="stat-label">Total Usage</div>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">Across all apps</p>
                 </div>
                 <div class="quick-stat-card">
                     <div class="stat-number" id="streak">0 days</div>
                     <div class="stat-label">Active Streak</div>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">Keep it up!</p>
                 </div>
                 <div class="quick-stat-card">
                     <div class="stat-number" id="appsUsed">3</div>
                     <div class="stat-label">Apps Used</div>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">This week</p>
                 </div>
                 <div class="quick-stat-card">
                     <div class="stat-number" id="mostUsedTime">0m</div>
                     <div class="stat-label">Most Used</div>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);" id="mostUsedAppName">Clover AI</p>
                 </div>
             </div>
 
@@ -931,6 +1281,10 @@
                             <h2 id="profileUserName">Loading...</h2>
                             <p class="email" id="userEmail">Loading...</p>
                             <p class="member-since" id="memberSince">Member since: Loading...</p>
+                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm);">
+                                <span class="status-dot online"></span>
+                                <span>Active now</span>
+                            </div>
                         </div>
                     </div>
 
@@ -983,9 +1337,9 @@
                                 <i class="fas fa-save"></i>
                                 Save Changes
                             </button>
-                            <button type="button" class="btn btn-outlined" onclick="logout()">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Sign Out
+                            <button type="button" class="btn btn-outlined" onclick="showToast('Changes discarded')">
+                                <i class="fas fa-times"></i>
+                                Cancel
                             </button>
                         </div>
                     </form>
@@ -1005,6 +1359,10 @@
                             <h3 class="app-title">Clover AI</h3>
                             <p class="app-stats" id="cloverTime">0 mins this week</p>
                             <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Intelligent tutoring system with personalized learning</p>
+                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
+                                <span class="status-dot online"></span>
+                                <span>Active</span>
+                            </div>
                         </div>
                     </a>
                     
@@ -1016,6 +1374,10 @@
                             <h3 class="app-title">MindScribe</h3>
                             <p class="app-stats" id="mindscribeTime">0 mins this week</p>
                             <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">AI-powered note-taking and organization</p>
+                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
+                                <span class="status-dot online"></span>
+                                <span>Active</span>
+                            </div>
                         </div>
                     </a>
                     
@@ -1027,6 +1389,10 @@
                             <h3 class="app-title">Peo</h3>
                             <p class="app-stats" id="peoTime">0 mins this week</p>
                             <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Natural text-to-speech with emotion</p>
+                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
+                                <span class="status-dot online"></span>
+                                <span>Active</span>
+                            </div>
                         </div>
                     </a>
                     
@@ -1038,6 +1404,10 @@
                             <h3 class="app-title">All Tools</h3>
                             <p class="app-stats">Explore more</p>
                             <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Complete Reverbit ecosystem</p>
+                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
+                                <span class="status-dot online"></span>
+                                <span>10+ tools</span>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -1060,6 +1430,12 @@
                         </div>
                         <div class="stat-number" id="detailedTotalTime">0 hours</div>
                         <div class="stat-label">Total Time Spent</div>
+                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
+                            +12% from last week
+                        </p>
                     </div>
                     
                     <div class="dashboard-card">
@@ -1074,6 +1450,12 @@
                         </div>
                         <div class="stat-number" id="detailedStreak">0 days</div>
                         <div class="stat-label">Current Streak</div>
+                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
+                            5 days to beat your record!
+                        </p>
                     </div>
                     
                     <div class="dashboard-card">
@@ -1088,6 +1470,12 @@
                         </div>
                         <div class="stat-number" id="mostUsedApp">Loading...</div>
                         <div class="stat-label" id="mostUsedTimeLabel">0 minutes</div>
+                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
+                            Your top choice this month
+                        </p>
                     </div>
                     
                     <div class="dashboard-card">
@@ -1102,6 +1490,12 @@
                         </div>
                         <div class="stat-number" id="weeklyTotal">0 mins</div>
                         <div class="stat-label">Total this week</div>
+                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
+                            Daily average: 45 mins
+                        </p>
                     </div>
                 </div>
             </section>
@@ -1122,6 +1516,12 @@
                             </div>
                         </div>
                         <p style="color: var(--md-on-surface); margin-bottom: var(--md-spacing-lg);">Complete your profile to get personalized recommendations and better experience.</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="profileProgressBar" style="width: 60%;"></div>
+                        </div>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin: var(--md-spacing-sm) 0 var(--md-spacing-lg);">
+                            Profile completion: <span id="profileCompletionOverview">60%</span>
+                        </p>
                         <a href="#profile" class="btn btn-filled" style="width: 100%;" onclick="showSection('profile')">
                             <i class="fas fa-user-edit"></i>
                             Edit Profile
@@ -1142,14 +1542,17 @@
                             <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined" style="justify-content: start;">
                                 <i class="fas fa-leaf"></i>
                                 Clover AI
+                                <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="cloverQuickTime">0m</span>
                             </a>
                             <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined" style="justify-content: start;">
                                 <i class="fas fa-brain"></i>
                                 MindScribe
+                                <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="mindscribeQuickTime">0m</span>
                             </a>
                             <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined" style="justify-content: start;">
                                 <i class="fas fa-users"></i>
                                 Peo
+                                <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="peoQuickTime">0m</span>
                             </a>
                         </div>
                     </div>
@@ -1165,9 +1568,22 @@
                             </div>
                         </div>
                         <div style="color: var(--md-on-surface-variant);">
-                            <p><i class="fas fa-circle" style="color: var(--md-primary); font-size: 0.5rem; margin-right: 8px;"></i> Last active: <span id="lastActive">Today</span></p>
-                            <p><i class="fas fa-circle" style="color: var(--md-secondary); font-size: 0.5rem; margin-right: 8px;"></i> Apps used this week: <span id="appsUsedCount">3</span></p>
-                            <p><i class="fas fa-circle" style="color: #ea4335; font-size: 0.5rem; margin-right: 8px;"></i> Profile completion: <span id="profileCompletion">60%</span></p>
+                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
+                                <i class="fas fa-circle" style="color: var(--md-primary); font-size: 0.5rem; margin-right: 8px;"></i>
+                                Last active: <span id="lastActive" style="margin-left: auto;">Today</span>
+                            </p>
+                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
+                                <i class="fas fa-circle" style="color: var(--md-secondary); font-size: 0.5rem; margin-right: 8px;"></i>
+                                Apps used this week: <span id="appsUsedCount" style="margin-left: auto;">3</span>
+                            </p>
+                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
+                                <i class="fas fa-circle" style="color: #ea4335; font-size: 0.5rem; margin-right: 8px;"></i>
+                                Profile completion: <span id="profileCompletionValue" style="margin-left: auto;">60%</span>
+                            </p>
+                            <p style="display: flex; align-items: center;">
+                                <i class="fas fa-circle" style="color: #fbbc05; font-size: 0.5rem; margin-right: 8px;"></i>
+                                Current streak: <span id="currentStreak" style="margin-left: auto;">0 days</span>
+                            </p>
                         </div>
                     </div>
                     
@@ -1182,15 +1598,37 @@
                             </div>
                         </div>
                         <div style="color: var(--md-on-surface-variant);">
-                            <p>🎯 Complete your profile</p>
-                            <p>🚀 New features in Clover AI</p>
-                            <p>📱 Mobile app coming soon</p>
-                            <p>💡 Tip: Use keyboard shortcuts</p>
+                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
+                                <i class="fas fa-circle" style="color: var(--md-primary); font-size: 0.5rem; margin-right: 8px;"></i>
+                                Complete your profile
+                            </p>
+                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
+                                <i class="fas fa-circle" style="color: var(--md-secondary); font-size: 0.5rem; margin-right: 8px;"></i>
+                                New features in Clover AI
+                            </p>
+                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
+                                <i class="fas fa-circle" style="color: #ea4335; font-size: 0.5rem; margin-right: 8px;"></i>
+                                Mobile app coming soon
+                            </p>
+                            <p style="display: flex; align-items: center;">
+                                <i class="fas fa-circle" style="color: #fbbc05; font-size: 0.5rem; margin-right: 8px;"></i>
+                                Tip: Use keyboard shortcuts
+                            </p>
                         </div>
+                        <button class="btn btn-outlined" style="width: 100%; margin-top: var(--md-spacing-lg);" onclick="showToast('All notifications marked as read')">
+                            <i class="fas fa-check"></i>
+                            Mark all as read
+                        </button>
                     </div>
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Changes saved successfully!</span>
     </div>
 
     <!-- Logout Modal -->
@@ -1221,13 +1659,11 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
         const loadingScreen = document.getElementById('loading');
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
         const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
         const navItems = document.querySelectorAll('.nav-item');
-
-        // Initialize Firebase
-        let auth, db, storage;
-        let currentUser = null;
 
         // Theme Toggle
         function toggleTheme() {
@@ -1237,9 +1673,11 @@
             if (document.body.classList.contains('dark-theme')) {
                 themeIcon.textContent = 'light_mode';
                 localStorage.setItem('theme', 'dark');
+                showToast('Dark mode enabled');
             } else {
                 themeIcon.textContent = 'dark_mode';
                 localStorage.setItem('theme', 'light');
+                showToast('Light mode enabled');
             }
         }
 
@@ -1260,8 +1698,29 @@
         }
 
         // Mobile menu toggle
-        mobileMenuToggle.addEventListener('click', () => {
+        function toggleMobileMenu() {
             sidebar.classList.toggle('mobile-open');
+            hamburgerMenu.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            
+            if (sidebar.classList.contains('mobile-open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        hamburgerMenu.addEventListener('click', toggleMobileMenu);
+        sidebarClose.addEventListener('click', toggleMobileMenu);
+        sidebarOverlay.addEventListener('click', toggleMobileMenu);
+
+        // Close mobile menu when clicking on a nav item
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleMobileMenu();
+                }
+            });
         });
 
         // Navigation functionality
@@ -1272,30 +1731,45 @@
             });
             
             // Show selected section
-            document.getElementById(sectionId).style.display = 'block';
-            
-            // Update active nav item
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href') === `#${sectionId}`) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Close mobile menu on selection
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('mobile-open');
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Update active nav item
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${sectionId}`) {
+                        item.classList.add('active');
+                    }
+                });
             }
         }
 
         // Set up nav item click handlers
         navItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const sectionId = item.getAttribute('href').substring(1);
-                showSection(sectionId);
+                const href = item.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const sectionId = href.substring(1);
+                    showSection(sectionId);
+                }
             });
         });
+
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
 
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1325,13 +1799,26 @@
                         await loadUserData(user);
                         await loadUsageData(user.uid);
                         setupAuthCookies(user);
+                        showToast(`Welcome back, ${user.displayName || 'User'}!`);
                     } else {
                         window.location.href = 'https://aditya-cmd-max.github.io/signin';
                     }
                 });
+
+                // Update last sync time
+                setInterval(() => {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    document.getElementById('lastSync').textContent = timeString;
+                }, 60000); // Update every minute
+                
             } catch (error) {
                 console.error('Initialization error:', error);
                 loadingScreen.classList.add('hidden');
+                showToast('Error loading dashboard');
             }
         });
 
@@ -1354,6 +1841,7 @@
                 // Update avatar
                 const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
                 document.getElementById('userAvatarImg').src = avatarUrl;
+                document.getElementById('mobileUserAvatarImg').src = avatarUrl;
                 document.getElementById('profileAvatarImg').src = avatarUrl.replace('&size=120', '') + '&size=120';
                 
                 // Calculate member since
@@ -1384,10 +1872,15 @@
                     if (userData.dob) completion += 10;
                     if (userData.gender) completion += 10;
                     
+                    // Update all profile completion indicators
                     document.getElementById('profileCompletion').textContent = `${completion}%`;
+                    document.getElementById('profileCompletionOverview').textContent = `${completion}%`;
+                    document.getElementById('profileCompletionValue').textContent = `${completion}%`;
+                    document.getElementById('profileProgressBar').style.width = `${completion}%`;
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
+                showToast('Error loading user data');
             }
         }
 
@@ -1400,12 +1893,20 @@
                     const usageData = usageDoc.data();
                     
                     // Update app times
-                    document.getElementById('cloverTime').textContent = `${usageData.cloverAI || 0} mins this week`;
-                    document.getElementById('mindscribeTime').textContent = `${usageData.mindscribe || 0} mins this week`;
-                    document.getElementById('peoTime').textContent = `${usageData.peo || 0} mins this week`;
+                    const cloverTime = usageData.cloverAI || 0;
+                    const mindscribeTime = usageData.mindscribe || 0;
+                    const peoTime = usageData.peo || 0;
+                    
+                    document.getElementById('cloverTime').textContent = `${cloverTime} mins this week`;
+                    document.getElementById('mindscribeTime').textContent = `${mindscribeTime} mins this week`;
+                    document.getElementById('peoTime').textContent = `${peoTime} mins this week`;
+                    
+                    document.getElementById('cloverQuickTime').textContent = `${cloverTime}m`;
+                    document.getElementById('mindscribeQuickTime').textContent = `${mindscribeTime}m`;
+                    document.getElementById('peoQuickTime').textContent = `${peoTime}m`;
                     
                     // Calculate total time
-                    const totalMinutes = (usageData.cloverAI || 0) + (usageData.mindscribe || 0) + (usageData.peo || 0);
+                    const totalMinutes = cloverTime + mindscribeTime + peoTime;
                     const totalHours = (totalMinutes / 60).toFixed(1);
                     
                     // Update all total time displays
@@ -1414,9 +1915,9 @@
                     
                     // Find most used app
                     const apps = [
-                        { name: 'Clover AI', time: usageData.cloverAI || 0 },
-                        { name: 'MindScribe', time: usageData.mindscribe || 0 },
-                        { name: 'Peo', time: usageData.peo || 0 }
+                        { name: 'Clover AI', time: cloverTime },
+                        { name: 'MindScribe', time: mindscribeTime },
+                        { name: 'Peo', time: peoTime }
                     ];
                     
                     const mostUsed = apps.reduce((prev, current) => 
@@ -1424,12 +1925,15 @@
                     );
                     
                     document.getElementById('mostUsedApp').textContent = mostUsed.name;
+                    document.getElementById('mostUsedAppName').textContent = mostUsed.name;
                     document.getElementById('mostUsedTime').textContent = `${mostUsed.time}m`;
                     document.getElementById('mostUsedTimeLabel').textContent = `${mostUsed.time} minutes`;
                     
                     // Update streak
-                    document.getElementById('streak').textContent = `${usageData.streak || 0} days`;
-                    document.getElementById('detailedStreak').textContent = `${usageData.streak || 0} days`;
+                    const streak = usageData.streak || 0;
+                    document.getElementById('streak').textContent = `${streak} days`;
+                    document.getElementById('detailedStreak').textContent = `${streak} days`;
+                    document.getElementById('currentStreak').textContent = `${streak} days`;
                     
                     // Update weekly total
                     document.getElementById('weeklyTotal').textContent = `${totalMinutes} mins`;
@@ -1438,6 +1942,9 @@
                     const appsUsedCount = apps.filter(app => app.time > 0).length;
                     document.getElementById('appsUsed').textContent = appsUsedCount;
                     document.getElementById('appsUsedCount').textContent = appsUsedCount;
+                    
+                    // Update last active
+                    document.getElementById('lastActive').textContent = 'Today';
                 }
             } catch (error) {
                 console.error('Error loading usage data:', error);
@@ -1487,11 +1994,13 @@
                     displayName: userData.fullName
                 });
                 
-                alert('Profile updated successfully!');
-                location.reload();
+                showToast('Profile updated successfully!');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
             } catch (error) {
                 console.error('Error updating profile:', error);
-                alert('Error updating profile. Please try again.');
+                showToast('Error updating profile');
             }
         });
 
@@ -1501,16 +2010,18 @@
             if (!file) return;
             
             if (!file.type.startsWith('image/')) {
-                alert('Please select an image file');
+                showToast('Please select an image file');
                 return;
             }
             
             if (file.size > 5 * 1024 * 1024) {
-                alert('Image must be less than 5MB');
+                showToast('Image must be less than 5MB');
                 return;
             }
             
             try {
+                showToast('Uploading profile picture...');
+                
                 // Upload to Firebase Storage
                 const storageRef = storage.ref();
                 const avatarRef = storageRef.child(`avatars/${currentUser.uid}/${Date.now()}_${file.name}`);
@@ -1530,12 +2041,13 @@
                 
                 // Update UI
                 document.getElementById('userAvatarImg').src = downloadURL;
+                document.getElementById('mobileUserAvatarImg').src = downloadURL;
                 document.getElementById('profileAvatarImg').src = downloadURL;
                 
-                alert('Profile picture updated successfully!');
+                showToast('Profile picture updated!');
             } catch (error) {
                 console.error('Error uploading avatar:', error);
-                alert('Error uploading image. Please try again.');
+                showToast('Error uploading image');
             }
         });
 
@@ -1560,6 +2072,7 @@
                 window.location.href = 'https://aditya-cmd-max.github.io/signin';
             } catch (error) {
                 console.error('Error signing out:', error);
+                showToast('Error signing out');
             }
         }
 
@@ -1572,7 +2085,26 @@
             
             // Toggle mobile menu with Shift+M
             if (e.shiftKey && e.key === 'M' && window.innerWidth <= 768) {
-                sidebar.classList.toggle('mobile-open');
+                toggleMobileMenu();
+            }
+            
+            // Close modals with Escape
+            if (e.key === 'Escape') {
+                closeModal('logoutModal');
+                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                    toggleMobileMenu();
+                }
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                // Ensure sidebar is visible on larger screens
+                sidebar.classList.remove('mobile-open');
+                hamburgerMenu.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
         });
     </script>
