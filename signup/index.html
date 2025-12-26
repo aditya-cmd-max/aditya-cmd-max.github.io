@@ -900,6 +900,133 @@
             font-size: 0.875rem;
         }
 
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md-spacing-md);
+        }
+
+        .success-modal-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xl);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: var(--md-elevation-4);
+            position: relative;
+            border: 1px solid var(--md-outline);
+            animation: slideInUp 0.3s ease-out;
+            text-align: center;
+        }
+
+        .success-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--md-spacing-lg);
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .success-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .success-message {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .success-actions {
+            display: flex;
+            gap: var(--md-spacing-md);
+            justify-content: center;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Progress Indicator */
+        .form-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .progress-step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: var(--md-transition);
+            position: relative;
+        }
+
+        .progress-step.active {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+        }
+
+        .progress-step.completed {
+            background: var(--md-secondary);
+            color: white;
+        }
+
+        .progress-step.completed::after {
+            content: '✓';
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 2px;
+            background: var(--md-outline);
+            max-width: 40px;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .signup-wrapper {
@@ -925,6 +1052,10 @@
             
             .feature-item {
                 text-align: left;
+            }
+            
+            .success-actions {
+                flex-direction: column;
             }
         }
 
@@ -965,6 +1096,10 @@
                 font-size: 1.125rem;
                 padding: var(--md-spacing-md);
             }
+            
+            .success-modal-content {
+                padding: var(--md-spacing-lg);
+            }
         }
 
         @media (max-width: 480px) {
@@ -992,6 +1127,14 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .form-progress {
+                gap: var(--md-spacing-sm);
+            }
+            
+            .progress-line {
+                max-width: 20px;
+            }
         }
     </style>
 </head>
@@ -1000,6 +1143,24 @@
     <div class="animated-bg">
         <div class="gradient-bg"></div>
         <div class="mesh-overlay"></div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="success-title">Welcome to Reverbit!</h3>
+            <p class="success-message" id="successMessage">
+                Your account has been created successfully. We've sent a verification email to your address.
+                Please verify your email to unlock all features.
+            </p>
+            <div class="success-actions">
+                <button class="btn btn-outlined" onclick="closeSuccessModal()">Close</button>
+                <button class="btn btn-filled" onclick="goToDashboard()">Go to Dashboard</button>
+            </div>
+        </div>
     </div>
 
     <!-- Modern Floating Pill Navbar -->
@@ -1163,15 +1324,26 @@
                     <p class="form-subtitle">Fill in your details to get started</p>
                 </div>
 
+                <!-- Progress Indicator -->
+                <div class="form-progress">
+                    <div class="progress-step active">1</div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step">2</div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step">3</div>
+                </div>
+
                 <form class="signup-form" id="signup-form">
                     <div class="form-group">
                         <label for="name" class="form-label">Full Name</label>
                         <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+                        <div class="strength-text" id="nameError" style="color: #ff4444; display: none;"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                        <div class="strength-text" id="emailError" style="color: #ff4444; display: none;"></div>
                     </div>
 
                     <div class="form-group">
@@ -1204,7 +1376,7 @@
                     <div class="terms-group">
                         <input type="checkbox" id="terms" required>
                         <label for="terms">
-                            I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+                            I agree to the <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank" class="terms-link">Terms of Service</a> and <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank" class="terms-link">Privacy Policy</a>
                         </label>
                     </div>
 
@@ -1229,7 +1401,7 @@
 
                     <p class="signin-link">
                         Already have an account?
-                        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html">Sign in</a>
+                        <a href="https://aditya-cmd-max.github.io/signin">Sign in</a>
                     </p>
                 </form>
             </div>
@@ -1249,6 +1421,43 @@
     </footer>
 
     <script>
+        // Check if user is already logged in and redirect
+        async function checkAndRedirect() {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+                    authDomain: "reverbit11.firebaseapp.com",
+                    projectId: "reverbit11",
+                    storageBucket: "reverbit11.firebasestorage.app",
+                    messagingSenderId: "607495314412",
+                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+                    measurementId: "G-DMWMRM1M47"
+                };
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                const auth = firebase.auth();
+                
+                // Check if user is already logged in
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        console.log('User is already signed in. Redirecting to dashboard...');
+                        // Small delay to ensure page is loaded
+                        setTimeout(() => {
+                            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+                        }, 500);
+                    }
+                });
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+            }
+        }
+
+        // Call this at the very beginning
+        checkAndRedirect();
+        
         // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
         const mobileThemeToggle = document.getElementById('mobileThemeToggle');
@@ -1265,6 +1474,8 @@
         const strengthFill = document.getElementById('strengthFill');
         const strengthText = document.getElementById('strengthText');
         const passwordMatch = document.getElementById('passwordMatch');
+        const successModal = document.getElementById('successModal');
+        const successMessage = document.getElementById('successMessage');
 
         // Theme Toggle
         function toggleTheme() {
@@ -1411,27 +1622,78 @@
         
         confirmPasswordField.addEventListener('input', checkPasswordMatch);
 
-        // Form submission - UPDATED WITH DASHBOARD REDIRECTION
+        // Validate form
+        function validateForm(name, email, password, confirmPassword) {
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            
+            // Reset errors
+            nameError.style.display = 'none';
+            emailError.style.display = 'none';
+            
+            let isValid = true;
+            
+            // Validate name
+            if (name.length < 2) {
+                nameError.textContent = 'Name must be at least 2 characters';
+                nameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                passwordMatch.textContent = '✗ Passwords do not match';
+                passwordMatch.style.color = '#ff4444';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Show success modal
+        function showSuccessModal(message) {
+            successMessage.textContent = message;
+            successModal.style.display = 'flex';
+        }
+
+        // Close success modal
+        function closeSuccessModal() {
+            successModal.style.display = 'none';
+        }
+
+        // Go to dashboard
+        function goToDashboard() {
+            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+        }
+
+        // Close modal when clicking outside
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                closeSuccessModal();
+            }
+        });
+
+        // Form submission - ENHANCED WITH BETTER VALIDATION AND SUCCESS MODAL
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
             const submitBtn = e.target.querySelector('button[type="submit"]');
             
-            // Validate password match
-            if (password !== confirmPassword) {
-                alert("Passwords don't match!");
+            // Validate form
+            if (!validateForm(name, email, password, confirmPassword)) {
                 return;
-            }
-            
-            // Validate password strength
-            const strength = checkPasswordStrength(password);
-            if (strength.strength === 'Very Weak' || strength.strength === 'Weak') {
-                const confirmWeak = confirm("Your password is weak. Are you sure you want to continue?");
-                if (!confirmWeak) return;
             }
             
             // Show loading state
@@ -1457,6 +1719,8 @@
                 
                 const auth = firebase.auth();
                 const db = firebase.firestore();
+                
+                // Create user with email and password
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
@@ -1466,7 +1730,10 @@
                 });
                 
                 // Send email verification
-                await user.sendEmailVerification();
+                await user.sendEmailVerification({
+                    url: 'https://aditya-cmd-max.github.io/dashboard',
+                    handleCodeInApp: true
+                });
                 
                 // Store user data in localStorage for SSO
                 localStorage.setItem('reverbit_user', JSON.stringify({
@@ -1496,6 +1763,7 @@
                     bio: '',
                     country: '',
                     streak: 0,
+                    emailVerified: user.emailVerified,
                     joinedAt: user.metadata.creationTime,
                     lastActive: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
@@ -1508,17 +1776,27 @@
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
                 
-                // Success state
-                submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
-                submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
+                // Reset button state
+                submitBtn.querySelector('span').textContent = 'Create Account';
+                submitLoading.style.display = 'none';
+                submitBtn.disabled = false;
                 
-                // Show welcome message
-                console.log('Account created successfully! Redirecting to dashboard...');
+                // Show success modal
+                showSuccessModal(`Your account has been created successfully! We've sent a verification email to ${email}. Please verify your email to unlock all features.`);
                 
-                // Redirect to dashboard after 1.5 seconds
-                setTimeout(() => {
-                    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-                }, 1500);
+                // Reset form
+                signupForm.reset();
+                strengthFill.style.width = '0%';
+                strengthText.textContent = 'Password strength: Weak';
+                passwordMatch.textContent = '';
+                
+                // Update progress steps
+                document.querySelectorAll('.progress-step').forEach((step, index) => {
+                    if (index < 3) {
+                        step.classList.add('completed');
+                        step.classList.remove('active');
+                    }
+                });
                 
             } catch (error) {
                 // Error state
@@ -1533,13 +1811,19 @@
                         errorMessage = 'This email is already registered. Please sign in instead.';
                         break;
                     case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address.';
+                        errorMessage = 'Invalid email address. Please check and try again.';
                         break;
                     case 'auth/operation-not-allowed':
-                        errorMessage = 'Email/password accounts are not enabled.';
+                        errorMessage = 'Email/password accounts are not enabled. Please contact support.';
                         break;
                     case 'auth/weak-password':
-                        errorMessage = 'Password is too weak. Please choose a stronger password.';
+                        errorMessage = 'Password is too weak. Please choose a stronger password (at least 8 characters with letters and numbers).';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Network error. Please check your internet connection and try again.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many attempts. Please try again in a few minutes.';
                         break;
                 }
                 
@@ -1547,7 +1831,7 @@
             }
         });
 
-        // Google Sign In - UPDATED WITH DASHBOARD REDIRECTION
+        // Google Sign In - ENHANCED WITH PROGRESS STEPS
         window.googleSignIn = function() {
             try {
                 const firebaseConfig = {
@@ -1567,6 +1851,10 @@
                 const auth = firebase.auth();
                 const db = firebase.firestore();
                 const provider = new firebase.auth.GoogleAuthProvider();
+                
+                // Add additional scopes if needed
+                provider.addScope('profile');
+                provider.addScope('email');
                 
                 auth.signInWithPopup(provider)
                     .then(async (result) => {
@@ -1603,6 +1891,7 @@
                                 bio: '',
                                 country: '',
                                 streak: 0,
+                                emailVerified: user.emailVerified,
                                 joinedAt: user.metadata.creationTime,
                                 lastActive: new Date().toISOString(),
                                 updatedAt: new Date().toISOString()
@@ -1625,21 +1914,31 @@
                         // Show success message
                         console.log('Google sign up successful! Redirecting to dashboard...');
                         
-                        // Show brief success message
-                        const submitBtn = document.querySelector('.btn-filled');
-                        const originalText = submitBtn.querySelector('span').textContent;
-                        submitBtn.querySelector('span').textContent = 'Success! Redirecting...';
-                        submitBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
+                        // Update progress steps
+                        document.querySelectorAll('.progress-step').forEach((step, index) => {
+                            if (index < 3) {
+                                step.classList.add('completed');
+                                step.classList.remove('active');
+                            }
+                        });
                         
-                        // Redirect to dashboard after 1.5 seconds
-                        setTimeout(() => {
-                            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-                        }, 1500);
+                        // Show success modal
+                        showSuccessModal(`Welcome to Reverbit, ${user.displayName || 'User'}! Your account has been created successfully with Google. You're now ready to explore our AI ecosystem.`);
                         
                     })
                     .catch(error => {
                         console.error('Google sign up error:', error);
-                        alert('Google sign up failed: ' + error.message);
+                        
+                        let errorMessage = 'Google sign up failed. Please try again.';
+                        if (error.code === 'auth/popup-closed-by-user') {
+                            errorMessage = 'Sign up was cancelled. Please try again.';
+                        } else if (error.code === 'auth/cancelled-popup-request') {
+                            errorMessage = 'Sign up was cancelled. Please try again.';
+                        } else if (error.code === 'auth/account-exists-with-different-credential') {
+                            errorMessage = 'An account already exists with this email. Please try signing in instead.';
+                        }
+                        
+                        alert(errorMessage);
                     });
             } catch (error) {
                 console.error('Error initializing Google sign up:', error);
@@ -1686,8 +1985,20 @@
                 document.body.style.overflow = 'auto';
             }
             
+            if (e.key === 'Escape' && successModal.style.display === 'flex') {
+                closeSuccessModal();
+            }
+            
             if (e.shiftKey && e.key === 'T') {
                 toggleTheme();
+            }
+            
+            // Submit form with Ctrl/Cmd + Enter
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                const submitBtn = document.querySelector('#signup-form button[type="submit"]');
+                if (submitBtn && !submitBtn.disabled) {
+                    submitBtn.click();
+                }
             }
         });
     </script>
