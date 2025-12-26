@@ -413,6 +413,39 @@
             min-width: 300px;
         }
 
+        /* Animated Gradient Username */
+        .animated-username {
+            display: inline-block;
+            font-family: var(--md-font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, 
+                #1a73e8, 
+                #4285f4, 
+                #34a853, 
+                #0d8a72,
+                #1a73e8);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 4s ease infinite;
+            padding: 0 2px;
+            margin: 0 4px;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         .welcome-section h1 {
             font-family: var(--md-font-heading);
             font-size: 2rem;
@@ -1529,6 +1562,49 @@
                 display: block;
             }
             
+            /* Animated Username adjustments for mobile */
+            .animated-username {
+                font-size: 1.75rem;
+            }
+            
+            .welcome-section h1 {
+                font-size: 1.75rem;
+            }
+            
+            /* Prevent unwanted sidebar opening */
+            .header-actions button,
+            .header-actions a,
+            .btn,
+            .theme-toggle,
+            .app-card,
+            .profile-avatar-button,
+            .form-input,
+            select,
+            textarea,
+            .modal-content,
+            .reverbit-profile-popup,
+            .reverbit-profile-popup * {
+                pointer-events: auto !important;
+            }
+            
+            /* Ensure hamburger menu is always clickable */
+            .hamburger-menu {
+                pointer-events: auto !important;
+                z-index: 1000 !important;
+            }
+            
+            /* When sidebar is open, only allow clicks on sidebar content */
+            .sidebar.mobile-open ~ .main-content,
+            .sidebar.mobile-open ~ .mobile-header .nav-brand,
+            .sidebar.mobile-open ~ .mobile-header .profile-avatar-button {
+                pointer-events: none !important;
+            }
+            
+            /* But keep hamburger menu clickable */
+            .sidebar.mobile-open ~ .mobile-header .hamburger-menu {
+                pointer-events: auto !important;
+            }
+            
             /* Profile Popup Mobile Styles */
             .reverbit-profile-popup {
                 position: fixed !important;
@@ -1687,7 +1763,7 @@
             <!-- Top Header -->
             <header class="top-header">
                 <div class="welcome-section">
-                    <h1 id="greeting">Hi, <span id="userName">User</span>! 👋</h1>
+                    <h1 id="greeting">Hi, <span id="userName" class="animated-username">User</span>! 👋</h1>
                     <p>Welcome back to your Reverbit Dashboard</p>
                     <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
                         <div class="progress-fill" style="width: 60%;"></div>
@@ -2174,6 +2250,7 @@
         const navItems = document.querySelectorAll('.nav-item');
         const profilePopup = document.getElementById('profilePopup');
         const uploadLoading = document.getElementById('uploadLoading');
+        const animatedUsername = document.querySelector('.animated-username');
 
         // Profile avatar elements
         const desktopProfileAvatar = document.getElementById('desktopProfileAvatar');
@@ -2392,6 +2469,7 @@
 
         themeToggle.addEventListener('click', function(e) {
             e.stopPropagation();
+            e.preventDefault();
             toggleTheme();
         });
 
@@ -2409,7 +2487,7 @@
             }
         }
 
-        // Mobile menu toggle - FIXED: Only opens on hamburger menu click
+        // FIXED: Mobile menu handling with better click prevention
         function toggleMobileMenu() {
             sidebar.classList.toggle('mobile-open');
             hamburgerMenu.classList.toggle('active');
@@ -2417,35 +2495,59 @@
             
             if (sidebar.classList.contains('mobile-open')) {
                 document.body.style.overflow = 'hidden';
+                // Add event listener to close on overlay click
+                setTimeout(() => {
+                    sidebarOverlay.addEventListener('click', closeMobileMenuOnOverlayClick);
+                }, 10);
             } else {
                 document.body.style.overflow = 'auto';
+                sidebarOverlay.removeEventListener('click', closeMobileMenuOnOverlayClick);
             }
         }
 
-        // FIXED: Only hamburger menu should trigger sidebar
+        // Separate function for overlay click
+        function closeMobileMenuOnOverlayClick(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            if (sidebar.classList.contains('mobile-open')) {
+                toggleMobileMenu();
+            }
+        }
+
+        // FIXED: Only hamburger menu and close button should trigger sidebar
         hamburgerMenu.addEventListener('click', function(e) {
             e.stopPropagation();
-            toggleMobileMenu();
-        });
-        
-        sidebarClose.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleMobileMenu();
-        });
-        
-        sidebarOverlay.addEventListener('click', function(e) {
-            e.stopPropagation();
+            e.preventDefault();
             toggleMobileMenu();
         });
 
-        // Close mobile menu when clicking on a nav item
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (window.innerWidth <= 768) {
-                    toggleMobileMenu();
-                }
-            });
+        sidebarClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            toggleMobileMenu();
+        });
+
+        // FIXED: Overlay click handler
+        sidebarOverlay.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            toggleMobileMenu();
+        });
+
+        // FIXED: Prevent sidebar from opening when clicking other elements
+        document.addEventListener('click', function(e) {
+            // Don't prevent if we're clicking the hamburger menu
+            if (e.target.closest('.hamburger-menu') || e.target.closest('.sidebar-close')) {
+                return;
+            }
+            
+            // If sidebar is open on mobile and we click outside, close it
+            if (window.innerWidth <= 768 && 
+                sidebar.classList.contains('mobile-open') && 
+                !e.target.closest('.sidebar') &&
+                !e.target.closest('.hamburger-menu')) {
+                toggleMobileMenu();
+            }
         });
 
         // Profile Popup Functions
@@ -2744,6 +2846,7 @@
                 document.querySelectorAll('.prevent-sidebar-open').forEach(button => {
                     button.addEventListener('click', function(e) {
                         e.stopPropagation();
+                        e.preventDefault();
                     });
                 });
                 
@@ -2758,16 +2861,19 @@
         function setupProfilePopupHandlers() {
             desktopProfileAvatar.addEventListener('click', (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 toggleProfilePopup(e);
             });
             
             mobileProfileAvatar.addEventListener('click', (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 toggleProfilePopup(e);
             });
             
             sidebarProfileAvatar.addEventListener('click', (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 toggleProfilePopup(e);
             });
         }
@@ -2777,10 +2883,15 @@
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 
-                // Update greeting
+                // Update greeting with animated username
                 const displayName = user.displayName || 'User';
-                document.getElementById('greeting').innerHTML = `Hi, <span id="userName">${displayName}</span>! 👋`;
-                document.getElementById('userName').textContent = displayName;
+                const greetingElement = document.getElementById('greeting');
+                const userNameElement = document.getElementById('userName');
+                
+                // Update the animated username
+                userNameElement.textContent = displayName;
+                
+                // Update all other username displays
                 document.getElementById('sidebarUserName').textContent = displayName;
                 document.getElementById('profileUserName').textContent = displayName;
                 
@@ -2791,23 +2902,23 @@
                 // Get avatar URL - IMPROVED: Better logic for existing photos
                 let avatarUrl = null;
                 
-                // First, check if user has uploaded a profile picture to Firebase
+                // Priority 1: Cloudinary/Firestore photoURL
                 if (userDoc.exists && userDoc.data().photoURL) {
                     avatarUrl = userDoc.data().photoURL;
                     console.log('Found Cloudinary/Firebase avatar URL:', avatarUrl);
                 }
-                // Then check Firebase Auth
-                else if (user.photoURL) {
+                // Priority 2: Firebase Auth photoURL
+                else if (user.photoURL && !user.photoURL.includes('ui-avatars.com')) {
                     avatarUrl = user.photoURL;
                     console.log('Found Firebase Auth avatar URL:', avatarUrl);
                 }
-                // Last resort: use UI Avatars (only if no uploaded photo)
+                // Last resort: use UI Avatars
                 else {
-                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=160`;
                     console.log('Using fallback UI Avatars URL');
                 }
                 
-                // Update UI with the actual avatar URL
+                // CRITICAL FIX: Update the large profile picture in the update profile section
                 updateProfileAvatars(avatarUrl, false);
                 
                 // Calculate member since
@@ -2862,16 +2973,84 @@
             }
         }
 
-        // Update all profile avatars - IMPROVED: Better handling for existing photos
+        // IMPROVED: Update all profile avatars with better error handling
         function updateProfileAvatars(avatarUrl, isNewUpload = false) {
             console.log('Updating avatars with URL:', avatarUrl, 'isNewUpload:', isNewUpload);
             
             // Add cache busting parameter to prevent caching
-            const cacheBuster = isNewUpload ? '?t=' + Date.now() : '';
+            const cacheBuster = isNewUpload ? '?t=' + Date.now() : '?t=' + Date.now(); // Always use cache buster
             
-            // Update all small avatars
+            // IMPORTANT FIX: For large profile picture in update profile section
+            const profileAvatarImg = document.getElementById('profileAvatarImg');
+            if (profileAvatarImg) {
+                // Clear any existing content
+                const parent = profileAvatarImg.parentNode;
+                // Remove any existing fallback
+                const existingFallbacks = parent.querySelectorAll('[class*="fallback"]');
+                existingFallbacks.forEach(fb => fb.remove());
+                
+                // For Cloudinary URLs, we can add resize parameters
+                let profileAvatarUrl = avatarUrl;
+                
+                // If it's a Cloudinary URL, optimize it for display
+                if (avatarUrl && avatarUrl.includes('cloudinary.com') && avatarUrl.includes('/upload/')) {
+                    // Add resize parameters for better display - ensure face detection
+                    profileAvatarUrl = avatarUrl.replace('/upload/', '/upload/w_400,h_400,c_fill,g_face/');
+                }
+                
+                // Set the image source with cache busting
+                profileAvatarImg.src = profileAvatarUrl + (profileAvatarUrl.includes('?') ? '&t=' + Date.now() : '?t=' + Date.now());
+                profileAvatarImg.style.display = 'block';
+                profileAvatarImg.alt = currentUser?.displayName || 'User';
+                
+                // Set up better error handling
+                profileAvatarImg.onerror = function() {
+                    console.log('Large avatar failed to load, showing fallback:', profileAvatarUrl);
+                    
+                    // Hide the broken image
+                    this.style.display = 'none';
+                    
+                    // Show initials fallback
+                    const displayName = currentUser?.displayName || 'User';
+                    const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                    
+                    const fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'avatar-fallback-large';
+                    fallbackDiv.style.cssText = `
+                        width: 160px;
+                        height: 160px;
+                        border-radius: 50%;
+                        background: var(--md-gradient-1);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--md-on-primary);
+                        font-size: 3rem;
+                        font-weight: 700;
+                        border: 4px solid var(--md-surface);
+                        box-shadow: var(--md-elevation-3);
+                    `;
+                    fallbackDiv.textContent = initials;
+                    
+                    this.parentNode.appendChild(fallbackDiv);
+                };
+                
+                // Clear any error handler once loaded
+                profileAvatarImg.onload = function() {
+                    console.log('Large avatar loaded successfully');
+                    // Remove any fallback if it exists
+                    const fallback = this.parentNode.querySelector('.avatar-fallback-large');
+                    if (fallback) {
+                        fallback.remove();
+                    }
+                };
+            }
+            
+            // Update small avatars (desktop, mobile, sidebar)
             const avatarElements = document.querySelectorAll('.profile-avatar-img');
             avatarElements.forEach(img => {
+                if (img.id === 'profileAvatarImg') return; // Skip the large one
+                
                 // Remove any existing fallback
                 const existingFallback = img.parentNode.querySelector('.avatar-fallback');
                 if (existingFallback) {
@@ -2885,13 +3064,13 @@
                 
                 // Set up error handler
                 img.onerror = function() {
-                    console.log('Avatar failed to load:', avatarUrl);
+                    console.log('Small avatar failed to load');
                     handleAvatarError(this);
                 };
                 
                 // Set up load handler
                 img.onload = function() {
-                    console.log('Avatar loaded successfully');
+                    console.log('Small avatar loaded successfully');
                     // Image loaded successfully, ensure no fallback is visible
                     const fallback = this.parentNode.querySelector('.avatar-fallback');
                     if (fallback) {
@@ -2899,34 +3078,6 @@
                     }
                 };
             });
-            
-            // Update profile section avatar - This should show the real profile picture
-            const profileAvatarImg = document.getElementById('profileAvatarImg');
-            if (profileAvatarImg) {
-                // Remove any existing fallback
-                const existingFallback = profileAvatarImg.parentNode.querySelector('.avatar-fallback-large');
-                if (existingFallback) {
-                    existingFallback.remove();
-                }
-                
-                // For Cloudinary URLs, we can add resize parameters
-                let profileAvatarUrl = avatarUrl;
-                if (avatarUrl.includes('cloudinary.com') && avatarUrl.includes('/upload/')) {
-                    // Add resize parameters for better display
-                    profileAvatarUrl = avatarUrl.replace('/upload/', '/upload/w_400,h_400,c_fill,g_face/');
-                }
-                
-                profileAvatarImg.src = profileAvatarUrl + cacheBuster;
-                profileAvatarImg.style.display = 'block';
-                profileAvatarImg.alt = currentUser?.displayName || 'User';
-                profileAvatarImg.onerror = function() {
-                    console.log('Large avatar failed to load');
-                    handleLargeAvatarError(this);
-                };
-                profileAvatarImg.onload = function() {
-                    console.log('Large avatar loaded successfully');
-                };
-            }
         }
 
         // Load usage data
@@ -3034,6 +3185,11 @@
                     await currentUser.updateProfile({
                         displayName: fullName
                     });
+                    
+                    // Update animated username
+                    document.getElementById('userName').textContent = fullName;
+                    document.getElementById('sidebarUserName').textContent = fullName;
+                    document.getElementById('profileUserName').textContent = fullName;
                 }
                 
                 // Update Firestore
@@ -3113,6 +3269,7 @@
         // Update signout button
         document.getElementById('signoutButton').addEventListener('click', function(e) {
             e.stopPropagation();
+            e.preventDefault();
             logout();
         });
 
