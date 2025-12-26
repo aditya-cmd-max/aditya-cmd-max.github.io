@@ -2270,8 +2270,8 @@
                 currentUserProfile.photoURL = imageUrl;
                 currentUserProfile.cloudinaryImageId = publicId;
                 
-                // Update UI
-                updateProfileAvatars(imageUrl);
+                // Update UI - FIXED: Use the actual Cloudinary URL
+                updateProfileAvatars(imageUrl, true);
                 
                 // Hide loading
                 uploadLoading.style.display = 'none';
@@ -2291,9 +2291,31 @@
             }
         }
 
-        // Avatar error handler
+        // Avatar error handler - FIXED: Only show fallback when image doesn't exist
         function handleAvatarError(img) {
-            console.log('Avatar image failed to load, using fallback');
+            console.log('Avatar image failed to load');
+            
+            // If there's a real photoURL but it failed to load, try to reload it
+            if (currentUserProfile && currentUserProfile.photoURL && 
+                !currentUserProfile.photoURL.includes('ui-avatars.com')) {
+                console.log('Retrying to load profile picture...');
+                // Add cache busting parameter and try again
+                img.src = currentUserProfile.photoURL + '?t=' + Date.now();
+                img.onerror = null; // Remove error handler to prevent infinite loop
+                setTimeout(() => {
+                    if (img.complete && img.naturalHeight === 0) {
+                        // Still failed, show fallback
+                        showFallbackAvatar(img);
+                    }
+                }, 1000);
+                return;
+            }
+            
+            // Show fallback
+            showFallbackAvatar(img);
+        }
+
+        function showFallbackAvatar(img) {
             const displayName = currentUser?.displayName || 'User';
             const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             
@@ -2309,6 +2331,28 @@
 
         function handleLargeAvatarError(img) {
             console.log('Large avatar image failed to load');
+            
+            // If there's a real photoURL but it failed to load, try to reload it
+            if (currentUserProfile && currentUserProfile.photoURL && 
+                !currentUserProfile.photoURL.includes('ui-avatars.com')) {
+                console.log('Retrying to load large profile picture...');
+                // Add cache busting parameter and try again
+                img.src = currentUserProfile.photoURL + '?t=' + Date.now();
+                img.onerror = null; // Remove error handler to prevent infinite loop
+                setTimeout(() => {
+                    if (img.complete && img.naturalHeight === 0) {
+                        // Still failed, show fallback
+                        showLargeFallbackAvatar(img);
+                    }
+                }, 1000);
+                return;
+            }
+            
+            // Show fallback
+            showLargeFallbackAvatar(img);
+        }
+
+        function showLargeFallbackAvatar(img) {
             const displayName = currentUser?.displayName || 'User';
             const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             
@@ -2387,13 +2431,14 @@
             
             const displayName = userProfile.displayName || 'User';
             const email = userProfile.email || '';
+            // Use the actual photoURL from userProfile (which should be Cloudinary URL)
             const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
             
             return `
                 <div class="profile-popup-container">
                     <div class="profile-popup-header">
                         <div class="profile-popup-avatar" onclick="openCloudinaryUploadWidget()">
-                            <img src="${photoURL}" alt="${displayName}" onerror="this.parentElement.innerHTML = '<div class=\\'avatar-fallback\\'>${displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)}</div>'">
+                            <img src="${photoURL}" alt="${displayName}" onerror="handleAvatarError(this)">
                         </div>
                         <div class="profile-popup-info">
                             <div class="profile-popup-name">${displayName}</div>
@@ -2692,7 +2737,7 @@
             });
         }
 
-        // Load user data from Firestore
+        // Load user data from Firestore - FIXED: Get photoURL from Firebase
         async function loadUserData(user) {
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
@@ -2708,18 +2753,27 @@
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('email').value = user.email || '';
                 
-                // Update avatar - Get proper photoURL from Cloudinary
-                let avatarUrl;
+                // Get avatar URL - FIXED: Always check Firebase first for Cloudinary URL
+                let avatarUrl = null;
+                
+                // First, check if user has uploaded a profile picture to Firebase
                 if (userDoc.exists && userDoc.data().photoURL) {
                     avatarUrl = userDoc.data().photoURL;
-                } else if (user.photoURL) {
+                    console.log('Found Cloudinary/Firebase avatar URL:', avatarUrl);
+                }
+                // Then check Firebase Auth
+                else if (user.photoURL) {
                     avatarUrl = user.photoURL;
-                } else {
+                    console.log('Found Firebase Auth avatar URL:', avatarUrl);
+                }
+                // Last resort: use UI Avatars (only if no uploaded photo)
+                else {
                     avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+                    console.log('Using fallback UI Avatars URL');
                 }
                 
-                console.log('Loading avatar from:', avatarUrl);
-                updateProfileAvatars(avatarUrl);
+                // Update UI with the actual avatar URL
+                updateProfileAvatars(avatarUrl, false);
                 
                 // Calculate member since
                 const joinDate = user.metadata.creationTime;
@@ -2738,7 +2792,7 @@
                     currentUserProfile = {
                         displayName: displayName,
                         email: user.email,
-                        photoURL: avatarUrl,
+                        photoURL: avatarUrl, // Store the actual URL
                         ...userData
                     };
                     
@@ -2764,7 +2818,7 @@
                     currentUserProfile = {
                         displayName: displayName,
                         email: user.email,
-                        photoURL: avatarUrl
+                        photoURL: avatarUrl // Store the actual URL
                     };
                 }
             } catch (error) {
@@ -2773,46 +2827,37 @@
             }
         }
 
-        // Update all profile avatars
-        function updateProfileAvatars(avatarUrl) {
-            console.log('Updating avatars with URL:', avatarUrl);
+        // Update all profile avatars - FIXED: Use actual image URLs, not fallback
+        function updateProfileAvatars(avatarUrl, isNewUpload = false) {
+            console.log('Updating avatars with URL:', avatarUrl, 'isNewUpload:', isNewUpload);
             
-            // Add cache busting parameter to prevent caching issues
-            const cacheBuster = '&timestamp=' + Date.now();
-            let cleanAvatarUrl = avatarUrl;
-            
-            // Handle UI Avatars URLs
-            if (avatarUrl.includes('ui-avatars.com')) {
-                if (!avatarUrl.includes('bold=true')) {
-                    cleanAvatarUrl += '&bold=true';
-                }
-            }
+            // Add cache busting parameter to prevent caching
+            const cacheBuster = isNewUpload ? '?t=' + Date.now() : '';
             
             // Update all small avatars
             const avatarElements = document.querySelectorAll('.profile-avatar-img');
             avatarElements.forEach(img => {
-                // Set the new source with cache busting
-                img.src = cleanAvatarUrl + cacheBuster;
-                img.alt = currentUser?.displayName || 'User';
-                
-                // Clear any existing fallback
+                // Remove any existing fallback
                 const existingFallback = img.parentNode.querySelector('.avatar-fallback');
                 if (existingFallback) {
                     existingFallback.remove();
                 }
                 
+                // Set the image source
+                img.src = avatarUrl + cacheBuster;
+                img.alt = currentUser?.displayName || 'User';
                 img.style.display = 'block';
                 
                 // Set up error handler
                 img.onerror = function() {
-                    console.log('Avatar failed to load, creating fallback');
+                    console.log('Avatar failed to load:', avatarUrl);
                     handleAvatarError(this);
                 };
                 
                 // Set up load handler
                 img.onload = function() {
                     console.log('Avatar loaded successfully');
-                    // Hide any fallback if image loads successfully
+                    // Image loaded successfully, ensure no fallback is visible
                     const fallback = this.parentNode.querySelector('.avatar-fallback');
                     if (fallback) {
                         fallback.style.display = 'none';
@@ -2823,14 +2868,23 @@
             // Update profile section avatar
             const profileAvatarImg = document.getElementById('profileAvatarImg');
             if (profileAvatarImg) {
-                let profileAvatarUrl = cleanAvatarUrl;
+                // Remove any existing fallback
+                const existingFallback = profileAvatarImg.parentNode.querySelector('.avatar-fallback-large');
+                if (existingFallback) {
+                    existingFallback.remove();
+                }
                 
-                // For UI Avatars, adjust size for large avatar
-                if (profileAvatarUrl.includes('ui-avatars.com')) {
-                    profileAvatarUrl = profileAvatarUrl.replace(/&size=[^&]*/, '') + '&size=160';
+                // For Cloudinary URLs, we can add resize parameters
+                let profileAvatarUrl = avatarUrl;
+                if (avatarUrl.includes('cloudinary.com') && !avatarUrl.includes('/upload/')) {
+                    // Already a Cloudinary URL, use as is
+                } else if (avatarUrl.includes('cloudinary.com') && avatarUrl.includes('/upload/')) {
+                    // Add resize parameters for better display
+                    profileAvatarUrl = avatarUrl.replace('/upload/', '/upload/w_400,h_400,c_fill,g_face/');
                 }
                 
                 profileAvatarImg.src = profileAvatarUrl + cacheBuster;
+                profileAvatarImg.style.display = 'block';
                 profileAvatarImg.onerror = function() {
                     console.log('Large avatar failed to load');
                     handleLargeAvatarError(this);
