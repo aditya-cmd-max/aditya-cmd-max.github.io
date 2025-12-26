@@ -701,6 +701,9 @@
             text-decoration: none;
             font-weight: 500;
             transition: var(--md-transition);
+            cursor: pointer;
+            background: none;
+            border: none;
         }
 
         .forgot-link:hover {
@@ -879,6 +882,166 @@
             font-size: 0.875rem;
         }
 
+        /* Reset Password Modal */
+        .reset-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md-spacing-md);
+        }
+
+        .reset-modal-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xl);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: var(--md-elevation-4);
+            position: relative;
+            border: 1px solid var(--md-outline);
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        .reset-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .reset-modal-header {
+            text-align: center;
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .reset-modal-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .reset-modal-subtitle {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+        }
+
+        .reset-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-lg);
+        }
+
+        .reset-actions {
+            display: flex;
+            gap: var(--md-spacing-md);
+            margin-top: var(--md-spacing-lg);
+        }
+
+        .reset-actions .btn {
+            flex: 1;
+        }
+
+        .reset-success {
+            display: none;
+            text-align: center;
+            padding: var(--md-spacing-xl) 0;
+        }
+
+        .reset-success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--md-spacing-lg);
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .reset-success-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .reset-success-message {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        /* Success Checkmark Animation */
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: white;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            box-shadow: inset 0px 0px 0px var(--md-secondary);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: var(--md-secondary);
+            fill: none;
+            animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+
+        @keyframes fill {
+            100% { box-shadow: inset 0px 0px 0px 40px var(--md-secondary); }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .login-wrapper {
@@ -950,6 +1113,14 @@
                 font-size: 1.125rem;
                 padding: var(--md-spacing-md);
             }
+            
+            .reset-modal-content {
+                padding: var(--md-spacing-lg);
+            }
+            
+            .reset-actions {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -981,11 +1152,49 @@
     </style>
 </head>
 <body class="light-theme">
-    <!-- (Keep all your HTML structure the same) -->
     <!-- Enhanced Animated Background -->
     <div class="animated-bg">
         <div class="gradient-bg"></div>
         <div class="mesh-overlay"></div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="reset-modal" id="resetModal">
+        <div class="reset-modal-content">
+            <div id="resetForm" class="reset-form">
+                <div class="reset-modal-header">
+                    <h2 class="reset-modal-title">Reset Your Password</h2>
+                    <p class="reset-modal-subtitle">Enter your email address and we'll send you a link to reset your password.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resetEmail" class="form-label">Email Address</label>
+                    <input type="email" id="resetEmail" class="form-input" placeholder="you@example.com" required>
+                </div>
+                
+                <div class="reset-actions">
+                    <button type="button" class="btn btn-outlined" onclick="closeResetModal()">Cancel</button>
+                    <button type="button" class="btn btn-filled" onclick="sendPasswordReset()" id="resetSubmitBtn">
+                        <span>Send Reset Link</span>
+                        <div class="loading" id="resetLoading"></div>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="resetSuccess" class="reset-success">
+                <div class="reset-success-icon">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+                <h3 class="reset-success-title">Email Sent!</h3>
+                <p class="reset-success-message" id="resetSuccessMessage">
+                    We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.
+                </p>
+                <button class="btn btn-filled" onclick="closeResetModal()">Close</button>
+            </div>
+        </div>
     </div>
 
     <!-- Modern Floating Pill Navbar -->
@@ -1152,7 +1361,7 @@
                             <input type="checkbox" id="remember-me">
                             <label for="remember-me">Remember me</label>
                         </div>
-                        <a href="resetPassword()" class="forgot-link">Forgot password?</a>
+                        <button type="button" class="forgot-link" id="forgotPasswordBtn">Forgot password?</button>
                     </div>
 
                     <button type="submit" class="btn btn-filled">
@@ -1196,47 +1405,42 @@
     </footer>
 
     <script>
-
-        
-        
         // Minimal version - Add this at the beginning of your script
-async function checkAndRedirect() {
-    try {
-        const firebaseConfig = {
-            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-            authDomain: "reverbit11.firebaseapp.com",
-            projectId: "reverbit11",
-            storageBucket: "reverbit11.firebasestorage.app",
-            messagingSenderId: "607495314412",
-            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-            measurementId: "G-DMWMRM1M47"
-        };
+        async function checkAndRedirect() {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+                    authDomain: "reverbit11.firebaseapp.com",
+                    projectId: "reverbit11",
+                    storageBucket: "reverbit11.firebasestorage.app",
+                    messagingSenderId: "607495314412",
+                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+                    measurementId: "G-DMWMRM1M47"
+                };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        
-        const auth = firebase.auth();
-        
-        // Check if user is already logged in
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                console.log('User is already signed in. Redirecting to dashboard...');
-                // Small delay to ensure page is loaded
-                setTimeout(() => {
-                    window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-                }, 500);
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                const auth = firebase.auth();
+                
+                // Check if user is already logged in
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        console.log('User is already signed in. Redirecting to dashboard...');
+                        // Small delay to ensure page is loaded
+                        setTimeout(() => {
+                            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+                        }, 500);
+                    }
+                });
+            } catch (error) {
+                console.error('Error checking auth status:', error);
             }
-        });
-    } catch (error) {
-        console.error('Error checking auth status:', error);
-    }
-}
+        }
 
-// Call this at the very beginning of your script
-checkAndRedirect();
-        
-        
+        // Call this at the very beginning of your script
+        checkAndRedirect();
         
         // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
@@ -1249,6 +1453,14 @@ checkAndRedirect();
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('password');
         const submitLoading = document.getElementById('submitLoading');
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        const resetModal = document.getElementById('resetModal');
+        const resetEmail = document.getElementById('resetEmail');
+        const resetSubmitBtn = document.getElementById('resetSubmitBtn');
+        const resetLoading = document.getElementById('resetLoading');
+        const resetForm = document.getElementById('resetForm');
+        const resetSuccess = document.getElementById('resetSuccess');
+        const resetSuccessMessage = document.getElementById('resetSuccessMessage');
 
         // Theme Toggle
         function toggleTheme() {
@@ -1308,6 +1520,110 @@ checkAndRedirect();
                 '<i class="fas fa-eye"></i>' : 
                 '<i class="fas fa-eye-slash"></i>';
         });
+
+        // Show reset password modal
+        forgotPasswordBtn.addEventListener('click', () => {
+            // Pre-fill with the email from login form if available
+            const emailInput = document.getElementById('email');
+            if (emailInput && emailInput.value) {
+                resetEmail.value = emailInput.value;
+            }
+            
+            // Reset the form state
+            resetForm.style.display = 'flex';
+            resetSuccess.style.display = 'none';
+            resetModal.style.display = 'flex';
+        });
+
+        // Close reset password modal
+        function closeResetModal() {
+            resetModal.style.display = 'none';
+            resetEmail.value = '';
+        }
+
+        // Close modal when clicking outside
+        resetModal.addEventListener('click', (e) => {
+            if (e.target === resetModal) {
+                closeResetModal();
+            }
+        });
+
+        // Send password reset email
+        async function sendPasswordReset() {
+            const email = resetEmail.value.trim();
+            
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Show loading state
+            resetSubmitBtn.disabled = true;
+            resetSubmitBtn.querySelector('span').textContent = 'Sending...';
+            resetLoading.style.display = 'block';
+
+            try {
+                // Initialize Firebase if not already
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+                    authDomain: "reverbit11.firebaseapp.com",
+                    projectId: "reverbit11",
+                    storageBucket: "reverbit11.firebasestorage.app",
+                    messagingSenderId: "607495314412",
+                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+                    measurementId: "G-DMWMRM1M47"
+                };
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                const auth = firebase.auth();
+                
+                // Send password reset email
+                await auth.sendPasswordResetEmail(email);
+                
+                // Show success message
+                resetSuccessMessage.textContent = `We've sent a password reset link to ${email}. Please check your inbox and follow the instructions to reset your password. The link will expire in 1 hour.`;
+                resetForm.style.display = 'none';
+                resetSuccess.style.display = 'block';
+                
+            } catch (error) {
+                // Handle errors
+                let errorMessage = 'Failed to send reset email. Please try again.';
+                
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address.';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this email address.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many attempts. Please try again later.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Network error. Please check your connection.';
+                        break;
+                    default:
+                        errorMessage = error.message || 'Failed to send reset email.';
+                }
+                
+                alert(errorMessage);
+            } finally {
+                // Reset button state
+                resetSubmitBtn.disabled = false;
+                resetSubmitBtn.querySelector('span').textContent = 'Send Reset Link';
+                resetLoading.style.display = 'none';
+            }
+        }
 
         // Form submission - UPDATED WITH CORRECT DASHBOARD URL
         loginForm.addEventListener('submit', async (e) => {
@@ -1575,35 +1891,14 @@ checkAndRedirect();
                 document.body.style.overflow = 'auto';
             }
             
+            if (e.key === 'Escape' && resetModal.style.display === 'flex') {
+                closeResetModal();
+            }
+            
             if (e.shiftKey && e.key === 'T') {
                 toggleTheme();
             }
         });
-    </script
-
-<script>   
-        
-        function resetPassword() {
-  const email = document.getElementById("email").value;
-
-  if (!email) {
-    alert("Enter your email first");
-    return;
-  }
-
-  firebase.auth().sendPasswordResetEmail(email)
-    .then(() => {
-      alert("Password reset link sent to your email");
-    })
-    .catch(error => {
-      alert(error.message);
-    });
-}
-
-        
-        
-        </script>
-
-        
+    </script>
 </body>
 </html>
