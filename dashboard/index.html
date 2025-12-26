@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1650,6 +1651,65 @@
         .prevent-sidebar-open {
             pointer-events: auto !important;
         }
+      
+      
+      /* Mobile-specific fixes */
+@media (max-width: 768px) {
+    /* Ensure interactive elements don't open sidebar */
+    .main-content *,
+    .top-header *,
+    .mobile-header .nav-brand,
+    .mobile-header .profile-avatar-button,
+    .btn,
+    .theme-toggle,
+    .app-card,
+    .dashboard-card,
+    .quick-stat-card,
+    .form-input,
+    select,
+    textarea,
+    .modal-content,
+    .reverbit-profile-popup,
+    .reverbit-profile-popup * {
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+    }
+    
+    /* Only allow sidebar to open via hamburger menu */
+    .hamburger-menu {
+        pointer-events: auto !important;
+        z-index: 1000 !important;
+    }
+    
+    /* When sidebar is open, prevent clicks on main content */
+    .sidebar.mobile-open ~ .main-content *,
+    .sidebar.mobile-open ~ .mobile-header *:not(.hamburger-menu) {
+        pointer-events: none !important;
+    }
+    
+    /* But keep hamburger menu clickable */
+    .sidebar.mobile-open ~ .mobile-header .hamburger-menu {
+        pointer-events: auto !important;
+    }
+    
+    /* Make overlay properly block clicks */
+    .sidebar-overlay {
+        pointer-events: auto !important;
+    }
+    
+    /* Sidebar content should always be clickable */
+    .sidebar * {
+        pointer-events: auto !important;
+    }
+    
+    /* Prevent any element from opening sidebar except hamburger */
+    body *:not(.hamburger-menu):not(.sidebar):not(.sidebar *):not(.sidebar-overlay) {
+        user-select: auto !important;
+        -webkit-user-select: auto !important;
+    }
+}
+      
+      
     </style>
 </head>
 <body class="light-theme">
@@ -3295,6 +3355,71 @@
                 });
             });
         });
-    </script>
+   
+  </script>
+  <script>
+ 
+  
+  // In the DOMContentLoaded event listener, add this:
+document.addEventListener('DOMContentLoaded', async () => {
+    // ... existing code ...
+    
+    // FIXED: Mobile touch handling
+    document.addEventListener('touchstart', function(e) {
+        // Only allow hamburger menu to open sidebar
+        const isHamburger = e.target.closest('.hamburger-menu');
+        const isSidebar = e.target.closest('.sidebar');
+        const isSidebarClose = e.target.closest('.sidebar-close');
+        const isOverlay = e.target.closest('.sidebar-overlay');
+        
+        // If sidebar is open and we're clicking outside, close it
+        if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+            if (!isSidebar && !isHamburger && !isSidebarClose && !isOverlay) {
+                toggleMobileMenu();
+            }
+        }
+    }, { passive: true });
+    
+    // ... rest of existing code ...
+});
+
+// Update the hamburger menu click handler:
+hamburgerMenu.addEventListener('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggleMobileMenu();
+});
+
+// Update the overlay click handler:
+sidebarOverlay.addEventListener('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggleMobileMenu();
+});
+
+// Update the sidebar close button:
+sidebarClose.addEventListener('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggleMobileMenu();
+});
+
+// Add this new function to close sidebar when clicking a nav item in mobile:
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+            setTimeout(() => {
+                toggleMobileMenu();
+            }, 300);
+        }
+    });
+});
+  
+  </script>
+  
+  
 </body>
 </html>
