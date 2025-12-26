@@ -1187,3 +1187,37 @@ function getCurrentAppName() {
     
     return 'other';
 }
+
+
+function uploadImage() {
+  const file = document.getElementById("imgInput").files[0];
+  if (!file) {
+    alert("No file selected");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "reverbit_unsigned11");
+
+  fetch("https://api.cloudinary.com/v1_1/dgy9v2ctk/image/upload", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+
+    const imageURL = data.secure_url;
+    document.getElementById("preview").src = imageURL;
+
+    // now save imageURL in Firebase DB
+    saveImageURL(imageURL);
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Upload failed");
+  });
+}
+
+
