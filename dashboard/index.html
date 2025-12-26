@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1572,13 +1571,16 @@
                 font-size: 1.75rem;
             }
             
-            /* Prevent unwanted sidebar opening */
-            .header-actions button,
-            .header-actions a,
+            /* FIXED: Mobile-specific pointer events */
+            .main-content *,
+            .top-header *,
+            .mobile-header .nav-brand,
+            .mobile-header .profile-avatar-button,
             .btn,
             .theme-toggle,
             .app-card,
-            .profile-avatar-button,
+            .dashboard-card,
+            .quick-stat-card,
             .form-input,
             select,
             textarea,
@@ -1586,23 +1588,33 @@
             .reverbit-profile-popup,
             .reverbit-profile-popup * {
                 pointer-events: auto !important;
+                touch-action: manipulation !important;
             }
             
-            /* Ensure hamburger menu is always clickable */
+            /* Only hamburger menu should open sidebar */
             .hamburger-menu {
                 pointer-events: auto !important;
                 z-index: 1000 !important;
             }
             
-            /* When sidebar is open, only allow clicks on sidebar content */
-            .sidebar.mobile-open ~ .main-content,
-            .sidebar.mobile-open ~ .mobile-header .nav-brand,
-            .sidebar.mobile-open ~ .mobile-header .profile-avatar-button {
+            /* When sidebar is open, prevent clicks on main content */
+            .sidebar.mobile-open ~ .main-content *,
+            .sidebar.mobile-open ~ .mobile-header *:not(.hamburger-menu) {
                 pointer-events: none !important;
             }
             
             /* But keep hamburger menu clickable */
             .sidebar.mobile-open ~ .mobile-header .hamburger-menu {
+                pointer-events: auto !important;
+            }
+            
+            /* Make overlay properly block clicks */
+            .sidebar-overlay {
+                pointer-events: auto !important;
+            }
+            
+            /* Sidebar content should always be clickable */
+            .sidebar * {
                 pointer-events: auto !important;
             }
             
@@ -1646,14 +1658,6 @@
         .dark-theme .logo-svg {
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) brightness(1.2);
         }
-
-        /* Prevent sidebar opening on other element clicks */
-        .prevent-sidebar-open {
-            pointer-events: auto !important;
-        }
-      
-         
-      
     </style>
 </head>
 <body class="light-theme">
@@ -1783,10 +1787,10 @@
                         <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
                     </button>
                     
-                    <button class="theme-toggle prevent-sidebar-open" id="theme-toggle" aria-label="Toggle theme">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
                         <span class="material-icons-round">dark_mode</span>
                     </button>
-                    <button class="btn btn-filled prevent-sidebar-open" id="signoutButton">
+                    <button class="btn btn-filled" id="signoutButton">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
                     </button>
@@ -1918,7 +1922,7 @@
                 <h2 class="section-title">My Reverbit Apps</h2>
                 
                 <div class="apps-grid">
-                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card prevent-sidebar-open">
+                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
                         <div class="app-icon">
                             <i class="fas fa-leaf"></i>
                         </div>
@@ -1933,7 +1937,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card prevent-sidebar-open">
+                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
                         <div class="app-icon">
                             <i class="fas fa-brain"></i>
                         </div>
@@ -1948,7 +1952,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card prevent-sidebar-open">
+                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
                         <div class="app-icon">
                             <i class="fas fa-users"></i>
                         </div>
@@ -1963,7 +1967,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card prevent-sidebar-open">
+                    <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card">
                         <div class="app-icon" style="background: linear-gradient(135deg, #ea4335, #d93025);">
                             <i class="fas fa-network-wired"></i>
                         </div>
@@ -2089,7 +2093,7 @@
                         <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin: var(--md-spacing-sm) 0 var(--md-spacing-lg);">
                             Profile completion: <span id="profileCompletionOverview">60%</span>
                         </p>
-                        <a href="#profile" class="btn btn-filled prevent-sidebar-open" style="width: 100%;" onclick="showSection('profile')">
+                        <a href="#profile" class="btn btn-filled" style="width: 100%;" onclick="showSection('profile')">
                             <i class="fas fa-user-edit"></i>
                             Edit Profile
                         </a>
@@ -2106,17 +2110,17 @@
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: var(--md-spacing-sm); margin-bottom: var(--md-spacing-lg);">
-                            <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined prevent-sidebar-open" style="justify-content: start;">
+                            <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined" style="justify-content: start;">
                                 <i class="fas fa-leaf"></i>
                                 Clover AI
                                 <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="cloverQuickTime">0m</span>
                             </a>
-                            <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined prevent-sidebar-open" style="justify-content: start;">
+                            <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined" style="justify-content: start;">
                                 <i class="fas fa-brain"></i>
                                 MindScribe
                                 <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="mindscribeQuickTime">0m</span>
                             </a>
-                            <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined prevent-sidebar-open" style="justify-content: start;">
+                            <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined" style="justify-content: start;">
                                 <i class="fas fa-users"></i>
                                 Peo
                                 <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="peoQuickTime">0m</span>
@@ -2193,7 +2197,7 @@
                                 Tip: Use keyboard shortcuts
                             </p>
                         </div>
-                        <button class="btn btn-outlined prevent-sidebar-open" style="width: 100%; margin-top: var(--md-spacing-lg);" onclick="showToast('All notifications marked as read')">
+                        <button class="btn btn-outlined" style="width: 100%; margin-top: var(--md-spacing-lg);" onclick="showToast('All notifications marked as read')">
                             <i class="fas fa-check"></i>
                             Mark all as read
                         </button>
@@ -2491,7 +2495,7 @@
             }
         }
 
-        // FIXED: Mobile menu handling with better click prevention
+        // FIXED: Mobile menu handling with proper click isolation
         function toggleMobileMenu() {
             sidebar.classList.toggle('mobile-open');
             hamburgerMenu.classList.toggle('active');
@@ -2499,60 +2503,10 @@
             
             if (sidebar.classList.contains('mobile-open')) {
                 document.body.style.overflow = 'hidden';
-                // Add event listener to close on overlay click
-                setTimeout(() => {
-                    sidebarOverlay.addEventListener('click', closeMobileMenuOnOverlayClick);
-                }, 10);
             } else {
                 document.body.style.overflow = 'auto';
-                sidebarOverlay.removeEventListener('click', closeMobileMenuOnOverlayClick);
             }
         }
-
-        // Separate function for overlay click
-        function closeMobileMenuOnOverlayClick(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            if (sidebar.classList.contains('mobile-open')) {
-                toggleMobileMenu();
-            }
-        }
-
-        // FIXED: Only hamburger menu and close button should trigger sidebar
-        hamburgerMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleMobileMenu();
-        });
-
-        sidebarClose.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleMobileMenu();
-        });
-
-        // FIXED: Overlay click handler
-        sidebarOverlay.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleMobileMenu();
-        });
-
-        // FIXED: Prevent sidebar from opening when clicking other elements
-        document.addEventListener('click', function(e) {
-            // Don't prevent if we're clicking the hamburger menu
-            if (e.target.closest('.hamburger-menu') || e.target.closest('.sidebar-close')) {
-                return;
-            }
-            
-            // If sidebar is open on mobile and we click outside, close it
-            if (window.innerWidth <= 768 && 
-                sidebar.classList.contains('mobile-open') && 
-                !e.target.closest('.sidebar') &&
-                !e.target.closest('.hamburger-menu')) {
-                toggleMobileMenu();
-            }
-        });
 
         // Profile Popup Functions
         let isProfilePopupVisible = false;
@@ -2772,6 +2726,11 @@
                         item.classList.add('active');
                     }
                 });
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                    toggleMobileMenu();
+                }
             }
         }
 
@@ -2845,14 +2804,6 @@
                     });
                     document.getElementById('lastSync').textContent = timeString;
                 }, 60000); // Update every minute
-                
-                // Add click handler to prevent sidebar opening on all buttons
-                document.querySelectorAll('.prevent-sidebar-open').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                    });
-                });
                 
             } catch (error) {
                 console.error('Initialization error:', error);
@@ -3277,31 +3228,42 @@
             logout();
         });
 
-        // Add click event listeners to prevent sidebar opening on other buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add prevent-sidebar-open class to all buttons that shouldn't open sidebar
-            const buttonsToProtect = [
-                '.theme-toggle',
-                '.btn',
-                '.app-card',
-                '.avatar-upload-button',
-                '.activity-item',
-                '.quick-stat-card',
-                '.dashboard-card',
-                '.form-input',
-                'select',
-                'textarea'
-            ];
-            
-            buttonsToProtect.forEach(selector => {
-                document.querySelectorAll(selector).forEach(element => {
-                    element.classList.add('prevent-sidebar-open');
-                });
-            });
+        // FIXED: Mobile touch handling - Only hamburger menu should open sidebar
+        hamburgerMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            toggleMobileMenu();
         });
-   
-  </script>
- 
-  
+
+        sidebarClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            toggleMobileMenu();
+        });
+
+        sidebarOverlay.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            toggleMobileMenu();
+        });
+
+        // FIXED: Add touch event handling for mobile
+        document.addEventListener('touchstart', function(e) {
+            // If sidebar is open and we're clicking outside, close it
+            if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                const isHamburger = e.target.closest('.hamburger-menu');
+                const isSidebar = e.target.closest('.sidebar');
+                const isSidebarClose = e.target.closest('.sidebar-close');
+                const isOverlay = e.target.closest('.sidebar-overlay');
+                
+                if (!isSidebar && !isHamburger && !isSidebarClose && !isOverlay) {
+                    toggleMobileMenu();
+                }
+            }
+        }, { passive: true });
+    </script>
 </body>
 </html>
