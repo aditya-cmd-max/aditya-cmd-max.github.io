@@ -978,8 +978,6 @@
         /* Google-style Profile Popup Styles */
         .reverbit-profile-popup {
             position: fixed;
-            top: 0;
-            right: 0;
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
             box-shadow: var(--md-elevation-5);
@@ -992,6 +990,7 @@
             transition: opacity 0.2s ease, transform 0.2s ease;
             border: 1px solid var(--md-outline);
             font-family: var(--md-font-heading);
+            display: none;
         }
         
         .reverbit-profile-popup.active {
@@ -1008,6 +1007,7 @@
             align-items: center;
             gap: var(--md-spacing-md);
             padding-bottom: var(--md-spacing-md);
+            border-bottom: 1px solid var(--md-outline);
         }
         
         .profile-popup-avatar {
@@ -1082,6 +1082,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            padding-top: var(--md-spacing-md);
         }
         
         .profile-popup-menu-item {
@@ -1298,15 +1299,17 @@
             
             /* Profile Popup Mobile Styles */
             .reverbit-profile-popup {
-                position: fixed;
+                position: fixed !important;
                 top: 50% !important;
                 left: 50% !important;
-                right: auto !important;
                 transform: translate(-50%, -50%) !important;
-                width: calc(100vw - 32px);
-                max-width: 360px;
-                max-height: calc(100vh - 32px);
-                overflow-y: auto;
+                width: calc(100vw - 32px) !important;
+                max-width: 360px !important;
+                max-height: calc(100vh - 32px) !important;
+                overflow-y: auto !important;
+                right: auto !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+                border: 1px solid var(--md-outline) !important;
             }
             
             .reverbit-profile-popup.active {
@@ -2148,7 +2151,6 @@
             cloudName: 'dgy9v2ctk',
             uploadPreset: 'reverbit_unsigned11',
             folder: 'reverbit/user',
-            
         };
 
         // Firebase Configuration
@@ -2385,13 +2387,13 @@
             
             const displayName = userProfile.displayName || 'User';
             const email = userProfile.email || '';
-            const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
+            const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
             
             return `
                 <div class="profile-popup-container">
                     <div class="profile-popup-header">
                         <div class="profile-popup-avatar" onclick="openCloudinaryUploadWidget()">
-                            <img src="${photoURL}" alt="${displayName}" onerror="this.parentElement.innerHTML = '<div class=\'avatar-fallback\'>${displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)}</div>'">
+                            <img src="${photoURL}" alt="${displayName}" onerror="this.parentElement.innerHTML = '<div class=\\'avatar-fallback\\'>${displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)}</div>'">
                         </div>
                         <div class="profile-popup-info">
                             <div class="profile-popup-name">${displayName}</div>
@@ -2483,33 +2485,52 @@
             attachPopupEventListeners();
             profilePopup.style.display = 'block';
             
-            // Position the popup
-            const desktopAvatarRect = desktopProfileAvatar.getBoundingClientRect();
-            const mobileAvatarRect = mobileProfileAvatar.getBoundingClientRect();
-            const popupRect = profilePopup.getBoundingClientRect();
+            // Force reflow to get correct dimensions
+            profilePopup.offsetHeight;
             
-            // Use desktop avatar position on larger screens, mobile on smaller
+            // Position the popup relative to the clicked avatar
             let avatarRect;
+            
             if (window.innerWidth > 768) {
-                avatarRect = desktopAvatarRect;
+                // Desktop: use desktop avatar
+                avatarRect = desktopProfileAvatar.getBoundingClientRect();
             } else {
-                avatarRect = mobileAvatarRect;
+                // Mobile: use mobile avatar
+                avatarRect = mobileProfileAvatar.getBoundingClientRect();
             }
             
+            const popupRect = profilePopup.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate position - try to place below avatar first
             let top = avatarRect.bottom + 8;
-            let right = window.innerWidth - avatarRect.right;
+            let left = avatarRect.left;
             
-            // Adjust if goes off screen
-            if (top + popupRect.height > window.innerHeight) {
+            // Check if popup would go off bottom of screen
+            if (top + popupRect.height > viewportHeight) {
+                // Place above avatar instead
                 top = avatarRect.top - popupRect.height - 8;
+                // Ensure it doesn't go off top
+                top = Math.max(8, top);
             }
             
-            if (right - popupRect.width < 0) {
-                right = 8;
+            // Check if popup would go off right side of screen
+            if (left + popupRect.width > viewportWidth) {
+                // Align right edge with avatar
+                left = avatarRect.right - popupRect.width;
             }
             
+            // Check if popup would go off left side of screen
+            if (left < 0) {
+                left = 8;
+            }
+            
+            // Apply position - using absolute positioning
+            profilePopup.style.position = 'fixed';
             profilePopup.style.top = `${top}px`;
-            profilePopup.style.right = `${right}px`;
+            profilePopup.style.left = `${left}px`;
+            profilePopup.style.right = 'auto';
             
             // Add active class for animation
             setTimeout(() => {
@@ -2687,16 +2708,17 @@
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('email').value = user.email || '';
                 
-                // Update avatar - FIXED: Get proper photoURL
+                // Update avatar - Get proper photoURL from Cloudinary
                 let avatarUrl;
-                if (user.photoURL) {
-                    avatarUrl = user.photoURL;
-                } else if (userDoc.exists && userDoc.data().photoURL) {
+                if (userDoc.exists && userDoc.data().photoURL) {
                     avatarUrl = userDoc.data().photoURL;
+                } else if (user.photoURL) {
+                    avatarUrl = user.photoURL;
                 } else {
-                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff`;
+                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
                 }
                 
+                console.log('Loading avatar from:', avatarUrl);
                 updateProfileAvatars(avatarUrl);
                 
                 // Calculate member since
@@ -2737,7 +2759,6 @@
                     // Update all profile completion indicators
                     document.getElementById('profileCompletion').textContent = `${completion}%`;
                     document.getElementById('profileCompletionOverview').textContent = `${completion}%`;
-                    document.getElementById('profileCompletionValue').textContent = `${completion}%`;
                     document.getElementById('profileProgressBar').style.width = `${completion}%`;
                 } else {
                     currentUserProfile = {
@@ -2756,26 +2777,62 @@
         function updateProfileAvatars(avatarUrl) {
             console.log('Updating avatars with URL:', avatarUrl);
             
+            // Add cache busting parameter to prevent caching issues
+            const cacheBuster = '&timestamp=' + Date.now();
+            let cleanAvatarUrl = avatarUrl;
+            
+            // Handle UI Avatars URLs
+            if (avatarUrl.includes('ui-avatars.com')) {
+                if (!avatarUrl.includes('bold=true')) {
+                    cleanAvatarUrl += '&bold=true';
+                }
+            }
+            
             // Update all small avatars
             const avatarElements = document.querySelectorAll('.profile-avatar-img');
             avatarElements.forEach(img => {
-                img.src = avatarUrl;
+                // Set the new source with cache busting
+                img.src = cleanAvatarUrl + cacheBuster;
                 img.alt = currentUser?.displayName || 'User';
+                
+                // Clear any existing fallback
+                const existingFallback = img.parentNode.querySelector('.avatar-fallback');
+                if (existingFallback) {
+                    existingFallback.remove();
+                }
+                
+                img.style.display = 'block';
+                
+                // Set up error handler
                 img.onerror = function() {
+                    console.log('Avatar failed to load, creating fallback');
                     handleAvatarError(this);
+                };
+                
+                // Set up load handler
+                img.onload = function() {
+                    console.log('Avatar loaded successfully');
+                    // Hide any fallback if image loads successfully
+                    const fallback = this.parentNode.querySelector('.avatar-fallback');
+                    if (fallback) {
+                        fallback.style.display = 'none';
+                    }
                 };
             });
             
             // Update profile section avatar
             const profileAvatarImg = document.getElementById('profileAvatarImg');
             if (profileAvatarImg) {
-                // For UI Avatars, adjust size parameter
-                if (avatarUrl.includes('ui-avatars.com')) {
-                    profileAvatarImg.src = avatarUrl + '&size=160';
-                } else {
-                    profileAvatarImg.src = avatarUrl;
+                let profileAvatarUrl = cleanAvatarUrl;
+                
+                // For UI Avatars, adjust size for large avatar
+                if (profileAvatarUrl.includes('ui-avatars.com')) {
+                    profileAvatarUrl = profileAvatarUrl.replace(/&size=[^&]*/, '') + '&size=160';
                 }
+                
+                profileAvatarImg.src = profileAvatarUrl + cacheBuster;
                 profileAvatarImg.onerror = function() {
+                    console.log('Large avatar failed to load');
                     handleLargeAvatarError(this);
                 };
             }
@@ -2830,7 +2887,6 @@
                     const streak = usageData.streak || 0;
                     document.getElementById('streak').textContent = `${streak} days`;
                     document.getElementById('detailedStreak').textContent = `${streak} days`;
-                    document.getElementById('currentStreak').textContent = `${streak} days`;
                     
                     // Update weekly total
                     document.getElementById('weeklyTotal').textContent = `${totalMinutes} mins`;
@@ -2838,10 +2894,6 @@
                     // Update apps used count
                     const appsUsedCount = apps.filter(app => app.time > 0).length;
                     document.getElementById('appsUsed').textContent = appsUsedCount;
-                    document.getElementById('appsUsedCount').textContent = appsUsedCount;
-                    
-                    // Update last active
-                    document.getElementById('lastActive').textContent = 'Today';
                 }
             } catch (error) {
                 console.error('Error loading usage data:', error);
@@ -2962,14 +3014,13 @@
                 sidebarOverlay.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
+            
+            // Hide popup on resize
+            hideProfilePopup();
         });
 
         // Update signout button
         document.getElementById('signoutButton').addEventListener('click', logout);
     </script>
-
-<input type="file" id="imageInput" accept="image/*" style="display:none">
-
-
 </body>
 </html>
