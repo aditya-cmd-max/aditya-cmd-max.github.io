@@ -187,15 +187,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-medium);
-            color: var(--md-on-primary);
-            font-weight: 700;
             transition: var(--md-transition);
+            border-radius: var(--md-radius-medium);
+            overflow: hidden;
+        }
+
+        .nav-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         .nav-logo:hover {
-            transform: rotate(15deg) scale(1.1);
+            transform: rotate(5deg) scale(1.1);
         }
 
         .nav-name {
@@ -382,12 +387,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            padding: var(--md-spacing-lg) var(--md-spacing-xl);
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
-            margin-bottom: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-lg);
             box-shadow: var(--md-elevation-1);
             animation: slideInDown 0.5s ease-out;
+            gap: var(--md-spacing-lg);
+            flex-wrap: wrap;
         }
 
         @keyframes slideInDown {
@@ -399,6 +406,11 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .welcome-section {
+            flex: 1;
+            min-width: 300px;
         }
 
         .welcome-section h1 {
@@ -418,12 +430,13 @@
             display: flex;
             align-items: center;
             gap: var(--md-spacing-md);
+            flex-wrap: wrap;
         }
 
         /* Profile Avatar */
         .profile-avatar-button {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 2px solid transparent;
             padding: 2px;
@@ -432,7 +445,6 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
             flex-shrink: 0;
-            margin: 0 8px;
             position: relative;
         }
         
@@ -554,7 +566,7 @@
         /* Dashboard Content Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: var(--md-spacing-lg);
             margin-bottom: var(--md-spacing-xl);
         }
@@ -757,7 +769,7 @@
         .form-grid {
             padding: var(--md-spacing-xl);
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: var(--md-spacing-lg);
         }
 
@@ -1220,136 +1232,6 @@
             border-top: 3px solid white;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 260px;
-            }
-            
-            .main-content {
-                margin-left: 260px;
-                padding: var(--md-spacing-md);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 320px;
-                box-shadow: var(--md-elevation-4);
-            }
-            
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-            
-            .sidebar-header {
-                padding: var(--md-spacing-lg);
-            }
-            
-            .sidebar-close {
-                display: flex;
-            }
-            
-            .mobile-header {
-                display: flex;
-            }
-            
-            .hamburger-menu {
-                display: flex;
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding: var(--md-spacing-md);
-                padding-top: 80px; /* Account for fixed mobile header */
-            }
-            
-            .top-header {
-                flex-direction: column;
-                gap: var(--md-spacing-lg);
-                text-align: center;
-                padding: var(--md-spacing-lg);
-                margin-top: var(--md-spacing-sm);
-            }
-            
-            .header-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .dashboard-grid,
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-                padding: var(--md-spacing-lg);
-            }
-            
-            .sidebar-overlay {
-                display: block;
-            }
-            
-            /* Profile Popup Mobile Styles */
-            .reverbit-profile-popup {
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: calc(100vw - 32px) !important;
-                max-width: 360px !important;
-                max-height: calc(100vh - 32px) !important;
-                overflow-y: auto !important;
-                right: auto !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-                border: 1px solid var(--md-outline) !important;
-            }
-            
-            .reverbit-profile-popup.active {
-                transform: translate(-50%, -50%) !important;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .mobile-menu-toggle {
-                display: none;
-            }
-            
-            .sidebar-overlay {
-                display: none !important;
-            }
-        }
-
-        /* Section Titles */
-        .section-title {
-            font-family: var(--md-font-logo);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--md-on-surface);
-            margin-bottom: var(--md-spacing-lg);
-            position: relative;
-            padding-bottom: var(--md-spacing-sm);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--md-gradient-2);
-            border-radius: 2px;
-        }
-
         /* Quick Stats */
         .quick-stats {
             display: grid;
@@ -1368,11 +1250,6 @@
             animation: fadeInUp 0.5s ease-out;
             animation-fill-mode: both;
         }
-
-        .quick-stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .quick-stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .quick-stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .quick-stat-card:nth-child(4) { animation-delay: 0.4s; }
 
         .quick-stat-card:hover {
             transform: translateY(-4px);
@@ -1432,24 +1309,6 @@
             background: var(--md-on-surface-variant);
         }
 
-        /* Avatar Preview */
-        .avatar-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto var(--md-spacing-lg);
-            overflow: hidden;
-            border: 4px solid var(--md-surface);
-            box-shadow: var(--md-elevation-2);
-            position: relative;
-        }
-
-        .avatar-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         /* Recent Activity */
         .recent-activity {
             display: flex;
@@ -1489,16 +1348,6 @@
             border-radius: var(--md-radius-medium);
             padding: var(--md-spacing-md);
             margin-top: var(--md-spacing-md);
-        }
-
-        .upload-instructions ul {
-            padding-left: var(--md-spacing-lg);
-            margin-top: var(--md-spacing-sm);
-        }
-
-        .upload-instructions li {
-            margin-bottom: var(--md-spacing-xs);
-            color: var(--md-on-surface-variant);
         }
 
         /* Enhanced Dashboard Features */
@@ -1578,6 +1427,148 @@
             border-radius: var(--md-radius-pill);
             transition: width 0.3s ease;
         }
+
+        /* Section Titles */
+        .section-title {
+            font-family: var(--md-font-logo);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-lg);
+            position: relative;
+            padding-bottom: var(--md-spacing-sm);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--md-gradient-2);
+            border-radius: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 260px;
+            }
+            
+            .main-content {
+                margin-left: 260px;
+                padding: var(--md-spacing-md);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 320px;
+                box-shadow: var(--md-elevation-4);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-header {
+                padding: var(--md-spacing-lg);
+            }
+            
+            .sidebar-close {
+                display: flex;
+            }
+            
+            .mobile-header {
+                display: flex;
+            }
+            
+            .hamburger-menu {
+                display: flex;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: var(--md-spacing-md);
+                padding-top: 80px; /* Account for fixed mobile header */
+            }
+            
+            .top-header {
+                flex-direction: column;
+                gap: var(--md-spacing-lg);
+                text-align: center;
+                padding: var(--md-spacing-lg);
+                margin-top: var(--md-spacing-sm);
+            }
+            
+            .header-actions {
+                flex-direction: row;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .btn {
+                flex: 1;
+                min-width: 140px;
+            }
+            
+            .dashboard-grid,
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                padding: var(--md-spacing-lg);
+            }
+            
+            .sidebar-overlay {
+                display: block;
+            }
+            
+            /* Profile Popup Mobile Styles */
+            .reverbit-profile-popup {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: calc(100vw - 32px) !important;
+                max-width: 360px !important;
+                max-height: calc(100vh - 32px) !important;
+                overflow-y: auto !important;
+                right: auto !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+                border: 1px solid var(--md-outline) !important;
+            }
+            
+            .reverbit-profile-popup.active {
+                transform: translate(-50%, -50%) !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+            
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+
+        /* Logo Styles */
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .dark-theme .logo-svg {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) brightness(1.2);
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -1601,7 +1592,7 @@
         
         <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
             <div class="nav-logo">
-                <i class="fas fa-infinity"></i>
+                <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" class="logo-svg" onerror="handleLogoError(this)">
             </div>
             <span class="nav-name">Reverbit</span>
         </a>
@@ -1625,7 +1616,7 @@
             <div class="sidebar-header">
                 <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
                     <div class="nav-logo">
-                        <i class="fas fa-infinity"></i>
+                        <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" class="logo-svg" onerror="handleLogoError(this)">
                     </div>
                     <span class="nav-name">Reverbit</span>
                 </a>
@@ -2146,6 +2137,9 @@
     </div>
 
     <script>
+        // Your logo URL
+        const LOGO_URL = "https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg";
+
         // Cloudinary Configuration - USING YOUR DETAILS
         const cloudinaryConfig = {
             cloudName: 'dgy9v2ctk',
@@ -2185,6 +2179,16 @@
         let currentUser = null;
         let currentUserProfile = null;
         let auth, db;
+
+        // Handle logo error
+        function handleLogoError(img) {
+            console.log('Logo failed to load, using fallback');
+            img.style.display = 'none';
+            const fallbackDiv = document.createElement('div');
+            fallbackDiv.className = 'nav-logo';
+            fallbackDiv.innerHTML = '<i class="fas fa-infinity"></i>';
+            img.parentNode.appendChild(fallbackDiv);
+        }
 
         // Cloudinary Upload Widget
         function openCloudinaryUploadWidget() {
@@ -2270,7 +2274,7 @@
                 currentUserProfile.photoURL = imageUrl;
                 currentUserProfile.cloudinaryImageId = publicId;
                 
-                // Update UI - FIXED: Use the actual Cloudinary URL
+                // Update UI
                 updateProfileAvatars(imageUrl, true);
                 
                 // Hide loading
@@ -2291,7 +2295,7 @@
             }
         }
 
-        // Avatar error handler - FIXED: Only show fallback when image doesn't exist
+        // Avatar error handler
         function handleAvatarError(img) {
             console.log('Avatar image failed to load');
             
@@ -2431,7 +2435,6 @@
             
             const displayName = userProfile.displayName || 'User';
             const email = userProfile.email || '';
-            // Use the actual photoURL from userProfile (which should be Cloudinary URL)
             const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
             
             return `
@@ -2737,7 +2740,7 @@
             });
         }
 
-        // Load user data from Firestore - FIXED: Get photoURL from Firebase
+        // Load user data from Firestore
         async function loadUserData(user) {
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
@@ -2753,7 +2756,7 @@
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('email').value = user.email || '';
                 
-                // Get avatar URL - FIXED: Always check Firebase first for Cloudinary URL
+                // Get avatar URL
                 let avatarUrl = null;
                 
                 // First, check if user has uploaded a profile picture to Firebase
@@ -2792,7 +2795,7 @@
                     currentUserProfile = {
                         displayName: displayName,
                         email: user.email,
-                        photoURL: avatarUrl, // Store the actual URL
+                        photoURL: avatarUrl,
                         ...userData
                     };
                     
@@ -2818,7 +2821,7 @@
                     currentUserProfile = {
                         displayName: displayName,
                         email: user.email,
-                        photoURL: avatarUrl // Store the actual URL
+                        photoURL: avatarUrl
                     };
                 }
             } catch (error) {
@@ -2827,7 +2830,7 @@
             }
         }
 
-        // Update all profile avatars - FIXED: Use actual image URLs, not fallback
+        // Update all profile avatars
         function updateProfileAvatars(avatarUrl, isNewUpload = false) {
             console.log('Updating avatars with URL:', avatarUrl, 'isNewUpload:', isNewUpload);
             
