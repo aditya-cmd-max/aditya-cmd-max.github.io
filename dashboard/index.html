@@ -1569,6 +1569,11 @@
         .dark-theme .logo-svg {
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) brightness(1.2);
         }
+
+        /* Prevent sidebar opening on other element clicks */
+        .prevent-sidebar-open {
+            pointer-events: auto !important;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -1698,10 +1703,10 @@
                         <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
                     </button>
                     
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <button class="theme-toggle prevent-sidebar-open" id="theme-toggle" aria-label="Toggle theme">
                         <span class="material-icons-round">dark_mode</span>
                     </button>
-                    <button class="btn btn-filled" id="signoutButton">
+                    <button class="btn btn-filled prevent-sidebar-open" id="signoutButton">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
                     </button>
@@ -1833,7 +1838,7 @@
                 <h2 class="section-title">My Reverbit Apps</h2>
                 
                 <div class="apps-grid">
-                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card prevent-sidebar-open">
                         <div class="app-icon">
                             <i class="fas fa-leaf"></i>
                         </div>
@@ -1848,7 +1853,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card prevent-sidebar-open">
                         <div class="app-icon">
                             <i class="fas fa-brain"></i>
                         </div>
@@ -1863,7 +1868,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card prevent-sidebar-open">
                         <div class="app-icon">
                             <i class="fas fa-users"></i>
                         </div>
@@ -1878,7 +1883,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card prevent-sidebar-open">
                         <div class="app-icon" style="background: linear-gradient(135deg, #ea4335, #d93025);">
                             <i class="fas fa-network-wired"></i>
                         </div>
@@ -2004,7 +2009,7 @@
                         <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin: var(--md-spacing-sm) 0 var(--md-spacing-lg);">
                             Profile completion: <span id="profileCompletionOverview">60%</span>
                         </p>
-                        <a href="#profile" class="btn btn-filled" style="width: 100%;" onclick="showSection('profile')">
+                        <a href="#profile" class="btn btn-filled prevent-sidebar-open" style="width: 100%;" onclick="showSection('profile')">
                             <i class="fas fa-user-edit"></i>
                             Edit Profile
                         </a>
@@ -2021,17 +2026,17 @@
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: var(--md-spacing-sm); margin-bottom: var(--md-spacing-lg);">
-                            <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined" style="justify-content: start;">
+                            <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined prevent-sidebar-open" style="justify-content: start;">
                                 <i class="fas fa-leaf"></i>
                                 Clover AI
                                 <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="cloverQuickTime">0m</span>
                             </a>
-                            <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined" style="justify-content: start;">
+                            <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined prevent-sidebar-open" style="justify-content: start;">
                                 <i class="fas fa-brain"></i>
                                 MindScribe
                                 <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="mindscribeQuickTime">0m</span>
                             </a>
-                            <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined" style="justify-content: start;">
+                            <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined prevent-sidebar-open" style="justify-content: start;">
                                 <i class="fas fa-users"></i>
                                 Peo
                                 <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="peoQuickTime">0m</span>
@@ -2108,7 +2113,7 @@
                                 Tip: Use keyboard shortcuts
                             </p>
                         </div>
-                        <button class="btn btn-outlined" style="width: 100%; margin-top: var(--md-spacing-lg);" onclick="showToast('All notifications marked as read')">
+                        <button class="btn btn-outlined prevent-sidebar-open" style="width: 100%; margin-top: var(--md-spacing-lg);" onclick="showToast('All notifications marked as read')">
                             <i class="fas fa-check"></i>
                             Mark all as read
                         </button>
@@ -2295,9 +2300,9 @@
             }
         }
 
-        // Avatar error handler
+        // Avatar error handler - IMPROVED: Better handling for existing profile pictures
         function handleAvatarError(img) {
-            console.log('Avatar image failed to load');
+            console.log('Avatar image failed to load:', img.src);
             
             // If there's a real photoURL but it failed to load, try to reload it
             if (currentUserProfile && currentUserProfile.photoURL && 
@@ -2334,7 +2339,7 @@
         }
 
         function handleLargeAvatarError(img) {
-            console.log('Large avatar image failed to load');
+            console.log('Large avatar image failed to load:', img.src);
             
             // If there's a real photoURL but it failed to load, try to reload it
             if (currentUserProfile && currentUserProfile.photoURL && 
@@ -2385,7 +2390,10 @@
             }
         }
 
-        themeToggle.addEventListener('click', toggleTheme);
+        themeToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleTheme();
+        });
 
         // Load saved theme preference
         function loadThemePreference() {
@@ -2401,7 +2409,7 @@
             }
         }
 
-        // Mobile menu toggle
+        // Mobile menu toggle - FIXED: Only opens on hamburger menu click
         function toggleMobileMenu() {
             sidebar.classList.toggle('mobile-open');
             hamburgerMenu.classList.toggle('active');
@@ -2414,13 +2422,26 @@
             }
         }
 
-        hamburgerMenu.addEventListener('click', toggleMobileMenu);
-        sidebarClose.addEventListener('click', toggleMobileMenu);
-        sidebarOverlay.addEventListener('click', toggleMobileMenu);
+        // FIXED: Only hamburger menu should trigger sidebar
+        hamburgerMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+        
+        sidebarClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+        
+        sidebarOverlay.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
 
         // Close mobile menu when clicking on a nav item
         navItems.forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if (window.innerWidth <= 768) {
                     toggleMobileMenu();
                 }
@@ -2435,12 +2456,13 @@
             
             const displayName = userProfile.displayName || 'User';
             const email = userProfile.email || '';
+            // Use the actual photoURL from userProfile
             const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
             
             return `
                 <div class="profile-popup-container">
                     <div class="profile-popup-header">
-                        <div class="profile-popup-avatar" onclick="openCloudinaryUploadWidget()">
+                        <div class="profile-popup-avatar" onclick="openProfilePopupWidget()">
                             <img src="${photoURL}" alt="${displayName}" onerror="handleAvatarError(this)">
                         </div>
                         <div class="profile-popup-info">
@@ -2479,7 +2501,7 @@
                             <span class="profile-popup-menu-text">Analytics</span>
                         </a>
                         
-                        <button class="profile-popup-menu-item" onclick="showUploadWidgetFromPopup()">
+                        <button class="profile-popup-menu-item" onclick="openProfilePopupWidget()">
                             <span class="profile-popup-menu-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -2509,7 +2531,8 @@
             `;
         }
 
-        function showUploadWidgetFromPopup() {
+        // New function for opening widget from profile popup
+        function openProfilePopupWidget() {
             hideProfilePopup();
             openCloudinaryUploadWidget();
         }
@@ -2517,12 +2540,12 @@
         function attachPopupEventListeners() {
             const changePhotoBtn = profilePopup.querySelector('.profile-popup-menu-item:nth-child(4)');
             if (changePhotoBtn) {
-                changePhotoBtn.onclick = showUploadWidgetFromPopup;
+                changePhotoBtn.onclick = openProfilePopupWidget;
             }
             
             const avatarClick = profilePopup.querySelector('.profile-popup-avatar');
             if (avatarClick) {
-                avatarClick.onclick = showUploadWidgetFromPopup;
+                avatarClick.onclick = openProfilePopupWidget;
             }
         }
 
@@ -2602,7 +2625,9 @@
             document.removeEventListener('click', handleClickOutsideProfilePopup);
         }
 
-        function toggleProfilePopup() {
+        function toggleProfilePopup(e) {
+            if (e) e.stopPropagation();
+            
             if (isProfilePopupVisible) {
                 hideProfilePopup();
             } else {
@@ -2715,6 +2740,13 @@
                     document.getElementById('lastSync').textContent = timeString;
                 }, 60000); // Update every minute
                 
+                // Add click handler to prevent sidebar opening on all buttons
+                document.querySelectorAll('.prevent-sidebar-open').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                });
+                
             } catch (error) {
                 console.error('Initialization error:', error);
                 loadingScreen.classList.add('hidden');
@@ -2726,21 +2758,21 @@
         function setupProfilePopupHandlers() {
             desktopProfileAvatar.addEventListener('click', (e) => {
                 e.stopPropagation();
-                toggleProfilePopup();
+                toggleProfilePopup(e);
             });
             
             mobileProfileAvatar.addEventListener('click', (e) => {
                 e.stopPropagation();
-                toggleProfilePopup();
+                toggleProfilePopup(e);
             });
             
             sidebarProfileAvatar.addEventListener('click', (e) => {
                 e.stopPropagation();
-                toggleProfilePopup();
+                toggleProfilePopup(e);
             });
         }
 
-        // Load user data from Firestore
+        // Load user data from Firestore - IMPROVED: Better photoURL loading
         async function loadUserData(user) {
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
@@ -2756,7 +2788,7 @@
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('email').value = user.email || '';
                 
-                // Get avatar URL
+                // Get avatar URL - IMPROVED: Better logic for existing photos
                 let avatarUrl = null;
                 
                 // First, check if user has uploaded a profile picture to Firebase
@@ -2795,7 +2827,7 @@
                     currentUserProfile = {
                         displayName: displayName,
                         email: user.email,
-                        photoURL: avatarUrl,
+                        photoURL: avatarUrl, // Store the actual URL
                         ...userData
                     };
                     
@@ -2830,7 +2862,7 @@
             }
         }
 
-        // Update all profile avatars
+        // Update all profile avatars - IMPROVED: Better handling for existing photos
         function updateProfileAvatars(avatarUrl, isNewUpload = false) {
             console.log('Updating avatars with URL:', avatarUrl, 'isNewUpload:', isNewUpload);
             
@@ -2868,7 +2900,7 @@
                 };
             });
             
-            // Update profile section avatar
+            // Update profile section avatar - This should show the real profile picture
             const profileAvatarImg = document.getElementById('profileAvatarImg');
             if (profileAvatarImg) {
                 // Remove any existing fallback
@@ -2879,18 +2911,20 @@
                 
                 // For Cloudinary URLs, we can add resize parameters
                 let profileAvatarUrl = avatarUrl;
-                if (avatarUrl.includes('cloudinary.com') && !avatarUrl.includes('/upload/')) {
-                    // Already a Cloudinary URL, use as is
-                } else if (avatarUrl.includes('cloudinary.com') && avatarUrl.includes('/upload/')) {
+                if (avatarUrl.includes('cloudinary.com') && avatarUrl.includes('/upload/')) {
                     // Add resize parameters for better display
                     profileAvatarUrl = avatarUrl.replace('/upload/', '/upload/w_400,h_400,c_fill,g_face/');
                 }
                 
                 profileAvatarImg.src = profileAvatarUrl + cacheBuster;
                 profileAvatarImg.style.display = 'block';
+                profileAvatarImg.alt = currentUser?.displayName || 'User';
                 profileAvatarImg.onerror = function() {
                     console.log('Large avatar failed to load');
                     handleLargeAvatarError(this);
+                };
+                profileAvatarImg.onload = function() {
+                    console.log('Large avatar loaded successfully');
                 };
             }
         }
@@ -3077,7 +3111,33 @@
         });
 
         // Update signout button
-        document.getElementById('signoutButton').addEventListener('click', logout);
+        document.getElementById('signoutButton').addEventListener('click', function(e) {
+            e.stopPropagation();
+            logout();
+        });
+
+        // Add click event listeners to prevent sidebar opening on other buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add prevent-sidebar-open class to all buttons that shouldn't open sidebar
+            const buttonsToProtect = [
+                '.theme-toggle',
+                '.btn',
+                '.app-card',
+                '.avatar-upload-button',
+                '.activity-item',
+                '.quick-stat-card',
+                '.dashboard-card',
+                '.form-input',
+                'select',
+                'textarea'
+            ];
+            
+            buttonsToProtect.forEach(selector => {
+                document.querySelectorAll(selector).forEach(element => {
+                    element.classList.add('prevent-sidebar-open');
+                });
+            });
+        });
     </script>
 </body>
 </html>
