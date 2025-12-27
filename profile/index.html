@@ -1623,5 +1623,67 @@
         console.log('Profile page JavaScript loaded successfully');
     });
 </script>
+
+
+// Add this right after your existing script tag
+<script>
+// Debug function to check handle system
+async function debugHandleSystem() {
+    console.log('=== DEBUG HANDLE SYSTEM ===');
+    
+    // Check if handle system is initialized
+    console.log('Handle System exists:', !!window.ReverbitHandleSystem);
+    console.log('Handle System DB:', window.ReverbitHandleSystem?.db ? 'Connected' : 'Not connected');
+    
+    // Get current handle from URL
+    const handle = extractHandleFromUrl();
+    console.log('Current handle from URL:', handle);
+    
+    if (handle) {
+        // Test handle system directly
+        console.log('Testing handle system for:', handle);
+        try {
+            const result = await window.ReverbitHandleSystem.getUserByHandle(handle);
+            console.log('Handle system result:', result);
+            
+            if (!result.success) {
+                console.log('Error:', result.error);
+                
+                // Check if handle exists in Firestore directly
+                const handleDoc = await firebase.firestore()
+                    .collection('handles')
+                    .doc(handle.toLowerCase())
+                    .get();
+                
+                console.log('Handle document exists:', handleDoc.exists);
+                console.log('Handle document data:', handleDoc.exists ? handleDoc.data() : 'No data');
+                
+                if (handleDoc.exists) {
+                    const handleData = handleDoc.data();
+                    console.log('Handle owner ID:', handleData.userId);
+                    
+                    // Check if user exists
+                    const userDoc = await firebase.firestore()
+                        .collection('users')
+                        .doc(handleData.userId)
+                        .get();
+                    
+                    console.log('User document exists:', userDoc.exists);
+                    console.log('User data:', userDoc.exists ? userDoc.data() : 'No data');
+                }
+            }
+        } catch (error) {
+            console.error('Debug error:', error);
+        }
+    }
+    
+    console.log('=== END DEBUG ===');
+}
+
+// Run debug on page load
+setTimeout(debugHandleSystem, 2000);
+</script>
+
+    
 </body>
 </html>
