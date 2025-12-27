@@ -12,12 +12,10 @@ class ReverbitAuth {
         };
         
         // Cloudinary Configuration
-            this.cloudinaryConfig = {
-             cloudName: 'dgy9v2ctk',          
-             uploadPreset: 'reverbit_unsigned11',
-             folder: 'reverbit/user'
-
-
+        this.cloudinaryConfig = {
+            cloudName: 'dgy9v2ctk',          
+            uploadPreset: 'reverbit_unsigned11',
+            folder: 'reverbit/user'
         };
         
         this.user = null;
@@ -90,6 +88,9 @@ class ReverbitAuth {
                 
                 // Add or update profile avatar
                 this.addOrUpdateProfileAvatar();
+                
+                // Track login activity
+                await this.trackLogin();
             } else {
                 this.user = null;
                 this.userProfile = null;
@@ -116,8 +117,22 @@ class ReverbitAuth {
         }
     }
 
+    async trackLogin() {
+        if (!this.user || !this.db) return;
+        
+        try {
+            const userRef = this.db.collection('users').doc(this.user.uid);
+            await userRef.update({
+                lastLogin: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+        } catch (error) {
+            console.error('Error tracking login:', error);
+        }
+    }
+
     async loadUserProfile() {
-        if (!this.user) return;
+        if (!this.user || !this.db) return;
         
         try {
             const userRef = this.db.collection('users').doc(this.user.uid);
@@ -125,36 +140,83 @@ class ReverbitAuth {
             
             if (userDoc.exists) {
                 this.userProfile = userDoc.data();
+                console.log('Loaded existing user profile');
+                
             } else {
-                // Create default profile
+                // Create default profile for new user
+                console.log('Creating new user profile...');
                 const displayName = this.user.displayName || 
                                   this.user.email?.split('@')[0] || 
                                   'User';
+                
+                // Generate a simple username
+                const username = this.generateSimpleUsername(displayName, this.user.email);
                 
                 this.userProfile = {
                     uid: this.user.uid,
                     email: this.user.email,
                     displayName: displayName,
+                    username: username,
                     photoURL: this.user.photoURL || 
                              `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff`,
+                    isPublic: true, // Default to public profile
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString(),
                     theme: 'auto',
                     preferences: {},
-                    cloudinaryImageId: null
+                    cloudinaryImageId: null,
+                    bio: '',
+                    country: '',
+                    gender: '',
+                    showApps: true,
+                    streak: 0,
+                    lastActive: new Date().toISOString()
                 };
                 
                 await userRef.set(this.userProfile);
+                console.log('New user profile created with username:', username);
             }
             
             // Update avatar if exists
             if (this.profileAvatar) {
                 this.updateProfileAvatar();
             }
+            
         } catch (error) {
             console.error('Error loading user profile:', error);
         }
+    }
+
+    // Simple username generator (no handle system)
+    generateSimpleUsername(displayName, email) {
+        if (displayName && displayName.trim()) {
+            // Clean the display name
+            let username = displayName.toLowerCase()
+                .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric
+                .replace(/\s+/g, '_');    // Replace spaces with underscores
+            
+            // Ensure minimum length
+            if (username.length >= 3) {
+                return username.substring(0, 20);
+            }
+        }
+        
+        // Use email username as fallback
+        if (email) {
+            const emailUsername = email.split('@')[0];
+            let username = emailUsername.toLowerCase()
+                .replace(/[^a-z0-9]/g, '')
+                .replace(/\./g, '_');
+            
+            // Ensure minimum length
+            if (username.length >= 3) {
+                return username.substring(0, 20);
+            }
+        }
+        
+        // Fallback to generic
+        return `user${Date.now().toString().slice(-6)}`;
     }
 
     addOrUpdateProfileAvatar() {
@@ -317,8 +379,18 @@ class ReverbitAuth {
         
         const avatarImg = this.profileAvatar.querySelector('.reverbit-avatar-img');
         if (avatarImg) {
-            avatarImg.src = this.userProfile.photoURL;
+            // Add cache busting parameter to prevent caching
+            const photoURL = this.userProfile.photoURL || 
+                           `https://ui-avatars.com/api/?name=${encodeURIComponent(this.userProfile.displayName || 'User')}&background=4285f4&color=fff`;
+            
+            avatarImg.src = photoURL + (photoURL.includes('?') ? '&' : '?') + 't=' + Date.now();
             avatarImg.alt = this.userProfile.displayName || 'Profile';
+            avatarImg.onerror = function() {
+                // Fallback to UI Avatars if image fails to load
+                const displayName = this.userProfile?.displayName || 'User';
+                const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=4285f4&color=fff`;
+            }.bind(this);
         }
     }
 
@@ -361,6 +433,8 @@ class ReverbitAuth {
         const displayName = this.userProfile.displayName || 'User';
         const email = this.userProfile.email || '';
         const photoURL = this.userProfile.photoURL;
+        const username = this.userProfile.username || this.generateSimpleUsername(displayName, email);
+        const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
         
         return `
             <div class="profile-popup-container">
@@ -375,6 +449,7 @@ class ReverbitAuth {
                     </div>
                     <div class="profile-info">
                         <div class="profile-name">${displayName}</div>
+                        <div class="profile-handle">@${username}</div>
                         <div class="profile-email">${email}</div>
                         <button class="change-avatar-btn" id="change-avatar-btn">
                             Change profile picture
@@ -392,6 +467,15 @@ class ReverbitAuth {
                             </svg>
                         </span>
                         <span class="profile-menu-text">Dashboard</span>
+                    </a>
+                    
+                    <a href="${profileUrl}" target="_blank" class="profile-menu-item" id="profile-public">
+                        <span class="profile-menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </span>
+                        <span class="profile-menu-text">View Public Profile</span>
                     </a>
                     
                     <button class="profile-menu-item" id="profile-signout">
@@ -748,6 +832,16 @@ class ReverbitAuth {
                 text-overflow: ellipsis;
             }
             
+            .profile-handle {
+                font-size: 14px;
+                color: #1a73e8;
+                font-weight: 500;
+                margin-bottom: 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
             .profile-email {
                 font-size: 14px;
                 color: #5f6368;
@@ -897,6 +991,10 @@ class ReverbitAuth {
                     color: #e8eaed;
                 }
                 
+                .profile-handle {
+                    color: #8ab4f8;
+                }
+                
                 .profile-email {
                     color: #9aa0a6;
                 }
@@ -963,6 +1061,10 @@ class ReverbitAuth {
             
             .dark-theme .profile-name {
                 color: #e8eaed;
+            }
+            
+            .dark-theme .profile-handle {
+                color: #8ab4f8;
             }
             
             .dark-theme .profile-email {
@@ -1122,19 +1224,64 @@ class ReverbitAuth {
                 today.setHours(0, 0, 0, 0);
                 
                 if (!lastActive || lastActive.getTime() < today.getTime() - 86400000) {
-                    await userRef.set({
+                    await userRef.update({
                         streak: 1,
                         lastActive: new Date().toISOString()
-                    }, { merge: true });
+                    });
                 } else if (lastActive.getTime() < today.getTime()) {
-                    await userRef.set({
+                    await userRef.update({
                         streak: (userData.streak || 0) + 1,
                         lastActive: new Date().toISOString()
-                    }, { merge: true });
+                    });
                 }
             }
         } catch (error) {
             console.error('Streak update error:', error);
+        }
+    }
+
+    // Generate profile link using user ID
+    async generateProfileLink() {
+        if (!this.user) {
+            await this.loadUserProfile();
+        }
+        
+        if (this.user) {
+            return `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
+        }
+        
+        return null;
+    }
+
+    // Get user username
+    getUserUsername() {
+        return this.userProfile?.username || null;
+    }
+
+    // Get user profile data
+    getUserProfileData() {
+        return this.userProfile;
+    }
+
+    // Update user profile
+    async updateUserProfile(updates) {
+        if (!this.user || !this.db) return false;
+        
+        try {
+            const userRef = this.db.collection('users').doc(this.user.uid);
+            
+            await userRef.update({
+                ...updates,
+                updatedAt: new Date().toISOString()
+            });
+            
+            // Reload profile
+            await this.loadUserProfile();
+            
+            return true;
+        } catch (error) {
+            console.error('Error updating user profile:', error);
+            return false;
         }
     }
 
@@ -1176,8 +1323,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-
-
 function getCurrentAppName() {
     const pathname = window.location.pathname;
     const title = document.title.toLowerCase();
@@ -1190,7 +1335,62 @@ function getCurrentAppName() {
     return 'other';
 }
 
+// Helper function to view public profile
+window.viewPublicProfile = async function() {
+    if (!window.ReverbitAuth) {
+        console.error('Auth system not available');
+        return;
+    }
+    
+    const link = await window.ReverbitAuth.generateProfileLink();
+    if (link) {
+        window.open(link, '_blank');
+    } else {
+        // Show toast if user not logged in
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ea4335;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+        `;
+        toast.textContent = 'Please sign in first';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 3000);
+    }
+};
 
-
-
-
+// Debug function
+window.debugUserProfile = async function() {
+    console.log('=== DEBUG USER PROFILE ===');
+    
+    if (!window.ReverbitAuth) {
+        console.error('Auth system not available');
+        return;
+    }
+    
+    const user = window.ReverbitAuth.getUser();
+    console.log('Current user:', user);
+    
+    const profile = window.ReverbitAuth.getUserProfile();
+    console.log('User profile:', profile);
+    
+    const username = window.ReverbitAuth.getUserUsername();
+    console.log('User username:', username);
+    
+    if (user) {
+        const profileLink = await window.ReverbitAuth.generateProfileLink();
+        console.log('Profile link:', profileLink);
+    }
+    
+    console.log('=== END DEBUG ===');
+};
