@@ -64,6 +64,7 @@
             background: var(--md-background);
             color: var(--md-on-surface);
             line-height: 1.6;
+            min-height: 100vh;
             transition: background-color 0.3s ease;
         }
 
@@ -71,9 +72,95 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
+        .main-header {
+            padding: 20px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--md-outline);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--md-on-surface);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--md-gradient-1);
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-family: var(--md-font-logo);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            padding: 10px 20px;
+            border-radius: var(--md-radius-pill);
+            border: none;
+            font-family: var(--md-font-heading);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-btn-primary {
+            background: var(--md-gradient-1);
+            color: white;
+        }
+
+        .auth-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .auth-btn-secondary {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+            border: 1px solid var(--md-outline);
+        }
+
+        .auth-btn-secondary:hover {
+            background: var(--md-primary);
+            color: white;
+            border-color: var(--md-primary);
+        }
+
+        /* Profile Header */
         .profile-header {
             text-align: center;
             margin-bottom: 40px;
@@ -82,29 +169,6 @@
             border-radius: var(--md-radius-large);
             box-shadow: var(--md-elevation-1);
             position: relative;
-        }
-
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: var(--md-surface-variant);
-            border: none;
-            padding: 10px 20px;
-            border-radius: var(--md-radius-pill);
-            color: var(--md-on-surface);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--md-font-heading);
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: var(--md-primary);
-            color: white;
-            transform: translateX(-4px);
         }
 
         .profile-avatar-large {
@@ -184,72 +248,6 @@
         .stat-label {
             color: var(--md-on-surface-variant);
             font-size: 1rem;
-        }
-
-        /* Apps Grid */
-        .apps-section {
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--md-on-surface);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .app-card {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: 24px;
-            text-decoration: none;
-            color: inherit;
-            box-shadow: var(--md-elevation-1);
-            transition: all 0.3s ease;
-            border: 1px solid var(--md-outline);
-        }
-
-        .app-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--md-elevation-3);
-            border-color: var(--md-primary);
-        }
-
-        .app-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-medium);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-        }
-
-        .app-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--md-on-surface);
-        }
-
-        .app-description {
-            color: var(--md-on-surface-variant);
-            font-size: 0.95rem;
-            line-height: 1.6;
         }
 
         /* Owner Controls */
@@ -341,6 +339,72 @@
             font-weight: 500;
         }
 
+        /* Apps Grid */
+        .apps-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--md-on-surface);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .app-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: var(--md-elevation-1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--md-outline);
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-3);
+            border-color: var(--md-primary);
+        }
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--md-gradient-1);
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .app-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--md-on-surface);
+        }
+
+        .app-description {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
         /* Visitor Message */
         .visitor-message {
             text-align: center;
@@ -381,6 +445,32 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Not Found */
+        .not-found {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .not-found h1 {
+            font-family: var(--md-font-logo);
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: var(--md-gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding: 40px 0;
+            text-align: center;
+            color: var(--md-on-surface-variant);
+            border-top: 1px solid var(--md-outline);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -415,6 +505,11 @@
             .apps-grid {
                 grid-template-columns: 1fr;
             }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -422,106 +517,63 @@
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="loader"></div>
-        <p>Loading profile...</p>
+        <p id="loadingText">Loading profile...</p>
     </div>
 
     <!-- Main Content -->
     <div class="container" style="display: none;" id="mainContent">
-        <!-- Profile Header -->
-        <div class="profile-header" id="profileHeader">
-            <button class="back-button" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i>
-                Back
-            </button>
-            
-            <div class="profile-avatar-large">
-                <img id="profileAvatar" src="" alt="Profile Picture" onerror="handleAvatarError(this)">
-            </div>
-            
-            <h1 class="profile-name" id="profileName">Loading...</h1>
-            <p class="profile-username" id="profileUsername">@username</p>
-            <p class="profile-bio" id="profileBio">This user hasn't added a bio yet.</p>
-        </div>
-
-        <!-- Owner Controls (Only visible to profile owner) -->
-        <div class="owner-controls" id="ownerControls" style="display: none;">
-            <h2 class="section-title">
-                <i class="fas fa-user-cog"></i>
-                Profile Settings
-            </h2>
-            <div class="control-buttons">
-                <button class="btn btn-primary" onclick="editProfile()">
-                    <i class="fas fa-edit"></i>
-                    Edit Profile
-                </button>
-                <button class="btn btn-secondary" onclick="toggleProfileVisibility()" id="visibilityBtn">
-                    <i class="fas fa-globe"></i>
-                    Make Profile Public
-                </button>
-                <button class="btn btn-secondary" onclick="copyShareLink()">
-                    <i class="fas fa-share-alt"></i>
-                    Share Profile
-                </button>
-            </div>
-            
-            <div class="share-section" id="shareSection" style="display: none;">
-                <p>Share your profile link:</p>
-                <div class="share-link">
-                    <input type="text" id="shareLinkInput" readonly>
-                    <button onclick="copyToClipboard()">
-                        <i class="fas fa-copy"></i>
-                        Copy
-                    </button>
+        <!-- Main Header -->
+        <header class="main-header">
+            <div class="header-content">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <span class="logo-text">Reverbit</span>
+                </a>
+                
+                <div class="header-actions" id="headerActions">
+                    <!-- Will be populated by JavaScript -->
                 </div>
             </div>
+        </header>
+
+        <!-- Profile Content -->
+        <div id="profileContent">
+            <!-- Profile will be loaded here dynamically -->
         </div>
 
-        <!-- Profile Stats -->
-        <div class="profile-stats" id="profileStats">
-            <div class="stat-card">
-                <div class="stat-number" id="streakStat">0</div>
-                <div class="stat-label">Day Streak</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="appsStat">0</div>
-                <div class="stat-label">Apps Used</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="memberStat">0</div>
-                <div class="stat-label">Days as Member</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="lastActiveStat">Today</div>
-                <div class="stat-label">Last Active</div>
-            </div>
-        </div>
-
-        <!-- Public Apps Section -->
-        <div class="apps-section" id="publicApps" style="display: none;">
-            <h2 class="section-title">
-                <i class="fas fa-th-large"></i>
-                Favorite Apps
-            </h2>
-            <div class="apps-grid" id="appsGrid">
-                <!-- Apps will be dynamically added here -->
+        <!-- Not Found Message -->
+        <div class="not-found" id="notFound" style="display: none;">
+            <h1>Profile Not Found</h1>
+            <p style="margin-bottom: 20px;">The profile you're looking for doesn't exist or is set to private.</p>
+            <div class="control-buttons" style="justify-content: center;">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    Go Home
+                </a>
+                <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-secondary">
+                    <i class="fas fa-user"></i>
+                    Your Dashboard
+                </a>
             </div>
         </div>
 
-        <!-- Visitor Message -->
-        <div class="visitor-message" id="visitorMessage" style="display: none;">
-            <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
-            <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
-                Create your own Reverbit account to explore all features and connect with this user!
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 Reverbit. All rights reserved.</p>
+            <p style="margin-top: 8px;">
+                <a href="https://aditya-cmd-max.github.io/reverbit/privacy" style="color: var(--md-primary); margin: 0 8px;">Privacy</a>
+                •
+                <a href="https://aditya-cmd-max.github.io/reverbit/terms" style="color: var(--md-primary); margin: 0 8px;">Terms</a>
+                •
+                <a href="https://aditya-cmd-max.github.io/reverbit/contact" style="color: var(--md-primary); margin: 0 8px;">Contact</a>
             </p>
-            <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
-                <i class="fas fa-sign-in-alt"></i>
-                Sign In / Sign Up
-            </button>
-        </div>
+        </footer>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" style="position: fixed; bottom: 20px; right: 20px; background: var(--md-surface); color: var(--md-on-surface); padding: 16px 24px; border-radius: var(--md-radius-medium); box-shadow: var(--md-elevation-3); display: none; z-index: 1000;">
+    <div id="toast" style="position: fixed; bottom: 20px; right: 20px; background: var(--md-surface); color: var(--md-on-surface); padding: 16px 24px; border-radius: var(--md-radius-medium); box-shadow: var(--md-elevation-3); display: none; z-index: 1000; max-width: 400px;">
         <span id="toastMessage"></span>
     </div>
 
@@ -539,14 +591,11 @@
 
         // DOM Elements
         const loadingScreen = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
         const mainContent = document.getElementById('mainContent');
-        const ownerControls = document.getElementById('ownerControls');
-        const profileStats = document.getElementById('profileStats');
-        const publicApps = document.getElementById('publicApps');
-        const visitorMessage = document.getElementById('visitorMessage');
-        const shareSection = document.getElementById('shareSection');
-        const shareLinkInput = document.getElementById('shareLinkInput');
-        const visibilityBtn = document.getElementById('visibilityBtn');
+        const profileContent = document.getElementById('profileContent');
+        const notFound = document.getElementById('notFound');
+        const headerActions = document.getElementById('headerActions');
 
         // Global variables
         let currentUser = null;
@@ -566,24 +615,28 @@
                 auth = firebase.auth();
                 db = firebase.firestore();
 
-                // Check URL parameters
-                const urlParams = new URLSearchParams(window.location.search);
-                const userId = urlParams.get('id');
-                const username = urlParams.get('username');
-
                 // Listen for auth state
                 auth.onAuthStateChanged(async (user) => {
                     currentUser = user;
+                    updateHeaderActions(user);
+                    
+                    // Get URL parameters
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const userId = urlParams.get('id');
+                    const username = urlParams.get('username');
                     
                     if (userId || username) {
-                        // Viewing someone else's profile
-                        await loadPublicProfile(userId, username);
+                        // Viewing a specific profile
+                        await loadProfile(userId, username);
                     } else if (user) {
                         // Viewing own profile
                         await loadOwnProfile(user);
                     } else {
-                        // Not logged in and no profile specified
-                        window.location.href = 'https://aditya-cmd-max.github.io/signin';
+                        // No profile specified and not logged in
+                        loadingText.textContent = 'Redirecting to home...';
+                        setTimeout(() => {
+                            window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
+                        }, 2000);
                     }
                 });
 
@@ -595,47 +648,72 @@
             }
         });
 
+        // Update header actions based on auth state
+        function updateHeaderActions(user) {
+            headerActions.innerHTML = '';
+            
+            if (user) {
+                // User is logged in
+                headerActions.innerHTML = `
+                    <a href="https://aditya-cmd-max.github.io/dashboard" class="auth-btn auth-btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <button class="auth-btn auth-btn-primary" onclick="signOut()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                `;
+            } else {
+                // User is not logged in
+                headerActions.innerHTML = `
+                    <a href="https://aditya-cmd-max.github.io/signin" class="auth-btn auth-btn-secondary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/signup" class="auth-btn auth-btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        Sign Up
+                    </a>
+                `;
+            }
+        }
+
         // Load own profile
         async function loadOwnProfile(user) {
             try {
                 isOwner = true;
                 profileOwner = user.uid;
+                loadingText.textContent = 'Loading your profile...';
                 
-                // Load user data from Firestore
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 
                 if (userDoc.exists) {
                     profileData = userDoc.data();
                     await displayProfile(profileData, true);
                     
-                    // Show owner controls
-                    ownerControls.style.display = 'block';
-                    shareSection.style.display = 'block';
+                    // Update URL to include username for sharing
+                    if (profileData.username) {
+                        const newUrl = window.location.origin + window.location.pathname + '?username=' + profileData.username;
+                        window.history.replaceState({}, '', newUrl);
+                    }
                     
-                    // Generate share link
-                    const shareLink = generateShareLink(userDoc.id, profileData.username);
-                    shareLinkInput.value = shareLink;
-                    
-                    // Update visibility button
-                    updateVisibilityButton(profileData.isPublic);
-                    
-                    // Load usage data
-                    await loadUsageData(user.uid);
                 } else {
-                    showToast('Profile not found');
+                    showNotFound();
                 }
                 
             } catch (error) {
                 console.error('Error loading own profile:', error);
                 showToast('Error loading profile');
+                showNotFound();
             } finally {
                 loadingScreen.style.display = 'none';
                 mainContent.style.display = 'block';
             }
         }
 
-        // Load public profile
-        async function loadPublicProfile(userId, username) {
+        // Load profile by ID or username
+        async function loadProfile(userId, username) {
             try {
                 let userDoc;
                 
@@ -662,10 +740,7 @@
                     
                     // Check if profile is public
                     if (!profileData.isPublic && (!currentUser || currentUser.uid !== userDoc.id)) {
-                        showToast('This profile is private');
-                        visitorMessage.style.display = 'block';
-                        loadingScreen.style.display = 'none';
-                        mainContent.style.display = 'block';
+                        showNotFound();
                         return;
                     }
                     
@@ -675,88 +750,233 @@
                     
                     await displayProfile(profileData, isOwner);
                     
-                    // Show owner controls if it's the owner
-                    if (isOwner) {
-                        ownerControls.style.display = 'block';
-                        shareSection.style.display = 'block';
-                        const shareLink = generateShareLink(userDoc.id, profileData.username);
-                        shareLinkInput.value = shareLink;
-                        updateVisibilityButton(profileData.isPublic);
-                    } else {
-                        visitorMessage.style.display = 'block';
-                    }
-                    
-                    // Load public stats
-                    await loadPublicStats(userDoc.id);
-                    
                 } else {
-                    showToast('Profile not found');
+                    showNotFound();
                 }
                 
             } catch (error) {
-                console.error('Error loading public profile:', error);
+                console.error('Error loading profile:', error);
                 showToast('Error loading profile');
+                showNotFound();
             } finally {
                 loadingScreen.style.display = 'none';
                 mainContent.style.display = 'block';
             }
         }
 
-        // Display profile data
+        // Display profile
         async function displayProfile(data, isOwnerView) {
-            // Set avatar
-            const avatarImg = document.getElementById('profileAvatar');
-            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
-                avatarImg.src = data.photoURL + '?t=' + Date.now();
-                avatarImg.onerror = () => {
-                    const displayName = data.displayName || 'User';
-                    const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                    avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a73e8&color=fff&bold=true`;
-                };
-            } else {
-                const displayName = data.displayName || 'User';
-                avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+            // Create profile HTML
+            const profileHTML = `
+                <div class="profile-header">
+                    <div class="profile-avatar-large">
+                        <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" onerror="handleAvatarError(this)">
+                    </div>
+                    
+                    <h1 class="profile-name">${data.displayName || 'User'}</h1>
+                    <p class="profile-username">${data.username ? '@' + data.username : ''}</p>
+                    <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
+                </div>
+
+                ${isOwnerView ? createOwnerControls() : ''}
+
+                ${createProfileStats(data, isOwnerView)}
+
+                ${data.showApps ? createAppsSection() : ''}
+
+                ${!isOwnerView ? createVisitorMessage() : ''}
+            `;
+            
+            profileContent.innerHTML = profileHTML;
+            
+            // Initialize interactive elements
+            if (isOwnerView) {
+                initializeOwnerControls(data);
+                loadUsageData();
             }
-            
-            // Set name and username
-            document.getElementById('profileName').textContent = data.displayName || 'User';
-            document.getElementById('profileUsername').textContent = data.username ? `@${data.username}` : '@user';
-            
-            // Set bio
-            document.getElementById('profileBio').textContent = data.bio || 'This user hasn\'t added a bio yet.';
-            
-            // Calculate member days
-            if (data.createdAt) {
-                const joinDate = new Date(data.createdAt);
-                const today = new Date();
-                const diffTime = Math.abs(today - joinDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                document.getElementById('memberStat').textContent = diffDays;
-            }
-            
-            // Show/hide elements based on view
-            profileStats.style.display = isOwnerView ? 'grid' : 'none';
-            publicApps.style.display = isOwnerView || data.showApps ? 'block' : 'none';
         }
 
-        // Load usage data for owner
-        async function loadUsageData(userId) {
+        // Get avatar URL
+        function getAvatarUrl(data) {
+            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
+                return data.photoURL + '?t=' + Date.now();
+            } else {
+                const displayName = data.displayName || 'User';
+                return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+            }
+        }
+
+        // Create owner controls HTML
+        function createOwnerControls() {
+            return `
+                <div class="owner-controls" id="ownerControls">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-cog"></i>
+                        Profile Settings
+                    </h2>
+                    <div class="control-buttons">
+                        <button class="btn btn-primary" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile
+                        </button>
+                        <button class="btn btn-secondary" id="visibilityBtn">
+                            <i class="fas fa-globe"></i>
+                            Make Profile Public
+                        </button>
+                        <button class="btn btn-secondary" onclick="copyShareLink()">
+                            <i class="fas fa-share-alt"></i>
+                            Share Profile
+                        </button>
+                    </div>
+                    
+                    <div class="share-section" id="shareSection" style="display: none;">
+                        <p>Your public profile link:</p>
+                        <div class="share-link">
+                            <input type="text" id="shareLinkInput" readonly>
+                            <button onclick="copyToClipboard()">
+                                <i class="fas fa-copy"></i>
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create profile stats HTML
+        function createProfileStats(data, isOwnerView) {
+            return `
+                <div class="profile-stats" id="profileStats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="streakStat">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    ${isOwnerView ? `
+                        <div class="stat-card">
+                            <div class="stat-number" id="appsStat">0</div>
+                            <div class="stat-label">Apps Used</div>
+                        </div>
+                    ` : ''}
+                    <div class="stat-card">
+                        <div class="stat-number" id="memberStat">
+                            ${calculateMemberDays(data.createdAt)}
+                        </div>
+                        <div class="stat-label">Days as Member</div>
+                    </div>
+                    ${isOwnerView ? `
+                        <div class="stat-card">
+                            <div class="stat-number" id="lastActiveStat">Today</div>
+                            <div class="stat-label">Last Active</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Create apps section HTML
+        function createAppsSection() {
+            return `
+                <div class="apps-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-th-large"></i>
+                        Favorite Apps
+                    </h2>
+                    <div class="apps-grid" id="appsGrid">
+                        <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h3 class="app-title">Clover AI</h3>
+                            <p class="app-description">Intelligent tutoring system with personalized learning</p>
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3 class="app-title">MindScribe</h3>
+                            <p class="app-description">AI-powered note-taking and organization</p>
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="app-title">Peo</h3>
+                            <p class="app-description">Natural text-to-speech with emotion</p>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create visitor message HTML
+        function createVisitorMessage() {
+            return `
+                <div class="visitor-message">
+                    <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
+                        Create your own Reverbit account to explore all features and connect with this user!
+                    </p>
+                    <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In / Sign Up
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize owner controls
+        function initializeOwnerControls(data) {
+            // Update visibility button
+            const visibilityBtn = document.getElementById('visibilityBtn');
+            if (data.isPublic) {
+                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
+                visibilityBtn.classList.remove('btn-secondary');
+                visibilityBtn.classList.add('btn-primary');
+            } else {
+                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
+                visibilityBtn.classList.remove('btn-primary');
+                visibilityBtn.classList.add('btn-secondary');
+            }
+            
+            // Add click handler
+            visibilityBtn.onclick = toggleProfileVisibility;
+            
+            // Set up share link
+            const shareLinkInput = document.getElementById('shareLinkInput');
+            shareLinkInput.value = generateShareLink();
+        }
+
+        // Calculate member days
+        function calculateMemberDays(createdAt) {
+            if (!createdAt) return '0';
+            const joinDate = new Date(createdAt);
+            const today = new Date();
+            const diffTime = Math.abs(today - joinDate);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Load usage data
+        async function loadUsageData() {
             try {
-                const usageDoc = await db.collection('usage').doc(userId).get();
+                const usageDoc = await db.collection('usage').doc(profileOwner).get();
                 
                 if (usageDoc.exists) {
                     const usageData = usageDoc.data();
                     
                     // Update streak
-                    document.getElementById('streakStat').textContent = usageData.streak || 0;
+                    if (document.getElementById('streakStat')) {
+                        document.getElementById('streakStat').textContent = usageData.streak || 0;
+                    }
                     
                     // Calculate apps used
-                    const apps = ['cloverAI', 'mindscribe', 'peo'];
-                    const appsUsed = apps.filter(app => usageData[app] > 0).length;
-                    document.getElementById('appsStat').textContent = appsUsed;
+                    if (document.getElementById('appsStat')) {
+                        const apps = ['cloverAI', 'mindscribe', 'peo'];
+                        const appsUsed = apps.filter(app => usageData[app] > 0).length;
+                        document.getElementById('appsStat').textContent = appsUsed;
+                    }
                     
                     // Update last active
-                    if (usageData.lastUsed) {
+                    if (document.getElementById('lastActiveStat') && usageData.lastUsed) {
                         const lastUsed = new Date(usageData.lastUsed);
                         const today = new Date();
                         const diffDays = Math.floor((today - lastUsed) / (1000 * 60 * 60 * 24));
@@ -769,115 +989,15 @@
                             document.getElementById('lastActiveStat').textContent = `${diffDays} days ago`;
                         }
                     }
-                    
-                    // Load favorite apps if available
-                    if (usageData.favoriteApps) {
-                        displayFavoriteApps(usageData.favoriteApps);
-                    }
                 }
             } catch (error) {
                 console.error('Error loading usage data:', error);
             }
         }
 
-        // Load public stats
-        async function loadPublicStats(userId) {
-            try {
-                // Only load basic stats for public view
-                const usageDoc = await db.collection('usage').doc(userId).get();
-                
-                if (usageDoc.exists) {
-                    const usageData = usageDoc.data();
-                    
-                    // Only show streak and member days to public
-                    document.getElementById('streakStat').textContent = usageData.streak || 0;
-                    
-                    if (profileData.createdAt) {
-                        const joinDate = new Date(profileData.createdAt);
-                        const today = new Date();
-                        const diffDays = Math.ceil((today - joinDate) / (1000 * 60 * 60 * 24));
-                        document.getElementById('memberStat').textContent = diffDays;
-                    }
-                    
-                    // Hide other stats from public view
-                    document.getElementById('appsStat').parentElement.style.display = 'none';
-                    document.getElementById('lastActiveStat').parentElement.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error loading public stats:', error);
-            }
-        }
-
-        // Display favorite apps
-        function displayFavoriteApps(apps) {
-            const appsGrid = document.getElementById('appsGrid');
-            appsGrid.innerHTML = '';
-            
-            const appData = {
-                'cloverAI': {
-                    name: 'Clover AI',
-                    icon: 'fas fa-leaf',
-                    description: 'Intelligent tutoring system',
-                    link: 'https://aditya-cmd-max.github.io/cloverai/'
-                },
-                'mindscribe': {
-                    name: 'MindScribe',
-                    icon: 'fas fa-brain',
-                    description: 'AI-powered note-taking',
-                    link: 'https://aditya-cmd-max.github.io/mindscribe/'
-                },
-                'peo': {
-                    name: 'Peo',
-                    icon: 'fas fa-users',
-                    description: 'Natural text-to-speech',
-                    link: 'https://aditya-cmd-max.github.io/Peo/'
-                }
-            };
-            
-            apps.forEach(appId => {
-                if (appData[appId]) {
-                    const app = appData[appId];
-                    const appCard = document.createElement('a');
-                    appCard.href = app.link;
-                    appCard.className = 'app-card';
-                    appCard.innerHTML = `
-                        <div class="app-icon">
-                            <i class="${app.icon}"></i>
-                        </div>
-                        <h3 class="app-title">${app.name}</h3>
-                        <p class="app-description">${app.description}</p>
-                    `;
-                    appsGrid.appendChild(appCard);
-                }
-            });
-        }
-
-        // Generate shareable link
-        function generateShareLink(userId, username) {
-            const baseUrl = window.location.origin + window.location.pathname;
-            if (username) {
-                return `${baseUrl}?username=${username}`;
-            } else {
-                return `${baseUrl}?id=${userId}`;
-            }
-        }
-
-        // Copy to clipboard
-        async function copyToClipboard() {
-            try {
-                await navigator.clipboard.writeText(shareLinkInput.value);
-                showToast('Link copied to clipboard!');
-            } catch (error) {
-                // Fallback for older browsers
-                shareLinkInput.select();
-                document.execCommand('copy');
-                showToast('Link copied!');
-            }
-        }
-
         // Toggle profile visibility
         async function toggleProfileVisibility() {
-            if (!isOwner) return;
+            if (!isOwner || !profileData) return;
             
             try {
                 const newVisibility = !profileData.isPublic;
@@ -888,25 +1008,36 @@
                     updatedAt: new Date().toISOString()
                 });
                 
-                // Update public profiles collection
-                if (newVisibility && profileData.username) {
-                    await db.collection('publicProfiles').doc(profileData.username).set({
-                        userId: profileOwner,
-                        username: profileData.username,
-                        displayName: profileData.displayName,
-                        photoURL: profileData.photoURL,
-                        isPublic: true,
-                        updatedAt: new Date().toISOString()
-                    });
-                } else if (!newVisibility && profileData.username) {
-                    await db.collection('publicProfiles').doc(profileData.username).delete();
+                // Update public profile
+                if (profileData.username) {
+                    if (newVisibility) {
+                        await db.collection('publicProfiles').doc(profileData.username).set({
+                            userId: profileOwner,
+                            username: profileData.username,
+                            displayName: profileData.displayName,
+                            photoURL: profileData.photoURL,
+                            isPublic: true,
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true });
+                    } else {
+                        await db.collection('publicProfiles').doc(profileData.username).delete();
+                    }
                 }
                 
                 // Update local data
                 profileData.isPublic = newVisibility;
                 
-                // Update button
-                updateVisibilityButton(newVisibility);
+                // Update UI
+                const visibilityBtn = document.getElementById('visibilityBtn');
+                if (newVisibility) {
+                    visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
+                    visibilityBtn.classList.remove('btn-secondary');
+                    visibilityBtn.classList.add('btn-primary');
+                } else {
+                    visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
+                    visibilityBtn.classList.remove('btn-primary');
+                    visibilityBtn.classList.add('btn-secondary');
+                }
                 
                 showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
                 
@@ -916,23 +1047,33 @@
             }
         }
 
-        // Update visibility button text
-        function updateVisibilityButton(isPublic) {
-            if (isPublic) {
-                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
-                visibilityBtn.classList.remove('btn-secondary');
-                visibilityBtn.classList.add('btn-primary');
-            } else {
-                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
-                visibilityBtn.classList.remove('btn-primary');
-                visibilityBtn.classList.add('btn-secondary');
-            }
+        // Generate share link
+        function generateShareLink() {
+            if (!profileData || !profileData.username) return '';
+            return window.location.origin + window.location.pathname + '?username=' + profileData.username;
         }
 
         // Copy share link
         function copyShareLink() {
+            const shareSection = document.getElementById('shareSection');
+            const shareLinkInput = document.getElementById('shareLinkInput');
+            
             shareSection.style.display = 'block';
             shareLinkInput.select();
+        }
+
+        // Copy to clipboard
+        async function copyToClipboard() {
+            const shareLinkInput = document.getElementById('shareLinkInput');
+            try {
+                await navigator.clipboard.writeText(shareLinkInput.value);
+                showToast('Link copied to clipboard!');
+            } catch (error) {
+                // Fallback
+                shareLinkInput.select();
+                document.execCommand('copy');
+                showToast('Link copied!');
+            }
         }
 
         // Edit profile (redirect to dashboard)
@@ -940,13 +1081,21 @@
             window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
         }
 
-        // Go back
-        function goBack() {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
+        // Sign out
+        async function signOut() {
+            try {
+                await auth.signOut();
+                window.location.href = 'https://aditya-cmd-max.github.io/signin';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showToast('Error signing out');
             }
+        }
+
+        // Show not found
+        function showNotFound() {
+            profileContent.style.display = 'none';
+            notFound.style.display = 'block';
         }
 
         // Show toast notification
