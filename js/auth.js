@@ -12,12 +12,10 @@ class ReverbitAuth {
         };
         
         // Cloudinary Configuration
-            this.cloudinaryConfig = {
-             cloudName: 'dgy9v2ctk',          
-             uploadPreset: 'reverbit_unsigned11',
-             folder: 'reverbit/user'
-
-
+        this.cloudinaryConfig = {
+            cloudName: 'dgy9v2ctk',          
+            uploadPreset: 'reverbit_unsigned11',
+            folder: 'reverbit/user'
         };
         
         this.user = null;
@@ -90,6 +88,9 @@ class ReverbitAuth {
                 
                 // Add or update profile avatar
                 this.addOrUpdateProfileAvatar();
+                
+                // Track login activity
+                await this.trackLogin();
             } else {
                 this.user = null;
                 this.userProfile = null;
@@ -116,8 +117,22 @@ class ReverbitAuth {
         }
     }
 
+    async trackLogin() {
+        if (!this.user || !this.db) return;
+        
+        try {
+            const userRef = this.db.collection('users').doc(this.user.uid);
+            await userRef.update({
+                lastLogin: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+        } catch (error) {
+            console.error('Error tracking login:', error);
+        }
+    }
+
     async loadUserProfile() {
-        if (!this.user) return;
+        if (!this.user || !this.db) return;
         
         try {
             const userRef = this.db.collection('users').doc(this.user.uid);
@@ -125,36 +140,173 @@ class ReverbitAuth {
             
             if (userDoc.exists) {
                 this.userProfile = userDoc.data();
+                
+                // Check if user has a handle, if not create one
+                if (!this.userProfile.handle) {
+                    console.log('User has no handle, creating one...');
+                    const handle = await this.createUserHandle(
+                        this.user.uid,
+                        this.user.email,
+                        this.user.displayName || this.user.email?.split('@')[0] || 'User'
+                    );
+                    
+                    if (handle) {
+                        this.userProfile.handle = handle;
+                        this.userProfile.lowercaseHandle = handle.toLowerCase();
+                        
+                        // Update the user document with the new handle
+                        await userRef.update({
+                            handle: handle,
+                            lowercaseHandle: handle.toLowerCase(),
+                            updatedAt: new Date().toISOString()
+                        });
+                        
+                        console.log('Created handle for user:', handle);
+                    }
+                }
+                
             } else {
-                // Create default profile
+                // Create default profile for new user
+                console.log('Creating new user profile...');
                 const displayName = this.user.displayName || 
                                   this.user.email?.split('@')[0] || 
                                   'User';
+                
+                // Create a handle for the new user
+                const handle = await this.createUserHandle(
+                    this.user.uid,
+                    this.user.email,
+                    displayName
+                );
                 
                 this.userProfile = {
                     uid: this.user.uid,
                     email: this.user.email,
                     displayName: displayName,
+                    handle: handle,
+                    lowercaseHandle: handle ? handle.toLowerCase() : null,
                     photoURL: this.user.photoURL || 
                              `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff`,
+                    isPublic: true, // Default to public profile
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString(),
                     theme: 'auto',
                     preferences: {},
-                    cloudinaryImageId: null
+                    cloudinaryImageId: null,
+                    bio: '',
+                    country: '',
+                    gender: '',
+                    showApps: true
                 };
                 
                 await userRef.set(this.userProfile);
+                console.log('New user profile created with handle:', handle);
             }
             
             // Update avatar if exists
             if (this.profileAvatar) {
                 this.updateProfileAvatar();
             }
+            
         } catch (error) {
             console.error('Error loading user profile:', error);
         }
+    }
+
+    // NEW: Create user handle automatically
+    async createUserHandle(userId, email, displayName) {
+        try {
+            console.log('Creating handle for user:', userId);
+            
+            // Generate a handle from email or displayName
+            let handle = this.generateHandleFromEmail(email, displayName);
+            console.log('Generated handle:', handle);
+            
+            // Check if handle system is available
+            if (!window.ReverbitHandleSystem) {
+                console.error('Handle system not available');
+                return null;
+            }
+            
+            // Initialize handle system if needed
+            const handleSystem = window.ReverbitHandleSystem;
+            if (!handleSystem.db && this.db) {
+                handleSystem.db = this.db;
+            }
+            
+            // Check if handle is available
+            const availability = await handleSystem.isHandleAvailable(handle);
+            
+            // If not available, try variations
+            if (!availability.available) {
+                console.log('Handle not available, trying variations...');
+                let counter = 1;
+                let newHandle;
+                
+                do {
+                    newHandle = `${handle}${counter}`;
+                    const newAvailability = await handleSystem.isHandleAvailable(newHandle);
+                    if (newAvailability.available) {
+                        handle = newHandle;
+                        break;
+                    }
+                    counter++;
+                } while (counter <= 10);
+                
+                // If still not available, use userId
+                if (counter > 10) {
+                    handle = `user${userId.substring(0, 8)}`;
+                    console.log('Using fallback handle:', handle);
+                }
+            }
+            
+            // Claim the handle
+            const result = await handleSystem.claimHandle(userId, handle, displayName);
+            
+            if (result.success) {
+                console.log('Successfully created handle:', handle);
+                return handle;
+            } else {
+                console.error('Failed to claim handle:', result.error);
+                return null;
+            }
+            
+        } catch (error) {
+            console.error('Error creating user handle:', error);
+            return null;
+        }
+    }
+
+    generateHandleFromEmail(email, displayName) {
+        // Try to use displayName first
+        if (displayName && displayName.trim()) {
+            // Clean the display name
+            let handle = displayName.toLowerCase()
+                .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric
+                .replace(/\s+/g, '_');    // Replace spaces with underscores
+            
+            // Ensure minimum length
+            if (handle.length >= 3) {
+                return handle.substring(0, 20); // Limit to 20 chars
+            }
+        }
+        
+        // Use email username as fallback
+        if (email) {
+            const username = email.split('@')[0];
+            let handle = username.toLowerCase()
+                .replace(/[^a-z0-9]/g, '')
+                .replace(/\./g, '_');
+            
+            // Ensure minimum length
+            if (handle.length >= 3) {
+                return handle.substring(0, 20);
+            }
+        }
+        
+        // Fallback to generic
+        return `user${Date.now().toString().slice(-6)}`;
     }
 
     addOrUpdateProfileAvatar() {
@@ -317,8 +469,18 @@ class ReverbitAuth {
         
         const avatarImg = this.profileAvatar.querySelector('.reverbit-avatar-img');
         if (avatarImg) {
-            avatarImg.src = this.userProfile.photoURL;
+            // Add cache busting parameter to prevent caching
+            const photoURL = this.userProfile.photoURL || 
+                           `https://ui-avatars.com/api/?name=${encodeURIComponent(this.userProfile.displayName || 'User')}&background=4285f4&color=fff`;
+            
+            avatarImg.src = photoURL + (photoURL.includes('?') ? '&' : '?') + 't=' + Date.now();
             avatarImg.alt = this.userProfile.displayName || 'Profile';
+            avatarImg.onerror = function() {
+                // Fallback to UI Avatars if image fails to load
+                const displayName = this.userProfile?.displayName || 'User';
+                const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=4285f4&color=fff`;
+            }.bind(this);
         }
     }
 
@@ -361,6 +523,7 @@ class ReverbitAuth {
         const displayName = this.userProfile.displayName || 'User';
         const email = this.userProfile.email || '';
         const photoURL = this.userProfile.photoURL;
+        const handle = this.userProfile.handle || 'No handle set';
         
         return `
             <div class="profile-popup-container">
@@ -375,6 +538,7 @@ class ReverbitAuth {
                     </div>
                     <div class="profile-info">
                         <div class="profile-name">${displayName}</div>
+                        <div class="profile-handle">@${handle}</div>
                         <div class="profile-email">${email}</div>
                         <button class="change-avatar-btn" id="change-avatar-btn">
                             Change profile picture
@@ -393,6 +557,17 @@ class ReverbitAuth {
                         </span>
                         <span class="profile-menu-text">Dashboard</span>
                     </a>
+                    
+                    ${handle !== 'No handle set' ? `
+                    <a href="https://aditya-cmd-max.github.io/profile/#@${handle}" target="_blank" class="profile-menu-item" id="profile-public">
+                        <span class="profile-menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </span>
+                        <span class="profile-menu-text">View Public Profile</span>
+                    </a>
+                    ` : ''}
                     
                     <button class="profile-menu-item" id="profile-signout">
                         <span class="profile-menu-icon">
@@ -748,6 +923,16 @@ class ReverbitAuth {
                 text-overflow: ellipsis;
             }
             
+            .profile-handle {
+                font-size: 14px;
+                color: #1a73e8;
+                font-weight: 500;
+                margin-bottom: 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
             .profile-email {
                 font-size: 14px;
                 color: #5f6368;
@@ -897,6 +1082,10 @@ class ReverbitAuth {
                     color: #e8eaed;
                 }
                 
+                .profile-handle {
+                    color: #8ab4f8;
+                }
+                
                 .profile-email {
                     color: #9aa0a6;
                 }
@@ -963,6 +1152,10 @@ class ReverbitAuth {
             
             .dark-theme .profile-name {
                 color: #e8eaed;
+            }
+            
+            .dark-theme .profile-handle {
+                color: #8ab4f8;
             }
             
             .dark-theme .profile-email {
@@ -1138,6 +1331,51 @@ class ReverbitAuth {
         }
     }
 
+    // NEW: Generate profile link
+    async generateProfileLink() {
+        if (!this.userProfile) {
+            await this.loadUserProfile();
+        }
+        
+        if (this.userProfile && this.userProfile.handle) {
+            return `https://aditya-cmd-max.github.io/profile/#@${this.userProfile.handle}`;
+        }
+        
+        return null;
+    }
+
+    // NEW: Get user handle
+    getUserHandle() {
+        return this.userProfile?.handle || null;
+    }
+
+    // NEW: Get user profile data
+    getUserProfileData() {
+        return this.userProfile;
+    }
+
+    // NEW: Update user profile
+    async updateUserProfile(updates) {
+        if (!this.user || !this.db) return false;
+        
+        try {
+            const userRef = this.db.collection('users').doc(this.user.uid);
+            
+            await userRef.update({
+                ...updates,
+                updatedAt: new Date().toISOString()
+            });
+            
+            // Reload profile
+            await this.loadUserProfile();
+            
+            return true;
+        } catch (error) {
+            console.error('Error updating user profile:', error);
+            return false;
+        }
+    }
+
     isAuthenticated() {
         return this.user !== null;
     }
@@ -1176,8 +1414,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-
-
 function getCurrentAppName() {
     const pathname = window.location.pathname;
     const title = document.title.toLowerCase();
@@ -1190,8 +1426,68 @@ function getCurrentAppName() {
     return 'other';
 }
 
+// NEW: Helper function to view public profile
+window.viewPublicProfile = async function() {
+    if (!window.ReverbitAuth) {
+        console.error('Auth system not available');
+        return;
+    }
+    
+    const link = await window.ReverbitAuth.generateProfileLink();
+    if (link) {
+        window.open(link, '_blank');
+    } else {
+        // Show toast if handle not set
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ea4335;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+        `;
+        toast.textContent = 'Please set up your profile handle first';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 3000);
+    }
+};
 
-
-
-
-
+// NEW: Debug function to check handles
+window.debugUserHandle = async function() {
+    console.log('=== DEBUG USER HANDLE ===');
+    
+    if (!window.ReverbitAuth) {
+        console.error('Auth system not available');
+        return;
+    }
+    
+    const user = window.ReverbitAuth.getUser();
+    console.log('Current user:', user);
+    
+    const profile = window.ReverbitAuth.getUserProfile();
+    console.log('User profile:', profile);
+    
+    const handle = window.ReverbitAuth.getUserHandle();
+    console.log('User handle:', handle);
+    
+    if (handle) {
+        const profileLink = await window.ReverbitAuth.generateProfileLink();
+        console.log('Profile link:', profileLink);
+        
+        // Test if handle exists in Firestore
+        if (window.ReverbitHandleSystem && window.ReverbitHandleSystem.db) {
+            const result = await window.ReverbitHandleSystem.getUserByHandle(handle);
+            console.log('Handle system check:', result);
+        }
+    }
+    
+    console.log('=== END DEBUG ===');
+};
