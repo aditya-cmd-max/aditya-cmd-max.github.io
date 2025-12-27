@@ -12,12 +12,12 @@ class ReverbitAuth {
         };
         
         // Cloudinary Configuration
-            this.cloudinaryConfig = {
-             cloudName: 'dgy9v2ctk',          
-             uploadPreset: 'reverbit_unsigned11',
-             folder: 'reverbit/user'
-
-
+        this.cloudinaryConfig = {
+            cloudName: 'reverbit_unsigned11',
+            uploadPreset: 'unsigned',
+            folder: 'reverbit/user',
+            apiKey: '', // Leave empty for unsigned uploads
+            apiSecret: '' // Leave empty for unsigned uploads
         };
         
         this.user = null;
@@ -1176,8 +1176,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-
-
 function getCurrentAppName() {
     const pathname = window.location.pathname;
     const title = document.title.toLowerCase();
@@ -1191,6 +1189,34 @@ function getCurrentAppName() {
 }
 
 
+function uploadImage() {
+  const file = document.getElementById("imgInput").files[0];
+  if (!file) {
+    alert("No file selected");
+    return;
+  }
 
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "reverbit_unsigned11");
 
+  fetch("https://api.cloudinary.com/v1_1/dgy9v2ctk/image/upload", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+
+    const imageURL = data.secure_url;
+    document.getElementById("preview").src = imageURL;
+
+    // now save imageURL in Firebase DB
+    saveImageURL(imageURL);
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Upload failed");
+  });
+}
 
