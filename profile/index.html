@@ -717,522 +717,545 @@
         <span id="toastMessage"></span>
     </div>
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-            authDomain: "reverbit11.firebaseapp.com",
-            projectId: "reverbit11",
-            storageBucket: "reverbit11.firebasestorage.app",
-            messagingSenderId: "607495314412",
-            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-            measurementId: "G-DMWMRM1M47"
-        };
+<script>
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+        authDomain: "reverbit11.firebaseapp.com",
+        projectId: "reverbit11",
+        storageBucket: "reverbit11.firebasestorage.app",
+        messagingSenderId: "607495314412",
+        appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+        measurementId: "G-DMWMRM1M47"
+    };
 
-        // DOM Elements
-        const loadingScreen = document.getElementById('loading');
-        const loadingText = document.getElementById('loadingText');
-        const mainContent = document.getElementById('mainContent');
-        const profileContent = document.getElementById('profileContent');
-        const notFound = document.getElementById('notFound');
-        const headerActions = document.getElementById('headerActions');
-        const handleEditModal = document.getElementById('handleEditModal');
+    // DOM Elements
+    const loadingScreen = document.getElementById('loading');
+    const loadingText = document.getElementById('loadingText');
+    const mainContent = document.getElementById('mainContent');
+    const profileContent = document.getElementById('profileContent');
+    const notFound = document.getElementById('notFound');
+    const headerActions = document.getElementById('headerActions');
+    const handleEditModal = document.getElementById('handleEditModal');
 
-        // Global variables
-        let currentUser = null;
-        let profileOwner = null;
-        let profileData = null;
-        let isOwner = false;
-        let auth, db;
-        let handleSystem = window.ReverbitHandleSystem; // Use the global instance from handle.js
+    // Global variables
+    let currentUser = null;
+    let profileOwner = null;
+    let profileData = null;
+    let isOwner = false;
+    let auth, db;
+    let handleSystem = null;
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Initialize Firebase
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Initialize Firebase
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            
+            auth = firebase.auth();
+            db = firebase.firestore();
+
+            // Initialize handle system
+            handleSystem = window.ReverbitHandleSystem;
+            if (handleSystem) {
+                handleSystem.db = db;
+            }
+
+            // Listen for auth state
+            auth.onAuthStateChanged(async (user) => {
+                currentUser = user;
+                updateHeaderActions(user);
                 
-                auth = firebase.auth();
-                db = firebase.firestore();
-
-                // Initialize handle system with db
-                if (handleSystem) {
-                    handleSystem.db = db;
-                }
-
-                // Listen for auth state
-                auth.onAuthStateChanged(async (user) => {
-                    currentUser = user;
-                    updateHeaderActions(user);
-                    
-                    // Parse URL to get handle
-                    const handle = extractHandleFromUrl();
-                    
-                    if (handle) {
-                        // Viewing profile by handle
-                        await loadProfileByHandle(handle);
-                    } else if (user) {
-                        // Viewing own profile
-                        await loadOwnProfile(user);
-                    } else {
-                        // No handle specified and not logged in
-                        loadingText.textContent = 'Redirecting to home...';
-                        setTimeout(() => {
-                            window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
-                        }, 2000);
-                    }
-                });
-
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showToast('Error loading profile');
-                loadingScreen.style.display = 'none';
-                mainContent.style.display = 'block';
-            }
-        });
-
-        // Extract handle from URL
-        function extractHandleFromUrl() {
-            const path = window.location.pathname;
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            // Check for @handle in path (clean URL)
-            const pathMatch = path.match(/\/profile\/@([^\/]+)/);
-            if (pathMatch) {
-                return pathMatch[1];
-            }
-            
-            // Check for ?handle= parameter (fallback)
-            const handleParam = urlParams.get('handle');
-            if (handleParam) {
-                return handleParam;
-            }
-            
-            // Check for ?id= parameter (backward compatibility)
-            const idParam = urlParams.get('id');
-            if (idParam) {
-                return null; // Will be handled by ID-based lookup
-            }
-            
-            return null;
-        }
-
-        // Update header actions based on auth state
-        function updateHeaderActions(user) {
-            headerActions.innerHTML = '';
-            
-            if (user) {
-                // User is logged in
-                headerActions.innerHTML = `
-                    <a href="https://aditya-cmd-max.github.io/dashboard" class="auth-btn auth-btn-secondary">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
-                    <button class="auth-btn auth-btn-primary" onclick="signOut()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sign Out
-                    </button>
-                `;
-            } else {
-                // User is not logged in
-                headerActions.innerHTML = `
-                    <a href="https://aditya-cmd-max.github.io/signin" class="auth-btn auth-btn-secondary">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/signup" class="auth-btn auth-btn-primary">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up
-                    </a>
-                `;
-            }
-        }
-
-        // Load own profile
-        async function loadOwnProfile(user) {
-            try {
-                isOwner = true;
-                profileOwner = user.uid;
-                loadingText.textContent = 'Loading your profile...';
+                // Parse URL to get handle
+                const handle = extractHandleFromUrl();
                 
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                
-                if (userDoc.exists) {
-                    profileData = userDoc.data();
-                    await displayProfile(profileData, true);
-                    
-                    // Update URL to include handle for sharing
-                    if (profileData.handle) {
-                        const newUrl = window.location.origin + '/profile/@' + profileData.handle;
-                        window.history.replaceState({}, '', newUrl);
-                    }
-                    
+                if (handle) {
+                    // Viewing profile by handle
+                    await loadProfileByHandle(handle);
+                } else if (user) {
+                    // Viewing own profile
+                    await loadOwnProfile(user);
                 } else {
-                    showNotFound();
+                    // No handle specified and not logged in
+                    loadingText.textContent = 'Redirecting to home...';
+                    setTimeout(() => {
+                        window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
+                    }, 2000);
+                }
+            });
+
+        } catch (error) {
+            console.error('Initialization error:', error);
+            showToast('Error loading profile');
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+        }
+    });
+
+    // Extract handle from URL
+    function extractHandleFromUrl() {
+        const path = window.location.pathname;
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Check for @handle in path (clean URL)
+        const pathMatch = path.match(/\/profile\/@([^\/]+)/);
+        if (pathMatch) {
+            return pathMatch[1];
+        }
+        
+        // Check for ?handle= parameter (fallback)
+        const handleParam = urlParams.get('handle');
+        if (handleParam) {
+            return handleParam;
+        }
+        
+        // Check for ?id= parameter (backward compatibility)
+        const idParam = urlParams.get('id');
+        if (idParam) {
+            return null; // Will be handled by ID-based lookup
+        }
+        
+        return null;
+    }
+
+    // Update header actions based on auth state
+    function updateHeaderActions(user) {
+        headerActions.innerHTML = '';
+        
+        if (user) {
+            // User is logged in
+            headerActions.innerHTML = `
+                <a href="https://aditya-cmd-max.github.io/dashboard" class="auth-btn auth-btn-secondary">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <button class="auth-btn auth-btn-primary" onclick="signOut()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sign Out
+                </button>
+            `;
+        } else {
+            // User is not logged in
+            headerActions.innerHTML = `
+                <a href="https://aditya-cmd-max.github.io/signin" class="auth-btn auth-btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </a>
+                <a href="https://aditya-cmd-max.github.io/signup" class="auth-btn auth-btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Sign Up
+                </a>
+            `;
+        }
+    }
+
+    // Load own profile
+    async function loadOwnProfile(user) {
+        try {
+            isOwner = true;
+            profileOwner = user.uid;
+            loadingText.textContent = 'Loading your profile...';
+            
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            
+            if (userDoc.exists) {
+                profileData = userDoc.data();
+                await displayProfile(profileData, true);
+                
+                // Update URL to include handle for sharing
+                if (profileData.handle) {
+                    const newUrl = window.location.origin + '/profile/@' + profileData.handle;
+                    window.history.replaceState({}, '', newUrl);
                 }
                 
-            } catch (error) {
-                console.error('Error loading own profile:', error);
-                showToast('Error loading profile');
+            } else {
                 showNotFound();
-            } finally {
-                loadingScreen.style.display = 'none';
-                mainContent.style.display = 'block';
             }
+            
+        } catch (error) {
+            console.error('Error loading own profile:', error);
+            showToast('Error loading profile');
+            showNotFound();
+        } finally {
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
         }
+    }
 
-        // Load profile by handle
-        async function loadProfileByHandle(handle) {
-            try {
-                if (!handleSystem) {
+    // Load profile by handle
+    async function loadProfileByHandle(handle) {
+        try {
+            if (!handleSystem) {
+                showNotFound();
+                return;
+            }
+            
+            loadingText.textContent = 'Loading profile...';
+            
+            const result = await handleSystem.getUserByHandle(handle);
+            
+            if (result.success) {
+                profileData = result.user;
+                profileOwner = result.user.uid;
+                
+                // Check if profile is public
+                if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
                     showNotFound();
                     return;
                 }
                 
-                loadingText.textContent = 'Loading profile...';
+                // Check if current user is the owner
+                isOwner = currentUser && currentUser.uid === profileOwner;
                 
-                const result = await handleSystem.getUserByHandle(handle);
+                await displayProfile(profileData, isOwner);
                 
-                if (result.success) {
-                    profileData = result.user;
-                    profileOwner = result.user.uid;
-                    
-                    // Check if profile is public
-                    if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
-                        showNotFound();
-                        return;
-                    }
-                    
-                    // Check if current user is the owner
-                    isOwner = currentUser && currentUser.uid === profileOwner;
-                    
-                    await displayProfile(profileData, isOwner);
-                    
-                    // Update URL to clean format
-                    if (profileData.handle) {
-                        const cleanUrl = window.location.origin + '/profile/@' + profileData.handle;
-                        window.history.replaceState({}, '', cleanUrl);
-                    }
-                    
-                } else {
-                    showNotFound();
+                // Update URL to clean format
+                if (profileData.handle) {
+                    const cleanUrl = window.location.origin + '/profile/@' + profileData.handle;
+                    window.history.replaceState({}, '', cleanUrl);
                 }
                 
-            } catch (error) {
-                console.error('Error loading profile by handle:', error);
+            } else {
                 showNotFound();
-            } finally {
-                loadingScreen.style.display = 'none';
-                mainContent.style.display = 'block';
             }
+            
+        } catch (error) {
+            console.error('Error loading profile by handle:', error);
+            showNotFound();
+        } finally {
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
         }
+    }
 
-        // Display profile
-        async function displayProfile(data, isOwnerView) {
-            // Create profile HTML
-            const profileHTML = `
-                <div class="profile-header">
-                    <div class="profile-avatar-large">
-                        <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" onerror="handleAvatarError(this)">
-                    </div>
-                    
-                    <h1 class="profile-name">${data.displayName || 'User'}</h1>
-                    
-                    <div class="profile-handle">
+    // Display profile
+    async function displayProfile(data, isOwnerView) {
+        // Create profile HTML
+        const profileHTML = `
+            <div class="profile-header">
+                <div class="profile-avatar-large">
+                    <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" onerror="handleAvatarError(this)">
+                </div>
+                
+                <h1 class="profile-name">${data.displayName || 'User'}</h1>
+                
+                <div class="profile-handle">
+                    <i class="fas fa-at"></i>
+                    ${data.handle ? data.handle : 'No handle set'}
+                </div>
+                
+                <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
+            </div>
+
+            ${isOwnerView ? createOwnerControls(data) : ''}
+
+            ${createProfileStats(data, isOwnerView)}
+
+            ${data.showApps ? createAppsSection() : ''}
+
+            ${!isOwnerView ? createVisitorMessage() : ''}
+        `;
+        
+        profileContent.innerHTML = profileHTML;
+        
+        // Initialize interactive elements
+        if (isOwnerView) {
+            initializeOwnerControls(data);
+            loadUsageData();
+        }
+    }
+
+    // Create owner controls HTML
+    function createOwnerControls(data) {
+        return `
+            <div class="owner-controls" id="ownerControls">
+                <h2 class="section-title">
+                    <i class="fas fa-user-cog"></i>
+                    Profile Settings
+                </h2>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" onclick="editProfile()">
+                        <i class="fas fa-edit"></i>
+                        Edit Profile
+                    </button>
+                    <button class="btn btn-secondary" onclick="toggleProfileVisibility()" id="visibilityBtn">
+                        <i class="fas fa-globe"></i>
+                        ${data.isPublic ? 'Make Profile Private' : 'Make Profile Public'}
+                    </button>
+                    <button class="btn btn-secondary" onclick="openHandleEditModal()">
                         <i class="fas fa-at"></i>
-                        ${data.handle ? data.handle : 'No handle set'}
-                    </div>
-                    
-                    <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
-                </div>
-
-                ${isOwnerView ? createOwnerControls(data) : ''}
-
-                ${createProfileStats(data, isOwnerView)}
-
-                ${data.showApps ? createAppsSection() : ''}
-
-                ${!isOwnerView ? createVisitorMessage() : ''}
-            `;
-            
-            profileContent.innerHTML = profileHTML;
-            
-            // Initialize interactive elements
-            if (isOwnerView) {
-                initializeOwnerControls(data);
-                loadUsageData();
-            }
-        }
-
-        // Create owner controls HTML
-        function createOwnerControls(data) {
-            return `
-                <div class="owner-controls" id="ownerControls">
-                    <h2 class="section-title">
-                        <i class="fas fa-user-cog"></i>
-                        Profile Settings
-                    </h2>
-                    <div class="control-buttons">
-                        <button class="btn btn-primary" onclick="editProfile()">
-                            <i class="fas fa-edit"></i>
-                            Edit Profile
-                        </button>
-                        <button class="btn btn-secondary" onclick="toggleProfileVisibility()" id="visibilityBtn">
-                            <i class="fas fa-globe"></i>
-                            ${data.isPublic ? 'Make Profile Private' : 'Make Profile Public'}
-                        </button>
-                        <button class="btn btn-secondary" onclick="editHandleModal()">
-                            <i class="fas fa-at"></i>
-                            Change Handle
-                        </button>
-                    </div>
-                    
-                    <!-- Handle Section -->
-                    <div class="handle-section">
-                        <div class="handle-display">
-                            <span class="handle-prefix">@</span>
-                            <span class="handle-value">${data.handle || 'No handle set'}</span>
-                        </div>
-                        <div class="profile-url">
-                            Your profile URL: <br>
-                            <strong>https://aditya-cmd-max.github.io/profile/@${data.handle || 'user'}</strong>
-                        </div>
-                        <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
-                            <i class="fas fa-copy"></i>
-                            Copy Profile Link
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Create profile stats HTML
-        function createProfileStats(data, isOwnerView) {
-            return `
-                <div class="profile-stats" id="profileStats">
-                    <div class="stat-card">
-                        <div class="stat-number" id="streakStat">0</div>
-                        <div class="stat-label">Day Streak</div>
-                    </div>
-                    ${isOwnerView ? `
-                        <div class="stat-card">
-                            <div class="stat-number" id="appsStat">0</div>
-                            <div class="stat-label">Apps Used</div>
-                        </div>
-                    ` : ''}
-                    <div class="stat-card">
-                        <div class="stat-number" id="memberStat">
-                            ${calculateMemberDays(data.createdAt)}
-                        </div>
-                        <div class="stat-label">Days as Member</div>
-                    </div>
-                    ${isOwnerView ? `
-                        <div class="stat-card">
-                            <div class="stat-number" id="lastActiveStat">Today</div>
-                            <div class="stat-label">Last Active</div>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        // Create apps section HTML
-        function createAppsSection() {
-            return `
-                <div class="apps-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-th-large"></i>
-                        Favorite Apps
-                    </h2>
-                    <div class="apps-grid" id="appsGrid">
-                        <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
-                            <div class="app-icon">
-                                <i class="fas fa-leaf"></i>
-                            </div>
-                            <h3 class="app-title">Clover AI</h3>
-                            <p class="app-description">Intelligent tutoring system with personalized learning</p>
-                        </a>
-                        <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
-                            <div class="app-icon">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <h3 class="app-title">MindScribe</h3>
-                            <p class="app-description">AI-powered note-taking and organization</p>
-                        </a>
-                        <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
-                            <div class="app-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <h3 class="app-title">Peo</h3>
-                            <p class="app-description">Natural text-to-speech with emotion</p>
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Create visitor message HTML
-        function createVisitorMessage() {
-            return `
-                <div class="visitor-message">
-                    <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
-                    <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
-                        Create your own Reverbit account to explore all features and connect with this user!
-                    </p>
-                    <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In / Sign Up
+                        Change Handle
                     </button>
                 </div>
-            `;
-        }
-
-        // Get avatar URL
-        function getAvatarUrl(data) {
-            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
-                return data.photoURL + '?t=' + Date.now();
-            } else {
-                const displayName = data.displayName || 'User';
-                return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
-            }
-        }
-
-        // Calculate member days
-        function calculateMemberDays(createdAt) {
-            if (!createdAt) return '0';
-            const joinDate = new Date(createdAt);
-            const today = new Date();
-            const diffTime = Math.abs(today - joinDate);
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        }
-
-        // Initialize owner controls
-        function initializeOwnerControls(data) {
-            // Update visibility button
-            const visibilityBtn = document.getElementById('visibilityBtn');
-            if (data.isPublic) {
-                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
-                visibilityBtn.classList.remove('btn-secondary');
-                visibilityBtn.classList.add('btn-primary');
-            } else {
-                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
-                visibilityBtn.classList.remove('btn-primary');
-                visibilityBtn.classList.add('btn-secondary');
-            }
-        }
-
-        // Load usage data
-        async function loadUsageData() {
-            try {
-                const usageDoc = await db.collection('usage').doc(profileOwner).get();
                 
-                if (usageDoc.exists) {
-                    const usageData = usageDoc.data();
+                <!-- Handle Section -->
+                <div class="handle-section">
+                    <div class="handle-display">
+                        <span class="handle-prefix">@</span>
+                        <span class="handle-value">${data.handle || 'No handle set'}</span>
+                    </div>
+                    <div class="profile-url">
+                        Your profile URL: <br>
+                        <strong>https://aditya-cmd-max.github.io/profile/@${data.handle || 'user'}</strong>
+                    </div>
+                    <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
+                        <i class="fas fa-copy"></i>
+                        Copy Profile Link
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Create profile stats HTML
+    function createProfileStats(data, isOwnerView) {
+        return `
+            <div class="profile-stats" id="profileStats">
+                <div class="stat-card">
+                    <div class="stat-number" id="streakStat">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                ${isOwnerView ? `
+                    <div class="stat-card">
+                        <div class="stat-number" id="appsStat">0</div>
+                        <div class="stat-label">Apps Used</div>
+                    </div>
+                ` : ''}
+                <div class="stat-card">
+                    <div class="stat-number" id="memberStat">
+                        ${calculateMemberDays(data.createdAt)}
+                    </div>
+                    <div class="stat-label">Days as Member</div>
+                </div>
+                ${isOwnerView ? `
+                    <div class="stat-card">
+                        <div class="stat-number" id="lastActiveStat">Today</div>
+                        <div class="stat-label">Last Active</div>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    // Create apps section HTML
+    function createAppsSection() {
+        return `
+            <div class="apps-section">
+                <h2 class="section-title">
+                    <i class="fas fa-th-large"></i>
+                    Favorite Apps
+                </h2>
+                <div class="apps-grid" id="appsGrid">
+                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3 class="app-title">Clover AI</h3>
+                        <p class="app-description">Intelligent tutoring system with personalized learning</p>
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="app-title">MindScribe</h3>
+                        <p class="app-description">AI-powered note-taking and organization</p>
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="app-title">Peo</h3>
+                        <p class="app-description">Natural text-to-speech with emotion</p>
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    // Create visitor message HTML
+    function createVisitorMessage() {
+        return `
+            <div class="visitor-message">
+                <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
+                    Create your own Reverbit account to explore all features and connect with this user!
+                </p>
+                <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In / Sign Up
+                </button>
+            </div>
+        `;
+    }
+
+    // Get avatar URL
+    function getAvatarUrl(data) {
+        if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
+            return data.photoURL + '?t=' + Date.now();
+        } else {
+            const displayName = data.displayName || 'User';
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+        }
+    }
+
+    // Calculate member days
+    function calculateMemberDays(createdAt) {
+        if (!createdAt) return '0';
+        const joinDate = new Date(createdAt);
+        const today = new Date();
+        const diffTime = Math.abs(today - joinDate);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    // Initialize owner controls
+    function initializeOwnerControls(data) {
+        // Update visibility button
+        const visibilityBtn = document.getElementById('visibilityBtn');
+        if (data.isPublic) {
+            visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
+            visibilityBtn.classList.remove('btn-secondary');
+            visibilityBtn.classList.add('btn-primary');
+        } else {
+            visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
+            visibilityBtn.classList.remove('btn-primary');
+            visibilityBtn.classList.add('btn-secondary');
+        }
+    }
+
+    // Load usage data
+    async function loadUsageData() {
+        try {
+            const usageDoc = await db.collection('usage').doc(profileOwner).get();
+            
+            if (usageDoc.exists) {
+                const usageData = usageDoc.data();
+                
+                // Update streak
+                if (document.getElementById('streakStat')) {
+                    document.getElementById('streakStat').textContent = usageData.streak || 0;
+                }
+                
+                // Calculate apps used
+                if (document.getElementById('appsStat')) {
+                    const apps = ['cloverAI', 'mindscribe', 'peo'];
+                    const appsUsed = apps.filter(app => usageData[app] > 0).length;
+                    document.getElementById('appsStat').textContent = appsUsed;
+                }
+                
+                // Update last active
+                if (document.getElementById('lastActiveStat') && usageData.lastUsed) {
+                    const lastUsed = new Date(usageData.lastUsed);
+                    const today = new Date();
+                    const diffDays = Math.floor((today - lastUsed) / (1000 * 60 * 60 * 24));
                     
-                    // Update streak
-                    if (document.getElementById('streakStat')) {
-                        document.getElementById('streakStat').textContent = usageData.streak || 0;
-                    }
-                    
-                    // Calculate apps used
-                    if (document.getElementById('appsStat')) {
-                        const apps = ['cloverAI', 'mindscribe', 'peo'];
-                        const appsUsed = apps.filter(app => usageData[app] > 0).length;
-                        document.getElementById('appsStat').textContent = appsUsed;
-                    }
-                    
-                    // Update last active
-                    if (document.getElementById('lastActiveStat') && usageData.lastUsed) {
-                        const lastUsed = new Date(usageData.lastUsed);
-                        const today = new Date();
-                        const diffDays = Math.floor((today - lastUsed) / (1000 * 60 * 60 * 24));
-                        
-                        if (diffDays === 0) {
-                            document.getElementById('lastActiveStat').textContent = 'Today';
-                        } else if (diffDays === 1) {
-                            document.getElementById('lastActiveStat').textContent = 'Yesterday';
-                        } else {
-                            document.getElementById('lastActiveStat').textContent = `${diffDays} days ago`;
-                        }
+                    if (diffDays === 0) {
+                        document.getElementById('lastActiveStat').textContent = 'Today';
+                    } else if (diffDays === 1) {
+                        document.getElementById('lastActiveStat').textContent = 'Yesterday';
+                    } else {
+                        document.getElementById('lastActiveStat').textContent = `${diffDays} days ago`;
                     }
                 }
-            } catch (error) {
-                console.error('Error loading usage data:', error);
             }
+        } catch (error) {
+            console.error('Error loading usage data:', error);
         }
+    }
 
-        // Edit profile (redirect to dashboard)
-        function editProfile() {
-            window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
+    // Edit profile (redirect to dashboard)
+    function editProfile() {
+        window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
+    }
+
+    // Open handle edit modal
+    function openHandleEditModal() {
+        if (!isOwner || !profileData) {
+            showToast('You must be logged in to change your handle');
+            return;
         }
+        
+        const modal = handleEditModal;
+        const newHandleInput = document.getElementById('newHandleInput');
+        const handleValidation = document.getElementById('handleValidation');
+        const saveHandleBtn = document.getElementById('saveHandleBtn');
+        const handleSuggestions = document.getElementById('handleSuggestions');
+        
+        // Reset modal
+        newHandleInput.value = profileData.handle || '';
+        handleValidation.textContent = '';
+        handleValidation.style.color = '';
+        saveHandleBtn.disabled = false;
+        saveHandleBtn.innerHTML = 'Save Handle';
+        
+        // Generate suggestions
+        if (profileData.displayName && handleSystem) {
+            const suggestions = handleSystem.generateSuggestions(profileData.displayName);
+            handleSuggestions.innerHTML = `
+                <p style="margin-bottom: 10px; color: var(--md-on-surface-variant); font-size: 0.9em;">Suggestions:</p>
+                <div class="handle-suggestions">
+                    ${suggestions.map(s => `
+                        <button class="suggestion-btn" onclick="selectSuggestion('${s}')">
+                            @${s}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Show modal
+        modal.classList.add('active');
+        
+        // Focus on input
+        setTimeout(() => {
+            newHandleInput.focus();
+        }, 300);
+    }
 
-        // Open handle edit modal
-        function editHandleModal() {
-            if (!isOwner || !profileData) return;
-            
-            const modal = handleEditModal;
-            const newHandleInput = document.getElementById('newHandleInput');
-            const handleValidation = document.getElementById('handleValidation');
-            const saveHandleBtn = document.getElementById('saveHandleBtn');
-            const handleSuggestions = document.getElementById('handleSuggestions');
-            
-            // Reset modal
-            newHandleInput.value = profileData.handle || '';
+    // Select suggestion
+    function selectSuggestion(handle) {
+        const newHandleInput = document.getElementById('newHandleInput');
+        newHandleInput.value = handle;
+        checkHandleAvailability(handle);
+    }
+
+    // Close modal
+    function closeModal() {
+        const modal = document.getElementById('handleEditModal');
+        modal.classList.remove('active');
+    }
+
+    // Check handle availability
+    async function checkHandleAvailability(handle = null) {
+        const newHandleInput = document.getElementById('newHandleInput');
+        const handleValidation = document.getElementById('handleValidation');
+        const saveHandleBtn = document.getElementById('saveHandleBtn');
+        
+        const inputHandle = handle || newHandleInput.value.trim();
+        
+        if (!inputHandle) {
             handleValidation.textContent = '';
-            handleValidation.style.color = '';
-            saveHandleBtn.disabled = false;
-            saveHandleBtn.innerHTML = 'Save Handle';
-            
-            // Generate suggestions
-            if (profileData.displayName) {
-                const suggestions = handleSystem.generateSuggestions(profileData.displayName);
-                handleSuggestions.innerHTML = `
-                    <p style="margin-bottom: 10px; color: var(--md-on-surface-variant); font-size: 0.9em;">Suggestions:</p>
-                    <div class="handle-suggestions">
-                        ${suggestions.map(s => `
-                            <button class="suggestion-btn" onclick="document.getElementById('newHandleInput').value='${s}'; checkHandleAvailability('${s}')">
-                                @${s}
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            // Show modal
-            modal.classList.add('active');
-            
-            // Focus on input
-            setTimeout(() => {
-                newHandleInput.focus();
-            }, 300);
+            saveHandleBtn.disabled = true;
+            return;
         }
-
-        // Close modal
-        function closeModal() {
-            handleEditModal.classList.remove('active');
+        
+        if (!handleSystem) {
+            handleValidation.textContent = 'Error: Handle system not available';
+            handleValidation.style.color = '#ea4335';
+            saveHandleBtn.disabled = true;
+            return;
         }
-
-        // Check handle availability
-        async function checkHandleAvailability(handle = null) {
-            const inputHandle = handle || document.getElementById('newHandleInput').value.trim();
-            const handleValidation = document.getElementById('handleValidation');
-            const saveHandleBtn = document.getElementById('saveHandleBtn');
-            
-            if (!inputHandle) {
-                handleValidation.textContent = '';
-                saveHandleBtn.disabled = true;
-                return;
-            }
-            
-            if (!handleSystem) {
-                handleValidation.textContent = 'Error: Handle system not available';
-                handleValidation.style.color = '#ea4335';
-                saveHandleBtn.disabled = true;
-                return;
-            }
-            
+        
+        // Don't check if it's the same as current handle
+        if (profileData && inputHandle.toLowerCase() === (profileData.handle || '').toLowerCase()) {
+            handleValidation.textContent = 'This is your current handle';
+            handleValidation.style.color = '#5f6368';
+            saveHandleBtn.disabled = true;
+            return;
+        }
+        
+        try {
             const result = await handleSystem.isHandleAvailable(inputHandle);
             
             if (result.available) {
@@ -1244,20 +1267,36 @@
                 handleValidation.style.color = '#ea4335';
                 saveHandleBtn.disabled = true;
             }
-        }
-
-        // Save handle
-        async function saveHandle() {
-            const newHandleInput = document.getElementById('newHandleInput');
-            const saveHandleBtn = document.getElementById('saveHandleBtn');
-            
-            const newHandle = newHandleInput.value.trim();
-            if (!newHandle) return;
-            
-            // Disable button and show loading
+        } catch (error) {
+            console.error('Error checking handle availability:', error);
+            handleValidation.textContent = 'Error checking handle availability';
+            handleValidation.style.color = '#ea4335';
             saveHandleBtn.disabled = true;
-            saveHandleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            
+        }
+    }
+
+    // Save handle
+    async function saveHandle() {
+        const newHandleInput = document.getElementById('newHandleInput');
+        const saveHandleBtn = document.getElementById('saveHandleBtn');
+        
+        const newHandle = newHandleInput.value.trim();
+        if (!newHandle) {
+            showToast('Please enter a handle');
+            return;
+        }
+        
+        // Don't save if it's the same as current handle
+        if (profileData && newHandle.toLowerCase() === (profileData.handle || '').toLowerCase()) {
+            showToast('This is already your current handle');
+            return;
+        }
+        
+        // Disable button and show loading
+        saveHandleBtn.disabled = true;
+        saveHandleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        
+        try {
             // Update handle
             const result = await handleSystem.updateHandle(profileOwner, newHandle, profileData.displayName);
             
@@ -1266,135 +1305,144 @@
                 closeModal();
                 
                 // Reload profile with new handle
-                window.location.href = '/profile/@' + newHandle;
+                setTimeout(() => {
+                    window.location.href = '/profile/@' + newHandle;
+                }, 1000);
             } else {
                 showToast(result.error || 'Error updating handle');
                 saveHandleBtn.disabled = false;
                 saveHandleBtn.innerHTML = 'Save Handle';
             }
+        } catch (error) {
+            console.error('Error saving handle:', error);
+            showToast('Error updating handle');
+            saveHandleBtn.disabled = false;
+            saveHandleBtn.innerHTML = 'Save Handle';
         }
+    }
 
-        // Toggle profile visibility
-        async function toggleProfileVisibility() {
-            if (!isOwner || !profileData) return;
+    // Toggle profile visibility
+    async function toggleProfileVisibility() {
+        if (!isOwner || !profileData) return;
+        
+        try {
+            const newVisibility = !profileData.isPublic;
             
-            try {
-                const newVisibility = !profileData.isPublic;
+            // Update Firestore
+            await db.collection('users').doc(profileOwner).update({
+                isPublic: newVisibility,
+                updatedAt: new Date().toISOString()
+            });
+            
+            // Update public profile if handle exists
+            if (profileData.handle) {
+                const publicProfileRef = db.collection('publicProfiles').doc(profileData.handle.toLowerCase());
                 
-                // Update Firestore
-                await db.collection('users').doc(profileOwner).update({
-                    isPublic: newVisibility,
-                    updatedAt: new Date().toISOString()
-                });
-                
-                // Update public profile
-                if (profileData.handle) {
-                    if (newVisibility) {
-                        await db.collection('publicProfiles').doc(profileData.handle.toLowerCase()).set({
-                            userId: profileOwner,
-                            handle: profileData.handle,
-                            displayName: profileData.displayName,
-                            photoURL: profileData.photoURL,
-                            isPublic: true,
-                            updatedAt: new Date().toISOString()
-                        }, { merge: true });
-                    } else {
-                        await db.collection('publicProfiles').doc(profileData.handle.toLowerCase()).delete();
-                    }
-                }
-                
-                // Update local data
-                profileData.isPublic = newVisibility;
-                
-                // Update UI
-                const visibilityBtn = document.getElementById('visibilityBtn');
                 if (newVisibility) {
-                    visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
-                    visibilityBtn.classList.remove('btn-secondary');
-                    visibilityBtn.classList.add('btn-primary');
+                    await publicProfileRef.set({
+                        userId: profileOwner,
+                        handle: profileData.handle,
+                        displayName: profileData.displayName,
+                        photoURL: profileData.photoURL,
+                        isPublic: true,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
                 } else {
-                    visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
-                    visibilityBtn.classList.remove('btn-primary');
-                    visibilityBtn.classList.add('btn-secondary');
+                    await publicProfileRef.delete();
                 }
-                
-                showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
-                
-            } catch (error) {
-                console.error('Error toggling visibility:', error);
-                showToast('Error updating profile visibility');
-            }
-        }
-
-        // Copy profile link
-        async function copyProfileLink() {
-            if (!profileData || !profileData.handle) {
-                showToast('Please set a handle first');
-                return;
             }
             
-            const profileUrl = `https://aditya-cmd-max.github.io/profile/@${profileData.handle}`;
+            // Update local data
+            profileData.isPublic = newVisibility;
             
-            try {
-                await navigator.clipboard.writeText(profileUrl);
-                showToast('Profile link copied to clipboard!');
-            } catch (error) {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = profileUrl;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showToast('Profile link copied!');
+            // Update UI
+            const visibilityBtn = document.getElementById('visibilityBtn');
+            if (newVisibility) {
+                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
+                visibilityBtn.classList.remove('btn-secondary');
+                visibilityBtn.classList.add('btn-primary');
+            } else {
+                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
+                visibilityBtn.classList.remove('btn-primary');
+                visibilityBtn.classList.add('btn-secondary');
             }
-        }
-
-        // Sign out
-        async function signOut() {
-            try {
-                await auth.signOut();
-                window.location.href = 'https://aditya-cmd-max.github.io/signin';
-            } catch (error) {
-                console.error('Error signing out:', error);
-                showToast('Error signing out');
-            }
-        }
-
-        // Show not found
-        function showNotFound() {
-            profileContent.style.display = 'none';
-            notFound.style.display = 'block';
-            loadingScreen.style.display = 'none';
-            mainContent.style.display = 'block';
-        }
-
-        // Show toast notification
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
             
-            toastMessage.textContent = message;
-            toast.style.display = 'block';
+            showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
             
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
+        } catch (error) {
+            console.error('Error toggling visibility:', error);
+            showToast('Error updating profile visibility');
         }
+    }
 
-        // Avatar error handler
-        function handleAvatarError(img) {
-            const displayName = profileData?.displayName || 'User';
-            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a73e8&color=fff&bold=true`;
+    // Copy profile link
+    async function copyProfileLink() {
+        if (!profileData || !profileData.handle) {
+            showToast('Please set a handle first');
+            return;
         }
+        
+        const profileUrl = `https://aditya-cmd-max.github.io/profile/@${profileData.handle}`;
+        
+        try {
+            await navigator.clipboard.writeText(profileUrl);
+            showToast('Profile link copied to clipboard!');
+        } catch (error) {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = profileUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('Profile link copied!');
+        }
+    }
 
-        // Setup event listeners for handle modal
-        document.addEventListener('DOMContentLoaded', () => {
-            const newHandleInput = document.getElementById('newHandleInput');
-            const saveHandleBtn = document.getElementById('saveHandleBtn');
-            
-            // Check handle availability on input
+    // Sign out
+    async function signOut() {
+        try {
+            await auth.signOut();
+            window.location.href = 'https://aditya-cmd-max.github.io/signin';
+        } catch (error) {
+            console.error('Error signing out:', error);
+            showToast('Error signing out');
+        }
+    }
+
+    // Show not found
+    function showNotFound() {
+        profileContent.style.display = 'none';
+        notFound.style.display = 'block';
+        loadingScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+    }
+
+    // Show toast notification
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        toastMessage.textContent = message;
+        toast.style.display = 'block';
+        
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // Avatar error handler
+    function handleAvatarError(img) {
+        const displayName = profileData?.displayName || 'User';
+        const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a73e8&color=fff&bold=true`;
+    }
+
+    // Setup event listeners after DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Handle input event for handle checking
+        const newHandleInput = document.getElementById('newHandleInput');
+        if (newHandleInput) {
             let checkTimeout;
             newHandleInput.addEventListener('input', () => {
                 clearTimeout(checkTimeout);
@@ -1402,24 +1450,34 @@
                     checkHandleAvailability();
                 }, 500);
             });
-            
-            // Save handle on button click
+        }
+        
+        // Save handle button
+        const saveHandleBtn = document.getElementById('saveHandleBtn');
+        if (saveHandleBtn) {
             saveHandleBtn.addEventListener('click', saveHandle);
-            
-            // Close modal on overlay click
-            handleEditModal.addEventListener('click', (e) => {
-                if (e.target === handleEditModal) {
+        }
+        
+        // Close modal on overlay click
+        const modalOverlay = document.getElementById('handleEditModal');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
                     closeModal();
                 }
             });
-            
-            // Close modal on Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && handleEditModal.classList.contains('active')) {
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('handleEditModal');
+                if (modal && modal.classList.contains('active')) {
                     closeModal();
                 }
-            });
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
