@@ -749,6 +749,11 @@
     // Initialize app
     document.addEventListener('DOMContentLoaded', async () => {
         try {
+            console.log('Profile Page: Initializing...');
+            
+            // Check for direct @handle access first
+            checkForDirectHandleAccess();
+            
             // Initialize Firebase
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
@@ -759,8 +764,11 @@
 
             // Initialize handle system
             handleSystem = window.ReverbitHandleSystem;
-            if (handleSystem) {
+            if (handleSystem && db) {
                 handleSystem.db = db;
+                console.log('Handle System: Initialized successfully');
+            } else {
+                console.error('Handle System: Failed to initialize');
             }
 
             // Listen for auth state
@@ -770,6 +778,7 @@
                 
                 // Parse URL to get handle
                 const handle = extractHandleFromUrl();
+                console.log('Extracted handle from URL:', handle);
                 
                 if (handle) {
                     // Viewing profile by handle
@@ -779,10 +788,7 @@
                     await loadOwnProfile(user);
                 } else {
                     // No handle specified and not logged in
-                    loadingText.textContent = 'Redirecting to home...';
-                    setTimeout(() => {
-                        window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
-                    }, 2000);
+                    showVisitorLanding();
                 }
             });
 
@@ -794,30 +800,146 @@
         }
     });
 
-    // Extract handle from URL
-    function extractHandleFromUrl() {
+    // NEW: Check for direct @handle access and redirect to hash URL
+    function checkForDirectHandleAccess() {
         const path = window.location.pathname;
-        const urlParams = new URLSearchParams(window.location.search);
+        const url = window.location.href;
         
-        // Check for @handle in path (clean URL)
+        console.log('Checking for direct handle access...');
+        console.log('Path:', path);
+        console.log('Full URL:', url);
+        
+        // If someone tries to access /profile/@handle directly on GitHub Pages
+        if (path.includes('/profile/@')) {
+            const pathParts = path.split('/');
+            const handlePart = pathParts[pathParts.length - 1];
+            
+            if (handlePart && handlePart.startsWith('@')) {
+                const handle = handlePart.substring(1);
+                console.log('Found direct handle access, redirecting:', handle);
+                
+                // Redirect to hash-based URL for GitHub Pages compatibility
+                const newUrl = `/profile/#@${handle}`;
+                window.location.href = newUrl;
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // UPDATED: Extract handle from URL - supports multiple formats
+    function extractHandleFromUrl() {
+        const url = window.location.href;
+        const path = window.location.pathname;
+        const hash = window.location.hash;
+        const search = window.location.search;
+        
+        console.log('URL parsing details:');
+        console.log('- Full URL:', url);
+        console.log('- Path:', path);
+        console.log('- Hash:', hash);
+        console.log('- Search:', search);
+        
+        // Method 1: Check for hash-based URL (#@handle) - PRIMARY for GitHub Pages
+        if (hash && hash.startsWith('#@')) {
+            const handle = hash.substring(2); // Remove '#@'
+            console.log('Found handle in hash:', handle);
+            return handle;
+        }
+        
+        // Method 2: Check for query parameter (?handle=)
+        const urlParams = new URLSearchParams(search);
+        const handleParam = urlParams.get('handle');
+        if (handleParam) {
+            console.log('Found handle in query param:', handleParam);
+            return handleParam.replace('@', '');
+        }
+        
+        // Method 3: Check for old-style path (/profile/@handle)
         const pathMatch = path.match(/\/profile\/@([^\/]+)/);
         if (pathMatch) {
+            console.log('Found handle in path (old style):', pathMatch[1]);
+            
+            // Auto-redirect to hash URL for GitHub Pages compatibility
+            setTimeout(() => {
+                window.location.href = `/profile/#@${pathMatch[1]}`;
+            }, 100);
+            
             return pathMatch[1];
         }
         
-        // Check for ?handle= parameter (fallback)
-        const handleParam = urlParams.get('handle');
-        if (handleParam) {
-            return handleParam;
+        // Method 4: Check for profile/ handle (without @)
+        const simplePathMatch = path.match(/\/profile\/([^\/]+)/);
+        if (simplePathMatch && simplePathMatch[1] && !simplePathMatch[1].includes('.') && simplePathMatch[1] !== 'index.html') {
+            console.log('Found handle in simple path:', simplePathMatch[1]);
+            
+            // Check if it looks like a handle (not a file extension)
+            if (isValidHandleFormat(simplePathMatch[1])) {
+                setTimeout(() => {
+                    window.location.href = `/profile/#@${simplePathMatch[1]}`;
+                }, 100);
+                return simplePathMatch[1];
+            }
         }
         
-        // Check for ?id= parameter (backward compatibility)
-        const idParam = urlParams.get('id');
-        if (idParam) {
-            return null; // Will be handled by ID-based lookup
-        }
-        
+        console.log('No handle found in URL');
         return null;
+    }
+    
+    // Helper: Check if string looks like a handle
+    function isValidHandleFormat(str) {
+        if (!str || typeof str !== 'string') return false;
+        
+        // Remove @ if present
+        str = str.replace(/^@/, '');
+        
+        // Basic validation
+        return str.length >= 3 && 
+               str.length <= 20 && 
+               /^[a-zA-Z0-9_]+$/.test(str) &&
+               !/^[0-9]/.test(str);
+    }
+
+    // NEW: Listen for hash changes
+    window.addEventListener('hashchange', function() {
+        console.log('Hash changed:', window.location.hash);
+        const handle = extractHandleFromUrl();
+        if (handle) {
+            loadProfileByHandle(handle);
+        }
+    });
+
+    // UPDATED: Show visitor landing page when no handle and not logged in
+    function showVisitorLanding() {
+        loadingScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+        
+        profileContent.innerHTML = `
+            <div class="visitor-message">
+                <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
+                    Share your unique profile link: <strong>https://aditya-cmd-max.github.io/profile/#@yourhandle</strong>
+                </p>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
+                    Sign in to view your profile or visit a profile using the format above.
+                </p>
+                <div class="control-buttons" style="justify-content: center; gap: 20px;">
+                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i>
+                        Sign Up
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-outlined">
+                        <i class="fas fa-home"></i>
+                        Go Home
+                    </a>
+                </div>
+            </div>
+        `;
     }
 
     // Update header actions based on auth state
@@ -864,10 +986,11 @@
                 profileData = userDoc.data();
                 await displayProfile(profileData, true);
                 
-                // Update URL to include handle for sharing
+                // Update URL to hash format for sharing (GitHub Pages compatible)
                 if (profileData.handle) {
-                    const newUrl = window.location.origin + '/profile/@' + profileData.handle;
+                    const newUrl = `${window.location.origin}/profile/#@${profileData.handle}`;
                     window.history.replaceState({}, '', newUrl);
+                    console.log('Updated URL to hash format:', newUrl);
                 }
                 
             } else {
@@ -886,8 +1009,11 @@
 
     // Load profile by handle
     async function loadProfileByHandle(handle) {
+        console.log('Loading profile for handle:', handle);
+        
         try {
-            if (!handleSystem) {
+            if (!handleSystem || !handleSystem.db) {
+                console.error('Handle system not properly initialized');
                 showNotFound();
                 return;
             }
@@ -895,6 +1021,7 @@
             loadingText.textContent = 'Loading profile...';
             
             const result = await handleSystem.getUserByHandle(handle);
+            console.log('Handle system result:', result);
             
             if (result.success) {
                 profileData = result.user;
@@ -911,13 +1038,15 @@
                 
                 await displayProfile(profileData, isOwner);
                 
-                // Update URL to clean format
-                if (profileData.handle) {
-                    const cleanUrl = window.location.origin + '/profile/@' + profileData.handle;
-                    window.history.replaceState({}, '', cleanUrl);
-                }
+                // Update page title
+                document.title = `${profileData.displayName || 'User'} (@${handle}) - Reverbit Profile`;
+                
+                // Update URL to clean hash format
+                const cleanUrl = `${window.location.origin}/profile/#@${handle}`;
+                window.history.replaceState({}, '', cleanUrl);
                 
             } else {
+                console.log('Handle not found:', result.error);
                 showNotFound();
             }
             
@@ -932,6 +1061,8 @@
 
     // Display profile
     async function displayProfile(data, isOwnerView) {
+        console.log('Displaying profile for:', data.displayName, 'isOwner:', isOwnerView);
+        
         // Create profile HTML
         const profileHTML = `
             <div class="profile-header">
@@ -955,7 +1086,7 @@
 
             ${data.showApps ? createAppsSection() : ''}
 
-            ${!isOwnerView ? createVisitorMessage() : ''}
+            ${!isOwnerView && currentUser ? createVisitorMessage() : ''}
         `;
         
         profileContent.innerHTML = profileHTML;
@@ -967,8 +1098,10 @@
         }
     }
 
-    // Create owner controls HTML
+    // UPDATED: Create owner controls HTML with hash-based URLs
     function createOwnerControls(data) {
+        const profileUrl = `https://aditya-cmd-max.github.io/profile/#@${data.handle || 'user'}`;
+        
         return `
             <div class="owner-controls" id="ownerControls">
                 <h2 class="section-title">
@@ -997,8 +1130,11 @@
                         <span class="handle-value">${data.handle || 'No handle set'}</span>
                     </div>
                     <div class="profile-url">
-                        Your profile URL: <br>
-                        <strong>https://aditya-cmd-max.github.io/profile/@${data.handle || 'user'}</strong>
+                        <strong>Your Profile URL:</strong><br>
+                        ${profileUrl}
+                        <p style="font-size: 0.85rem; color: var(--md-on-surface-variant); margin-top: 5px; font-style: italic;">
+                            Share this link with others! (GitHub Pages compatible)
+                        </p>
                     </div>
                     <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
                         <i class="fas fa-copy"></i>
@@ -1078,13 +1214,13 @@
     function createVisitorMessage() {
         return `
             <div class="visitor-message">
-                <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
+                <h2 style="margin-bottom: 16px;">View Your Own Profile</h2>
                 <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
-                    Create your own Reverbit account to explore all features and connect with this user!
+                    You're viewing someone else's profile. Sign in to see your own dashboard and profile settings.
                 </p>
-                <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Sign In / Sign Up
+                <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Go to Dashboard
                 </button>
             </div>
         `;
@@ -1113,20 +1249,24 @@
     function initializeOwnerControls(data) {
         // Update visibility button
         const visibilityBtn = document.getElementById('visibilityBtn');
-        if (data.isPublic) {
-            visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
-            visibilityBtn.classList.remove('btn-secondary');
-            visibilityBtn.classList.add('btn-primary');
-        } else {
-            visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
-            visibilityBtn.classList.remove('btn-primary');
-            visibilityBtn.classList.add('btn-secondary');
+        if (visibilityBtn) {
+            if (data.isPublic) {
+                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
+                visibilityBtn.classList.remove('btn-secondary');
+                visibilityBtn.classList.add('btn-primary');
+            } else {
+                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
+                visibilityBtn.classList.remove('btn-primary');
+                visibilityBtn.classList.add('btn-secondary');
+            }
         }
     }
 
     // Load usage data
     async function loadUsageData() {
         try {
+            if (!profileOwner) return;
+            
             const usageDoc = await db.collection('usage').doc(profileOwner).get();
             
             if (usageDoc.exists) {
@@ -1191,7 +1331,7 @@
         
         // Generate suggestions
         if (profileData.displayName && handleSystem) {
-            const suggestions = handleSystem.generateSuggestions(profileData.displayName);
+            const suggestions = handleSystem.generateSuggestions(profileData.displayName, 5);
             handleSuggestions.innerHTML = `
                 <p style="margin-bottom: 10px; color: var(--md-on-surface-variant); font-size: 0.9em;">Suggestions:</p>
                 <div class="handle-suggestions">
@@ -1275,7 +1415,7 @@
         }
     }
 
-    // Save handle
+    // UPDATED: Save handle with hash URL redirect
     async function saveHandle() {
         const newHandleInput = document.getElementById('newHandleInput');
         const saveHandleBtn = document.getElementById('saveHandleBtn');
@@ -1304,9 +1444,9 @@
                 showToast('Handle updated successfully!');
                 closeModal();
                 
-                // Reload profile with new handle
+                // Reload profile with new handle using hash URL
                 setTimeout(() => {
-                    window.location.href = '/profile/@' + newHandle;
+                    window.location.href = `/profile/#@${newHandle}`;
                 }, 1000);
             } else {
                 showToast(result.error || 'Error updating handle');
@@ -1315,7 +1455,7 @@
             }
         } catch (error) {
             console.error('Error saving handle:', error);
-            showToast('Error updating handle');
+            showToast('Error updating handle: ' + error.message);
             saveHandleBtn.disabled = false;
             saveHandleBtn.innerHTML = 'Save Handle';
         }
@@ -1375,14 +1515,15 @@
         }
     }
 
-    // Copy profile link
+    // UPDATED: Copy profile link with hash URL
     async function copyProfileLink() {
         if (!profileData || !profileData.handle) {
             showToast('Please set a handle first');
             return;
         }
         
-        const profileUrl = `https://aditya-cmd-max.github.io/profile/@${profileData.handle}`;
+        // Use hash-based URL for GitHub Pages compatibility
+        const profileUrl = `https://aditya-cmd-max.github.io/profile/#@${profileData.handle}`;
         
         try {
             await navigator.clipboard.writeText(profileUrl);
@@ -1477,6 +1618,9 @@
                 }
             }
         });
+        
+        // Debug: Log when page is fully loaded
+        console.log('Profile page JavaScript loaded successfully');
     });
 </script>
 </body>
