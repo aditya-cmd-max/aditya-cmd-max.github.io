@@ -767,6 +767,10 @@
             if (handleSystem && db) {
                 handleSystem.db = db;
                 console.log('Handle System: Initialized successfully');
+                
+                // Test handle system
+                const health = await handleSystem.healthCheck();
+                console.log('Handle System Health:', health);
             } else {
                 console.error('Handle System: Failed to initialize');
             }
@@ -792,6 +796,15 @@
                 }
             });
 
+            // Listen for hash changes
+            window.addEventListener('hashchange', function() {
+                console.log('Hash changed:', window.location.hash);
+                const handle = extractHandleFromUrl();
+                if (handle) {
+                    loadProfileByHandle(handle);
+                }
+            });
+
         } catch (error) {
             console.error('Initialization error:', error);
             showToast('Error loading profile');
@@ -800,7 +813,7 @@
         }
     });
 
-    // NEW: Check for direct @handle access and redirect to hash URL
+    // Check for direct @handle access and redirect to hash URL
     function checkForDirectHandleAccess() {
         const path = window.location.pathname;
         const url = window.location.href;
@@ -828,7 +841,7 @@
         return false;
     }
 
-    // UPDATED: Extract handle from URL - supports multiple formats
+    // Extract handle from URL - supports multiple formats
     function extractHandleFromUrl() {
         const url = window.location.href;
         const path = window.location.pathname;
@@ -901,45 +914,64 @@
                !/^[0-9]/.test(str);
     }
 
-    // NEW: Listen for hash changes
-    window.addEventListener('hashchange', function() {
-        console.log('Hash changed:', window.location.hash);
-        const handle = extractHandleFromUrl();
-        if (handle) {
-            loadProfileByHandle(handle);
-        }
-    });
-
-    // UPDATED: Show visitor landing page when no handle and not logged in
+    // Show visitor landing page when no handle and not logged in
     function showVisitorLanding() {
         loadingScreen.style.display = 'none';
         mainContent.style.display = 'block';
         
-        profileContent.innerHTML = `
-            <div class="visitor-message">
-                <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
-                    Share your unique profile link: <strong>https://aditya-cmd-max.github.io/profile/#@yourhandle</strong>
-                </p>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
-                    Sign in to view your profile or visit a profile using the format above.
-                </p>
-                <div class="control-buttons" style="justify-content: center; gap: 20px;">
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-outlined">
-                        <i class="fas fa-home"></i>
-                        Go Home
-                    </a>
+        const hashHandle = window.location.hash.substring(2); // Remove #@
+        
+        if (hashHandle) {
+            // Show specific handle not found message
+            profileContent.innerHTML = `
+                <div class="visitor-message">
+                    <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Handle Not Found</h1>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
+                        The handle <strong>@${hashHandle}</strong> doesn't exist yet.
+                    </p>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
+                        Sign in to claim this handle or browse other profiles.
+                    </p>
+                    <div class="control-buttons" style="justify-content: center; gap: 20px;">
+                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In to Claim
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-secondary">
+                            <i class="fas fa-home"></i>
+                            Go Home
+                        </a>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        } else {
+            // Show general welcome message
+            profileContent.innerHTML = `
+                <div class="visitor-message">
+                    <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
+                        Share your unique profile link: <strong>https://aditya-cmd-max.github.io/profile/#@yourhandle</strong>
+                    </p>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
+                        Sign in to view your profile or visit a profile using the format above.
+                    </p>
+                    <div class="control-buttons" style="justify-content: center; gap: 20px;">
+                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">
+                            <i class="fas fa-user-plus"></i>
+                            Sign Up
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-outlined">
+                            <i class="fas fa-home"></i>
+                            Go Home
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
     }
 
     // Update header actions based on auth state
@@ -984,16 +1016,25 @@
             
             if (userDoc.exists) {
                 profileData = userDoc.data();
-                await displayProfile(profileData, true);
+                console.log('Loaded user data:', profileData);
                 
-                // Update URL to hash format for sharing (GitHub Pages compatible)
+                // If user has a handle, redirect to their handle URL
                 if (profileData.handle) {
                     const newUrl = `${window.location.origin}/profile/#@${profileData.handle}`;
                     window.history.replaceState({}, '', newUrl);
-                    console.log('Updated URL to hash format:', newUrl);
+                    console.log('Updated URL to handle format:', newUrl);
+                    
+                    // Load profile by handle instead
+                    await loadProfileByHandle(profileData.handle);
+                } else {
+                    // No handle set, show profile without handle
+                    await displayProfile(profileData, true);
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
                 }
                 
             } else {
+                console.log('User document not found');
                 showNotFound();
             }
             
@@ -1001,13 +1042,10 @@
             console.error('Error loading own profile:', error);
             showToast('Error loading profile');
             showNotFound();
-        } finally {
-            loadingScreen.style.display = 'none';
-            mainContent.style.display = 'block';
         }
     }
 
-    // Load profile by handle
+    // Load profile by handle - IMPROVED with better error handling
     async function loadProfileByHandle(handle) {
         console.log('Loading profile for handle:', handle);
         
@@ -1020,35 +1058,89 @@
             
             loadingText.textContent = 'Loading profile...';
             
-            const result = await handleSystem.getUserByHandle(handle);
-            console.log('Handle system result:', result);
+            // Direct Firestore query for debugging
+            console.log('Direct Firestore query for handle:', handle.toLowerCase());
+            const handleDoc = await db.collection('handles').doc(handle.toLowerCase()).get();
             
-            if (result.success) {
-                profileData = result.user;
-                profileOwner = result.user.uid;
+            if (!handleDoc.exists) {
+                console.log('Handle not found in Firestore');
                 
-                // Check if profile is public
-                if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
+                // Show claim option if logged in
+                if (currentUser) {
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    
+                    profileContent.innerHTML = `
+                        <div class="visitor-message">
+                            <h2 style="margin-bottom: 16px;">Handle Available!</h2>
+                            <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
+                                The handle <strong>@${handle}</strong> is available to claim.
+                            </p>
+                            <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
+                                Would you like to claim it as your profile handle?
+                            </p>
+                            <div class="control-buttons" style="justify-content: center; gap: 20px;">
+                                <button class="btn btn-primary" onclick="claimHandle('${handle}')">
+                                    <i class="fas fa-at"></i>
+                                    Claim @${handle}
+                                </button>
+                                <button class="btn btn-secondary" onclick="window.location.href='/dashboard'">
+                                    <i class="fas fa-user"></i>
+                                    Go to Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
                     showNotFound();
-                    return;
                 }
-                
-                // Check if current user is the owner
-                isOwner = currentUser && currentUser.uid === profileOwner;
-                
-                await displayProfile(profileData, isOwner);
-                
-                // Update page title
-                document.title = `${profileData.displayName || 'User'} (@${handle}) - Reverbit Profile`;
-                
-                // Update URL to clean hash format
-                const cleanUrl = `${window.location.origin}/profile/#@${handle}`;
-                window.history.replaceState({}, '', cleanUrl);
-                
-            } else {
-                console.log('Handle not found:', result.error);
-                showNotFound();
+                return;
             }
+            
+            const handleData = handleDoc.data();
+            console.log('Found handle data:', handleData);
+            
+            // Get user document
+            const userDoc = await db.collection('users').doc(handleData.userId).get();
+            
+            if (!userDoc.exists) {
+                console.log('User document not found for handle owner');
+                showNotFound();
+                return;
+            }
+            
+            const userData = userDoc.data();
+            console.log('Found user data:', userData);
+            
+            // Combine data
+            profileData = {
+                ...userData,
+                uid: handleData.userId,
+                handle: handleData.handle,
+                displayName: handleData.displayName || userData.displayName
+            };
+            
+            profileOwner = handleData.userId;
+            
+            // Check if profile is public
+            if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
+                console.log('Profile is private and user is not owner');
+                showNotFound();
+                return;
+            }
+            
+            // Check if current user is the owner
+            isOwner = currentUser && currentUser.uid === profileOwner;
+            console.log('Is owner?', isOwner);
+            
+            await displayProfile(profileData, isOwner);
+            
+            // Update page title
+            document.title = `${profileData.displayName || 'User'} (@${handle}) - Reverbit Profile`;
+            
+            // Update URL to clean hash format
+            const cleanUrl = `${window.location.origin}/profile/#@${handle}`;
+            window.history.replaceState({}, '', cleanUrl);
             
         } catch (error) {
             console.error('Error loading profile by handle:', error);
@@ -1056,6 +1148,48 @@
         } finally {
             loadingScreen.style.display = 'none';
             mainContent.style.display = 'block';
+        }
+    }
+
+    // Claim a handle (available handle)
+    async function claimHandle(handle) {
+        if (!currentUser) {
+            showToast('Please sign in first');
+            window.location.href = '/signin';
+            return;
+        }
+        
+        try {
+            showToast('Claiming handle...');
+            
+            // Check if handle is available
+            const availability = await handleSystem.isHandleAvailable(handle);
+            if (!availability.available) {
+                showToast(availability.error || 'Handle not available');
+                return;
+            }
+            
+            // Claim the handle
+            const result = await handleSystem.claimHandle(
+                currentUser.uid,
+                handle,
+                currentUser.displayName || 'User'
+            );
+            
+            if (result.success) {
+                showToast(`Successfully claimed @${handle}!`);
+                
+                // Redirect to the new profile
+                setTimeout(() => {
+                    window.location.href = `/profile/#@${handle}`;
+                }, 1000);
+            } else {
+                showToast(result.error || 'Error claiming handle');
+            }
+            
+        } catch (error) {
+            console.error('Error claiming handle:', error);
+            showToast('Error: ' + error.message);
         }
     }
 
@@ -1078,15 +1212,24 @@
                 </div>
                 
                 <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
+                
+                ${!isOwnerView && currentUser ? `
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-outlined" onclick="window.location.href='/dashboard'">
+                            <i class="fas fa-user"></i>
+                            View Your Profile
+                        </button>
+                    </div>
+                ` : ''}
             </div>
 
             ${isOwnerView ? createOwnerControls(data) : ''}
 
             ${createProfileStats(data, isOwnerView)}
 
-            ${data.showApps ? createAppsSection() : ''}
+            ${data.showApps !== false ? createAppsSection() : ''}
 
-            ${!isOwnerView && currentUser ? createVisitorMessage() : ''}
+            ${!isOwnerView && !currentUser ? createVisitorMessage(data.handle) : ''}
         `;
         
         profileContent.innerHTML = profileHTML;
@@ -1098,7 +1241,7 @@
         }
     }
 
-    // UPDATED: Create owner controls HTML with hash-based URLs
+    // Create owner controls HTML with hash-based URLs
     function createOwnerControls(data) {
         const profileUrl = `https://aditya-cmd-max.github.io/profile/#@${data.handle || 'user'}`;
         
@@ -1211,16 +1354,16 @@
     }
 
     // Create visitor message HTML
-    function createVisitorMessage() {
+    function createVisitorMessage(handle) {
         return `
             <div class="visitor-message">
-                <h2 style="margin-bottom: 16px;">View Your Own Profile</h2>
+                <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
                 <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
-                    You're viewing someone else's profile. Sign in to see your own dashboard and profile settings.
+                    Create your own Reverbit account to explore all features${handle ? ` and connect with @${handle}` : ''}!
                 </p>
-                <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/dashboard'">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Go to Dashboard
+                <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In / Sign Up
                 </button>
             </div>
         `;
@@ -1415,7 +1558,7 @@
         }
     }
 
-    // UPDATED: Save handle with hash URL redirect
+    // Save handle
     async function saveHandle() {
         const newHandleInput = document.getElementById('newHandleInput');
         const saveHandleBtn = document.getElementById('saveHandleBtn');
@@ -1515,7 +1658,7 @@
         }
     }
 
-    // UPDATED: Copy profile link with hash URL
+    // Copy profile link
     async function copyProfileLink() {
         if (!profileData || !profileData.handle) {
             showToast('Please set a handle first');
@@ -1619,69 +1762,37 @@
             }
         });
         
-        // Debug: Log when page is fully loaded
         console.log('Profile page JavaScript loaded successfully');
     });
-</script>
 
-
-// Add this right after your existing script tag
-<script>
-// Debug function to check handle system
-async function debugHandleSystem() {
-    console.log('=== DEBUG HANDLE SYSTEM ===');
-    
-    // Check if handle system is initialized
-    console.log('Handle System exists:', !!window.ReverbitHandleSystem);
-    console.log('Handle System DB:', window.ReverbitHandleSystem?.db ? 'Connected' : 'Not connected');
-    
-    // Get current handle from URL
-    const handle = extractHandleFromUrl();
-    console.log('Current handle from URL:', handle);
-    
-    if (handle) {
-        // Test handle system directly
-        console.log('Testing handle system for:', handle);
-        try {
-            const result = await window.ReverbitHandleSystem.getUserByHandle(handle);
-            console.log('Handle system result:', result);
+    // DEBUG: Add a test function to check handles
+    window.debugHandles = async function() {
+        console.log('=== DEBUG HANDLES ===');
+        const handle = 'adityajha1';
+        
+        // Check Firestore directly
+        const handleDoc = await db.collection('handles').doc(handle.toLowerCase()).get();
+        console.log('Handle exists?', handleDoc.exists);
+        
+        if (handleDoc.exists) {
+            const data = handleDoc.data();
+            console.log('Handle data:', data);
             
-            if (!result.success) {
-                console.log('Error:', result.error);
-                
-                // Check if handle exists in Firestore directly
-                const handleDoc = await firebase.firestore()
-                    .collection('handles')
-                    .doc(handle.toLowerCase())
-                    .get();
-                
-                console.log('Handle document exists:', handleDoc.exists);
-                console.log('Handle document data:', handleDoc.exists ? handleDoc.data() : 'No data');
-                
-                if (handleDoc.exists) {
-                    const handleData = handleDoc.data();
-                    console.log('Handle owner ID:', handleData.userId);
-                    
-                    // Check if user exists
-                    const userDoc = await firebase.firestore()
-                        .collection('users')
-                        .doc(handleData.userId)
-                        .get();
-                    
-                    console.log('User document exists:', userDoc.exists);
-                    console.log('User data:', userDoc.exists ? userDoc.data() : 'No data');
-                }
-            }
-        } catch (error) {
-            console.error('Debug error:', error);
+            // Check user
+            const userDoc = await db.collection('users').doc(data.userId).get();
+            console.log('User exists?', userDoc.exists);
+            console.log('User data:', userDoc.exists ? userDoc.data() : null);
         }
-    }
-    
-    console.log('=== END DEBUG ===');
-}
-
-// Run debug on page load
-setTimeout(debugHandleSystem, 2000);
+        
+        // List all handles
+        const allHandles = await db.collection('handles').limit(10).get();
+        console.log('All handles in database:');
+        allHandles.forEach(doc => {
+            console.log(`- @${doc.id}: ${JSON.stringify(doc.data())}`);
+        });
+        
+        console.log('=== END DEBUG ===');
+    };
 </script>
 
     
