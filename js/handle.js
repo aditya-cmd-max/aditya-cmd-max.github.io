@@ -7,7 +7,7 @@ class ReverbitHandleSystem {
         this.reservedHandles = [
             'admin', 'administrator', 'system', 'root',
             'support', 'help', 'info', 'contact',
-            'reverbit', 'clover', 'mindscribe', 'peo',
+            'clover', 'mindscribe', 'peo',
             'null', 'undefined', 'home', 'dashboard',
             'profile', 'settings', 'account', 'user',
             'api', 'auth', 'login', 'signin', 'signup',
