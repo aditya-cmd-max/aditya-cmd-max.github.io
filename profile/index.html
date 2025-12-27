@@ -751,6 +751,9 @@
         try {
             console.log('Profile Page: Initializing...');
             
+            // Check for direct @handle access first
+            checkForDirectHandleAccess();
+            
             // Initialize Firebase
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
@@ -764,6 +767,10 @@
             if (handleSystem && db) {
                 handleSystem.db = db;
                 console.log('Handle System: Initialized successfully');
+                
+                // Test handle system
+                const health = await handleSystem.healthCheck();
+                console.log('Handle System Health:', health);
             } else {
                 console.error('Handle System: Failed to initialize');
             }
@@ -798,9 +805,6 @@
                 }
             });
 
-            // Add event listeners for handle modal
-            setupModalEventListeners();
-
         } catch (error) {
             console.error('Initialization error:', error);
             showToast('Error loading profile');
@@ -809,111 +813,165 @@
         }
     });
 
-    // Setup modal event listeners
-    function setupModalEventListeners() {
-        // Handle input event for handle checking
-        const newHandleInput = document.getElementById('newHandleInput');
-        if (newHandleInput) {
-            let checkTimeout;
-            newHandleInput.addEventListener('input', () => {
-                clearTimeout(checkTimeout);
-                checkTimeout = setTimeout(() => {
-                    checkHandleAvailability();
-                }, 500);
-            });
+    // Check for direct @handle access and redirect to hash URL
+    function checkForDirectHandleAccess() {
+        const path = window.location.pathname;
+        const url = window.location.href;
+        
+        console.log('Checking for direct handle access...');
+        console.log('Path:', path);
+        console.log('Full URL:', url);
+        
+        // If someone tries to access /profile/@handle directly on GitHub Pages
+        if (path.includes('/profile/@')) {
+            const pathParts = path.split('/');
+            const handlePart = pathParts[pathParts.length - 1];
             
-            // Also check on focus
-            newHandleInput.addEventListener('focus', () => {
-                checkHandleAvailability();
-            });
-        }
-        
-        // Save handle button
-        const saveHandleBtn = document.getElementById('saveHandleBtn');
-        if (saveHandleBtn) {
-            saveHandleBtn.addEventListener('click', saveHandle);
-        }
-        
-        // Close modal on overlay click
-        const modalOverlay = document.getElementById('handleEditModal');
-        if (modalOverlay) {
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
-                    closeModal();
-                }
-            });
-        }
-        
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('handleEditModal');
-                if (modal && modal.classList.contains('active')) {
-                    closeModal();
-                }
+            if (handlePart && handlePart.startsWith('@')) {
+                const handle = handlePart.substring(1);
+                console.log('Found direct handle access, redirecting:', handle);
+                
+                // Redirect to hash-based URL for GitHub Pages compatibility
+                const newUrl = `/profile/#@${handle}`;
+                window.location.href = newUrl;
+                return true;
             }
-        });
+        }
+        
+        return false;
     }
 
-    // Extract handle from URL
+    // Extract handle from URL - supports multiple formats
     function extractHandleFromUrl() {
         const url = window.location.href;
+        const path = window.location.pathname;
         const hash = window.location.hash;
+        const search = window.location.search;
         
-        console.log('URL parsing:', { url, hash });
+        console.log('URL parsing details:');
+        console.log('- Full URL:', url);
+        console.log('- Path:', path);
+        console.log('- Hash:', hash);
+        console.log('- Search:', search);
         
-        // Check for hash-based URL (#@handle) - PRIMARY for GitHub Pages
+        // Method 1: Check for hash-based URL (#@handle) - PRIMARY for GitHub Pages
         if (hash && hash.startsWith('#@')) {
             const handle = hash.substring(2); // Remove '#@'
             console.log('Found handle in hash:', handle);
             return handle;
         }
         
-        // Check for query parameter (?handle=)
-        const urlParams = new URLSearchParams(window.location.search);
+        // Method 2: Check for query parameter (?handle=)
+        const urlParams = new URLSearchParams(search);
         const handleParam = urlParams.get('handle');
         if (handleParam) {
             console.log('Found handle in query param:', handleParam);
             return handleParam.replace('@', '');
         }
         
-        // For direct URL access like /profile/@handle
-        if (window.location.pathname.includes('/profile/@')) {
-            const path = window.location.pathname;
-            const match = path.match(/\/profile\/@([^\/]+)/);
-            if (match) {
-                console.log('Found handle in path:', match[1]);
-                return match[1];
+        // Method 3: Check for old-style path (/profile/@handle)
+        const pathMatch = path.match(/\/profile\/@([^\/]+)/);
+        if (pathMatch) {
+            console.log('Found handle in path (old style):', pathMatch[1]);
+            
+            // Auto-redirect to hash URL for GitHub Pages compatibility
+            setTimeout(() => {
+                window.location.href = `/profile/#@${pathMatch[1]}`;
+            }, 100);
+            
+            return pathMatch[1];
+        }
+        
+        // Method 4: Check for profile/ handle (without @)
+        const simplePathMatch = path.match(/\/profile\/([^\/]+)/);
+        if (simplePathMatch && simplePathMatch[1] && !simplePathMatch[1].includes('.') && simplePathMatch[1] !== 'index.html') {
+            console.log('Found handle in simple path:', simplePathMatch[1]);
+            
+            // Check if it looks like a handle (not a file extension)
+            if (isValidHandleFormat(simplePathMatch[1])) {
+                setTimeout(() => {
+                    window.location.href = `/profile/#@${simplePathMatch[1]}`;
+                }, 100);
+                return simplePathMatch[1];
             }
         }
         
         console.log('No handle found in URL');
         return null;
     }
+    
+    // Helper: Check if string looks like a handle
+    function isValidHandleFormat(str) {
+        if (!str || typeof str !== 'string') return false;
+        
+        // Remove @ if present
+        str = str.replace(/^@/, '');
+        
+        // Basic validation
+        return str.length >= 3 && 
+               str.length <= 20 && 
+               /^[a-zA-Z0-9_]+$/.test(str) &&
+               !/^[0-9]/.test(str);
+    }
 
-    // Show visitor landing page
+    // Show visitor landing page when no handle and not logged in
     function showVisitorLanding() {
         loadingScreen.style.display = 'none';
         mainContent.style.display = 'block';
         
-        profileContent.innerHTML = `
-            <div class="visitor-message">
-                <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
-                    Visit a profile using: <strong>https://aditya-cmd-max.github.io/profile/#@username</strong>
-                </p>
-                <div class="control-buttons" style="justify-content: center; gap: 20px;">
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-secondary">
-                        <i class="fas fa-home"></i>
-                        Go Home
-                    </a>
+        const hashHandle = window.location.hash.substring(2); // Remove #@
+        
+        if (hashHandle) {
+            // Show specific handle not found message
+            profileContent.innerHTML = `
+                <div class="visitor-message">
+                    <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Handle Not Found</h1>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
+                        The handle <strong>@${hashHandle}</strong> doesn't exist yet.
+                    </p>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
+                        Sign in to claim this handle or browse other profiles.
+                    </p>
+                    <div class="control-buttons" style="justify-content: center; gap: 20px;">
+                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In to Claim
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-secondary">
+                            <i class="fas fa-home"></i>
+                            Go Home
+                        </a>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        } else {
+            // Show general welcome message
+            profileContent.innerHTML = `
+                <div class="visitor-message">
+                    <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
+                        Share your unique profile link: <strong>https://aditya-cmd-max.github.io/profile/#@yourhandle</strong>
+                    </p>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
+                        Sign in to view your profile or visit a profile using the format above.
+                    </p>
+                    <div class="control-buttons" style="justify-content: center; gap: 20px;">
+                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">
+                            <i class="fas fa-user-plus"></i>
+                            Sign Up
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-outlined">
+                            <i class="fas fa-home"></i>
+                            Go Home
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
     }
 
     // Update header actions based on auth state
@@ -958,12 +1016,15 @@
             
             if (userDoc.exists) {
                 profileData = userDoc.data();
+                console.log('Loaded user data:', profileData);
                 
-                // If user has a handle, redirect to handle URL
+                // If user has a handle, redirect to their handle URL
                 if (profileData.handle) {
                     const newUrl = `${window.location.origin}/profile/#@${profileData.handle}`;
                     window.history.replaceState({}, '', newUrl);
-                    console.log('Redirecting to handle URL:', newUrl);
+                    console.log('Updated URL to handle format:', newUrl);
+                    
+                    // Load profile by handle instead
                     await loadProfileByHandle(profileData.handle);
                 } else {
                     // No handle set, show profile without handle
@@ -984,33 +1045,25 @@
         }
     }
 
-    // Load profile by handle - FIXED VERSION
+    // Load profile by handle - IMPROVED with better error handling
     async function loadProfileByHandle(handle) {
         console.log('Loading profile for handle:', handle);
         
-        if (!handle || handle.trim() === '') {
-            showNotFound();
-            return;
-        }
-        
         try {
-            if (!db) {
-                console.error('Firestore not initialized');
+            if (!handleSystem || !handleSystem.db) {
+                console.error('Handle system not properly initialized');
                 showNotFound();
                 return;
             }
             
             loadingText.textContent = 'Loading profile...';
             
-            // Convert handle to lowercase for query
-            const lowercaseHandle = handle.toLowerCase();
-            
-            // Direct Firestore query - check handles collection
-            console.log('Checking handles collection for:', lowercaseHandle);
-            const handleDoc = await db.collection('handles').doc(lowercaseHandle).get();
+            // Direct Firestore query for debugging
+            console.log('Direct Firestore query for handle:', handle.toLowerCase());
+            const handleDoc = await db.collection('handles').doc(handle.toLowerCase()).get();
             
             if (!handleDoc.exists) {
-                console.log('❌ Handle not found in Firestore:', lowercaseHandle);
+                console.log('Handle not found in Firestore');
                 
                 // Show claim option if logged in
                 if (currentUser) {
@@ -1022,6 +1075,9 @@
                             <h2 style="margin-bottom: 16px;">Handle Available!</h2>
                             <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
                                 The handle <strong>@${handle}</strong> is available to claim.
+                            </p>
+                            <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
+                                Would you like to claim it as your profile handle?
                             </p>
                             <div class="control-buttons" style="justify-content: center; gap: 20px;">
                                 <button class="btn btn-primary" onclick="claimHandle('${handle}')">
@@ -1042,30 +1098,26 @@
             }
             
             const handleData = handleDoc.data();
-            console.log('✅ Found handle data:', handleData);
+            console.log('Found handle data:', handleData);
             
             // Get user document
             const userDoc = await db.collection('users').doc(handleData.userId).get();
             
             if (!userDoc.exists) {
-                console.log('❌ User document not found for handle owner:', handleData.userId);
+                console.log('User document not found for handle owner');
                 showNotFound();
                 return;
             }
             
             const userData = userDoc.data();
-            console.log('✅ Found user data:', userData);
+            console.log('Found user data:', userData);
             
             // Combine data
             profileData = {
                 ...userData,
                 uid: handleData.userId,
                 handle: handleData.handle,
-                displayName: handleData.displayName || userData.displayName,
-                photoURL: userData.photoURL,
-                isPublic: userData.isPublic !== false, // Default to true
-                createdAt: userData.createdAt,
-                updatedAt: userData.updatedAt
+                displayName: handleData.displayName || userData.displayName
             };
             
             profileOwner = handleData.userId;
@@ -1091,7 +1143,7 @@
             window.history.replaceState({}, '', cleanUrl);
             
         } catch (error) {
-            console.error('❌ Error loading profile by handle:', error);
+            console.error('Error loading profile by handle:', error);
             showNotFound();
         } finally {
             loadingScreen.style.display = 'none';
@@ -1110,14 +1162,8 @@
         try {
             showToast('Claiming handle...');
             
-            if (!handleSystem) {
-                showToast('Handle system not available');
-                return;
-            }
-            
             // Check if handle is available
             const availability = await handleSystem.isHandleAvailable(handle);
-            
             if (!availability.available) {
                 showToast(availability.error || 'Handle not available');
                 return;
@@ -1195,7 +1241,7 @@
         }
     }
 
-    // Create owner controls HTML
+    // Create owner controls HTML with hash-based URLs
     function createOwnerControls(data) {
         const profileUrl = `https://aditya-cmd-max.github.io/profile/#@${data.handle || 'user'}`;
         
@@ -1229,6 +1275,9 @@
                     <div class="profile-url">
                         <strong>Your Profile URL:</strong><br>
                         ${profileUrl}
+                        <p style="font-size: 0.85rem; color: var(--md-on-surface-variant); margin-top: 5px; font-style: italic;">
+                            Share this link with others! (GitHub Pages compatible)
+                        </p>
                     </div>
                     <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
                         <i class="fas fa-copy"></i>
@@ -1403,7 +1452,7 @@
         window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
     }
 
-    // Open handle edit modal - FIXED SUGGESTIONS
+    // Open handle edit modal
     function openHandleEditModal() {
         if (!isOwner || !profileData) {
             showToast('You must be logged in to change your handle');
@@ -1423,27 +1472,19 @@
         saveHandleBtn.disabled = false;
         saveHandleBtn.innerHTML = 'Save Handle';
         
-        // Generate suggestions - FIXED
+        // Generate suggestions
         if (profileData.displayName && handleSystem) {
             const suggestions = handleSystem.generateSuggestions(profileData.displayName, 5);
-            console.log('Generated suggestions:', suggestions);
-            
-            if (suggestions.length > 0) {
-                handleSuggestions.innerHTML = `
-                    <p style="margin-bottom: 10px; color: var(--md-on-surface-variant); font-size: 0.9em;">Suggestions:</p>
-                    <div class="handle-suggestions">
-                        ${suggestions.map(s => `
-                            <button type="button" class="suggestion-btn" onclick="selectSuggestion('${s}')">
-                                @${s}
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-            } else {
-                handleSuggestions.innerHTML = '';
-            }
-        } else {
-            handleSuggestions.innerHTML = '';
+            handleSuggestions.innerHTML = `
+                <p style="margin-bottom: 10px; color: var(--md-on-surface-variant); font-size: 0.9em;">Suggestions:</p>
+                <div class="handle-suggestions">
+                    ${suggestions.map(s => `
+                        <button class="suggestion-btn" onclick="selectSuggestion('${s}')">
+                            @${s}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
         }
         
         // Show modal
@@ -1452,13 +1493,11 @@
         // Focus on input
         setTimeout(() => {
             newHandleInput.focus();
-            checkHandleAvailability();
         }, 300);
     }
 
     // Select suggestion
     function selectSuggestion(handle) {
-        console.log('Selected suggestion:', handle);
         const newHandleInput = document.getElementById('newHandleInput');
         newHandleInput.value = handle;
         checkHandleAvailability(handle);
@@ -1470,15 +1509,13 @@
         modal.classList.remove('active');
     }
 
-    // Check handle availability - FIXED
+    // Check handle availability
     async function checkHandleAvailability(handle = null) {
         const newHandleInput = document.getElementById('newHandleInput');
         const handleValidation = document.getElementById('handleValidation');
         const saveHandleBtn = document.getElementById('saveHandleBtn');
         
         const inputHandle = handle || newHandleInput.value.trim();
-        
-        console.log('Checking handle availability for:', inputHandle);
         
         if (!inputHandle) {
             handleValidation.textContent = '';
@@ -1503,7 +1540,6 @@
         
         try {
             const result = await handleSystem.isHandleAvailable(inputHandle);
-            console.log('Handle availability result:', result);
             
             if (result.available) {
                 handleValidation.textContent = '✓ This handle is available';
@@ -1686,7 +1722,77 @@
         img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a73e8&color=fff&bold=true`;
     }
 
-    console.log('Profile page JavaScript loaded successfully');
+    // Setup event listeners after DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Handle input event for handle checking
+        const newHandleInput = document.getElementById('newHandleInput');
+        if (newHandleInput) {
+            let checkTimeout;
+            newHandleInput.addEventListener('input', () => {
+                clearTimeout(checkTimeout);
+                checkTimeout = setTimeout(() => {
+                    checkHandleAvailability();
+                }, 500);
+            });
+        }
+        
+        // Save handle button
+        const saveHandleBtn = document.getElementById('saveHandleBtn');
+        if (saveHandleBtn) {
+            saveHandleBtn.addEventListener('click', saveHandle);
+        }
+        
+        // Close modal on overlay click
+        const modalOverlay = document.getElementById('handleEditModal');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('handleEditModal');
+                if (modal && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            }
+        });
+        
+        console.log('Profile page JavaScript loaded successfully');
+    });
+
+    // DEBUG: Add a test function to check handles
+    window.debugHandles = async function() {
+        console.log('=== DEBUG HANDLES ===');
+        const handle = 'adityajha1';
+        
+        // Check Firestore directly
+        const handleDoc = await db.collection('handles').doc(handle.toLowerCase()).get();
+        console.log('Handle exists?', handleDoc.exists);
+        
+        if (handleDoc.exists) {
+            const data = handleDoc.data();
+            console.log('Handle data:', data);
+            
+            // Check user
+            const userDoc = await db.collection('users').doc(data.userId).get();
+            console.log('User exists?', userDoc.exists);
+            console.log('User data:', userDoc.exists ? userDoc.data() : null);
+        }
+        
+        // List all handles
+        const allHandles = await db.collection('handles').limit(10).get();
+        console.log('All handles in database:');
+        allHandles.forEach(doc => {
+            console.log(`- @${doc.id}: ${JSON.stringify(doc.data())}`);
+        });
+        
+        console.log('=== END DEBUG ===');
+    };
 </script>
 
     
