@@ -1,7 +1,7 @@
 // handle.js - Handle System for Reverbit
 class ReverbitHandleSystem {
     constructor() {
-        this.db = firebase.firestore();
+        this.db = null; // Will be set when initialized
         this.handles = {};
         this.reservedHandles = [
             'admin', 'administrator', 'system', 'root',
@@ -13,6 +13,15 @@ class ReverbitHandleSystem {
             'logout', 'register', 'privacy', 'terms',
             'about', 'contact', 'blog', 'news'
         ];
+    }
+
+    // Initialize with Firebase instance
+    init(firebase) {
+        if (firebase && firebase.firestore) {
+            this.db = firebase.firestore();
+            return true;
+        }
+        return false;
     }
 
     // Validate handle
@@ -55,6 +64,10 @@ class ReverbitHandleSystem {
     // Check if handle is available
     async isHandleAvailable(handle) {
         try {
+            if (!this.db) {
+                return { available: false, error: 'Database not initialized. Please wait...' };
+            }
+            
             const validation = this.validateHandle(handle);
             if (!validation.valid) {
                 return { available: false, error: validation.error };
@@ -77,6 +90,10 @@ class ReverbitHandleSystem {
     // Claim a handle for a user
     async claimHandle(userId, handle, displayName = null) {
         try {
+            if (!this.db) {
+                return { success: false, error: 'Database not initialized' };
+            }
+            
             const validation = this.validateHandle(handle);
             if (!validation.valid) {
                 return { success: false, error: validation.error };
@@ -121,13 +138,17 @@ class ReverbitHandleSystem {
             
         } catch (error) {
             console.error('Error claiming handle:', error);
-            return { success: false, error: 'Error claiming handle' };
+            return { success: false, error: 'Error claiming handle: ' + error.message };
         }
     }
 
     // Get user by handle
     async getUserByHandle(handle) {
         try {
+            if (!this.db) {
+                return { success: false, error: 'Database not initialized', user: null };
+            }
+            
             const lowercaseHandle = handle.toLowerCase();
             
             // Get handle document
@@ -158,10 +179,14 @@ class ReverbitHandleSystem {
         }
     }
 
-    // Update handle (change handle)
-    async updateHandle(userId, newHandle) {
+    // Update handle (change handle) - FIXED VERSION
+    async updateHandle(userId, newHandle, displayName = null) {
         try {
-            // Get current handle
+            if (!this.db) {
+                return { success: false, error: 'Database not initialized' };
+            }
+            
+            // Get current user data
             const userDoc = await this.db.collection('users').doc(userId).get();
             if (!userDoc.exists) {
                 return { success: false, error: 'User not found' };
@@ -170,32 +195,84 @@ class ReverbitHandleSystem {
             const userData = userDoc.data();
             const oldHandle = userData.handle;
             
+            // Don't update if it's the same handle
+            if (oldHandle && oldHandle.toLowerCase() === newHandle.toLowerCase()) {
+                return { success: false, error: 'This is already your handle' };
+            }
+            
             // Check if new handle is available
             const availability = await this.isHandleAvailable(newHandle);
             if (!availability.available) {
                 return { success: false, error: availability.error };
             }
             
-            // Delete old handle entry
+            // Delete old handle entry if exists
             if (oldHandle) {
-                await this.db.collection('handles').doc(oldHandle.toLowerCase()).delete();
-                await this.db.collection('publicProfiles').doc(oldHandle.toLowerCase()).delete();
+                try {
+                    // Delete old handle
+                    const oldHandleRef = this.db.collection('handles').doc(oldHandle.toLowerCase());
+                    const oldHandleDoc = await oldHandleRef.get();
+                    if (oldHandleDoc.exists) {
+                        await oldHandleRef.delete();
+                    }
+                    
+                    // Delete old public profile
+                    const oldProfileRef = this.db.collection('publicProfiles').doc(oldHandle.toLowerCase());
+                    const oldProfileDoc = await oldProfileRef.get();
+                    if (oldProfileDoc.exists) {
+                        await oldProfileRef.delete();
+                    }
+                } catch (error) {
+                    console.warn('Error deleting old handle:', error);
+                    // Continue anyway
+                }
             }
             
-            // Claim new handle
-            const result = await this.claimHandle(userId, newHandle, userData.displayName);
+            // Create new handle document
+            const lowercaseHandle = newHandle.toLowerCase();
             
-            return result;
+            await this.db.collection('handles').doc(lowercaseHandle).set({
+                userId: userId,
+                handle: newHandle,
+                lowercaseHandle: lowercaseHandle,
+                displayName: displayName || userData.displayName,
+                claimedAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+            
+            // Create new public profile entry
+            await this.db.collection('publicProfiles').doc(lowercaseHandle).set({
+                userId: userId,
+                handle: newHandle,
+                displayName: displayName || userData.displayName,
+                photoURL: userData.photoURL,
+                isPublic: userData.isPublic || false,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+            
+            // Update user document with new handle
+            await this.db.collection('users').doc(userId).update({
+                handle: newHandle,
+                lowercaseHandle: lowercaseHandle,
+                updatedAt: new Date().toISOString()
+            });
+            
+            return { success: true, handle: newHandle, error: null };
             
         } catch (error) {
             console.error('Error updating handle:', error);
-            return { success: false, error: 'Error updating handle' };
+            return { success: false, error: 'Error updating handle: ' + error.message };
         }
     }
 
     // Release handle (when user deletes account)
     async releaseHandle(handle) {
         try {
+            if (!this.db) {
+                return { success: false, error: 'Database not initialized' };
+            }
+            
             const lowercaseHandle = handle.toLowerCase();
             
             // Delete handle document
