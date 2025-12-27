@@ -9,10 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-
-<!-- Add this to the head of profile/index.html -->
-<script src="https://aditya-cmd-max.github.io/js/handle.js"></script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,6 +17,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+    <!-- Reverbit Handle System -->
+    <script src="https://aditya-cmd-max.github.io/js/handle.js"></script>
 
     <style>
         /* Material Design 3 Color System */
@@ -203,10 +202,17 @@
             background-clip: text;
         }
 
-        .profile-username {
-            color: var(--md-on-surface-variant);
+        .profile-handle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--md-primary);
             font-size: 1.25rem;
+            font-weight: 600;
             margin-bottom: 16px;
+            padding: 6px 12px;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-pill);
         }
 
         .profile-bio {
@@ -303,6 +309,45 @@
             background: var(--md-primary);
             color: white;
             border-color: var(--md-primary);
+        }
+
+        /* Handle Management */
+        .handle-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+        }
+
+        .handle-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .handle-prefix {
+            color: var(--md-primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .handle-value {
+            font-family: var(--md-font-heading);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        .profile-url {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+            word-break: break-all;
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--md-surface);
+            border-radius: var(--md-radius-small);
+            border: 1px solid var(--md-outline);
         }
 
         /* Share Section */
@@ -475,6 +520,71 @@
             border-top: 1px solid var(--md-outline);
         }
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--md-elevation-4);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Handle Edit Modal Specific Styles */
+        .handle-suggestions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .suggestion-btn {
+            padding: 8px 16px;
+            background: var(--md-surface-variant);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-surface);
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .suggestion-btn:hover {
+            background: var(--md-primary);
+            color: white;
+            border-color: var(--md-primary);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -522,6 +632,32 @@
     <div class="loading" id="loading">
         <div class="loader"></div>
         <p id="loadingText">Loading profile...</p>
+    </div>
+
+    <!-- Handle Edit Modal -->
+    <div class="modal-overlay" id="handleEditModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 16px;">Choose Your Handle</h2>
+            <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">
+                Your handle is your unique identifier on Reverbit. It will appear in your profile URL as @handle.
+            </p>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Handle</label>
+                <div style="display: flex; gap: 10px;">
+                    <span style="padding: 12px; background: var(--md-surface-variant); border-radius: var(--md-radius-small); font-weight: 600;">@</span>
+                    <input type="text" id="newHandleInput" placeholder="Enter your handle" style="flex: 1; padding: 12px; border: 1px solid var(--md-outline); border-radius: var(--md-radius-medium); background: var(--md-surface); color: var(--md-on-surface);">
+                </div>
+                <div id="handleValidation" style="margin-top: 8px; font-size: 0.9em; min-height: 20px;"></div>
+            </div>
+            
+            <div id="handleSuggestions"></div>
+            
+            <div style="display: flex; gap: 12px; margin-top: 30px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveHandleBtn">Save Handle</button>
+            </div>
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -600,6 +736,7 @@
         const profileContent = document.getElementById('profileContent');
         const notFound = document.getElementById('notFound');
         const headerActions = document.getElementById('headerActions');
+        const handleEditModal = document.getElementById('handleEditModal');
 
         // Global variables
         let currentUser = null;
@@ -607,6 +744,7 @@
         let profileData = null;
         let isOwner = false;
         let auth, db;
+        let handleSystem = window.ReverbitHandleSystem; // Use the global instance from handle.js
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', async () => {
@@ -619,24 +757,27 @@
                 auth = firebase.auth();
                 db = firebase.firestore();
 
+                // Initialize handle system with db
+                if (handleSystem) {
+                    handleSystem.db = db;
+                }
+
                 // Listen for auth state
                 auth.onAuthStateChanged(async (user) => {
                     currentUser = user;
                     updateHeaderActions(user);
                     
-                    // Get URL parameters
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const userId = urlParams.get('id');
-                    const username = urlParams.get('username');
+                    // Parse URL to get handle
+                    const handle = extractHandleFromUrl();
                     
-                    if (userId || username) {
-                        // Viewing a specific profile
-                        await loadProfile(userId, username);
+                    if (handle) {
+                        // Viewing profile by handle
+                        await loadProfileByHandle(handle);
                     } else if (user) {
                         // Viewing own profile
                         await loadOwnProfile(user);
                     } else {
-                        // No profile specified and not logged in
+                        // No handle specified and not logged in
                         loadingText.textContent = 'Redirecting to home...';
                         setTimeout(() => {
                             window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
@@ -651,6 +792,32 @@
                 mainContent.style.display = 'block';
             }
         });
+
+        // Extract handle from URL
+        function extractHandleFromUrl() {
+            const path = window.location.pathname;
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Check for @handle in path (clean URL)
+            const pathMatch = path.match(/\/profile\/@([^\/]+)/);
+            if (pathMatch) {
+                return pathMatch[1];
+            }
+            
+            // Check for ?handle= parameter (fallback)
+            const handleParam = urlParams.get('handle');
+            if (handleParam) {
+                return handleParam;
+            }
+            
+            // Check for ?id= parameter (backward compatibility)
+            const idParam = urlParams.get('id');
+            if (idParam) {
+                return null; // Will be handled by ID-based lookup
+            }
+            
+            return null;
+        }
 
         // Update header actions based on auth state
         function updateHeaderActions(user) {
@@ -696,9 +863,9 @@
                     profileData = userDoc.data();
                     await displayProfile(profileData, true);
                     
-                    // Update URL to include username for sharing
-                    if (profileData.username) {
-                        const newUrl = window.location.origin + window.location.pathname + '?username=' + profileData.username;
+                    // Update URL to include handle for sharing
+                    if (profileData.handle) {
+                        const newUrl = window.location.origin + '/profile/@' + profileData.handle;
                         window.history.replaceState({}, '', newUrl);
                     }
                     
@@ -716,51 +883,45 @@
             }
         }
 
-        // Load profile by ID or username
-        async function loadProfile(userId, username) {
+        // Load profile by handle
+        async function loadProfileByHandle(handle) {
             try {
-                let userDoc;
-                
-                if (username) {
-                    // Try to get by username from publicProfiles collection
-                    const publicProfile = await db.collection('publicProfiles')
-                        .where('username', '==', username)
-                        .where('isPublic', '==', true)
-                        .limit(1)
-                        .get();
-                    
-                    if (!publicProfile.empty) {
-                        const profile = publicProfile.docs[0].data();
-                        userId = profile.userId;
-                        userDoc = await db.collection('users').doc(userId).get();
-                    }
-                } else if (userId) {
-                    // Get by user ID
-                    userDoc = await db.collection('users').doc(userId).get();
+                if (!handleSystem) {
+                    showNotFound();
+                    return;
                 }
                 
-                if (userDoc && userDoc.exists) {
-                    profileData = userDoc.data();
+                loadingText.textContent = 'Loading profile...';
+                
+                const result = await handleSystem.getUserByHandle(handle);
+                
+                if (result.success) {
+                    profileData = result.user;
+                    profileOwner = result.user.uid;
                     
                     // Check if profile is public
-                    if (!profileData.isPublic && (!currentUser || currentUser.uid !== userDoc.id)) {
+                    if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
                         showNotFound();
                         return;
                     }
                     
                     // Check if current user is the owner
-                    isOwner = currentUser && currentUser.uid === userDoc.id;
-                    profileOwner = userDoc.id;
+                    isOwner = currentUser && currentUser.uid === profileOwner;
                     
                     await displayProfile(profileData, isOwner);
+                    
+                    // Update URL to clean format
+                    if (profileData.handle) {
+                        const cleanUrl = window.location.origin + '/profile/@' + profileData.handle;
+                        window.history.replaceState({}, '', cleanUrl);
+                    }
                     
                 } else {
                     showNotFound();
                 }
                 
             } catch (error) {
-                console.error('Error loading profile:', error);
-                showToast('Error loading profile');
+                console.error('Error loading profile by handle:', error);
                 showNotFound();
             } finally {
                 loadingScreen.style.display = 'none';
@@ -778,11 +939,16 @@
                     </div>
                     
                     <h1 class="profile-name">${data.displayName || 'User'}</h1>
-                    <p class="profile-username">${data.username ? '@' + data.username : ''}</p>
+                    
+                    <div class="profile-handle">
+                        <i class="fas fa-at"></i>
+                        ${data.handle ? data.handle : 'No handle set'}
+                    </div>
+                    
                     <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
                 </div>
 
-                ${isOwnerView ? createOwnerControls() : ''}
+                ${isOwnerView ? createOwnerControls(data) : ''}
 
                 ${createProfileStats(data, isOwnerView)}
 
@@ -800,18 +966,8 @@
             }
         }
 
-        // Get avatar URL
-        function getAvatarUrl(data) {
-            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
-                return data.photoURL + '?t=' + Date.now();
-            } else {
-                const displayName = data.displayName || 'User';
-                return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
-            }
-        }
-
         // Create owner controls HTML
-        function createOwnerControls() {
+        function createOwnerControls(data) {
             return `
                 <div class="owner-controls" id="ownerControls">
                     <h2 class="section-title">
@@ -823,25 +979,30 @@
                             <i class="fas fa-edit"></i>
                             Edit Profile
                         </button>
-                        <button class="btn btn-secondary" id="visibilityBtn">
+                        <button class="btn btn-secondary" onclick="toggleProfileVisibility()" id="visibilityBtn">
                             <i class="fas fa-globe"></i>
-                            Make Profile Public
+                            ${data.isPublic ? 'Make Profile Private' : 'Make Profile Public'}
                         </button>
-                        <button class="btn btn-secondary" onclick="copyShareLink()">
-                            <i class="fas fa-share-alt"></i>
-                            Share Profile
+                        <button class="btn btn-secondary" onclick="editHandleModal()">
+                            <i class="fas fa-at"></i>
+                            Change Handle
                         </button>
                     </div>
                     
-                    <div class="share-section" id="shareSection" style="display: none;">
-                        <p>Your public profile link:</p>
-                        <div class="share-link">
-                            <input type="text" id="shareLinkInput" readonly>
-                            <button onclick="copyToClipboard()">
-                                <i class="fas fa-copy"></i>
-                                Copy
-                            </button>
+                    <!-- Handle Section -->
+                    <div class="handle-section">
+                        <div class="handle-display">
+                            <span class="handle-prefix">@</span>
+                            <span class="handle-value">${data.handle || 'No handle set'}</span>
                         </div>
+                        <div class="profile-url">
+                            Your profile URL: <br>
+                            <strong>https://aditya-cmd-max.github.io/profile/@${data.handle || 'user'}</strong>
+                        </div>
+                        <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
+                            <i class="fas fa-copy"></i>
+                            Copy Profile Link
+                        </button>
                     </div>
                 </div>
             `;
@@ -928,6 +1089,25 @@
             `;
         }
 
+        // Get avatar URL
+        function getAvatarUrl(data) {
+            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
+                return data.photoURL + '?t=' + Date.now();
+            } else {
+                const displayName = data.displayName || 'User';
+                return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
+            }
+        }
+
+        // Calculate member days
+        function calculateMemberDays(createdAt) {
+            if (!createdAt) return '0';
+            const joinDate = new Date(createdAt);
+            const today = new Date();
+            const diffTime = Math.abs(today - joinDate);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
         // Initialize owner controls
         function initializeOwnerControls(data) {
             // Update visibility button
@@ -941,22 +1121,6 @@
                 visibilityBtn.classList.remove('btn-primary');
                 visibilityBtn.classList.add('btn-secondary');
             }
-            
-            // Add click handler
-            visibilityBtn.onclick = toggleProfileVisibility;
-            
-            // Set up share link
-            const shareLinkInput = document.getElementById('shareLinkInput');
-            shareLinkInput.value = generateShareLink();
-        }
-
-        // Calculate member days
-        function calculateMemberDays(createdAt) {
-            if (!createdAt) return '0';
-            const joinDate = new Date(createdAt);
-            const today = new Date();
-            const diffTime = Math.abs(today - joinDate);
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         }
 
         // Load usage data
@@ -999,6 +1163,117 @@
             }
         }
 
+        // Edit profile (redirect to dashboard)
+        function editProfile() {
+            window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
+        }
+
+        // Open handle edit modal
+        function editHandleModal() {
+            if (!isOwner || !profileData) return;
+            
+            const modal = handleEditModal;
+            const newHandleInput = document.getElementById('newHandleInput');
+            const handleValidation = document.getElementById('handleValidation');
+            const saveHandleBtn = document.getElementById('saveHandleBtn');
+            const handleSuggestions = document.getElementById('handleSuggestions');
+            
+            // Reset modal
+            newHandleInput.value = profileData.handle || '';
+            handleValidation.textContent = '';
+            handleValidation.style.color = '';
+            saveHandleBtn.disabled = false;
+            saveHandleBtn.innerHTML = 'Save Handle';
+            
+            // Generate suggestions
+            if (profileData.displayName) {
+                const suggestions = handleSystem.generateSuggestions(profileData.displayName);
+                handleSuggestions.innerHTML = `
+                    <p style="margin-bottom: 10px; color: var(--md-on-surface-variant); font-size: 0.9em;">Suggestions:</p>
+                    <div class="handle-suggestions">
+                        ${suggestions.map(s => `
+                            <button class="suggestion-btn" onclick="document.getElementById('newHandleInput').value='${s}'; checkHandleAvailability('${s}')">
+                                @${s}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Focus on input
+            setTimeout(() => {
+                newHandleInput.focus();
+            }, 300);
+        }
+
+        // Close modal
+        function closeModal() {
+            handleEditModal.classList.remove('active');
+        }
+
+        // Check handle availability
+        async function checkHandleAvailability(handle = null) {
+            const inputHandle = handle || document.getElementById('newHandleInput').value.trim();
+            const handleValidation = document.getElementById('handleValidation');
+            const saveHandleBtn = document.getElementById('saveHandleBtn');
+            
+            if (!inputHandle) {
+                handleValidation.textContent = '';
+                saveHandleBtn.disabled = true;
+                return;
+            }
+            
+            if (!handleSystem) {
+                handleValidation.textContent = 'Error: Handle system not available';
+                handleValidation.style.color = '#ea4335';
+                saveHandleBtn.disabled = true;
+                return;
+            }
+            
+            const result = await handleSystem.isHandleAvailable(inputHandle);
+            
+            if (result.available) {
+                handleValidation.textContent = '✓ This handle is available';
+                handleValidation.style.color = '#34a853';
+                saveHandleBtn.disabled = false;
+            } else {
+                handleValidation.textContent = result.error || 'This handle is not available';
+                handleValidation.style.color = '#ea4335';
+                saveHandleBtn.disabled = true;
+            }
+        }
+
+        // Save handle
+        async function saveHandle() {
+            const newHandleInput = document.getElementById('newHandleInput');
+            const saveHandleBtn = document.getElementById('saveHandleBtn');
+            
+            const newHandle = newHandleInput.value.trim();
+            if (!newHandle) return;
+            
+            // Disable button and show loading
+            saveHandleBtn.disabled = true;
+            saveHandleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            // Update handle
+            const result = await handleSystem.updateHandle(profileOwner, newHandle, profileData.displayName);
+            
+            if (result.success) {
+                showToast('Handle updated successfully!');
+                closeModal();
+                
+                // Reload profile with new handle
+                window.location.href = '/profile/@' + newHandle;
+            } else {
+                showToast(result.error || 'Error updating handle');
+                saveHandleBtn.disabled = false;
+                saveHandleBtn.innerHTML = 'Save Handle';
+            }
+        }
+
         // Toggle profile visibility
         async function toggleProfileVisibility() {
             if (!isOwner || !profileData) return;
@@ -1013,18 +1288,18 @@
                 });
                 
                 // Update public profile
-                if (profileData.username) {
+                if (profileData.handle) {
                     if (newVisibility) {
-                        await db.collection('publicProfiles').doc(profileData.username).set({
+                        await db.collection('publicProfiles').doc(profileData.handle.toLowerCase()).set({
                             userId: profileOwner,
-                            username: profileData.username,
+                            handle: profileData.handle,
                             displayName: profileData.displayName,
                             photoURL: profileData.photoURL,
                             isPublic: true,
                             updatedAt: new Date().toISOString()
                         }, { merge: true });
                     } else {
-                        await db.collection('publicProfiles').doc(profileData.username).delete();
+                        await db.collection('publicProfiles').doc(profileData.handle.toLowerCase()).delete();
                     }
                 }
                 
@@ -1051,38 +1326,28 @@
             }
         }
 
-        // Generate share link
-        function generateShareLink() {
-            if (!profileData || !profileData.username) return '';
-            return window.location.origin + window.location.pathname + '?username=' + profileData.username;
-        }
-
-        // Copy share link
-        function copyShareLink() {
-            const shareSection = document.getElementById('shareSection');
-            const shareLinkInput = document.getElementById('shareLinkInput');
-            
-            shareSection.style.display = 'block';
-            shareLinkInput.select();
-        }
-
-        // Copy to clipboard
-        async function copyToClipboard() {
-            const shareLinkInput = document.getElementById('shareLinkInput');
-            try {
-                await navigator.clipboard.writeText(shareLinkInput.value);
-                showToast('Link copied to clipboard!');
-            } catch (error) {
-                // Fallback
-                shareLinkInput.select();
-                document.execCommand('copy');
-                showToast('Link copied!');
+        // Copy profile link
+        async function copyProfileLink() {
+            if (!profileData || !profileData.handle) {
+                showToast('Please set a handle first');
+                return;
             }
-        }
-
-        // Edit profile (redirect to dashboard)
-        function editProfile() {
-            window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
+            
+            const profileUrl = `https://aditya-cmd-max.github.io/profile/@${profileData.handle}`;
+            
+            try {
+                await navigator.clipboard.writeText(profileUrl);
+                showToast('Profile link copied to clipboard!');
+            } catch (error) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = profileUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Profile link copied!');
+            }
         }
 
         // Sign out
@@ -1100,6 +1365,8 @@
         function showNotFound() {
             profileContent.style.display = 'none';
             notFound.style.display = 'block';
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
         }
 
         // Show toast notification
@@ -1121,467 +1388,38 @@
             const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a73e8&color=fff&bold=true`;
         }
-    </script>
 
-<script>
-    // Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-        authDomain: "reverbit11.firebaseapp.com",
-        projectId: "reverbit11",
-        storageBucket: "reverbit11.firebasestorage.app",
-        messagingSenderId: "607495314412",
-        appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-        measurementId: "G-DMWMRM1M47"
-    };
-
-    // DOM Elements
-    const loadingScreen = document.getElementById('loading');
-    const loadingText = document.getElementById('loadingText');
-    const mainContent = document.getElementById('mainContent');
-    const profileContent = document.getElementById('profileContent');
-    const notFound = document.getElementById('notFound');
-    const headerActions = document.getElementById('headerActions');
-    const handleEditModal = document.getElementById('handleEditModal');
-
-    // Global variables
-    let currentUser = null;
-    let profileOwner = null;
-    let profileData = null;
-    let isOwner = false;
-    let auth, db;
-    let handleSystem = null;
-
-    // Initialize app
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // Initialize Firebase
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
+        // Setup event listeners for handle modal
+        document.addEventListener('DOMContentLoaded', () => {
+            const newHandleInput = document.getElementById('newHandleInput');
+            const saveHandleBtn = document.getElementById('saveHandleBtn');
             
-            auth = firebase.auth();
-            db = firebase.firestore();
+            // Check handle availability on input
+            let checkTimeout;
+            newHandleInput.addEventListener('input', () => {
+                clearTimeout(checkTimeout);
+                checkTimeout = setTimeout(() => {
+                    checkHandleAvailability();
+                }, 500);
+            });
             
-            // Initialize handle system
-            handleSystem = new ReverbitHandleSystem();
-
-            // Listen for auth state
-            auth.onAuthStateChanged(async (user) => {
-                currentUser = user;
-                updateHeaderActions(user);
-                
-                // Parse URL to get handle
-                const handle = extractHandleFromUrl();
-                
-                if (handle) {
-                    // Viewing profile by handle
-                    await loadProfileByHandle(handle);
-                } else if (user) {
-                    // Viewing own profile
-                    await loadOwnProfile(user);
-                } else {
-                    // No handle specified and not logged in
-                    loadingText.textContent = 'Redirecting to home...';
-                    setTimeout(() => {
-                        window.location.href = 'https://aditya-cmd-max.github.io/reverbit/';
-                    }, 2000);
+            // Save handle on button click
+            saveHandleBtn.addEventListener('click', saveHandle);
+            
+            // Close modal on overlay click
+            handleEditModal.addEventListener('click', (e) => {
+                if (e.target === handleEditModal) {
+                    closeModal();
                 }
             });
-
-        } catch (error) {
-            console.error('Initialization error:', error);
-            showToast('Error loading profile');
-            loadingScreen.style.display = 'none';
-            mainContent.style.display = 'block';
-        }
-    });
-
-    // Extract handle from URL
-    function extractHandleFromUrl() {
-        const path = window.location.pathname;
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Check for @handle in path
-        const pathMatch = path.match(/\/profile\/@([^\/]+)/);
-        if (pathMatch) {
-            return pathMatch[1];
-        }
-        
-        // Check for ?handle= parameter
-        const handleParam = urlParams.get('handle');
-        if (handleParam) {
-            return handleParam;
-        }
-        
-        return null;
-    }
-
-    // Handle System Class
-    class ReverbitHandleSystem {
-        constructor() {
-            this.db = db;
-        }
-
-        async getUserByHandle(handle) {
-            try {
-                const lowercaseHandle = handle.toLowerCase();
-                
-                // Get handle document
-                const handleDoc = await this.db.collection('handles').doc(lowercaseHandle).get();
-                if (!handleDoc.exists) {
-                    return { success: false, error: 'Handle not found', user: null };
-                }
-                
-                const handleData = handleDoc.data();
-                
-                // Get user document
-                const userDoc = await this.db.collection('users').doc(handleData.userId).get();
-                if (!userDoc.exists) {
-                    return { success: false, error: 'User not found', user: null };
-                }
-                
-                const userData = userDoc.data();
-                return { 
-                    success: true, 
-                    error: null, 
-                    user: { ...userData, uid: handleData.userId },
-                    handle: handleData.handle
-                };
-                
-            } catch (error) {
-                console.error('Error getting user by handle:', error);
-                return { success: false, error: 'Error finding user', user: null };
-            }
-        }
-
-        async checkHandleAvailability(handle) {
-            try {
-                const lowercaseHandle = handle.toLowerCase();
-                
-                // Basic validation
-                if (handle.length < 3) {
-                    return { available: false, error: 'Handle must be at least 3 characters' };
-                }
-                if (handle.length > 20) {
-                    return { available: false, error: 'Handle must be 20 characters or less' };
-                }
-                
-                // Check format
-                const handleRegex = /^[a-zA-Z0-9_]+$/;
-                if (!handleRegex.test(handle)) {
-                    return { available: false, error: 'Handle can only contain letters, numbers, and underscores' };
-                }
-                
-                // Check if starts with number
-                if (/^[0-9]/.test(handle)) {
-                    return { available: false, error: 'Handle cannot start with a number' };
-                }
-                
-                // Check reserved handles
-                const reservedHandles = ['admin', 'reverbit', 'system', 'root'];
-                if (reservedHandles.includes(lowercaseHandle)) {
-                    return { available: false, error: 'This handle is reserved' };
-                }
-                
-                // Check if handle exists
-                const handleDoc = await this.db.collection('handles').doc(lowercaseHandle).get();
-                if (handleDoc.exists) {
-                    return { available: false, error: 'This handle is already taken' };
-                }
-                
-                return { available: true, error: null };
-                
-            } catch (error) {
-                console.error('Error checking handle availability:', error);
-                return { available: false, error: 'Error checking handle availability' };
-            }
-        }
-
-        async claimHandle(userId, handle, displayName) {
-            try {
-                const lowercaseHandle = handle.toLowerCase();
-                
-                // Check availability
-                const availability = await this.checkHandleAvailability(handle);
-                if (!availability.available) {
-                    return { success: false, error: availability.error };
-                }
-                
-                // Create handle document
-                await this.db.collection('handles').doc(lowercaseHandle).set({
-                    userId: userId,
-                    handle: handle,
-                    lowercaseHandle: lowercaseHandle,
-                    displayName: displayName,
-                    claimedAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                });
-                
-                // Update user document
-                await this.db.collection('users').doc(userId).update({
-                    handle: handle,
-                    lowercaseHandle: lowercaseHandle,
-                    updatedAt: new Date().toISOString()
-                });
-                
-                return { success: true, handle: handle, error: null };
-                
-            } catch (error) {
-                console.error('Error claiming handle:', error);
-                return { success: false, error: 'Error claiming handle' };
-            }
-        }
-
-        async updateHandle(userId, newHandle) {
-            try {
-                // Get current user data
-                const userDoc = await this.db.collection('users').doc(userId).get();
-                if (!userDoc.exists) {
-                    return { success: false, error: 'User not found' };
-                }
-                
-                const userData = userDoc.data();
-                const oldHandle = userData.handle;
-                
-                // Check if new handle is available
-                const availability = await this.checkHandleAvailability(newHandle);
-                if (!availability.available) {
-                    return { success: false, error: availability.error };
-                }
-                
-                // Delete old handle entry if exists
-                if (oldHandle) {
-                    await this.db.collection('handles').doc(oldHandle.toLowerCase()).delete();
-                    
-                    // Delete old public profile if exists
-                    const oldPublicProfile = await this.db.collection('publicProfiles').doc(oldHandle.toLowerCase()).get();
-                    if (oldPublicProfile.exists) {
-                        await oldPublicProfile.ref.delete();
-                    }
-                }
-                
-                // Claim new handle
-                const result = await this.claimHandle(userId, newHandle, userData.displayName);
-                
-                return result;
-                
-            } catch (error) {
-                console.error('Error updating handle:', error);
-                return { success: false, error: 'Error updating handle' };
-            }
-        }
-
-        generateSuggestions(baseName) {
-            const suggestions = [];
-            const base = baseName.toLowerCase().replace(/[^a-z0-9]/g, '');
             
-            if (base.length < 3) return [];
-            
-            // Add variations
-            suggestions.push(`${base}`);
-            suggestions.push(`${base}_`);
-            suggestions.push(`_${base}`);
-            
-            // Add numbers
-            for (let i = 1; i <= 3; i++) {
-                suggestions.push(`${base}${i}`);
-                suggestions.push(`${base}0${i}`);
-            }
-            
-            // Add year
-            const year = new Date().getFullYear().toString().slice(-2);
-            suggestions.push(`${base}${year}`);
-            
-            return [...new Set(suggestions)].slice(0, 6);
-        }
-    }
-
-    // Load profile by handle
-    async function loadProfileByHandle(handle) {
-        try {
-            const result = await handleSystem.getUserByHandle(handle);
-            
-            if (result.success) {
-                profileData = result.user;
-                profileOwner = result.user.uid;
-                
-                // Check if current user is the owner
-                isOwner = currentUser && currentUser.uid === profileOwner;
-                
-                await displayProfile(profileData, isOwner);
-                
-                // Update URL to clean format
-                const cleanUrl = window.location.origin + '/profile/@' + handle;
-                window.history.replaceState({}, '', cleanUrl);
-                
-            } else {
-                showNotFound();
-            }
-            
-        } catch (error) {
-            console.error('Error loading profile by handle:', error);
-            showNotFound();
-        } finally {
-            loadingScreen.style.display = 'none';
-            mainContent.style.display = 'block';
-        }
-    }
-
-    // Rest of your existing functions remain the same...
-    // (loadOwnProfile, displayProfile, updateHeaderActions, etc.)
-
-    // Add handle editing function
-    function editHandle() {
-        if (!isOwner) return;
-        
-        // Show handle edit modal
-        const modal = document.createElement('div');
-        modal.className = 'handle-edit-modal';
-        modal.innerHTML = `
-            <div class="modal-content" style="max-width: 500px;">
-                <h2>Choose Your Handle</h2>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">
-                    Your handle is your unique identifier on Reverbit. It will appear in your profile URL.
-                </p>
-                
-                <div class="form-group">
-                    <label>Handle</label>
-                    <div style="display: flex; gap: 10px;">
-                        <span style="padding: 12px; background: var(--md-surface-variant); border-radius: var(--md-radius-small);">@</span>
-                        <input type="text" id="newHandleInput" value="${profileData?.handle || ''}" 
-                               placeholder="Enter your handle" style="flex: 1;">
-                    </div>
-                    <div id="handleValidation" style="margin-top: 8px; font-size: 0.9em;"></div>
-                </div>
-                
-                <div id="handleSuggestions" style="margin-top: 20px;"></div>
-                
-                <div style="display: flex; gap: 12px; margin-top: 30px; justify-content: flex-end;">
-                    <button class="btn btn-secondary" onclick="this.closest('.handle-edit-modal').remove()">Cancel</button>
-                    <button class="btn btn-primary" id="saveHandleBtn">Save Handle</button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Add styles
-        const style = document.createElement('style');
-        style.textContent = `
-            .handle-edit-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-            }
-            .handle-edit-modal .modal-content {
-                background: var(--md-surface);
-                padding: 30px;
-                border-radius: var(--md-radius-large);
-                box-shadow: var(--md-elevation-4);
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Setup event listeners
-        const newHandleInput = document.getElementById('newHandleInput');
-        const saveHandleBtn = document.getElementById('saveHandleBtn');
-        const handleValidation = document.getElementById('handleValidation');
-        
-        // Generate suggestions
-        if (profileData?.displayName) {
-            const suggestions = handleSystem.generateSuggestions(profileData.displayName);
-            const suggestionsDiv = document.getElementById('handleSuggestions');
-            suggestionsDiv.innerHTML = `
-                <p style="font-size: 0.9em; margin-bottom: 10px; color: var(--md-on-surface-variant);">Suggestions:</p>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    ${suggestions.map(s => `
-                        <button class="suggestion-btn" onclick="document.getElementById('newHandleInput').value='${s}'">
-                            @${s}
-                        </button>
-                    `).join('')}
-                </div>
-            `;
-            
-            // Add suggestion button styles
-            const suggestionStyle = document.createElement('style');
-            suggestionStyle.textContent = `
-                .suggestion-btn {
-                    padding: 8px 16px;
-                    background: var(--md-surface-variant);
-                    border: 1px solid var(--md-outline);
-                    border-radius: var(--md-radius-medium);
-                    color: var(--md-on-surface);
-                    cursor: pointer;
-                    font-size: 0.9em;
-                    transition: all 0.2s;
+            // Close modal on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && handleEditModal.classList.contains('active')) {
+                    closeModal();
                 }
-                .suggestion-btn:hover {
-                    background: var(--md-primary);
-                    color: white;
-                    border-color: var(--md-primary);
-                }
-            `;
-            document.head.appendChild(suggestionStyle);
-        }
-        
-        // Check handle availability on input
-        let checkTimeout;
-        newHandleInput.addEventListener('input', async () => {
-            clearTimeout(checkTimeout);
-            checkTimeout = setTimeout(async () => {
-                const handle = newHandleInput.value.trim();
-                if (!handle) {
-                    handleValidation.textContent = '';
-                    handleValidation.style.color = '';
-                    return;
-                }
-                
-                const result = await handleSystem.checkHandleAvailability(handle);
-                if (result.available) {
-                    handleValidation.textContent = '✓ This handle is available';
-                    handleValidation.style.color = 'var(--md-secondary)';
-                    saveHandleBtn.disabled = false;
-                } else {
-                    handleValidation.textContent = result.error;
-                    handleValidation.style.color = '#ea4335';
-                    saveHandleBtn.disabled = true;
-                }
-            }, 500);
+            });
         });
-        
-        // Save handle
-        saveHandleBtn.addEventListener('click', async () => {
-            const newHandle = newHandleInput.value.trim();
-            if (!newHandle) return;
-            
-            saveHandleBtn.disabled = true;
-            saveHandleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            
-            const result = await handleSystem.updateHandle(profileOwner, newHandle);
-            
-            if (result.success) {
-                showToast('Handle updated successfully!');
-                modal.remove();
-                
-                // Reload profile with new handle
-                window.location.href = '/profile/@' + newHandle;
-            } else {
-                showToast(result.error || 'Error updating handle');
-                saveHandleBtn.disabled = false;
-                saveHandleBtn.innerHTML = 'Save Handle';
-            }
-        });
-    }
-</script>
-
-    
+    </script>
 </body>
 </html>
