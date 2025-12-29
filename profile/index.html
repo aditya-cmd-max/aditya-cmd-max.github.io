@@ -1012,354 +1012,812 @@
             color: #ea4335;
         }
 
+        /* Friend/Connection System Styles */
+        .connection-section {
+            margin: var(--md-spacing-xl) 0;
+        }
 
-/* Search System Styles */
-.search-empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background: var(--md-surface-variant);
-    border-radius: var(--md-radius-large);
-    margin: var(--md-spacing-xl) 0;
-}
+        .connection-stats {
+            display: flex;
+            gap: var(--md-spacing-lg);
+            margin-bottom: var(--md-spacing-lg);
+            flex-wrap: wrap;
+        }
 
-.empty-state-icon {
-    font-size: 48px;
-    color: var(--md-outline);
-    margin-bottom: 20px;
-}
+        .connection-stat {
+            text-align: center;
+            padding: var(--md-spacing-md);
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            min-width: 120px;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
 
-.search-suggestions {
-    max-width: 400px;
-    margin: 24px auto 0;
-}
+        .connection-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-3);
+            border-color: var(--md-primary);
+        }
 
-.suggestion-tags {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 16px;
-}
+        .connection-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--md-primary);
+            margin-bottom: var(--md-spacing-xs);
+        }
 
-.suggestion-tag {
-    padding: 8px 16px;
-    border-radius: var(--md-radius-pill);
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--md-transition);
-}
+        .connection-label {
+            color: var(--md-on-surface-variant);
+            font-size: 0.9rem;
+        }
 
-.suggestion-tag:hover {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    transform: translateY(-2px);
-}
+        .connection-controls {
+            display: flex;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-xl);
+            flex-wrap: wrap;
+        }
 
-.search-no-results {
-    text-align: center;
-    padding: 60px 20px;
-}
+        .connection-btn {
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            border-radius: var(--md-radius-pill);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            min-width: 140px;
+            justify-content: center;
+        }
 
-.no-results-icon {
-    font-size: 48px;
-    color: var(--md-outline);
-    margin-bottom: 20px;
-}
+        .connect-btn {
+            background: var(--md-gradient-1);
+            color: var(--md-on-primary);
+        }
 
-.no-results-suggestions {
-    max-width: 400px;
-    margin: 24px auto 0;
-    text-align: left;
-    background: var(--md-surface);
-    padding: 20px;
-    border-radius: var(--md-radius-medium);
-    border: 1px solid var(--md-outline);
-}
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-3);
+        }
 
-.no-results-suggestions p {
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: var(--md-on-surface);
-}
+        .pending-btn {
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            border-color: var(--md-outline);
+        }
 
-.no-results-suggestions ul {
-    margin: 0;
-    padding-left: 20px;
-    color: var(--md-on-surface-variant);
-}
+        .pending-btn:hover {
+            background: var(--md-surface-variant);
+        }
 
-.no-results-suggestions li {
-    margin-bottom: 6px;
-}
+        .connected-btn {
+            background: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+            border-color: var(--md-secondary);
+        }
 
-/* User Cards in Search */
-.user-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: var(--md-surface);
-    border: 1px solid var(--md-outline);
-    border-radius: var(--md-radius-large);
-    margin-bottom: 16px;
-    transition: var(--md-transition);
-    cursor: pointer;
-}
+        .connected-btn:hover {
+            background: var(--md-secondary);
+            color: var(--md-on-secondary);
+        }
 
-.user-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--md-primary);
-    box-shadow: var(--md-elevation-3);
-}
+        .following-btn {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-color: var(--md-primary);
+        }
 
-.user-card-avatar {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-}
+        .following-btn:hover {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
 
-.user-card-avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--md-surface);
-    box-shadow: var(--md-elevation-1);
-}
+        .connection-actions {
+            display: flex;
+            gap: var(--md-spacing-sm);
+        }
 
-.user-avatar-badge {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--verified-badge-bg);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--md-surface);
-    font-size: 10px;
-}
+        .connection-action-btn {
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.user-avatar-badge.premium {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #000;
-}
+        .accept-btn {
+            background: #34a853;
+            color: white;
+        }
 
-.user-card-info {
-    flex: 1;
-    min-width: 0;
-}
+        .reject-btn {
+            background: #ea4335;
+            color: white;
+        }
 
-.user-card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-}
+        .unfriend-btn {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            border: 1px solid var(--md-outline);
+        }
 
-.user-name {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--md-on-surface);
-    margin: 0;
-}
+        .unfriend-btn:hover {
+            background: #ea4335;
+            color: white;
+            border-color: #ea4335;
+        }
 
-.user-verified-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--verified-badge-bg);
-    color: white;
-    padding: 4px 10px;
-    border-radius: var(--md-radius-pill);
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: var(--verified-badge-glow);
-}
+        .connection-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--md-spacing-md);
+            margin-top: var(--md-spacing-lg);
+        }
 
-.user-verified-badge.premium {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #000;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-}
+        .connection-card {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-medium);
+            border: 1px solid var(--md-outline);
+            padding: var(--md-spacing-md);
+            transition: var(--md-transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
 
-.user-email {
-    font-size: 14px;
-    color: var(--md-on-surface-variant);
-    margin: 0 0 12px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+        .connection-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--md-primary);
+            box-shadow: var(--md-elevation-3);
+        }
 
-.user-stats {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-}
+        .connection-card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-sm);
+        }
 
-.user-stat {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--md-on-surface-variant);
-}
+        .connection-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--md-surface);
+            box-shadow: var(--md-elevation-1);
+        }
 
-.user-stat i {
-    font-size: 12px;
-}
+        .connection-info {
+            flex: 1;
+        }
 
-.user-bio {
-    font-size: 14px;
-    color: var(--md-on-surface-variant);
-    margin: 0 0 8px 0;
-    line-height: 1.4;
-}
+        .connection-name {
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
 
-.user-location {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--md-on-surface-variant);
-}
+        .connection-status {
+            font-size: 0.8rem;
+            color: var(--md-on-surface-variant);
+        }
 
-.user-card-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-}
+        .connection-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: var(--md-radius-pill);
+            margin-left: 4px;
+        }
 
-.user-card-action {
-    padding: 8px 16px;
-    border-radius: var(--md-radius-pill);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--md-transition);
-    border: 1px solid var(--md-outline);
-    background: var(--md-surface);
-    color: var(--md-primary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-}
+        .connection-badge.premium {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+        }
 
-.user-card-action:hover {
-    background: var(--md-primary-container);
-    border-color: var(--md-primary);
-}
+        .connection-badge.verified {
+            background: var(--md-gradient-1);
+            color: white;
+        }
 
-.copy-link-btn {
-    padding: 8px;
-    min-width: 36px;
-    justify-content: center;
-}
+        .connection-actions-small {
+            display: flex;
+            gap: 4px;
+            margin-top: var(--md-spacing-sm);
+        }
 
-/* Search Loading */
-.search-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    gap: 16px;
-}
+        .connection-action-small {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            border-radius: var(--md-radius-small);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--md-transition);
+        }
 
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--md-outline);
-    border-top-color: var(--md-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
+        .connection-action-small:hover {
+            transform: translateY(-2px);
+        }
 
-/* Search Error */
-.search-error {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    gap: 16px;
-}
+        .connection-mutual {
+            margin-top: var(--md-spacing-sm);
+            font-size: 0.8rem;
+            color: var(--md-on-surface-variant);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.search-error i {
-    font-size: 48px;
-    color: #ea4335;
-}
+        .view-all-connections {
+            text-align: center;
+            margin-top: var(--md-spacing-xl);
+        }
 
-.retry-btn {
-    padding: 10px 20px;
-    border-radius: var(--md-radius-pill);
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--md-transition);
-}
+        /* Connection Tabs */
+        .connection-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--md-outline);
+            margin-bottom: var(--md-spacing-lg);
+            overflow-x: auto;
+        }
 
-.retry-btn:hover {
-    background: var(--md-primary-dark);
-    transform: translateY(-2px);
-}
+        .connection-tab {
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            transition: var(--md-transition);
+            white-space: nowrap;
+            font-family: var(--md-font-heading);
+            font-weight: 500;
+        }
 
-/* Dark theme adjustments */
-.dark-theme .suggestion-tag {
-    background: var(--md-surface);
-    color: var(--md-on-surface);
-}
+        .connection-tab:hover {
+            color: var(--md-primary);
+            background: var(--md-surface-variant);
+        }
 
-.dark-theme .suggestion-tag:hover {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-}
+        .connection-tab.active {
+            color: var(--md-primary);
+            border-bottom-color: var(--md-primary);
+            font-weight: 600;
+        }
 
-.dark-theme .user-avatar-badge {
-    border-color: var(--md-surface);
-}
+        /* Connection Requests */
+        .pending-requests {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            padding: var(--md-spacing-xl);
+            margin-top: var(--md-spacing-xl);
+        }
 
-.dark-theme .no-results-suggestions {
-    background: var(--md-surface-variant);
-    border-color: var(--md-outline-variant);
-}
+        .pending-requests h3 {
+            margin-bottom: var(--md-spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+        }
 
-@media (max-width: 768px) {
-    .user-card {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
-    }
-    
-    .user-card-avatar {
-        align-self: center;
-    }
-    
-    .user-stats {
-        justify-content: center;
-    }
-    
-    .user-card-actions {
-        justify-content: center;
-    }
-}
+        .request-count-badge {
+            background: var(--md-primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: var(--md-radius-pill);
+            font-size: 0.875rem;
+        }
 
-        
+        .no-requests, .no-connections {
+            text-align: center;
+            padding: var(--md-spacing-xl);
+            color: var(--md-on-surface-variant);
+        }
+
+        .no-requests i, .no-connections i {
+            font-size: 3rem;
+            color: var(--md-outline);
+            margin-bottom: 16px;
+        }
+
+        /* Connection Badge */
+        .connection-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: var(--md-radius-pill);
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            border: 1px solid var(--md-outline);
+        }
+
+        /* Connection Strength */
+        .connection-strength {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .strength-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--md-outline);
+        }
+
+        .strength-dot.active {
+            background: #34a853;
+        }
+
+        /* Dark theme adjustments */
+        .dark-theme .connection-card {
+            background: var(--md-surface-variant);
+        }
+
+        .dark-theme .connection-stat {
+            background: var(--md-surface);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .connection-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .connection-stat {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .connection-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .connection-controls {
+                justify-content: center;
+            }
+            
+            .connection-tabs {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .connection-btn {
+                min-width: 100%;
+            }
+            
+            .connection-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .connection-action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Search System Styles */
+        .search-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-large);
+            margin: var(--md-spacing-xl) 0;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            color: var(--md-outline);
+            margin-bottom: 20px;
+        }
+
+        .search-suggestions {
+            max-width: 400px;
+            margin: 24px auto 0;
+        }
+
+        .suggestion-tags {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .suggestion-tag {
+            padding: 8px 16px;
+            border-radius: var(--md-radius-pill);
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .suggestion-tag:hover {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            transform: translateY(-2px);
+        }
+
+        .search-no-results {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .no-results-icon {
+            font-size: 48px;
+            color: var(--md-outline);
+            margin-bottom: 20px;
+        }
+
+        .no-results-suggestions {
+            max-width: 400px;
+            margin: 24px auto 0;
+            text-align: left;
+            background: var(--md-surface);
+            padding: 20px;
+            border-radius: var(--md-radius-medium);
+            border: 1px solid var(--md-outline);
+        }
+
+        .no-results-suggestions p {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--md-on-surface);
+        }
+
+        .no-results-suggestions ul {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--md-on-surface-variant);
+        }
+
+        .no-results-suggestions li {
+            margin-bottom: 6px;
+        }
+
+        /* User Cards in Search */
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-large);
+            margin-bottom: 16px;
+            transition: var(--md-transition);
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--md-primary);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .user-card-avatar {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .user-card-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--md-surface);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .user-avatar-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--verified-badge-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--md-surface);
+            font-size: 10px;
+        }
+
+        .user-avatar-badge.premium {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+        }
+
+        .user-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin: 0;
+        }
+
+        .user-verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--verified-badge-bg);
+            color: white;
+            padding: 4px 10px;
+            border-radius: var(--md-radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: var(--verified-badge-glow);
+        }
+
+        .user-verified-badge.premium {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--md-on-surface-variant);
+            margin: 0 0 12px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .user-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--md-on-surface-variant);
+        }
+
+        .user-stat i {
+            font-size: 12px;
+        }
+
+        .user-bio {
+            font-size: 14px;
+            color: var(--md-on-surface-variant);
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+        }
+
+        .user-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--md-on-surface-variant);
+        }
+
+        .user-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .user-card-action {
+            padding: 8px 16px;
+            border-radius: var(--md-radius-pill);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            border: 1px solid var(--md-outline);
+            background: var(--md-surface);
+            color: var(--md-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .user-card-action:hover {
+            background: var(--md-primary-container);
+            border-color: var(--md-primary);
+        }
+
+        .copy-link-btn {
+            padding: 8px;
+            min-width: 36px;
+            justify-content: center;
+        }
+
+        /* Search Loading */
+        .search-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 16px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--md-outline);
+            border-top-color: var(--md-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Search Error */
+        .search-error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 16px;
+        }
+
+        .search-error i {
+            font-size: 48px;
+            color: #ea4335;
+        }
+
+        .retry-btn {
+            padding: 10px 20px;
+            border-radius: var(--md-radius-pill);
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .retry-btn:hover {
+            background: var(--md-primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Dark theme adjustments */
+        .dark-theme .suggestion-tag {
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+        }
+
+        .dark-theme .suggestion-tag:hover {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+
+        .dark-theme .user-avatar-badge {
+            border-color: var(--md-surface);
+        }
+
+        .dark-theme .no-results-suggestions {
+            background: var(--md-surface-variant);
+            border-color: var(--md-outline-variant);
+        }
+
+        @media (max-width: 768px) {
+            .user-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            
+            .user-card-avatar {
+                align-self: center;
+            }
+            
+            .user-stats {
+                justify-content: center;
+            }
+            
+            .user-card-actions {
+                justify-content: center;
+            }
+        }
+
+        /* Connection Notification */
+        .connection-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            box-shadow: var(--md-elevation-4);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+            border: 1px solid var(--md-outline);
+            max-width: 400px;
+        }
+
+        .connection-notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notification-btn {
+            padding: 6px 12px;
+            border-radius: var(--md-radius-medium);
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .notification-btn.accept {
+            background: #34a853;
+            color: white;
+        }
+
+        .notification-btn.reject {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            border: 1px solid var(--md-outline);
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -1431,6 +1889,18 @@
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toastMessage">Profile link copied!</span>
+    </div>
+
+    <!-- Connection Notification -->
+    <div class="connection-notification" id="connectionNotification">
+        <img id="notificationAvatar" src="" alt="" class="notification-avatar">
+        <div class="notification-content">
+            <div id="notificationMessage"></div>
+        </div>
+        <div class="notification-actions">
+            <button class="notification-btn accept" id="notificationAccept">Accept</button>
+            <button class="notification-btn reject" id="notificationReject">Reject</button>
+        </div>
     </div>
 
     <!-- Share Modal -->
@@ -1533,6 +2003,9 @@
                     }
                 });
 
+                // Initialize search system
+                await initializeSearchSystem();
+
             } catch (error) {
                 console.error('Initialization error:', error);
                 showToast('Error loading profile');
@@ -1540,6 +2013,896 @@
                 mainContent.style.display = 'block';
             }
         });
+
+        // ================= ADVANCED CONNECTION SYSTEM =================
+        class AdvancedConnectionSystem {
+            constructor() {
+                this.connections = {
+                    friends: [],        // Mutual connections
+                    followers: [],      // People following this user
+                    following: [],      // People this user follows
+                    sentRequests: [],   // Pending requests sent by current user
+                    receivedRequests: [] // Pending requests received by current user
+                };
+                this.connectionStatus = null;
+                this.connectionListeners = [];
+                this.notificationsEnabled = true;
+            }
+
+            async init(userId, isOwner) {
+                this.userId = userId;
+                this.isOwner = isOwner;
+                
+                if (userId) {
+                    await this.loadConnections();
+                    await this.setupConnectionListeners();
+                    this.checkConnectionStatus();
+                }
+            }
+
+            async loadConnections() {
+                try {
+                    // Load connections data
+                    const connectionsDoc = await db.collection('connections').doc(this.userId).get();
+                    
+                    if (connectionsDoc.exists) {
+                        const data = connectionsDoc.data();
+                        this.connections.friends = data.friends || [];
+                        this.connections.followers = data.followers || [];
+                        this.connections.following = data.following || [];
+                    }
+
+                    // Load pending requests
+                    const sentRequestsQuery = await db.collection('connectionRequests')
+                        .where('from', '==', this.userId)
+                        .where('status', '==', 'pending')
+                        .get();
+                    
+                    this.connections.sentRequests = sentRequestsQuery.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+
+                    const receivedRequestsQuery = await db.collection('connectionRequests')
+                        .where('to', '==', this.userId)
+                        .where('status', '==', 'pending')
+                        .get();
+                    
+                    this.connections.receivedRequests = receivedRequestsQuery.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+
+                    // Update UI
+                    this.updateConnectionUI();
+                    
+                } catch (error) {
+                    console.error('Error loading connections:', error);
+                }
+            }
+
+            async setupConnectionListeners() {
+                // Listen for incoming connection requests
+                if (this.isOwner) {
+                    db.collection('connectionRequests')
+                        .where('to', '==', this.userId)
+                        .where('status', '==', 'pending')
+                        .onSnapshot((snapshot) => {
+                            const newRequests = snapshot.docs.map(doc => ({
+                                id: doc.id,
+                                ...doc.data()
+                            }));
+                            
+                            // Check for new requests
+                            const oldRequestIds = this.connections.receivedRequests.map(r => r.id);
+                            const newRequestIds = newRequests.map(r => r.id);
+                            const addedRequests = newRequests.filter(r => !oldRequestIds.includes(r.id));
+                            
+                            // Update local state
+                            this.connections.receivedRequests = newRequests;
+                            
+                            // Show notification for new requests
+                            addedRequests.forEach(request => {
+                                if (this.notificationsEnabled && request.from !== this.userId) {
+                                    this.showConnectionNotification(request);
+                                }
+                            });
+                            
+                            this.updateConnectionUI();
+                        });
+                }
+
+                // Listen for connection updates
+                db.collection('connections').doc(this.userId)
+                    .onSnapshot((doc) => {
+                        if (doc.exists) {
+                            const data = doc.data();
+                            this.connections.friends = data.friends || [];
+                            this.connections.followers = data.followers || [];
+                            this.connections.following = data.following || [];
+                            this.updateConnectionUI();
+                        }
+                    });
+            }
+
+            async checkConnectionStatus() {
+                if (!currentUser || this.isOwner) {
+                    this.connectionStatus = null;
+                    return;
+                }
+
+                try {
+                    // Check if already friends
+                    if (this.connections.friends.includes(currentUser.uid)) {
+                        this.connectionStatus = 'connected';
+                        return;
+                    }
+
+                    // Check pending requests
+                    const pendingRequest = this.connections.sentRequests.find(req => 
+                        req.from === currentUser.uid && req.to === this.userId
+                    );
+                    
+                    if (pendingRequest) {
+                        this.connectionStatus = 'pending';
+                        return;
+                    }
+
+                    // Check if following
+                    if (this.connections.followers.includes(currentUser.uid)) {
+                        this.connectionStatus = 'following';
+                        return;
+                    }
+
+                    this.connectionStatus = null;
+                    
+                } catch (error) {
+                    console.error('Error checking connection status:', error);
+                    this.connectionStatus = null;
+                }
+            }
+
+            async sendConnectionRequest() {
+                if (!currentUser) {
+                    showToast('Please sign in to send connection requests');
+                    return;
+                }
+                
+                if (this.isOwner) {
+                    showToast('Cannot connect with yourself');
+                    return;
+                }
+                
+                try {
+                    const requestId = `${currentUser.uid}_${this.userId}`;
+                    
+                    // Check if request already exists
+                    const existingRequest = await db.collection('connectionRequests').doc(requestId).get();
+                    
+                    if (existingRequest.exists) {
+                        showToast('Connection request already sent');
+                        return;
+                    }
+
+                    // Create connection request
+                    const requestData = {
+                        from: currentUser.uid,
+                        to: this.userId,
+                        fromName: currentUser.displayName || currentUser.email.split('@')[0],
+                        toName: profileData.displayName || profileData.email.split('@')[0],
+                        status: 'pending',
+                        sentAt: new Date().toISOString(),
+                        type: 'connection',
+                        message: ''
+                    };
+                    
+                    await db.collection('connectionRequests').doc(requestId).set(requestData);
+                    
+                    // Update local state
+                    this.connectionStatus = 'pending';
+                    this.connections.sentRequests.push({
+                        id: requestId,
+                        ...requestData
+                    });
+                    
+                    this.updateConnectionUI();
+                    showToast('Connection request sent!');
+                    
+                } catch (error) {
+                    console.error('Error sending connection request:', error);
+                    showToast('Error sending request');
+                }
+            }
+
+            async followUser() {
+                if (!currentUser) {
+                    showToast('Please sign in to follow users');
+                    return;
+                }
+                
+                if (this.isOwner) {
+                    showToast('Cannot follow yourself');
+                    return;
+                }
+                
+                try {
+                    // Add to following list
+                    await db.collection('connections').doc(currentUser.uid).set({
+                        following: firebase.firestore.FieldValue.arrayUnion(this.userId),
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                    
+                    // Add to other user's followers
+                    await db.collection('connections').doc(this.userId).set({
+                        followers: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                    
+                    // Update local state
+                    this.connectionStatus = 'following';
+                    if (!this.connections.followers.includes(currentUser.uid)) {
+                        this.connections.followers.push(currentUser.uid);
+                    }
+                    
+                    this.updateConnectionUI();
+                    showToast('You are now following this user');
+                    
+                } catch (error) {
+                    console.error('Error following user:', error);
+                    showToast('Error following user');
+                }
+            }
+
+            async unfollowUser() {
+                if (!currentUser) return;
+                
+                try {
+                    // Remove from following list
+                    await db.collection('connections').doc(currentUser.uid).update({
+                        following: firebase.firestore.FieldValue.arrayRemove(this.userId)
+                    });
+                    
+                    // Remove from other user's followers
+                    await db.collection('connections').doc(this.userId).update({
+                        followers: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+                    });
+                    
+                    // Update local state
+                    this.connectionStatus = null;
+                    this.connections.followers = this.connections.followers.filter(id => id !== currentUser.uid);
+                    
+                    this.updateConnectionUI();
+                    showToast('Unfollowed user');
+                    
+                } catch (error) {
+                    console.error('Error unfollowing user:', error);
+                    showToast('Error unfollowing user');
+                }
+            }
+
+            async acceptConnectionRequest(requestId) {
+                try {
+                    // Get the request
+                    const requestDoc = await db.collection('connectionRequests').doc(requestId).get();
+                    if (!requestDoc.exists) return;
+                    
+                    const request = requestDoc.data();
+                    
+                    // Update request status
+                    await db.collection('connectionRequests').doc(requestId).update({
+                        status: 'accepted',
+                        acceptedAt: new Date().toISOString()
+                    });
+                    
+                    // Add to friends list for both users
+                    await db.collection('connections').doc(this.userId).set({
+                        friends: firebase.firestore.FieldValue.arrayUnion(request.from),
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                    
+                    await db.collection('connections').doc(request.from).set({
+                        friends: firebase.firestore.FieldValue.arrayUnion(this.userId),
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                    
+                    // Remove from pending requests
+                    this.connections.receivedRequests = this.connections.receivedRequests.filter(
+                        req => req.id !== requestId
+                    );
+                    
+                    // Add to friends list
+                    if (!this.connections.friends.includes(request.from)) {
+                        this.connections.friends.push(request.from);
+                    }
+                    
+                    this.updateConnectionUI();
+                    showToast('Connection request accepted!');
+                    
+                } catch (error) {
+                    console.error('Error accepting request:', error);
+                    showToast('Error accepting request');
+                }
+            }
+
+            async rejectConnectionRequest(requestId) {
+                try {
+                    // Update request status
+                    await db.collection('connectionRequests').doc(requestId).update({
+                        status: 'rejected',
+                        rejectedAt: new Date().toISOString()
+                    });
+                    
+                    // Remove from pending requests
+                    this.connections.receivedRequests = this.connections.receivedRequests.filter(
+                        req => req.id !== requestId
+                    );
+                    
+                    this.updateConnectionUI();
+                    showToast('Connection request rejected');
+                    
+                } catch (error) {
+                    console.error('Error rejecting request:', error);
+                    showToast('Error rejecting request');
+                }
+            }
+
+            async removeConnection(otherUserId) {
+                if (!confirm('Are you sure you want to remove this connection?')) {
+                    return;
+                }
+                
+                try {
+                    // Remove from friends list for both users
+                    await db.collection('connections').doc(this.userId).update({
+                        friends: firebase.firestore.FieldValue.arrayRemove(otherUserId),
+                        followers: firebase.firestore.FieldValue.arrayRemove(otherUserId),
+                        following: firebase.firestore.FieldValue.arrayRemove(otherUserId)
+                    });
+                    
+                    await db.collection('connections').doc(otherUserId).update({
+                        friends: firebase.firestore.FieldValue.arrayRemove(this.userId),
+                        followers: firebase.firestore.FieldValue.arrayRemove(this.userId),
+                        following: firebase.firestore.FieldValue.arrayRemove(this.userId)
+                    });
+                    
+                    // Update local state
+                    this.connections.friends = this.connections.friends.filter(id => id !== otherUserId);
+                    this.connections.followers = this.connections.followers.filter(id => id !== otherUserId);
+                    this.connections.following = this.connections.following.filter(id => id !== otherUserId);
+                    
+                    this.updateConnectionUI();
+                    showToast('Connection removed');
+                    
+                } catch (error) {
+                    console.error('Error removing connection:', error);
+                    showToast('Error removing connection');
+                }
+            }
+
+            async cancelRequest() {
+                if (!currentUser) return;
+                
+                try {
+                    const requestId = `${currentUser.uid}_${this.userId}`;
+                    
+                    // Delete the request
+                    await db.collection('connectionRequests').doc(requestId).delete();
+                    
+                    // Update local state
+                    this.connectionStatus = null;
+                    this.connections.sentRequests = this.connections.sentRequests.filter(
+                        req => req.id !== requestId
+                    );
+                    
+                    this.updateConnectionUI();
+                    showToast('Connection request cancelled');
+                    
+                } catch (error) {
+                    console.error('Error cancelling request:', error);
+                    showToast('Error cancelling request');
+                }
+            }
+
+            updateConnectionUI() {
+                // Update connection stats
+                this.updateConnectionStats();
+                
+                // Update connection button
+                this.updateConnectionButton();
+                
+                // Update connection lists if on connections tab
+                if (currentTab === 'connections') {
+                    this.displayConnections();
+                }
+            }
+
+            updateConnectionStats() {
+                const statsContainer = document.getElementById('connectionStats');
+                if (!statsContainer) return;
+                
+                const statsHTML = `
+                    <div class="connection-stat" onclick="switchTab('connections'); window.connectionSystem.switchConnectionTab('friends')">
+                        <div class="connection-number">${this.connections.friends.length}</div>
+                        <div class="connection-label">Connections</div>
+                    </div>
+                    <div class="connection-stat" onclick="switchTab('connections'); window.connectionSystem.switchConnectionTab('followers')">
+                        <div class="connection-number">${this.connections.followers.length}</div>
+                        <div class="connection-label">Followers</div>
+                    </div>
+                    <div class="connection-stat" onclick="switchTab('connections'); window.connectionSystem.switchConnectionTab('following')">
+                        <div class="connection-number">${this.connections.following.length}</div>
+                        <div class="connection-label">Following</div>
+                    </div>
+                `;
+                
+                statsContainer.innerHTML = statsHTML;
+            }
+
+            updateConnectionButton() {
+                const controlsContainer = document.getElementById('connectionControls');
+                if (!controlsContainer || this.isOwner) return;
+                
+                let buttonHTML = '';
+                
+                switch(this.connectionStatus) {
+                    case 'connected':
+                        buttonHTML = `
+                            <button class="connection-btn connected-btn">
+                                <i class="fas fa-user-check"></i>
+                                Connected
+                            </button>
+                            <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.removeConnection('${this.userId}')">
+                                <i class="fas fa-user-times"></i>
+                                Remove
+                            </button>
+                        `;
+                        break;
+                        
+                    case 'pending':
+                        buttonHTML = `
+                            <button class="connection-btn pending-btn">
+                                <i class="fas fa-clock"></i>
+                                Request Pending
+                            </button>
+                            <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.cancelRequest()">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                        `;
+                        break;
+                        
+                    case 'following':
+                        buttonHTML = `
+                            <button class="connection-btn following-btn">
+                                <i class="fas fa-user-plus"></i>
+                                Following
+                            </button>
+                            <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.unfollowUser()">
+                                <i class="fas fa-user-minus"></i>
+                                Unfollow
+                            </button>
+                        `;
+                        break;
+                        
+                    default:
+                        buttonHTML = `
+                            <div class="connection-actions">
+                                <button class="connection-btn connect-btn" onclick="window.connectionSystem.sendConnectionRequest()">
+                                    <i class="fas fa-user-plus"></i>
+                                    Connect
+                                </button>
+                                <button class="connection-btn" onclick="window.connectionSystem.followUser()" style="background: var(--md-surface-variant); color: var(--md-on-surface-variant); border: 1px solid var(--md-outline);">
+                                    <i class="fas fa-plus"></i>
+                                    Follow
+                                </button>
+                            </div>
+                        `;
+                }
+                
+                controlsContainer.innerHTML = buttonHTML;
+            }
+
+            async displayConnections() {
+                const contentContainer = document.getElementById('connectionsContent');
+                if (!contentContainer) return;
+                
+                // Create tabs
+                const tabsHTML = `
+                    <div class="connection-tabs">
+                        <button class="connection-tab active" data-tab="friends" onclick="window.connectionSystem.switchConnectionTab('friends')">
+                            <i class="fas fa-users"></i>
+                            Connections (${this.connections.friends.length})
+                        </button>
+                        <button class="connection-tab" data-tab="followers" onclick="window.connectionSystem.switchConnectionTab('followers')">
+                            <i class="fas fa-user-friends"></i>
+                            Followers (${this.connections.followers.length})
+                        </button>
+                        <button class="connection-tab" data-tab="following" onclick="window.connectionSystem.switchConnectionTab('following')">
+                            <i class="fas fa-user-plus"></i>
+                            Following (${this.connections.following.length})
+                        </button>
+                        ${this.isOwner && this.connections.receivedRequests.length > 0 ? `
+                            <button class="connection-tab" data-tab="requests" onclick="window.connectionSystem.switchConnectionTab('requests')">
+                                <i class="fas fa-bell"></i>
+                                Requests
+                                <span class="request-count-badge">${this.connections.receivedRequests.length}</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div id="connectionsTabContent"></div>
+                `;
+                
+                contentContainer.innerHTML = tabsHTML;
+                
+                // Load initial tab content
+                await this.loadConnectionTab('friends');
+            }
+
+            async switchConnectionTab(tabName) {
+                // Update active tab
+                document.querySelectorAll('.connection-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.add('active');
+                    }
+                });
+                
+                // Load tab content
+                await this.loadConnectionTab(tabName);
+            }
+
+            async loadConnectionTab(tabName) {
+                const contentContainer = document.getElementById('connectionsTabContent');
+                if (!contentContainer) return;
+                
+                switch(tabName) {
+                    case 'friends':
+                        await this.displayConnectionList(this.connections.friends, 'friends');
+                        break;
+                    case 'followers':
+                        await this.displayConnectionList(this.connections.followers, 'followers');
+                        break;
+                    case 'following':
+                        await this.displayConnectionList(this.connections.following, 'following');
+                        break;
+                    case 'requests':
+                        this.displayConnectionRequests();
+                        break;
+                }
+            }
+
+            async displayConnectionList(userIds, type) {
+                const contentContainer = document.getElementById('connectionsTabContent');
+                if (!contentContainer) return;
+                
+                if (userIds.length === 0) {
+                    const noResultsText = {
+                        'friends': 'No connections yet',
+                        'followers': 'No followers yet',
+                        'following': 'Not following anyone'
+                    };
+                    
+                    contentContainer.innerHTML = `
+                        <div class="no-connections">
+                            <i class="fas fa-users"></i>
+                            <p>${noResultsText[type]}</p>
+                            ${type === 'friends' && !this.isOwner ? `
+                                <button class="btn btn-filled" onclick="window.connectionSystem.sendConnectionRequest()" style="margin-top: 16px;">
+                                    <i class="fas fa-user-plus"></i>
+                                    Connect with this user
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Fetch user data
+                const limitedIds = userIds.slice(0, 50);
+                const userPromises = limitedIds.map(id => 
+                    db.collection('users').doc(id).get()
+                );
+                
+                const userSnapshots = await Promise.all(userPromises);
+                const users = userSnapshots
+                    .filter(doc => doc.exists)
+                    .map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // Create connection cards
+                const cardsHTML = users.map(user => this.createConnectionCard(user, type)).join('');
+                
+                contentContainer.innerHTML = `
+                    <div class="connection-list">
+                        ${cardsHTML}
+                    </div>
+                    ${userIds.length > 50 ? `
+                        <div class="view-all-connections">
+                            <button class="btn btn-outlined" onclick="window.connectionSystem.viewAllConnections('${type}')">
+                                View All ${userIds.length} ${type}
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
+                
+                // Add click handlers
+                contentContainer.querySelectorAll('.connection-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (!e.target.closest('.connection-action-small')) {
+                            const userId = card.dataset.userId;
+                            window.open(`https://aditya-cmd-max.github.io/profile/?id=${userId}`, '_blank');
+                        }
+                    });
+                });
+            }
+
+            createConnectionCard(user, type) {
+                const isVerified = user.verified;
+                const isPremium = user.verifiedLevel === 'premium' || user.premiumVerified;
+                const memberDays = user.createdAt ? this.calculateMemberDays(user.createdAt) : '0';
+                
+                let actionButtons = '';
+                let typeBadge = '';
+                
+                if (this.isOwner) {
+                    switch(type) {
+                        case 'friends':
+                            actionButtons = `
+                                <div class="connection-actions-small">
+                                    <button class="connection-action-small unfriend-btn" onclick="event.stopPropagation(); window.connectionSystem.removeConnection('${user.id}')">
+                                        Remove
+                                    </button>
+                                    <button class="connection-action-small" onclick="event.stopPropagation(); window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank')">
+                                        View
+                                    </button>
+                                </div>
+                            `;
+                            typeBadge = '<span class="connection-type-badge">Mutual</span>';
+                            break;
+                            
+                        case 'followers':
+                            const isFriend = this.connections.friends.includes(user.id);
+                            const isFollowing = this.connections.following.includes(user.id);
+                            
+                            if (!isFriend) {
+                                actionButtons = `
+                                    <div class="connection-actions-small">
+                                        <button class="connection-action-small connect-btn" onclick="event.stopPropagation(); window.connectionSystem.sendConnectionRequestTo('${user.id}')">
+                                            Connect Back
+                                        </button>
+                                        ${!isFollowing ? `
+                                            <button class="connection-action-small" onclick="event.stopPropagation(); window.connectionSystem.followUserById('${user.id}')">
+                                                Follow
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                `;
+                            }
+                            typeBadge = '<span class="connection-type-badge">Follower</span>';
+                            break;
+                            
+                        case 'following':
+                            actionButtons = `
+                                <div class="connection-actions-small">
+                                    <button class="connection-action-small unfriend-btn" onclick="event.stopPropagation(); window.connectionSystem.unfollowUserById('${user.id}')">
+                                        Unfollow
+                                    </button>
+                                </div>
+                            `;
+                            typeBadge = '<span class="connection-type-badge">Following</span>';
+                            break;
+                    }
+                }
+                
+                return `
+                    <div class="connection-card" data-user-id="${user.id}">
+                        ${typeBadge}
+                        <div class="connection-card-header">
+                            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                                 alt="${user.displayName}" 
+                                 class="connection-avatar"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                            <div class="connection-info">
+                                <div class="connection-name">
+                                    ${user.displayName || 'User'}
+                                    ${isVerified ? `
+                                        <span class="connection-badge ${isPremium ? 'premium' : 'verified'}">
+                                            <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div class="connection-status">
+                                    ${user.bio ? this.truncateText(user.bio, 40) : ''}
+                                    ${memberDays > 0 ? ` · ${memberDays} days` : ''}
+                                </div>
+                                <div class="connection-strength">
+                                    ${this.getConnectionStrength(user.id)}
+                                </div>
+                            </div>
+                        </div>
+                        ${actionButtons}
+                    </div>
+                `;
+            }
+
+            displayConnectionRequests() {
+                const contentContainer = document.getElementById('connectionsTabContent');
+                if (!contentContainer) return;
+                
+                if (this.connections.receivedRequests.length === 0) {
+                    contentContainer.innerHTML = `
+                        <div class="no-requests">
+                            <i class="fas fa-inbox"></i>
+                            <p>No pending connection requests</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const requestsHTML = this.connections.receivedRequests.map(request => `
+                    <div class="connection-card">
+                        <div class="connection-card-header">
+                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(request.fromName)}&background=1a73e8&color=fff&bold=true" 
+                                 alt="${request.fromName}" 
+                                 class="connection-avatar">
+                            <div class="connection-info">
+                                <div class="connection-name">${request.fromName}</div>
+                                <div class="connection-status">Sent ${this.formatTimeAgo(request.sentAt)}</div>
+                            </div>
+                        </div>
+                        <div class="connection-actions-small">
+                            <button class="connection-action-small accept-btn" onclick="event.stopPropagation(); window.connectionSystem.acceptConnectionRequest('${request.id}')">
+                                <i class="fas fa-check"></i> Accept
+                            </button>
+                            <button class="connection-action-small reject-btn" onclick="event.stopPropagation(); window.connectionSystem.rejectConnectionRequest('${request.id}')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                contentContainer.innerHTML = `
+                    <div class="connection-list">
+                        ${requestsHTML}
+                    </div>
+                `;
+            }
+
+            getConnectionStrength(userId) {
+                const mutualFriends = this.connections.friends.filter(friendId => {
+                    // This would need additional logic to calculate actual mutual friends
+                    return true; // Placeholder
+                }).length;
+                
+                let strength = 1;
+                if (mutualFriends > 5) strength = 3;
+                else if (mutualFriends > 2) strength = 2;
+                
+                const dots = Array(3).fill(0).map((_, i) => 
+                    `<div class="strength-dot ${i < strength ? 'active' : ''}"></div>`
+                ).join('');
+                
+                return `<div class="connection-strength">${dots} ${mutualFriends} mutual</div>`;
+            }
+
+            showConnectionNotification(request) {
+                const notification = document.getElementById('connectionNotification');
+                const avatar = document.getElementById('notificationAvatar');
+                const message = document.getElementById('notificationMessage');
+                const acceptBtn = document.getElementById('notificationAccept');
+                const rejectBtn = document.getElementById('notificationReject');
+                
+                // Set notification content
+                avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(request.fromName)}&background=1a73e8&color=fff&bold=true`;
+                message.textContent = `${request.fromName} wants to connect with you`;
+                
+                // Set button handlers
+                acceptBtn.onclick = () => {
+                    this.acceptConnectionRequest(request.id);
+                    notification.classList.remove('show');
+                };
+                
+                rejectBtn.onclick = () => {
+                    this.rejectConnectionRequest(request.id);
+                    notification.classList.remove('show');
+                };
+                
+                // Show notification
+                notification.classList.add('show');
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 10000);
+            }
+
+            calculateMemberDays(dateString) {
+                if (!dateString) return '0';
+                const joinDate = new Date(dateString);
+                const today = new Date();
+                const diffTime = Math.abs(today - joinDate);
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+
+            formatTimeAgo(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMinutes = Math.floor(diffMs / (1000 * 60));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                
+                if (diffMinutes < 60) return `${diffMinutes}m ago`;
+                if (diffHours < 24) return `${diffHours}h ago`;
+                if (diffDays === 1) return 'Yesterday';
+                if (diffDays < 7) return `${diffDays}d ago`;
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+
+            truncateText(text, maxLength) {
+                if (!text) return '';
+                if (text.length <= maxLength) return text;
+                return text.substring(0, maxLength) + '...';
+            }
+
+            // Additional helper methods
+            async sendConnectionRequestTo(userId) {
+                if (!currentUser) return;
+                
+                try {
+                    const requestId = `${currentUser.uid}_${userId}`;
+                    const requestData = {
+                        from: currentUser.uid,
+                        to: userId,
+                        fromName: currentUser.displayName || currentUser.email.split('@')[0],
+                        status: 'pending',
+                        sentAt: new Date().toISOString(),
+                        type: 'connection'
+                    };
+                    
+                    await db.collection('connectionRequests').doc(requestId).set(requestData);
+                    showToast('Connection request sent!');
+                    
+                } catch (error) {
+                    console.error('Error sending connection request:', error);
+                    showToast('Error sending request');
+                }
+            }
+
+            async followUserById(userId) {
+                if (!currentUser) return;
+                
+                try {
+                    await db.collection('connections').doc(currentUser.uid).set({
+                        following: firebase.firestore.FieldValue.arrayUnion(userId)
+                    }, { merge: true });
+                    
+                    showToast('You are now following this user');
+                    
+                } catch (error) {
+                    console.error('Error following user:', error);
+                    showToast('Error following user');
+                }
+            }
+
+            async unfollowUserById(userId) {
+                if (!currentUser) return;
+                
+                try {
+                    await db.collection('connections').doc(currentUser.uid).update({
+                        following: firebase.firestore.FieldValue.arrayRemove(userId)
+                    });
+                    
+                    showToast('Unfollowed user');
+                    
+                } catch (error) {
+                    console.error('Error unfollowing user:', error);
+                    showToast('Error unfollowing user');
+                }
+            }
+        }
+
+        // Initialize connection system
+        window.connectionSystem = new AdvancedConnectionSystem();
 
         // Theme functions
         function loadThemePreference() {
@@ -1600,66 +2963,66 @@
         }
 
         // Update header actions based on auth state
-function updateHeaderActions(user) {
-    headerActions.innerHTML = '';
-    
-    const themeButton = `
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-            <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
-        </button>
-    `;
-    
-    // Add search button to header
-    const searchButton = `
-        <button class="btn btn-outlined" onclick="openProfileSearch()" id="searchButton">
-            <i class="fas fa-search"></i>
-            Search Profiles
-        </button>
-    `;
-    
-    if (user) {
-        // Check if user is admin (you)
-        const isAdmin = user.email === 'adityajha1104@gmail.com';
-        
-        // User is logged in
-        headerActions.innerHTML = `
-            ${searchButton}
-            <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
-                <i class="fas fa-tachometer-alt"></i>
-                Dashboard
-            </a>
-            <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
-                <i class="fas fa-user"></i>
-                My Profile
-            </a>
-            ${isAdmin ? `
-                <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
-                    <i class="fas fa-user-shield"></i>
-                    Admin
+        function updateHeaderActions(user) {
+            headerActions.innerHTML = '';
+            
+            const themeButton = `
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
                 </button>
-            ` : ''}
-            ${themeButton}
-            <button class="btn btn-outlined" onclick="signOut()">
-                <i class="fas fa-sign-out-alt"></i>
-                Sign Out
-            </button>
-        `;
-    } else {
-        // User is not logged in
-        headerActions.innerHTML = `
-            ${searchButton}
-            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
-                <i class="fas fa-sign-in-alt"></i>
-                Sign In
-            </a>
-            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
-                <i class="fas fa-user-plus"></i>
-                Sign Up
-            </a>
-            ${themeButton}
-        `;
-    }
-}
+            `;
+            
+            // Add search button to header
+            const searchButton = `
+                <button class="btn btn-outlined" onclick="openProfileSearch()" id="searchButton">
+                    <i class="fas fa-search"></i>
+                    Search Profiles
+                </button>
+            `;
+            
+            if (user) {
+                // Check if user is admin (you)
+                const isAdmin = user.email === 'adityajha1104@gmail.com';
+                
+                // User is logged in
+                headerActions.innerHTML = `
+                    ${searchButton}
+                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </a>
+                    ${isAdmin ? `
+                        <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
+                            <i class="fas fa-user-shield"></i>
+                            Admin
+                        </button>
+                    ` : ''}
+                    ${themeButton}
+                    <button class="btn btn-outlined" onclick="signOut()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                `;
+            } else {
+                // User is not logged in
+                headerActions.innerHTML = `
+                    ${searchButton}
+                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
+                        <i class="fas fa-user-plus"></i>
+                        Sign Up
+                    </a>
+                    ${themeButton}
+                `;
+            }
+        }
 
         // Load own profile
         async function loadOwnProfile(user) {
@@ -1672,7 +3035,6 @@ function updateHeaderActions(user) {
                 if (userDoc.exists) {
                     profileData = userDoc.data();
                     profileData.uid = user.uid;
-                    console.log('Loaded user data:', profileData);
                     
                     // Update URL with user ID for sharing
                     const newUrl = `${window.location.origin}/profile/?id=${user.uid}`;
@@ -1703,7 +3065,6 @@ function updateHeaderActions(user) {
                 if (userDoc.exists) {
                     profileData = userDoc.data();
                     profileData.uid = userId;
-                    console.log('Found user data:', profileData);
                     
                     profileOwner = userId;
                     
@@ -1716,7 +3077,6 @@ function updateHeaderActions(user) {
                     
                     // Check if current user is the owner
                     isOwner = currentUser && currentUser.uid === profileOwner;
-                    console.log('Is owner?', isOwner);
                     
                     await displayProfile(profileData, isOwner);
                     
@@ -1751,6 +3111,9 @@ function updateHeaderActions(user) {
             
             // Get status indicator
             const statusIndicator = getStatusIndicator(data);
+            
+            // Initialize connection system
+            await window.connectionSystem.init(profileOwner, isOwnerView);
             
             // Create profile HTML
             const profileHTML = `
@@ -1807,6 +3170,17 @@ function updateHeaderActions(user) {
                                 ` : ''}
                             </div>
                             
+                            <!-- Connection Stats -->
+                            <div class="connection-section">
+                                <div class="connection-stats" id="connectionStats">
+                                    <!-- Stats will be populated by connection system -->
+                                </div>
+                                
+                                <div class="connection-controls" id="connectionControls">
+                                    <!-- Connection buttons will be populated by connection system -->
+                                </div>
+                            </div>
+                            
                             <div class="profile-stats">
                                 <div class="stat-item">
                                     <span class="stat-number" id="streakStat">${data.streak || 0}</span>
@@ -1845,7 +3219,7 @@ function updateHeaderActions(user) {
                             
                             ${!isOwnerView && currentUser ? `
                                 <div class="profile-controls">
-                                    <button class="btn btn-filled" onclick="window.location.href='https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}'">
+                                    <button class="btn btn-outlined" onclick="window.location.href='https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}'">
                                         <i class="fas fa-user"></i>
                                         View Your Profile
                                     </button>
@@ -1865,6 +3239,10 @@ function updateHeaderActions(user) {
                         <button class="profile-tab ${currentTab === 'overview' ? 'active' : ''}" onclick="switchTab('overview')">
                             <i class="fas fa-user"></i>
                             Overview
+                        </button>
+                        <button class="profile-tab ${currentTab === 'connections' ? 'active' : ''}" onclick="switchTab('connections')">
+                            <i class="fas fa-users"></i>
+                            Connections
                         </button>
                         ${isOwnerView ? `
                             <button class="profile-tab ${currentTab === 'settings' ? 'active' : ''}" onclick="switchTab('settings')">
@@ -1977,6 +3355,8 @@ function updateHeaderActions(user) {
             switch(tab) {
                 case 'overview':
                     return createOverviewContent(data);
+                case 'connections':
+                    return createConnectionsPanel(data);
                 case 'settings':
                     return isOwnerView ? createSettingsPanel(data) : '';
                 case 'verification':
@@ -1993,7 +3373,7 @@ function updateHeaderActions(user) {
             // Update tab buttons
             document.querySelectorAll('.profile-tab').forEach(button => {
                 button.classList.remove('active');
-                if (button.textContent.includes(tab.charAt(0).toUpperCase() + tab.slice(1))) {
+                if (button.getAttribute('onclick')?.includes(`'${tab}'`)) {
                     button.classList.add('active');
                 }
             });
@@ -2035,6 +3415,22 @@ function updateHeaderActions(user) {
                         </p>
                     </div>
                     ` : ''}
+                </div>
+            `;
+        }
+
+        // Create connections panel
+        function createConnectionsPanel(data) {
+            return `
+                <div class="settings-panel">
+                    <h3>Connections</h3>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg);">
+                        Manage your connections, followers, and following.
+                    </p>
+                    
+                    <div id="connectionsContent">
+                        <!-- Connection content will be loaded by connection system -->
+                    </div>
                 </div>
             `;
         }
@@ -2212,6 +3608,27 @@ function updateHeaderActions(user) {
                         </button>
                         <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium); font-family: monospace; word-break: break-all; font-size: 0.875rem;">
                             https://aditya-cmd-max.github.io/profile/?id=${data.uid}
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Connection Settings</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
+                            Manage your connection preferences
+                        </p>
+                        <div style="display: flex; flex-direction: column; gap: var(--md-spacing-sm);">
+                            <label style="display: flex; align-items: center; gap: var(--md-spacing-sm);">
+                                <input type="checkbox" id="notificationToggle" checked>
+                                <span>Show connection notifications</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--md-spacing-sm);">
+                                <input type="checkbox" id="autoAcceptToggle">
+                                <span>Auto-accept connection requests</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--md-spacing-sm);">
+                                <input type="checkbox" id="privateConnectionsToggle">
+                                <span>Hide connections from public</span>
+                            </label>
                         </div>
                     </div>
                     
@@ -2725,300 +4142,354 @@ function updateHeaderActions(user) {
             `;
         }
 
-        console.log('Profile page JavaScript loaded successfully');
-
-// Search functions
-function openProfileSearch() {
-    if (window.ReverbitSearch) {
-        window.ReverbitSearch.openSearch();
-    } else {
-        console.warn('Search system not loaded');
-        // Fallback to simple search
-        showSimpleSearch();
-    }
-}
-
-function showSimpleSearch() {
-    const query = prompt('Search for users (name, username, email):');
-    if (query) {
-        performSimpleSearch(query);
-    }
-}
-
-async function performSimpleSearch(query) {
-    try {
-        showToast('Searching...', 'info');
-        
-        const usersRef = db.collection('users');
-        const snapshot = await usersRef.where('isPublic', '==', true).get();
-        
-        if (snapshot.empty) {
-            showToast('No users found', 'info');
-            return;
+        // Search functions
+        function openProfileSearch() {
+            window.simpleSearch.openSearch();
         }
-        
-        const results = [];
-        const searchTerm = query.toLowerCase();
-        
-        snapshot.forEach(doc => {
-            const user = doc.data();
-            const displayName = user.displayName?.toLowerCase() || '';
-            const email = user.email?.toLowerCase() || '';
-            const username = user.username?.toLowerCase() || '';
-            
-            if (displayName.includes(searchTerm) || 
-                email.includes(searchTerm) || 
-                username.includes(searchTerm)) {
-                user.id = doc.id;
-                results.push(user);
+
+        async function initializeSearchSystem() {
+            // Load search system
+            window.simpleSearch = new SimpleSearchSystem();
+            await window.simpleSearch.init();
+        }
+
+        // Simple Search System
+        class SimpleSearchSystem {
+            constructor() {
+                this.modal = null;
+                this.results = [];
+                this.isSearching = false;
             }
-        });
-        
-        if (results.length === 0) {
-            showToast('No matching users found', 'info');
-            return;
-        }
-        
-        // Show results in a modal
-        showSearchResultsModal(results, query);
-        
-    } catch (error) {
-        console.error('Search error:', error);
-        showToast('Search failed', 'error');
-    }
-}
 
-function showSearchResultsModal(results, query) {
-    // Create modal
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.style.display = 'flex';
-    
-    let resultsHTML = '';
-    
-    if (results.length === 0) {
-        resultsHTML = `
-            <div class="search-no-results">
-                <div class="no-results-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3>No results found for "${query}"</h3>
-                <p>Try different keywords or check the spelling</p>
-            </div>
-        `;
-    } else {
-        resultsHTML = results.map(user => `
-            <div class="user-card" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank')">
-                <div class="user-card-avatar">
-                    <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
-                         alt="${user.displayName || 'User'}">
-                    ${user.verified ? `
-                        <div class="user-avatar-badge ${user.verifiedLevel === 'premium' ? 'premium' : ''}">
-                            <i class="fas fa-${user.verifiedLevel === 'premium' ? 'crown' : 'check'}"></i>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <div class="user-card-info">
-                    <div class="user-card-header">
-                        <h4 class="user-name">${user.displayName || 'User'}</h4>
-                        ${user.verified ? `
-                            <div class="user-verified-badge ${user.verifiedLevel === 'premium' ? 'premium' : ''}">
-                                <i class="fas fa-${user.verifiedLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
-                                ${user.verifiedLevel === 'premium' ? 'Premium' : 'Verified'}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <p class="user-email">${user.email || ''}</p>
-                    
-                    <div class="user-stats">
-                        ${user.streak ? `
-                            <div class="user-stat">
-                                <i class="fas fa-fire"></i>
-                                <span>${user.streak} day streak</span>
-                            </div>
-                        ` : ''}
-                        ${user.country ? `
-                            <div class="user-stat">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>${user.country}</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    ${user.bio ? `<p class="user-bio">${truncateText(user.bio, 80)}</p>` : ''}
-                </div>
-                
-                <div class="user-card-actions">
-                    <button class="user-card-action view-profile-btn" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
-                        <i class="fas fa-eye"></i>
-                        View
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    modal.innerHTML = `
-        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h2 style="font-family: var(--md-font-heading); margin: 0;">
-                    <i class="fas fa-search" style="margin-right: 10px;"></i>
-                    Search Results
-                </h2>
-                <button class="btn btn-outlined" onclick="this.closest('.modal').style.display='none'">
-                    <i class="fas fa-times"></i>
-                    Close
-                </button>
-            </div>
-            
-            <div style="margin-bottom: 20px; color: var(--md-on-surface-variant);">
-                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
-            </div>
-            
-            <div id="search-results-container">
-                ${resultsHTML}
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Close on backdrop click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-            setTimeout(() => {
-                if (modal.parentNode) {
-                    modal.parentNode.removeChild(modal);
+            async init() {
+                console.log('Simple search system initialized');
+            }
+
+            openSearch() {
+                this.createSearchModal();
+            }
+
+            createSearchModal() {
+                // Remove existing modal
+                if (this.modal && this.modal.parentNode) {
+                    this.modal.parentNode.removeChild(this.modal);
                 }
-            }, 300);
-        }
-    });
-}
 
-function truncateText(text, maxLength) {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-}
-
-
-// Initialize app
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        console.log('Profile Page: Initializing...');
-        
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        
-        auth = firebase.auth();
-        db = firebase.firestore();
-
-        // Load theme preference
-        loadThemePreference();
-
-        // Initialize search system
-        await initializeSearchSystem();
-
-        // Rest of your existing code...
-        
-    } catch (error) {
-        console.error('Initialization error:', error);
-        showToast('Error loading profile');
-        loadingScreen.classList.add('hidden');
-        mainContent.style.display = 'block';
-    }
-});
-
-async function initializeSearchSystem() {
-    try {
-        // Load search system if not already loaded
-        if (!window.ReverbitSearch) {
-            const script = document.createElement('script');
-            script.src = 'search-system.js';
-            script.async = true;
-            script.onload = () => {
-                console.log('Search system loaded');
-                window.ReverbitSearch.init();
-            };
-            script.onerror = () => {
-                console.warn('Failed to load search system, using fallback');
-            };
-            document.body.appendChild(script);
-        } else {
-            await window.ReverbitSearch.init();
-        }
-    } catch (error) {
-        console.warn('Search system initialization failed:', error);
-    }
-}
-        
-      // ================= SEARCH SYSTEM =================
-class SimpleSearchSystem {
-    constructor() {
-        this.modal = null;
-        this.results = [];
-        this.isSearching = false;
-    }
-
-    async init() {
-        console.log('Simple search system initialized');
-    }
-
-    openSearch() {
-        this.createSearchModal();
-    }
-
-    createSearchModal() {
-        // Remove existing modal
-        if (this.modal && this.modal.parentNode) {
-            this.modal.parentNode.removeChild(this.modal);
-        }
-
-        this.modal = document.createElement('div');
-        this.modal.className = 'modal';
-        this.modal.style.display = 'flex';
-        
-        this.modal.innerHTML = `
-            <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-shrink: 0;">
-                    <h2 style="font-family: var(--md-font-heading); margin: 0;">
-                        <i class="fas fa-search" style="margin-right: 10px; color: var(--md-primary);"></i>
-                        Search Profiles
-                    </h2>
-                    <button class="btn btn-outlined" onclick="window.simpleSearch.closeSearch()" style="margin-left: auto;">
-                        <i class="fas fa-times"></i>
-                        Close
-                    </button>
-                </div>
+                this.modal = document.createElement('div');
+                this.modal.className = 'modal';
+                this.modal.style.display = 'flex';
                 
-                <div style="position: relative; margin-bottom: 24px; flex-shrink: 0;">
-                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--md-on-surface-variant);"></i>
-                    <input type="text" 
-                           id="search-input" 
-                           class="search-input" 
-                           placeholder="Search by name, username, or email..." 
-                           style="width: 100%; padding: 16px 20px 16px 48px; border: 2px solid var(--md-outline); border-radius: var(--md-radius-pill); background: var(--md-surface); color: var(--md-on-surface); font-size: 16px; transition: var(--md-transition);">
-                    <div id="search-loading" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
-                        <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                this.modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-shrink: 0;">
+                            <h2 style="font-family: var(--md-font-heading); margin: 0;">
+                                <i class="fas fa-search" style="margin-right: 10px; color: var(--md-primary);"></i>
+                                Search Profiles
+                            </h2>
+                            <button class="btn btn-outlined" onclick="window.simpleSearch.closeSearch()" style="margin-left: auto;">
+                                <i class="fas fa-times"></i>
+                                Close
+                            </button>
+                        </div>
+                        
+                        <div style="position: relative; margin-bottom: 24px; flex-shrink: 0;">
+                            <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--md-on-surface-variant);"></i>
+                            <input type="text" 
+                                   id="search-input" 
+                                   class="search-input" 
+                                   placeholder="Search by name, username, or email..." 
+                                   style="width: 100%; padding: 16px 20px 16px 48px; border: 2px solid var(--md-outline); border-radius: var(--md-radius-pill); background: var(--md-surface); color: var(--md-on-surface); font-size: 16px; transition: var(--md-transition);">
+                            <div id="search-loading" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+                                <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="search-filters" style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; flex-shrink: 0;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="filter-verified" style="margin: 0;">
+                                <span style="color: var(--md-on-surface-variant); font-size: 14px;">Verified only</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="filter-active" style="margin: 0;">
+                                <span style="color: var(--md-on-surface-variant); font-size: 14px;">Active users</span>
+                            </label>
+                        </div>
+                        
+                        <div id="search-results-container" style="flex: 1; overflow-y: auto; min-height: 300px;">
+                            <div class="search-empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Find users by name, username, or email address</p>
+                                <div class="search-suggestions">
+                                    <h4 style="margin-bottom: 12px; color: var(--md-on-surface-variant); font-size: 14px;">Try searching for:</h4>
+                                    <div class="suggestion-tags">
+                                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('verified')">Verified users</button>
+                                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('active')">Active members</button>
+                                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('premium')">Premium users</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--md-outline); color: var(--md-on-surface-variant); font-size: 12px; text-align: center; flex-shrink: 0;">
+                            <i class="fas fa-lightbulb" style="margin-right: 6px;"></i>
+                            Tip: Use quotes for exact matches (e.g., "john doe")
+                        </div>
                     </div>
-                </div>
+                `;
                 
-                <div id="search-filters" style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; flex-shrink: 0;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" id="filter-verified" style="margin: 0;">
-                        <span style="color: var(--md-on-surface-variant); font-size: 14px;">Verified only</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" id="filter-active" style="margin: 0;">
-                        <span style="color: var(--md-on-surface-variant); font-size: 14px;">Active users</span>
-                    </label>
-                </div>
+                document.body.appendChild(this.modal);
                 
-                <div id="search-results-container" style="flex: 1; overflow-y: auto; min-height: 300px;">
+                // Add event listeners
+                const searchInput = this.modal.querySelector('#search-input');
+                const searchLoading = this.modal.querySelector('#search-loading');
+                
+                let debounceTimer;
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(debounceTimer);
+                    const query = e.target.value.trim();
+                    
+                    if (!query) {
+                        this.showEmptyState();
+                        return;
+                    }
+                    
+                    searchLoading.style.display = 'block';
+                    
+                    debounceTimer = setTimeout(async () => {
+                        await this.performSearch(query);
+                        searchLoading.style.display = 'none';
+                    }, 300);
+                });
+                
+                searchInput.focus();
+                
+                // Close on backdrop click
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.closeSearch();
+                    }
+                });
+                
+                // Close on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.modal.style.display === 'flex') {
+                        this.closeSearch();
+                    }
+                });
+            }
+
+            async performSearch(query) {
+                if (this.isSearching || !query.trim()) return;
+                
+                this.isSearching = true;
+                
+                try {
+                    const verifiedOnly = document.getElementById('filter-verified')?.checked || false;
+                    const activeOnly = document.getElementById('filter-active')?.checked || false;
+                    
+                    const usersRef = db.collection('users');
+                    let queryRef = usersRef.where('isPublic', '==', true);
+                    
+                    const snapshot = await queryRef.get();
+                    
+                    if (snapshot.empty) {
+                        this.showNoResults(query);
+                        return;
+                    }
+                    
+                    this.results = [];
+                    const searchTerm = query.toLowerCase().trim();
+                    const now = new Date();
+                    
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        user.id = doc.id;
+                        
+                        // Apply filters
+                        if (verifiedOnly && !user.verified) return;
+                        
+                        if (activeOnly && user.lastActive) {
+                            const lastActive = new Date(user.lastActive);
+                            const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
+                            if (daysSinceActive > 7) return;
+                        }
+                        
+                        // Search matching
+                        const displayName = user.displayName?.toLowerCase() || '';
+                        const email = user.email?.toLowerCase() || '';
+                        const username = user.username?.toLowerCase() || '';
+                        const bio = user.bio?.toLowerCase() || '';
+                        const country = user.country?.toLowerCase() || '';
+                        
+                        let matchScore = 0;
+                        
+                        // Exact match scoring
+                        if (displayName === searchTerm) matchScore += 5;
+                        if (username === searchTerm) matchScore += 4;
+                        if (email === searchTerm) matchScore += 3;
+                        
+                        // Partial match scoring
+                        if (displayName.includes(searchTerm)) matchScore += 3;
+                        if (username.includes(searchTerm)) matchScore += 2;
+                        if (email.includes(searchTerm)) matchScore += 2;
+                        if (bio.includes(searchTerm)) matchScore += 1;
+                        if (country.includes(searchTerm)) matchScore += 1;
+                        
+                        // Special keywords
+                        if (searchTerm.includes('verified') && user.verified) matchScore += 2;
+                        if (searchTerm.includes('premium') && (user.verifiedLevel === 'premium' || user.premiumVerified)) matchScore += 3;
+                        if (searchTerm.includes('active') && user.lastActive) {
+                            const lastActive = new Date(user.lastActive);
+                            const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
+                            if (daysSinceActive < 7) matchScore += 2;
+                        }
+                        
+                        if (matchScore > 0) {
+                            user.matchScore = matchScore;
+                            this.results.push(user);
+                        }
+                    });
+                    
+                    // Sort by match score
+                    this.results.sort((a, b) => b.matchScore - a.matchScore);
+                    
+                    // Display results
+                    this.displayResults(this.results, query);
+                    
+                } catch (error) {
+                    console.error('Search error:', error);
+                    this.showError();
+                } finally {
+                    this.isSearching = false;
+                }
+            }
+
+            displayResults(results, query) {
+                const container = this.modal.querySelector('#search-results-container');
+                
+                if (results.length === 0) {
+                    this.showNoResults(query);
+                    return;
+                }
+                
+                const resultsHTML = results.map(user => this.createUserCard(user)).join('');
+                
+                container.innerHTML = `
+                    <div style="margin-bottom: 16px; color: var(--md-on-surface-variant);">
+                        Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
+                    </div>
+                    ${resultsHTML}
+                `;
+                
+                // Add click handlers
+                container.querySelectorAll('.user-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const userId = card.dataset.userId;
+                        if (userId) {
+                            window.open(`https://aditya-cmd-max.github.io/profile/?id=${userId}`, '_blank');
+                        }
+                    });
+                });
+            }
+
+            createUserCard(user) {
+                const isVerified = user.verified;
+                const isPremium = user.verifiedLevel === 'premium' || user.premiumVerified;
+                const memberDays = user.createdAt ? this.calculateMemberDays(user.createdAt) : '0';
+                
+                return `
+                    <div class="user-card" data-user-id="${user.id}">
+                        <div class="user-card-avatar">
+                            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                                 alt="${user.displayName || 'User'}"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                            ${isVerified ? `
+                                <div class="user-avatar-badge ${isPremium ? 'premium' : ''}">
+                                    <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="user-card-info">
+                            <div class="user-card-header">
+                                <h4 class="user-name">${user.displayName || 'User'}</h4>
+                                ${isVerified ? `
+                                    <div class="user-verified-badge ${isPremium ? 'premium' : ''}">
+                                        <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
+                                        ${isPremium ? 'Premium Verified' : 'Verified'}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <p class="user-email">${user.email || ''}</p>
+                            
+                            <div class="user-stats">
+                                ${user.streak ? `
+                                    <div class="user-stat">
+                                        <i class="fas fa-fire"></i>
+                                        <span>${user.streak} day streak</span>
+                                    </div>
+                                ` : ''}
+                                <div class="user-stat">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${memberDays} days</span>
+                                </div>
+                                ${user.lastActive ? `
+                                    <div class="user-stat">
+                                        <i class="fas fa-clock"></i>
+                                        <span>${this.formatLastActive(user.lastActive)}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            ${user.bio ? `<p class="user-bio">${this.truncateText(user.bio, 100)}</p>` : ''}
+                            
+                            ${user.country ? `<div class="user-location"><i class="fas fa-map-marker-alt"></i> ${user.country}</div>` : ''}
+                        </div>
+                        
+                        <div class="user-card-actions">
+                            <button class="user-card-action" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
+                                <i class="fas fa-eye"></i>
+                                View Profile
+                            </button>
+                            <button class="user-card-action copy-link-btn" onclick="navigator.clipboard.writeText('https://aditya-cmd-max.github.io/profile/?id=${user.id}'); showToast('Profile link copied!'); event.stopPropagation();">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            searchBySuggestion(type) {
+                const searchInput = this.modal.querySelector('#search-input');
+                let query = '';
+                
+                switch(type) {
+                    case 'verified':
+                        query = 'verified';
+                        document.getElementById('filter-verified').checked = true;
+                        break;
+                    case 'active':
+                        query = 'active';
+                        document.getElementById('filter-active').checked = true;
+                        break;
+                    case 'premium':
+                        query = 'premium';
+                        document.getElementById('filter-verified').checked = true;
+                        break;
+                }
+                
+                searchInput.value = query;
+                searchInput.focus();
+                searchInput.dispatchEvent(new Event('input'));
+            }
+
+            showEmptyState() {
+                const container = this.modal.querySelector('#search-results-container');
+                container.innerHTML = `
                     <div class="search-empty-state">
                         <div class="empty-state-icon">
                             <i class="fas fa-search"></i>
@@ -3034,390 +4505,95 @@ class SimpleSearchSystem {
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--md-outline); color: var(--md-on-surface-variant); font-size: 12px; text-align: center; flex-shrink: 0;">
-                    <i class="fas fa-lightbulb" style="margin-right: 6px;"></i>
-                    Tip: Use quotes for exact matches (e.g., "john doe")
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(this.modal);
-        
-        // Add event listeners
-        const searchInput = this.modal.querySelector('#search-input');
-        const searchLoading = this.modal.querySelector('#search-loading');
-        
-        let debounceTimer;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(debounceTimer);
-            const query = e.target.value.trim();
-            
-            if (!query) {
-                this.showEmptyState();
-                return;
+                `;
             }
-            
-            searchLoading.style.display = 'block';
-            
-            debounceTimer = setTimeout(async () => {
-                await this.performSearch(query);
-                searchLoading.style.display = 'none';
-            }, 300);
-        });
-        
-        searchInput.focus();
-        
-        // Close on backdrop click
-        this.modal.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
-                this.closeSearch();
-            }
-        });
-        
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.modal.style.display === 'flex') {
-                this.closeSearch();
-            }
-        });
-    }
 
-    async performSearch(query) {
-        if (this.isSearching || !query.trim()) return;
-        
-        this.isSearching = true;
-        
-        try {
-            const verifiedOnly = document.getElementById('filter-verified')?.checked || false;
-            const activeOnly = document.getElementById('filter-active')?.checked || false;
-            
-            const usersRef = db.collection('users');
-            let queryRef = usersRef.where('isPublic', '==', true);
-            
-            const snapshot = await queryRef.get();
-            
-            if (snapshot.empty) {
-                this.showNoResults(query);
-                return;
-            }
-            
-            this.results = [];
-            const searchTerm = query.toLowerCase().trim();
-            const now = new Date();
-            
-            snapshot.forEach(doc => {
-                const user = doc.data();
-                user.id = doc.id;
-                
-                // Apply filters
-                if (verifiedOnly && !user.verified) return;
-                
-                if (activeOnly && user.lastActive) {
-                    const lastActive = new Date(user.lastActive);
-                    const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
-                    if (daysSinceActive > 7) return; // Not active in last 7 days
-                }
-                
-                // Search matching
-                const displayName = user.displayName?.toLowerCase() || '';
-                const email = user.email?.toLowerCase() || '';
-                const username = user.username?.toLowerCase() || '';
-                const bio = user.bio?.toLowerCase() || '';
-                const country = user.country?.toLowerCase() || '';
-                
-                let matchScore = 0;
-                
-                // Exact match scoring
-                if (displayName === searchTerm) matchScore += 5;
-                if (username === searchTerm) matchScore += 4;
-                if (email === searchTerm) matchScore += 3;
-                
-                // Partial match scoring
-                if (displayName.includes(searchTerm)) matchScore += 3;
-                if (username.includes(searchTerm)) matchScore += 2;
-                if (email.includes(searchTerm)) matchScore += 2;
-                if (bio.includes(searchTerm)) matchScore += 1;
-                if (country.includes(searchTerm)) matchScore += 1;
-                
-                // Special keywords
-                if (searchTerm.includes('verified') && user.verified) matchScore += 2;
-                if (searchTerm.includes('premium') && (user.verifiedLevel === 'premium' || user.premiumVerified)) matchScore += 3;
-                if (searchTerm.includes('active') && user.lastActive) {
-                    const lastActive = new Date(user.lastActive);
-                    const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
-                    if (daysSinceActive < 7) matchScore += 2;
-                }
-                
-                if (matchScore > 0) {
-                    user.matchScore = matchScore;
-                    this.results.push(user);
-                }
-            });
-            
-            // Sort by match score
-            this.results.sort((a, b) => b.matchScore - a.matchScore);
-            
-            // Display results
-            this.displayResults(this.results, query);
-            
-        } catch (error) {
-            console.error('Search error:', error);
-            this.showError();
-        } finally {
-            this.isSearching = false;
-        }
-    }
-
-    displayResults(results, query) {
-        const container = this.modal.querySelector('#search-results-container');
-        
-        if (results.length === 0) {
-            this.showNoResults(query);
-            return;
-        }
-        
-        const resultsHTML = results.map(user => this.createUserCard(user)).join('');
-        
-        container.innerHTML = `
-            <div style="margin-bottom: 16px; color: var(--md-on-surface-variant);">
-                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
-            </div>
-            ${resultsHTML}
-        `;
-        
-        // Add click handlers
-        container.querySelectorAll('.user-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const userId = card.dataset.userId;
-                if (userId) {
-                    window.open(`https://aditya-cmd-max.github.io/profile/?id=${userId}`, '_blank');
-                }
-            });
-        });
-    }
-
-    createUserCard(user) {
-        const isVerified = user.verified;
-        const isPremium = user.verifiedLevel === 'premium' || user.premiumVerified;
-        const memberDays = user.createdAt ? this.calculateMemberDays(user.createdAt) : '0';
-        
-        return `
-            <div class="user-card" data-user-id="${user.id}">
-                <div class="user-card-avatar">
-                    <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
-                         alt="${user.displayName || 'User'}"
-                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
-                    ${isVerified ? `
-                        <div class="user-avatar-badge ${isPremium ? 'premium' : ''}">
-                            <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
+            showNoResults(query) {
+                const container = this.modal.querySelector('#search-results-container');
+                container.innerHTML = `
+                    <div class="search-no-results">
+                        <div class="no-results-icon">
+                            <i class="fas fa-search"></i>
                         </div>
-                    ` : ''}
-                </div>
-                
-                <div class="user-card-info">
-                    <div class="user-card-header">
-                        <h4 class="user-name">${user.displayName || 'User'}</h4>
-                        ${isVerified ? `
-                            <div class="user-verified-badge ${isPremium ? 'premium' : ''}">
-                                <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
-                                ${isPremium ? 'Premium Verified' : 'Verified'}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <p class="user-email">${user.email || ''}</p>
-                    
-                    <div class="user-stats">
-                        ${user.streak ? `
-                            <div class="user-stat">
-                                <i class="fas fa-fire"></i>
-                                <span>${user.streak} day streak</span>
-                            </div>
-                        ` : ''}
-                        <div class="user-stat">
-                            <i class="fas fa-calendar"></i>
-                            <span>${memberDays} days</span>
+                        <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No results found for "${query}"</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Try different keywords or check the spelling</p>
+                        <div class="no-results-suggestions">
+                            <p style="margin-bottom: 8px; font-weight: 600;">Suggestions:</p>
+                            <ul>
+                                <li>Try using fewer keywords</li>
+                                <li>Check for typos in your search</li>
+                                <li>Try more general terms</li>
+                                <li>Make sure the profile is public</li>
+                            </ul>
                         </div>
-                        ${user.lastActive ? `
-                            <div class="user-stat">
-                                <i class="fas fa-clock"></i>
-                                <span>${this.formatLastActive(user.lastActive)}</span>
-                            </div>
-                        ` : ''}
                     </div>
-                    
-                    ${user.bio ? `<p class="user-bio">${this.truncateText(user.bio, 100)}</p>` : ''}
-                    
-                    ${user.country ? `<div class="user-location"><i class="fas fa-map-marker-alt"></i> ${user.country}</div>` : ''}
-                </div>
-                
-                <div class="user-card-actions">
-                    <button class="user-card-action" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
-                        <i class="fas fa-eye"></i>
-                        View Profile
-                    </button>
-                    <button class="user-card-action copy-link-btn" onclick="navigator.clipboard.writeText('https://aditya-cmd-max.github.io/profile/?id=${user.id}'); showToast('Profile link copied!'); event.stopPropagation();">
-                        <i class="fas fa-link"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-    }
+                `;
+            }
 
-    searchBySuggestion(type) {
-        const searchInput = this.modal.querySelector('#search-input');
-        let query = '';
-        
-        switch(type) {
-            case 'verified':
-                query = 'verified';
-                document.getElementById('filter-verified').checked = true;
-                break;
-            case 'active':
-                query = 'active';
-                document.getElementById('filter-active').checked = true;
-                break;
-            case 'premium':
-                query = 'premium';
-                document.getElementById('filter-verified').checked = true;
-                break;
-        }
-        
-        searchInput.value = query;
-        searchInput.focus();
-        searchInput.dispatchEvent(new Event('input'));
-    }
-
-    showEmptyState() {
-        const container = this.modal.querySelector('#search-results-container');
-        container.innerHTML = `
-            <div class="search-empty-state">
-                <div class="empty-state-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Find users by name, username, or email address</p>
-                <div class="search-suggestions">
-                    <h4 style="margin-bottom: 12px; color: var(--md-on-surface-variant); font-size: 14px;">Try searching for:</h4>
-                    <div class="suggestion-tags">
-                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('verified')">Verified users</button>
-                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('active')">Active members</button>
-                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('premium')">Premium users</button>
+            showError() {
+                const container = this.modal.querySelector('#search-results-container');
+                container.innerHTML = `
+                    <div class="search-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p style="color: var(--md-on-surface); margin: 12px 0;">Failed to load search results</p>
+                        <button class="retry-btn" onclick="window.simpleSearch.retrySearch()">Try again</button>
                     </div>
-                </div>
-            </div>
-        `;
-    }
+                `;
+            }
 
-    showNoResults(query) {
-        const container = this.modal.querySelector('#search-results-container');
-        container.innerHTML = `
-            <div class="search-no-results">
-                <div class="no-results-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No results found for "${query}"</h3>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Try different keywords or check the spelling</p>
-                <div class="no-results-suggestions">
-                    <p style="margin-bottom: 8px; font-weight: 600;">Suggestions:</p>
-                    <ul>
-                        <li>Try using fewer keywords</li>
-                        <li>Check for typos in your search</li>
-                        <li>Try more general terms</li>
-                        <li>Make sure the profile is public</li>
-                    </ul>
-                </div>
-            </div>
-        `;
-    }
-
-    showError() {
-        const container = this.modal.querySelector('#search-results-container');
-        container.innerHTML = `
-            <div class="search-error">
-                <i class="fas fa-exclamation-circle"></i>
-                <p style="color: var(--md-on-surface); margin: 12px 0;">Failed to load search results</p>
-                <button class="retry-btn" onclick="window.simpleSearch.retrySearch()">Try again</button>
-            </div>
-        `;
-    }
-
-    retrySearch() {
-        const searchInput = this.modal.querySelector('#search-input');
-        if (searchInput.value.trim()) {
-            searchInput.dispatchEvent(new Event('input'));
-        }
-    }
-
-    calculateMemberDays(dateString) {
-        if (!dateString) return '0';
-        const joinDate = new Date(dateString);
-        const today = new Date();
-        const diffTime = Math.abs(today - joinDate);
-        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
-    formatLastActive(dateString) {
-        if (!dateString) return 'Never';
-        
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffMs = now - date;
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        
-        if (diffHours < 1) return 'Just now';
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays === 1) return 'Yesterday';
-        if (diffDays < 7) return `${diffDays}d ago`;
-        if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
-        
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
-
-    truncateText(text, maxLength) {
-        if (!text) return '';
-        if (text.length <= maxLength) return text;
-        return text.substring(0, maxLength) + '...';
-    }
-
-    closeSearch() {
-        if (this.modal) {
-            this.modal.style.display = 'none';
-            setTimeout(() => {
-                if (this.modal && this.modal.parentNode) {
-                    this.modal.parentNode.removeChild(this.modal);
-                    this.modal = null;
+            retrySearch() {
+                const searchInput = this.modal.querySelector('#search-input');
+                if (searchInput.value.trim()) {
+                    searchInput.dispatchEvent(new Event('input'));
                 }
-            }, 300);
+            }
+
+            calculateMemberDays(dateString) {
+                if (!dateString) return '0';
+                const joinDate = new Date(dateString);
+                const today = new Date();
+                const diffTime = Math.abs(today - joinDate);
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+
+            formatLastActive(dateString) {
+                if (!dateString) return 'Never';
+                
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                
+                if (diffHours < 1) return 'Just now';
+                if (diffHours < 24) return `${diffHours}h ago`;
+                if (diffDays === 1) return 'Yesterday';
+                if (diffDays < 7) return `${diffDays}d ago`;
+                if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+                
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+
+            truncateText(text, maxLength) {
+                if (!text) return '';
+                if (text.length <= maxLength) return text;
+                return text.substring(0, maxLength) + '...';
+            }
+
+            closeSearch() {
+                if (this.modal) {
+                    this.modal.style.display = 'none';
+                    setTimeout(() => {
+                        if (this.modal && this.modal.parentNode) {
+                            this.modal.parentNode.removeChild(this.modal);
+                            this.modal = null;
+                        }
+                    }, 300);
+                }
+            }
         }
-    }
-}
 
-// Initialize simple search system
-window.simpleSearch = new SimpleSearchSystem();
-
-// Global function to open search
-function openProfileSearch() {
-    window.simpleSearch.openSearch();
-}
-
-// Initialize search system
-document.addEventListener('DOMContentLoaded', async () => {
-    // Your existing initialization code...
-    
-    // Initialize search system
-    await window.simpleSearch.init();
-    
-    // Rest of your code...
-});  
-      
-      
+        console.log('Advanced profile page loaded successfully');
     </script>
-
-<script src="https://aditya-cmd-max.github.io/js/search-system.js"></script>
-    
 </body>
 </html>
