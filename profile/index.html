@@ -383,11 +383,16 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            flex-wrap: wrap;
         }
 
         @media (max-width: 768px) {
             .profile-username {
                 font-size: 2rem;
+                justify-content: center;
             }
         }
 
@@ -537,6 +542,78 @@
             font-size: 0.875rem;
             font-weight: 500;
             margin-left: var(--md-spacing-sm);
+        }
+
+        /* Verified Badge Styles */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #1a73e8, #0d8a72);
+            color: white;
+            padding: 6px 14px;
+            border-radius: var(--md-radius-pill);
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+            animation: pulse 2s infinite;
+            white-space: nowrap;
+        }
+
+        .verified-badge i {
+            font-size: 0.9rem;
+        }
+
+        @keyframes pulse {
+            0% { 
+                opacity: 0.9;
+                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+            }
+            50% { 
+                opacity: 1;
+                box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
+            }
+            100% { 
+                opacity: 0.9;
+                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+            }
+        }
+
+        /* Avatar Badge */
+        .avatar-verified-badge {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #1a73e8, #0d8a72);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--md-surface);
+            z-index: 2;
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .avatar-verified-badge i {
+            font-size: 1.2rem;
+        }
+
+        /* For smaller screens */
+        @media (max-width: 768px) {
+            .verified-badge {
+                padding: 4px 10px;
+                font-size: 0.75rem;
+            }
+            
+            .avatar-verified-badge {
+                width: 32px;
+                height: 32px;
+                bottom: 10px;
+                right: 10px;
+            }
         }
 
         /* Avatar Error Handling */
@@ -807,83 +884,6 @@
             border-bottom-color: var(--md-primary);
             font-weight: 600;
         }
-
-/* Add this anywhere in your existing CSS, preferably after the .badge styles */
-
-/* Verified Badge Styles */
-.verified-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: linear-gradient(135deg, #1a73e8, #0d8a72);
-    color: white;
-    padding: 6px 14px;
-    border-radius: var(--md-radius-pill);
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-left: var(--md-spacing-sm);
-    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-    animation: pulse 2s infinite;
-    white-space: nowrap;
-}
-
-.verified-badge i {
-    font-size: 0.9rem;
-}
-
-@keyframes pulse {
-    0% { 
-        opacity: 0.9;
-        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-    }
-    50% { 
-        opacity: 1;
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
-    }
-    100% { 
-        opacity: 0.9;
-        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-    }
-}
-
-/* Avatar Badge */
-.avatar-verified-badge {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    background: linear-gradient(135deg, #1a73e8, #0d8a72);
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid var(--md-surface);
-    z-index: 2;
-    box-shadow: var(--md-elevation-3);
-}
-
-.avatar-verified-badge i {
-    font-size: 1.2rem;
-}
-
-/* For smaller screens */
-@media (max-width: 768px) {
-    .verified-badge {
-        padding: 4px 10px;
-        font-size: 0.75rem;
-    }
-    
-    .avatar-verified-badge {
-        width: 32px;
-        height: 32px;
-        bottom: 10px;
-        right: 10px;
-    }
-}
-
-        
     </style>
 </head>
 <body class="light-theme">
@@ -934,7 +934,7 @@
 
         <!-- Footer -->
         <footer class="profile-footer">
-            <p>© 2026 Reverbit. All rights reserved.</p>
+            <p>© 2024 Reverbit. All rights reserved.</p>
             <div class="profile-footer-links">
                 <a href="https://aditya-cmd-max.github.io/reverbit/privacy">Privacy</a>
                 <a href="https://aditya-cmd-max.github.io/reverbit/terms">Terms</a>
@@ -1105,6 +1105,9 @@
             `;
             
             if (user) {
+                // Check if user is admin (you)
+                const isAdmin = user.email === 'adityajha1104@gmail.com';
+                
                 // User is logged in
                 headerActions.innerHTML = `
                     <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
@@ -1115,6 +1118,12 @@
                         <i class="fas fa-user"></i>
                         My Profile
                     </a>
+                    ${isAdmin ? `
+                        <button class="btn btn-outlined" onclick="adminVerifyUser()" title="Admin: Verify Users">
+                            <i class="fas fa-check-circle"></i>
+                            Admin
+                        </button>
+                    ` : ''}
                     ${themeButton}
                     <button class="btn btn-outlined" onclick="signOut()">
                         <i class="fas fa-sign-out-alt"></i>
@@ -1221,52 +1230,52 @@
             // Calculate member days
             const memberDays = calculateMemberDays(data.createdAt);
             
-            // Create profile HTML
-           const isVerified = data.verified === true;
-    
-const profileHTML = `
-    <div class="profile-main">
-        <div class="profile-info-section">
-            <div class="profile-avatar-container">
-                <div class="profile-avatar-large">
-                    <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" class="profile-avatar-large-img" onerror="handleAvatarError(this)">
-                    ${isVerified ? `
-                        <div class="avatar-verified-badge" title="Verified Account">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    ` : ''}
-                    ${isOwnerView ? `
-                        <div class="avatar-upload-overlay" onclick="editProfile()">
-                            <i class="fas fa-camera" style="font-size: 2rem;"></i>
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
+            // Check if user is verified
+            const isVerified = data.verified === true;
             
-            <div class="profile-details">
-                <div class="profile-username-section">
-                    <h1 class="profile-username" style="display: flex; align-items: center; gap: var(--md-spacing-sm); flex-wrap: wrap;">
-                        ${data.displayName || 'User'}
-                        ${isVerified ? `
-                            <span class="verified-badge">
-                                <i class="fas fa-check-circle"></i>
-                                Verified
-                            </span>
-                        ` : ''}
-                    </h1>
-                    ${isOwnerView ? `
-                        <div style="display: flex; gap: var(--md-spacing-sm); margin-top: var(--md-spacing-sm);">
-                            <button class="btn btn-outlined" onclick="editProfile()">
-                                <i class="fas fa-edit"></i>
-                                Edit Profile
-                            </button>
-                            <button class="btn btn-filled" onclick="shareProfile()">
-                                <i class="fas fa-share"></i>
-                                Share
-                            </button>
+            // Create profile HTML
+            const profileHTML = `
+                <div class="profile-main">
+                    <div class="profile-info-section">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar-large">
+                                <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" class="profile-avatar-large-img" onerror="handleAvatarError(this)">
+                                ${isVerified ? `
+                                    <div class="avatar-verified-badge" title="Verified Account">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                ` : ''}
+                                ${isOwnerView ? `
+                                    <div class="avatar-upload-overlay" onclick="editProfile()">
+                                        <i class="fas fa-camera" style="font-size: 2rem;"></i>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
-                    ` : ''}
-                </div>
+                        
+                        <div class="profile-details">
+                            <div class="profile-username-section">
+                                <h1 class="profile-username">${data.displayName || 'User'}
+                                    ${isVerified ? `
+                                        <span class="verified-badge">
+                                            <i class="fas fa-check-circle"></i>
+                                            Verified
+                                        </span>
+                                    ` : ''}
+                                </h1>
+                                ${isOwnerView ? `
+                                    <div style="display: flex; gap: var(--md-spacing-sm); margin-top: var(--md-spacing-sm);">
+                                        <button class="btn btn-outlined" onclick="editProfile()">
+                                            <i class="fas fa-edit"></i>
+                                            Edit Profile
+                                        </button>
+                                        <button class="btn btn-filled" onclick="shareProfile()">
+                                            <i class="fas fa-share"></i>
+                                            Share
+                                        </button>
+                                    </div>
+                                ` : ''}
+                            </div>
                             
                             <div class="profile-stats">
                                 <div class="stat-item">
@@ -1426,8 +1435,32 @@ const profileHTML = `
 
         // Create settings panel (owner only)
         function createSettingsPanel(data) {
+            const isAdmin = currentUser && currentUser.email === 'adityajha1104@gmail.com';
+            
             return `
                 <div class="settings-panel">
+                    ${isAdmin ? `
+                    <div class="settings-section">
+                        <h3><i class="fas fa-user-shield" style="color: var(--md-primary); margin-right: 8px;"></i>Admin Controls</h3>
+                        <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg); border-left: 4px solid var(--md-primary);">
+                            <h4 style="margin-bottom: var(--md-spacing-sm); color: var(--md-primary);">Verification Status</h4>
+                            <p style="margin-bottom: var(--md-spacing-md); color: var(--md-on-surface-variant);">
+                                <strong>Current status:</strong> ${data.verified ? '<span style="color: #34a853;">✓ Verified Account</span>' : '<span style="color: var(--md-on-surface-variant);">Not Verified</span>'}
+                            </p>
+                            <div style="display: flex; gap: var(--md-spacing-sm); flex-wrap: wrap;">
+                                <button class="btn ${data.verified ? 'btn-outlined' : 'btn-filled'}" onclick="toggleVerifiedStatus('${data.uid}', ${!data.verified})">
+                                    <i class="fas fa-${data.verified ? 'times' : 'check'}"></i>
+                                    ${data.verified ? 'Remove Verification' : 'Verify This Account'}
+                                </button>
+                                <button class="btn btn-outlined" onclick="adminVerifyUser()">
+                                    <i class="fas fa-user-plus"></i>
+                                    Verify Other User
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
                     <div class="settings-section">
                         <h3>Profile Visibility</h3>
                         <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
@@ -1626,6 +1659,56 @@ const profileHTML = `
             }
         }
 
+        // Toggle verified status (admin only)
+        async function toggleVerifiedStatus(userId, newStatus) {
+            // Check if user is admin (you)
+            if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
+                showToast('Admin access required');
+                return;
+            }
+            
+            try {
+                // Update the verified status in Firestore
+                await db.collection('users').doc(userId).update({
+                    verified: newStatus,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Update local data
+                if (profileData && profileData.uid === userId) {
+                    profileData.verified = newStatus;
+                    
+                    // Refresh the display
+                    await displayProfile(profileData, isOwner);
+                    
+                    showToast(`User ${newStatus ? 'verified successfully! ✓' : 'unverified'}`);
+                } else {
+                    showToast('Status updated');
+                }
+                
+            } catch (error) {
+                console.error('Error toggling verified status:', error);
+                showToast('Error updating verification status');
+            }
+        }
+
+        // Add this function for admin to manually verify
+        function adminVerifyUser() {
+            if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
+                showToast('Admin access required');
+                return;
+            }
+            
+            // Prompt for user ID
+            const userId = prompt('Enter the User ID to verify:');
+            if (!userId) return;
+            
+            const confirmVerify = confirm(`Verify user ${userId}?\nThey will get a verified badge on their profile.`);
+            if (confirmVerify) {
+                toggleVerifiedStatus(userId, true);
+            }
+        }
+
         // Delete profile (placeholder function)
         function deleteProfile() {
             if (confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
@@ -1680,59 +1763,6 @@ const profileHTML = `
         }
 
         console.log('Profile page JavaScript loaded successfully');
-
-
-// Add this function to toggle verified status
-async function toggleVerifiedStatus(userId, newStatus) {
-    // Check if user is admin (you)
-    if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
-        showToast('Admin access required');
-        return;
-    }
-    
-    try {
-        // Update the verified status in Firestore
-        await db.collection('users').doc(userId).update({
-            verified: newStatus,
-            updatedAt: new Date().toISOString()
-        });
-        
-        // Update local data
-        if (profileData && profileData.uid === userId) {
-            profileData.verified = newStatus;
-            
-            // Refresh the display
-            await displayProfile(profileData, isOwner);
-            
-            showToast(`User ${newStatus ? 'verified successfully! ✓' : 'unverified'}`);
-        } else {
-            showToast('Status updated');
-        }
-        
-    } catch (error) {
-        console.error('Error toggling verified status:', error);
-        showToast('Error updating verification status');
-    }
-}
-
-// Add this function for admin to manually verify
-function adminVerifyUser() {
-    if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
-        showToast('Admin access required');
-        return;
-    }
-    
-    // Prompt for user ID
-    const userId = prompt('Enter the User ID to verify:');
-    if (!userId) return;
-    
-    const confirmVerify = confirm(`Verify user ${userId}?\nThey will get a verified badge on their profile.`);
-    if (confirmVerify) {
-        toggleVerifiedStatus(userId, true);
-    }
-}
-
-        
     </script>
 </body>
 </html>
