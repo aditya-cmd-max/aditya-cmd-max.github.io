@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Reverbit - Dashboard</title>
     <meta name="description" content="Your Reverbit Dashboard - Manage all your AI tools in one place">
     
@@ -126,10 +126,13 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
 
         html {
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
@@ -139,6 +142,8 @@
             line-height: 1.6;
             overflow-x: hidden;
             transition: var(--md-transition);
+            touch-action: pan-y;
+            position: relative;
         }
 
         /* Dashboard Layout */
@@ -148,7 +153,7 @@
             position: relative;
         }
 
-        /* Sidebar Navigation */
+        /* Sidebar Navigation - Fixed for Mobile Issues */
         .sidebar {
             width: 280px;
             background: var(--md-surface);
@@ -159,10 +164,13 @@
             left: 0;
             top: 0;
             bottom: 0;
-            z-index: 100;
-            transition: var(--md-transition);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--md-elevation-2);
             transform: translateX(0);
+            will-change: transform;
+            pointer-events: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .sidebar-header {
@@ -171,6 +179,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
+            z-index: 1001;
         }
 
         .nav-brand {
@@ -179,6 +189,7 @@
             gap: var(--md-spacing-sm);
             text-decoration: none;
             flex: 1;
+            pointer-events: auto;
         }
 
         .nav-logo {
@@ -190,6 +201,7 @@
             transition: var(--md-transition);
             border-radius: var(--md-radius-medium);
             overflow: hidden;
+            pointer-events: auto;
         }
 
         .nav-logo img {
@@ -197,6 +209,7 @@
             height: 100%;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            pointer-events: none;
         }
 
         .nav-logo:hover {
@@ -209,6 +222,7 @@
             font-weight: 700;
             color: var(--md-on-surface);
             letter-spacing: -0.5px;
+            pointer-events: none;
         }
 
         /* Sidebar Close Button */
@@ -224,6 +238,9 @@
             align-items: center;
             justify-content: center;
             transition: var(--md-transition);
+            pointer-events: auto;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .sidebar-close:hover {
@@ -238,6 +255,7 @@
             flex-direction: column;
             gap: var(--md-spacing-xs);
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .nav-item {
@@ -252,6 +270,11 @@
             font-family: var(--md-font-heading);
             font-weight: 500;
             position: relative;
+            cursor: pointer;
+            pointer-events: auto;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
 
         .nav-item:hover {
@@ -290,6 +313,7 @@
             display: flex;
             align-items: center;
             gap: var(--md-spacing-md);
+            pointer-events: auto;
         }
 
         .user-menu {
@@ -297,6 +321,7 @@
             align-items: center;
             gap: var(--md-spacing-md);
             width: 100%;
+            pointer-events: auto;
         }
 
         .user-menu-info {
@@ -312,6 +337,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            pointer-events: none;
         }
 
         .user-menu-email {
@@ -320,6 +346,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            pointer-events: none;
         }
 
         /* Main Content Area */
@@ -329,6 +356,8 @@
             padding: var(--md-spacing-lg);
             min-height: 100vh;
             transition: var(--md-transition);
+            position: relative;
+            pointer-events: auto;
         }
 
         /* Mobile Header */
@@ -343,8 +372,10 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 90;
+            z-index: 990;
             box-shadow: var(--md-elevation-1);
+            height: 64px;
+            pointer-events: auto;
         }
 
         .mobile-header .nav-brand {
@@ -366,7 +397,11 @@
             justify-content: center;
             transition: var(--md-transition);
             position: relative;
-            z-index: 101;
+            z-index: 1001;
+            pointer-events: auto;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
 
         .hamburger-menu:hover {
@@ -376,6 +411,7 @@
         .hamburger-icon {
             font-size: 1.5rem;
             transition: var(--md-transition);
+            pointer-events: none;
         }
 
         .hamburger-menu.active .hamburger-icon {
@@ -395,6 +431,7 @@
             animation: slideInDown 0.5s ease-out;
             gap: var(--md-spacing-lg);
             flex-wrap: wrap;
+            pointer-events: auto;
         }
 
         @keyframes slideInDown {
@@ -479,6 +516,10 @@
             overflow: hidden;
             flex-shrink: 0;
             position: relative;
+            pointer-events: auto;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
         
         .profile-avatar-button:hover {
@@ -512,6 +553,7 @@
             object-fit: cover;
             display: block;
             background: var(--md-surface-variant);
+            pointer-events: none;
         }
 
         /* Buttons */
@@ -532,6 +574,10 @@
             min-height: 48px;
             position: relative;
             overflow: hidden;
+            pointer-events: auto;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
 
         .btn::before {
@@ -589,6 +635,10 @@
             justify-content: center;
             transition: var(--md-transition);
             background: var(--md-surface-variant);
+            pointer-events: auto;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
 
         .theme-toggle:hover {
@@ -614,6 +664,8 @@
             overflow: hidden;
             animation: fadeInUp 0.5s ease-out;
             animation-fill-mode: both;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
@@ -708,6 +760,7 @@
             overflow: hidden;
             margin-bottom: var(--md-spacing-xl);
             animation: fadeIn 0.5s ease-out;
+            pointer-events: auto;
         }
 
         @keyframes fadeIn {
@@ -728,6 +781,8 @@
             height: 160px;
             margin: 0 auto var(--md-spacing-lg);
             cursor: pointer;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .profile-avatar-large-img {
@@ -738,6 +793,7 @@
             border: 4px solid var(--md-surface);
             box-shadow: var(--md-elevation-3);
             transition: var(--md-transition);
+            pointer-events: none;
         }
 
         .profile-avatar-large:hover .profile-avatar-large-img {
@@ -774,6 +830,8 @@
             z-index: 2;
             opacity: 0;
             transform: scale(0.8);
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .profile-avatar-large:hover .avatar-upload {
@@ -829,6 +887,10 @@
             font-size: 1rem;
             color: var(--md-on-surface);
             transition: var(--md-transition);
+            pointer-events: auto;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .form-input:focus {
@@ -856,6 +918,8 @@
             position: relative;
             animation: fadeInUp 0.5s ease-out;
             animation-fill-mode: both;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .app-card:nth-child(1) { animation-delay: 0.1s; }
@@ -961,10 +1025,11 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
-            z-index: 1000;
+            z-index: 2000;
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s ease-out;
+            pointer-events: auto;
         }
 
         .modal-content {
@@ -978,6 +1043,8 @@
             border: 1px solid var(--md-outline);
             position: relative;
             animation: slideInUp 0.3s ease-out;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         @keyframes slideInUp {
@@ -1001,7 +1068,7 @@
             background: var(--md-gradient-2);
         }
 
-        /* Overlay for mobile menu */
+        /* CRITICAL FIX: Overlay for mobile menu - Proper blocking */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -1011,13 +1078,23 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
-            z-index: 99;
+            z-index: 999;
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: auto;
         }
 
         .sidebar-overlay.active {
             opacity: 1;
+            display: block;
+        }
+
+        /* When sidebar is open, add class to body to prevent scrolling */
+        body.sidebar-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         /* Google-style Profile Popup Styles */
@@ -1028,7 +1105,7 @@
             box-shadow: var(--md-elevation-5);
             min-width: 320px;
             max-width: 360px;
-            z-index: 9999;
+            z-index: 2000;
             overflow: hidden;
             opacity: 0;
             transform: translateY(-10px);
@@ -1036,6 +1113,8 @@
             border: 1px solid var(--md-outline);
             font-family: var(--md-font-heading);
             display: none;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
         
         .reverbit-profile-popup.active {
@@ -1066,6 +1145,8 @@
             padding: 3px;
             cursor: pointer;
             position: relative;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
         
         .profile-popup-avatar:hover::after {
@@ -1146,6 +1227,8 @@
             background: none;
             width: 100%;
             text-align: left;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
         
         .profile-popup-menu-item:hover {
@@ -1225,10 +1308,11 @@
             display: flex;
             align-items: center;
             gap: var(--md-spacing-md);
-            z-index: 1000;
+            z-index: 2100;
             transform: translateY(100px);
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
+            pointer-events: none;
         }
 
         .toast.show {
@@ -1254,8 +1338,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            z-index: 2200;
             color: white;
+            pointer-events: auto;
         }
 
         .upload-loading .loader {
@@ -1282,6 +1367,8 @@
             text-align: center;
             animation: fadeInUp 0.5s ease-out;
             animation-fill-mode: both;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .quick-stat-card:hover {
@@ -1356,6 +1443,8 @@
             background: var(--md-surface-variant);
             border-radius: var(--md-radius-medium);
             transition: var(--md-transition);
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .activity-item:hover {
@@ -1401,6 +1490,8 @@
             border-radius: var(--md-radius-large);
             transition: var(--md-transition);
             text-align: center;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .achievement-badge:hover {
@@ -1436,6 +1527,8 @@
             font-weight: 500;
             margin-top: var(--md-spacing-md);
             justify-content: center;
+            pointer-events: auto;
+            touch-action: manipulation;
         }
 
         .avatar-upload-button:hover {
@@ -1501,10 +1594,12 @@
                 transform: translateX(-100%);
                 width: 320px;
                 box-shadow: var(--md-elevation-4);
+                z-index: 1000;
             }
             
             .sidebar.mobile-open {
                 transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
             }
             
             .sidebar-header {
@@ -1527,6 +1622,7 @@
                 margin-left: 0;
                 padding: var(--md-spacing-md);
                 padding-top: 80px; /* Account for fixed mobile header */
+                width: 100%;
             }
             
             .top-header {
@@ -1571,11 +1667,13 @@
                 font-size: 1.75rem;
             }
             
-            /* FIXED: Mobile-specific pointer events */
+            /* CRITICAL FIX: Mobile content should be clickable even when sidebar is open */
+            .main-content,
             .main-content *,
+            .top-header,
             .top-header *,
-            .mobile-header .nav-brand,
-            .mobile-header .profile-avatar-button,
+            .mobile-header,
+            .mobile-header *:not(.hamburger-menu),
             .btn,
             .theme-toggle,
             .app-card,
@@ -1591,31 +1689,32 @@
                 touch-action: manipulation !important;
             }
             
-            /* Only hamburger menu should open sidebar */
-            .hamburger-menu {
+            /* IMPORTANT: Sidebar content should be clickable */
+            .sidebar.mobile-open,
+            .sidebar.mobile-open * {
                 pointer-events: auto !important;
-                z-index: 1000 !important;
+                touch-action: manipulation !important;
             }
             
-            /* When sidebar is open, prevent clicks on main content */
-            .sidebar.mobile-open ~ .main-content *,
-            .sidebar.mobile-open ~ .mobile-header *:not(.hamburger-menu) {
+            /* Overlay should block clicks to main content when sidebar is open */
+            .sidebar-overlay.active {
+                pointer-events: auto !important;
+                touch-action: auto !important;
+            }
+            
+            /* When sidebar is open, overlay should prevent clicks to main content */
+            body.sidebar-open .main-content,
+            body.sidebar-open .main-content *,
+            body.sidebar-open .top-header,
+            body.sidebar-open .top-header *,
+            body.sidebar-open .mobile-header *:not(.hamburger-menu) {
                 pointer-events: none !important;
             }
             
-            /* But keep hamburger menu clickable */
-            .sidebar.mobile-open ~ .mobile-header .hamburger-menu {
+            /* Hamburger menu should always be clickable */
+            .hamburger-menu {
                 pointer-events: auto !important;
-            }
-            
-            /* Make overlay properly block clicks */
-            .sidebar-overlay {
-                pointer-events: auto !important;
-            }
-            
-            /* Sidebar content should always be clickable */
-            .sidebar * {
-                pointer-events: auto !important;
+                z-index: 1001 !important;
             }
             
             /* Profile Popup Mobile Styles */
@@ -1692,7 +1791,7 @@
         </button>
     </header>
 
-    <!-- Overlay for mobile menu -->
+    <!-- Overlay for mobile menu - CRITICAL FIX -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Profile Popup -->
@@ -1767,7 +1866,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="main-content">
+        <main class="main-content" id="mainContent">
             <!-- Top Header -->
             <header class="top-header">
                 <div class="welcome-section">
@@ -2099,21 +2198,6 @@
                         </a>
                     </div>
                     
-                   <!-- Add this to your dashboard somewhere -->
-<button class="btn btn-outlined" onclick="viewPublicProfile()">
-    <i class="fas fa-external-link-alt"></i>
-    View Public Profile
-</button>
-
-<script>
-async function viewPublicProfile() {
-    const link = await window.ReverbitAuth.generateProfileLink();
-    if (link) {
-        window.open(link, '_blank');
-    }
-}
-</script>
-                    
                     <div class="dashboard-card">
                         <div class="card-header">
                             <div class="card-icon">
@@ -2274,6 +2358,7 @@ async function viewPublicProfile() {
         const profilePopup = document.getElementById('profilePopup');
         const uploadLoading = document.getElementById('uploadLoading');
         const animatedUsername = document.querySelector('.animated-username');
+        const mainContent = document.getElementById('mainContent');
 
         // Profile avatar elements
         const desktopProfileAvatar = document.getElementById('desktopProfileAvatar');
@@ -2284,6 +2369,13 @@ async function viewPublicProfile() {
         let currentUser = null;
         let currentUserProfile = null;
         let auth, db;
+        let isMobileMenuOpen = false;
+        let isTouchDevice = false;
+
+        // Detect touch device
+        function detectTouchDevice() {
+            return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        }
 
         // Handle logo error
         function handleLogoError(img) {
@@ -2510,15 +2602,33 @@ async function viewPublicProfile() {
             }
         }
 
-        // FIXED: Mobile menu handling with proper click isolation
-        function toggleMobileMenu() {
-            sidebar.classList.toggle('mobile-open');
-            hamburgerMenu.classList.toggle('active');
-            sidebarOverlay.classList.toggle('active');
+        // CRITICAL FIX: Mobile menu handling with proper touch isolation
+        function toggleMobileMenu(forceClose = false) {
+            if (window.innerWidth > 768) return;
             
-            if (sidebar.classList.contains('mobile-open')) {
+            if (forceClose) {
+                sidebar.classList.remove('mobile-open');
+                hamburgerMenu.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.classList.remove('sidebar-open');
+                isMobileMenuOpen = false;
+                document.body.style.overflow = 'auto';
+                return;
+            }
+            
+            isMobileMenuOpen = !isMobileMenuOpen;
+            
+            if (isMobileMenuOpen) {
+                sidebar.classList.add('mobile-open');
+                hamburgerMenu.classList.add('active');
+                sidebarOverlay.classList.add('active');
+                document.body.classList.add('sidebar-open');
                 document.body.style.overflow = 'hidden';
             } else {
+                sidebar.classList.remove('mobile-open');
+                hamburgerMenu.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.classList.remove('sidebar-open');
                 document.body.style.overflow = 'auto';
             }
         }
@@ -2627,6 +2737,11 @@ async function viewPublicProfile() {
         function showProfilePopup() {
             if (!currentUserProfile) return;
             
+            // Close mobile menu if open
+            if (isMobileMenuOpen) {
+                toggleMobileMenu(true);
+            }
+            
             profilePopup.innerHTML = createProfilePopup(currentUserProfile);
             attachPopupEventListeners();
             profilePopup.style.display = 'block';
@@ -2687,6 +2802,7 @@ async function viewPublicProfile() {
             // Add click outside listener
             setTimeout(() => {
                 document.addEventListener('click', handleClickOutsideProfilePopup);
+                document.addEventListener('touchstart', handleClickOutsideProfilePopup);
             }, 100);
         }
 
@@ -2698,6 +2814,7 @@ async function viewPublicProfile() {
             }, 200);
             
             document.removeEventListener('click', handleClickOutsideProfilePopup);
+            document.removeEventListener('touchstart', handleClickOutsideProfilePopup);
         }
 
         function toggleProfilePopup(e) {
@@ -2743,8 +2860,13 @@ async function viewPublicProfile() {
                 });
                 
                 // Close mobile menu if open
-                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
-                    toggleMobileMenu();
+                if (window.innerWidth <= 768 && isMobileMenuOpen) {
+                    toggleMobileMenu(true);
+                }
+                
+                // Hide profile popup if open
+                if (isProfilePopupVisible) {
+                    hideProfilePopup();
                 }
             }
         }
@@ -2777,6 +2899,9 @@ async function viewPublicProfile() {
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Detect touch device
+                isTouchDevice = detectTouchDevice();
+                
                 // Initialize UI components
                 loadThemePreference();
                 
@@ -3216,8 +3341,8 @@ async function viewPublicProfile() {
             if (e.key === 'Escape') {
                 closeModal('logoutModal');
                 hideProfilePopup();
-                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
-                    toggleMobileMenu();
+                if (window.innerWidth <= 768 && isMobileMenuOpen) {
+                    toggleMobileMenu(true);
                 }
             }
         });
@@ -3226,10 +3351,7 @@ async function viewPublicProfile() {
         window.addEventListener('resize', () => {
             if (window.innerWidth > 768) {
                 // Ensure sidebar is visible on larger screens
-                sidebar.classList.remove('mobile-open');
-                hamburgerMenu.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
+                toggleMobileMenu(true);
             }
             
             // Hide popup on resize
@@ -3243,40 +3365,64 @@ async function viewPublicProfile() {
             logout();
         });
 
-        // FIXED: Mobile touch handling - Only hamburger menu should open sidebar
+        // CRITICAL FIX: Mobile touch handling - Only hamburger menu should open sidebar
         hamburgerMenu.addEventListener('click', function(e) {
             e.stopPropagation();
             e.preventDefault();
-            e.stopImmediatePropagation();
             toggleMobileMenu();
         });
 
         sidebarClose.addEventListener('click', function(e) {
             e.stopPropagation();
             e.preventDefault();
-            e.stopImmediatePropagation();
-            toggleMobileMenu();
+            toggleMobileMenu(true);
         });
 
         sidebarOverlay.addEventListener('click', function(e) {
             e.stopPropagation();
             e.preventDefault();
-            e.stopImmediatePropagation();
-            toggleMobileMenu();
+            toggleMobileMenu(true);
         });
 
-        // FIXED: Add touch event handling for mobile
+        // FIXED: Add touch event handling for mobile - Improved
         document.addEventListener('touchstart', function(e) {
-            // If sidebar is open and we're clicking outside, close it
-            if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+            // If sidebar is open and we're clicking on overlay or outside, close it
+            if (isMobileMenuOpen) {
                 const isHamburger = e.target.closest('.hamburger-menu');
                 const isSidebar = e.target.closest('.sidebar');
                 const isSidebarClose = e.target.closest('.sidebar-close');
-                const isOverlay = e.target.closest('.sidebar-overlay');
                 
-                if (!isSidebar && !isHamburger && !isSidebarClose && !isOverlay) {
-                    toggleMobileMenu();
+                if (!isSidebar && !isHamburger && !isSidebarClose) {
+                    // Only close if clicking on overlay or outside
+                    if (e.target.closest('.sidebar-overlay')) {
+                        toggleMobileMenu(true);
+                    }
                 }
+            }
+        }, { passive: true });
+
+        // Prevent accidental clicks on main content when sidebar is open
+        mainContent.addEventListener('click', function(e) {
+            if (isMobileMenuOpen && window.innerWidth <= 768) {
+                e.stopPropagation();
+                // Don't toggle menu here, let the overlay handle it
+            }
+        });
+
+        // FIXED: Handle touch events for interactive elements
+        document.addEventListener('touchstart', function(e) {
+            // Ensure buttons and interactive elements work properly
+            const interactiveElements = ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'];
+            if (interactiveElements.includes(e.target.tagName)) {
+                e.target.classList.add('active-touch');
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            // Remove active class from interactive elements
+            const interactiveElements = ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'];
+            if (interactiveElements.includes(e.target.tagName)) {
+                e.target.classList.remove('active-touch');
             }
         }, { passive: true });
     </script>
