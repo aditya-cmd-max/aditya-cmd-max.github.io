@@ -24,26 +24,44 @@ class ReverbitAuth {
         this.profilePopup = null;
         this.profileAvatar = null;
         this.avatarUploadInput = null;
+        this.authListeners = [];
         
         // Bind methods
         this.toggleProfilePopup = this.toggleProfilePopup.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.uploadProfilePicture = this.uploadProfilePicture.bind(this);
         this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     async init() {
-        if (this.initialized) return;
+        if (this.initialized) {
+            console.log('Auth: Already initialized');
+            return;
+        }
         
         try {
+            console.log('Auth: Initializing...');
+            
             // Initialize Firebase
             if (!firebase.apps.length) {
                 firebase.initializeApp(this.firebaseConfig);
+                console.log('Auth: Firebase initialized');
+            } else {
+                console.log('Auth: Firebase already initialized');
             }
             
             this.auth = firebase.auth();
             this.db = firebase.firestore();
             this.storage = firebase.storage();
+            
+            // Enable offline persistence for better UX
+            try {
+                await this.db.enablePersistence({ synchronizeTabs: true });
+                console.log('Auth: Firestore persistence enabled');
+            } catch (persistenceError) {
+                console.warn('Auth: Firestore persistence not supported:', persistenceError);
+            }
             
             // Initialize Cloudinary widget
             this.initCloudinaryWidget();
@@ -58,9 +76,43 @@ class ReverbitAuth {
             this.injectStyles();
             
             this.initialized = true;
+            console.log('Auth: Initialization complete');
+            
+            // Notify listeners
+            this.notifyAuthListeners();
+            
         } catch (error) {
             console.error('Auth initialization error:', error);
+            this.showToast('Failed to initialize authentication system', 'error');
         }
+    }
+
+    // Add listener for auth state changes
+    addAuthListener(callback) {
+        this.authListeners.push(callback);
+        // Call immediately with current state
+        if (this.initialized) {
+            callback(this.user, this.userProfile);
+        }
+    }
+
+    // Remove listener
+    removeAuthListener(callback) {
+        const index = this.authListeners.indexOf(callback);
+        if (index > -1) {
+            this.authListeners.splice(index, 1);
+        }
+    }
+
+    // Notify all listeners
+    notifyAuthListeners() {
+        this.authListeners.forEach(callback => {
+            try {
+                callback(this.user, this.userProfile);
+            } catch (error) {
+                console.error('Auth listener error:', error);
+            }
+        });
     }
 
     initCloudinaryWidget() {
@@ -69,12 +121,18 @@ class ReverbitAuth {
             const script = document.createElement('script');
             script.src = 'https://upload-widget.cloudinary.com/global/all.js';
             script.async = true;
+            script.onload = () => console.log('Auth: Cloudinary widget loaded');
+            script.onerror = (error) => console.error('Auth: Failed to load Cloudinary widget:', error);
             document.head.appendChild(script);
+        } else {
+            console.log('Auth: Cloudinary already loaded');
         }
     }
 
     setupAuthListener() {
         this.auth.onAuthStateChanged(async (user) => {
+            console.log('Auth state changed:', user ? `User logged in (${user.email})` : 'No user');
+            
             if (user) {
                 this.user = {
                     uid: user.uid,
@@ -83,74 +141,136 @@ class ReverbitAuth {
                     photoURL: user.photoURL
                 };
                 
+                console.log('Auth: Loading user profile for UID:', user.uid);
+                
                 await this.loadUserProfile();
+                
+                // Store in localStorage for persistence
                 localStorage.setItem('reverbit_user', JSON.stringify(this.user));
+                localStorage.setItem('reverbit_user_uid', user.uid);
+                localStorage.setItem('reverbit_user_email', user.email);
                 
                 // Add or update profile avatar
                 this.addOrUpdateProfileAvatar();
                 
                 // Track login activity
                 await this.trackLogin();
+                
+                console.log('Auth: User fully loaded:', this.user.email);
+                
+                // Show welcome message for new users
+                if (this.userProfile && this.userProfile.createdAt) {
+                    const createdAt = new Date(this.userProfile.createdAt);
+                    const now = new Date();
+                    const diffHours = (now - createdAt) / (1000 * 60 * 60);
+                    if (diffHours < 1) { // User created less than 1 hour ago
+                        this.showToast(`Welcome to Reverbit, ${this.userProfile.displayName}!`, 'success');
+                    }
+                }
             } else {
+                console.log('Auth: User signed out');
                 this.user = null;
                 this.userProfile = null;
                 localStorage.removeItem('reverbit_user');
+                localStorage.removeItem('reverbit_user_uid');
+                localStorage.removeItem('reverbit_user_email');
                 
-                // Remove profile avatar if exists
+                // Remove UI elements
                 this.removeProfileAvatar();
                 this.removeProfilePopup();
             }
+            
+            // Notify listeners
+            this.notifyAuthListeners();
         });
     }
 
     async checkExistingSession() {
         try {
             const userData = localStorage.getItem('reverbit_user');
+            const userUid = localStorage.getItem('reverbit_user_uid');
             
-            if (userData) {
+            if (userData && userUid) {
+                console.log('Auth: Found existing session for UID:', userUid);
                 this.user = JSON.parse(userData);
-                await this.loadUserProfile();
-                this.addOrUpdateProfileAvatar();
+                
+                // Verify the session is still valid
+                try {
+                    const currentUser = this.auth.currentUser;
+                    if (currentUser && currentUser.uid === userUid) {
+                        console.log('Auth: Session is valid, loading profile...');
+                        await this.loadUserProfile();
+                        this.addOrUpdateProfileAvatar();
+                    } else {
+                        console.log('Auth: Session expired, clearing local storage');
+                        localStorage.clear();
+                        this.user = null;
+                        this.userProfile = null;
+                    }
+                } catch (sessionError) {
+                    console.warn('Auth: Session check failed:', sessionError);
+                }
+            } else {
+                console.log('Auth: No existing session found');
             }
         } catch (error) {
             console.error('Session check error:', error);
+            // Clear corrupted data
+            localStorage.clear();
         }
     }
 
     async trackLogin() {
-        if (!this.user || !this.db) return;
+        if (!this.user || !this.db) {
+            console.warn('Cannot track login: No user or db');
+            return;
+        }
         
         try {
             const userRef = this.db.collection('users').doc(this.user.uid);
-            await userRef.update({
+            const updateData = {
                 lastLogin: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            });
+                updatedAt: new Date().toISOString(),
+                lastActive: new Date().toISOString()
+            };
+            
+            // Use set with merge to ensure document exists
+            await userRef.set(updateData, { merge: true });
+            
+            console.log('Auth: Login tracked successfully');
         } catch (error) {
             console.error('Error tracking login:', error);
+            // Don't show toast for tracking errors to avoid bothering users
         }
     }
 
     async loadUserProfile() {
-        if (!this.user || !this.db) return;
+        if (!this.user || !this.db) {
+            console.error('Cannot load profile: No user or db');
+            return;
+        }
         
         try {
+            console.log('Auth: Loading user profile for:', this.user.uid);
             const userRef = this.db.collection('users').doc(this.user.uid);
             const userDoc = await userRef.get();
             
             if (userDoc.exists) {
                 this.userProfile = userDoc.data();
-                console.log('Loaded existing user profile');
+                this.userProfile.uid = this.user.uid; // Ensure UID is included
+                console.log('Auth: Loaded existing user profile for:', this.user.email);
                 
             } else {
                 // Create default profile for new user
-                console.log('Creating new user profile...');
+                console.log('Auth: Creating new user profile for:', this.user.email);
+                
                 const displayName = this.user.displayName || 
                                   this.user.email?.split('@')[0] || 
                                   'User';
                 
-                // Generate a simple username (for internal use only)
-                const username = this.generateSimpleUsername(displayName, this.user.email);
+                // Clean username for internal use
+                const cleanDisplayName = displayName.trim().toLowerCase();
+                const username = cleanDisplayName.replace(/[^a-z0-9]/g, '_').substring(0, 20);
                 
                 this.userProfile = {
                     uid: this.user.uid,
@@ -158,11 +278,12 @@ class ReverbitAuth {
                     displayName: displayName,
                     username: username, // Internal use only
                     photoURL: this.user.photoURL || 
-                             `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff`,
+                             `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff&bold=true`,
                     isPublic: true, // Default to public profile
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
                     theme: 'auto',
                     preferences: {},
                     cloudinaryImageId: null,
@@ -171,11 +292,35 @@ class ReverbitAuth {
                     gender: '',
                     showApps: true,
                     streak: 0,
-                    lastActive: new Date().toISOString()
+                    totalLogins: 1
                 };
                 
-                await userRef.set(this.userProfile);
-                console.log('New user profile created');
+                console.log('Auth: Creating user document with data:', this.userProfile);
+                
+                try {
+                    // Use set() instead of add() to ensure we use the UID as document ID
+                    await userRef.set(this.userProfile);
+                    console.log('Auth: New user profile created successfully for:', this.user.email);
+                    
+                    // Store profile in localStorage for immediate access
+                    localStorage.setItem('reverbit_user_profile', JSON.stringify(this.userProfile));
+                    
+                } catch (createError) {
+                    console.error('Error creating user document:', createError);
+                    
+                    // Try alternative approach with add() if set() fails
+                    try {
+                        console.log('Auth: Trying alternative profile creation...');
+                        await this.db.collection('users').add({
+                            ...this.userProfile,
+                            uid: this.user.uid
+                        });
+                        console.log('Auth: Profile created via add()');
+                    } catch (altError) {
+                        console.error('Alternative profile creation also failed:', altError);
+                        throw altError;
+                    }
+                }
             }
             
             // Update avatar if exists
@@ -183,40 +328,31 @@ class ReverbitAuth {
                 this.updateProfileAvatar();
             }
             
+            // Store updated profile in localStorage
+            localStorage.setItem('reverbit_user_profile', JSON.stringify(this.userProfile));
+            
         } catch (error) {
             console.error('Error loading user profile:', error);
-        }
-    }
-
-    // Simple username generator (internal use only)
-    generateSimpleUsername(displayName, email) {
-        if (displayName && displayName.trim()) {
-            // Clean the display name
-            let username = displayName.toLowerCase()
-                .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric
-                .replace(/\s+/g, '_');    // Replace spaces with underscores
             
-            // Ensure minimum length
-            if (username.length >= 3) {
-                return username.substring(0, 20);
+            // Create a minimal fallback profile from localStorage
+            const storedProfile = localStorage.getItem('reverbit_user_profile');
+            if (storedProfile) {
+                this.userProfile = JSON.parse(storedProfile);
+                console.log('Auth: Using cached profile from localStorage');
+            } else {
+                this.userProfile = {
+                    uid: this.user.uid,
+                    email: this.user.email,
+                    displayName: this.user.displayName || 'User',
+                    photoURL: this.user.photoURL || `https://ui-avatars.com/api/?name=User&background=4285f4&color=fff`,
+                    isPublic: true,
+                    createdAt: new Date().toISOString()
+                };
+                console.log('Auth: Created minimal fallback profile');
             }
-        }
-        
-        // Use email username as fallback
-        if (email) {
-            const emailUsername = email.split('@')[0];
-            let username = emailUsername.toLowerCase()
-                .replace(/[^a-z0-9]/g, '')
-                .replace(/\./g, '_');
             
-            // Ensure minimum length
-            if (username.length >= 3) {
-                return username.substring(0, 20);
-            }
+            this.showToast('Profile loaded with limited functionality', 'info');
         }
-        
-        // Fallback to generic
-        return `user${Date.now().toString().slice(-6)}`;
     }
 
     addOrUpdateProfileAvatar() {
@@ -224,6 +360,7 @@ class ReverbitAuth {
         if (document.querySelector('.reverbit-profile-avatar')) {
             this.profileAvatar = document.querySelector('.reverbit-profile-avatar');
             this.updateProfileAvatar();
+            console.log('Auth: Updated existing profile avatar');
             return;
         }
         
@@ -234,8 +371,18 @@ class ReverbitAuth {
             // Try to find/create header
             const header = document.querySelector('.app-header, header, .header, nav.navbar');
             if (!header) {
-                console.warn('No header found for profile avatar');
-                return;
+                // Create a header if none exists
+                header = document.createElement('div');
+                header.className = 'reverbit-auth-header';
+                header.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    padding: 16px;
+                    z-index: 1000;
+                `;
+                document.body.appendChild(header);
+                console.log('Auth: Created header for avatar');
             }
             
             headerActions = document.createElement('div');
@@ -276,6 +423,15 @@ class ReverbitAuth {
             this.handleAvatarUpload();
         });
         
+        // Add hover effects
+        this.profileAvatar.addEventListener('mouseenter', () => {
+            this.profileAvatar.style.transform = 'scale(1.05)';
+        });
+        
+        this.profileAvatar.addEventListener('mouseleave', () => {
+            this.profileAvatar.style.transform = 'scale(1)';
+        });
+        
         // Insert at the beginning of header actions
         headerActions.insertBefore(this.profileAvatar, headerActions.firstChild);
         
@@ -287,26 +443,55 @@ class ReverbitAuth {
         this.avatarUploadInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (file) {
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    this.showToast('Image size should be less than 5MB', 'error');
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    this.showToast('Please select an image file', 'error');
+                    return;
+                }
+                
                 await this.uploadProfilePicture(file);
             }
+            // Reset input
+            e.target.value = '';
         });
         document.body.appendChild(this.avatarUploadInput);
         
         // Update avatar image
         this.updateProfileAvatar();
+        
+        console.log('Auth: Profile avatar added to page');
     }
 
     async handleAvatarUpload() {
-        if (!this.avatarUploadInput) return;
+        if (!this.avatarUploadInput) {
+            console.error('Avatar upload input not found');
+            return;
+        }
+        
+        if (!this.user) {
+            this.showToast('Please sign in to upload profile picture', 'error');
+            return;
+        }
+        
         this.avatarUploadInput.click();
     }
 
     async uploadProfilePicture(file) {
-        if (!this.user || !file) return;
+        if (!this.user || !file) {
+            console.error('Cannot upload: No user or file');
+            return;
+        }
         
         try {
             // Show loading state
             this.profileAvatar.classList.add('uploading');
+            this.showToast('Uploading profile picture...', 'info');
             
             // Create form data for Cloudinary upload
             const formData = new FormData();
@@ -321,6 +506,7 @@ class ReverbitAuth {
             // Upload to Cloudinary
             const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${this.cloudinaryConfig.cloudName}/image/upload`;
             
+            console.log('Auth: Uploading to Cloudinary...');
             const response = await fetch(cloudinaryUrl, {
                 method: 'POST',
                 body: formData
@@ -331,6 +517,7 @@ class ReverbitAuth {
             }
             
             const result = await response.json();
+            console.log('Auth: Cloudinary upload successful:', result);
             
             // Update user profile with Cloudinary URL
             const photoURL = result.secure_url;
@@ -351,8 +538,17 @@ class ReverbitAuth {
             
             // Update local user data
             this.user.photoURL = photoURL;
-            this.userProfile.photoURL = photoURL;
-            this.userProfile.cloudinaryImageId = cloudinaryImageId;
+            if (this.userProfile) {
+                this.userProfile.photoURL = photoURL;
+                this.userProfile.cloudinaryImageId = cloudinaryImageId;
+                this.userProfile.updatedAt = new Date().toISOString();
+            }
+            
+            // Update localStorage
+            localStorage.setItem('reverbit_user', JSON.stringify(this.user));
+            if (this.userProfile) {
+                localStorage.setItem('reverbit_user_profile', JSON.stringify(this.userProfile));
+            }
             
             // Update UI
             this.updateProfileAvatar();
@@ -375,22 +571,32 @@ class ReverbitAuth {
     }
 
     updateProfileAvatar() {
-        if (!this.profileAvatar || !this.userProfile) return;
+        if (!this.profileAvatar || !this.userProfile) {
+            console.warn('Cannot update avatar: No avatar element or profile');
+            return;
+        }
         
         const avatarImg = this.profileAvatar.querySelector('.reverbit-avatar-img');
         if (avatarImg) {
-            // Add cache busting parameter to prevent caching
-            const photoURL = this.userProfile.photoURL || 
-                           `https://ui-avatars.com/api/?name=${encodeURIComponent(this.userProfile.displayName || 'User')}&background=4285f4&color=fff`;
+            const displayName = this.userProfile.displayName || 'User';
+            let photoURL = this.userProfile.photoURL || 
+                         `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff&bold=true`;
             
-            avatarImg.src = photoURL + (photoURL.includes('?') ? '&' : '?') + 't=' + Date.now();
-            avatarImg.alt = this.userProfile.displayName || 'Profile';
-            avatarImg.onerror = function() {
-                // Fallback to UI Avatars if image fails to load
-                const displayName = this.userProfile?.displayName || 'User';
+            // Add cache busting parameter to prevent caching
+            photoURL += (photoURL.includes('?') ? '&' : '?') + 't=' + Date.now();
+            
+            avatarImg.src = photoURL;
+            avatarImg.alt = displayName;
+            avatarImg.title = displayName;
+            
+            // Set fallback on error
+            avatarImg.onerror = () => {
+                console.warn('Avatar image failed to load, using fallback');
                 const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=4285f4&color=fff`;
-            }.bind(this);
+                avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=4285f4&color=fff&bold=true`;
+            };
+            
+            console.log('Auth: Avatar updated with:', photoURL);
         }
     }
 
@@ -398,6 +604,7 @@ class ReverbitAuth {
         if (this.profileAvatar && this.profileAvatar.parentNode) {
             this.profileAvatar.parentNode.removeChild(this.profileAvatar);
             this.profileAvatar = null;
+            console.log('Auth: Profile avatar removed');
         }
         
         if (this.avatarUploadInput && this.avatarUploadInput.parentNode) {
@@ -421,6 +628,8 @@ class ReverbitAuth {
         // Add to body
         document.body.appendChild(this.profilePopup);
         
+        console.log('Auth: Profile popup created');
+        
         // Add event listeners
         setTimeout(() => {
             this.attachPopupEventListeners();
@@ -428,7 +637,9 @@ class ReverbitAuth {
     }
 
     getPopupHTML() {
-        if (!this.userProfile) return '';
+        if (!this.userProfile) {
+            return '<div class="profile-popup-container"><p>Loading profile...</p></div>';
+        }
         
         const displayName = this.userProfile.displayName || 'User';
         const email = this.userProfile.email || '';
@@ -439,7 +650,7 @@ class ReverbitAuth {
             <div class="profile-popup-container">
                 <div class="profile-header">
                     <div class="profile-avatar-large" id="profile-avatar-large">
-                        <img src="${photoURL}" alt="${displayName}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff'">
+                        <img src="${photoURL}" alt="${displayName}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff&bold=true'">
                         <button class="avatar-upload-btn" id="avatar-upload-btn" title="Upload new profile picture">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
@@ -498,13 +709,17 @@ class ReverbitAuth {
     }
 
     attachPopupEventListeners() {
-        if (!this.profilePopup) return;
+        if (!this.profilePopup) {
+            console.error('Cannot attach listeners: No popup');
+            return;
+        }
         
         // Sign out button
         const signoutBtn = this.profilePopup.querySelector('#profile-signout');
         if (signoutBtn) {
             signoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.logout();
             });
         }
@@ -517,6 +732,7 @@ class ReverbitAuth {
         if (changeAvatarBtn) {
             changeAvatarBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.handleAvatarUpload();
             });
         }
@@ -531,6 +747,7 @@ class ReverbitAuth {
         if (profileAvatarLarge) {
             profileAvatarLarge.addEventListener('click', (e) => {
                 if (e.target === profileAvatarLarge || e.target.tagName === 'IMG') {
+                    e.stopPropagation();
                     this.handleAvatarUpload();
                 }
             });
@@ -540,9 +757,16 @@ class ReverbitAuth {
         setTimeout(() => {
             document.addEventListener('click', this.handleClickOutside);
         }, 100);
+        
+        console.log('Auth: Popup event listeners attached');
     }
 
     toggleProfilePopup() {
+        if (!this.user) {
+            this.showToast('Please sign in to access profile', 'info');
+            return;
+        }
+        
         if (!this.profilePopup) {
             this.createProfilePopup();
         }
@@ -557,7 +781,10 @@ class ReverbitAuth {
     }
 
     showProfilePopup() {
-        if (!this.profilePopup || !this.profileAvatar) return;
+        if (!this.profilePopup || !this.profileAvatar) {
+            console.error('Cannot show popup: No popup or avatar');
+            return;
+        }
         
         // Update popup content
         this.profilePopup.innerHTML = this.getPopupHTML();
@@ -587,6 +814,8 @@ class ReverbitAuth {
         setTimeout(() => {
             this.profilePopup.classList.add('active');
         }, 10);
+        
+        console.log('Auth: Profile popup shown');
     }
 
     hideProfilePopup() {
@@ -629,6 +858,22 @@ class ReverbitAuth {
         toast.className = `reverbit-toast reverbit-toast-${type}`;
         toast.textContent = message;
         
+        // Add close button for important messages
+        if (type === 'error' || type === 'warning') {
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = `
+                background: none;
+                border: none;
+                color: white;
+                font-size: 20px;
+                cursor: pointer;
+                margin-left: 10px;
+            `;
+            closeBtn.onclick = () => toast.remove();
+            toast.appendChild(closeBtn);
+        }
+        
         // Add to DOM
         document.body.appendChild(toast);
         
@@ -645,11 +890,14 @@ class ReverbitAuth {
                     toast.parentNode.removeChild(toast);
                 }
             }, 300);
-        }, 3000);
+        }, type === 'error' ? 5000 : 3000);
     }
 
     injectStyles() {
-        if (document.getElementById('reverbit-auth-styles')) return;
+        if (document.getElementById('reverbit-auth-styles')) {
+            console.log('Auth: Styles already injected');
+            return;
+        }
         
         const styles = `
             /* Reverbit Google-style Profile System */
@@ -666,6 +914,7 @@ class ReverbitAuth {
                 flex-shrink: 0;
                 margin: 0 8px;
                 position: relative;
+                z-index: 1000;
             }
             
             .reverbit-profile-avatar:hover {
@@ -949,6 +1198,9 @@ class ReverbitAuth {
                 max-width: 90%;
                 text-align: center;
                 pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             
             .reverbit-toast.show {
@@ -966,6 +1218,11 @@ class ReverbitAuth {
             
             .reverbit-toast-info {
                 background: #1a73e8;
+            }
+            
+            .reverbit-toast-warning {
+                background: #fbbc05;
+                color: #202124;
             }
             
             /* Dark theme support */
@@ -1037,60 +1294,6 @@ class ReverbitAuth {
                 }
             }
             
-            /* Dark theme class support */
-            .dark-theme .reverbit-profile-popup {
-                background: #202124;
-                border-color: #3c4043;
-            }
-            
-            .dark-theme .profile-name {
-                color: #e8eaed;
-            }
-            
-            .dark-theme .profile-email {
-                color: #9aa0a6;
-            }
-            
-            .dark-theme .change-avatar-btn {
-                color: #8ab4f8;
-            }
-            
-            .dark-theme .change-avatar-btn:hover {
-                background-color: #2d2e31;
-            }
-            
-            .dark-theme .profile-divider {
-                background: #3c4043;
-            }
-            
-            .dark-theme .profile-menu-item {
-                color: #e8eaed;
-            }
-            
-            .dark-theme .profile-menu-item:hover {
-                background-color: #2d2e31;
-            }
-            
-            .dark-theme .profile-menu-item:active {
-                background-color: #3c4043;
-            }
-            
-            .dark-theme .profile-menu-icon {
-                color: #9aa0a6;
-            }
-            
-            .dark-theme .profile-footer {
-                border-top-color: #3c4043;
-            }
-            
-            .dark-theme .privacy-link {
-                color: #9aa0a6;
-            }
-            
-            .dark-theme .privacy-link a {
-                color: #8ab4f8;
-            }
-            
             /* Responsive design */
             @media (max-width: 600px) {
                 .reverbit-profile-popup {
@@ -1108,19 +1311,11 @@ class ReverbitAuth {
                 .reverbit-profile-popup.active {
                     transform: translate(-50%, -50%) !important;
                 }
-            }
-            
-            /* Animation for avatar loading */
-            @keyframes avatarPulse {
-                0% { opacity: 0.5; }
-                50% { opacity: 1; }
-                100% { opacity: 0.5; }
-            }
-            
-            .reverbit-profile-avatar.loading .reverbit-avatar-img {
-                animation: avatarPulse 1.5s ease-in-out infinite;
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
+                
+                .profile-header {
+                    flex-direction: column;
+                    text-align: center;
+                }
             }
             
             /* Upload animation */
@@ -1142,24 +1337,56 @@ class ReverbitAuth {
                 animation: spin 1s linear infinite;
                 pointer-events: none;
             }
+            
+            /* Auth header for when no header exists */
+            .reverbit-auth-header {
+                position: fixed !important;
+                top: 0 !important;
+                right: 0 !important;
+                padding: 16px !important;
+                z-index: 1000 !important;
+            }
         `;
         
         const styleEl = document.createElement('style');
         styleEl.id = 'reverbit-auth-styles';
         styleEl.textContent = styles;
         document.head.appendChild(styleEl);
+        
+        console.log('Auth: Styles injected');
     }
 
     async logout() {
         try {
+            console.log('Auth: Logging out...');
+            
+            // Update last active before logging out
+            if (this.user && this.db) {
+                try {
+                    const userRef = this.db.collection('users').doc(this.user.uid);
+                    await userRef.update({
+                        lastActive: new Date().toISOString()
+                    });
+                } catch (updateError) {
+                    console.warn('Failed to update last active:', updateError);
+                }
+            }
+            
             await this.auth.signOut();
+            
+            // Clear all local storage
             localStorage.removeItem('reverbit_user');
+            localStorage.removeItem('reverbit_user_uid');
+            localStorage.removeItem('reverbit_user_email');
+            localStorage.removeItem('reverbit_user_profile');
             
             // Remove UI elements
             this.removeProfileAvatar();
             this.removeProfilePopup();
             
-            // Redirect to home page
+            console.log('Auth: Logout successful');
+            
+            // Redirect to signin page
             setTimeout(() => {
                 window.location.href = 'https://aditya-cmd-max.github.io/signin';
             }, 300);
@@ -1167,12 +1394,16 @@ class ReverbitAuth {
             return true;
         } catch (error) {
             console.error('Logout error:', error);
+            this.showToast('Error signing out. Please try again.', 'error');
             return false;
         }
     }
 
     async trackUsage(appName, minutes = 1) {
-        if (!this.user) return;
+        if (!this.user) {
+            console.warn('Cannot track usage: No user');
+            return;
+        }
         
         try {
             const today = new Date().toISOString().split('T')[0];
@@ -1203,17 +1434,20 @@ class ReverbitAuth {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 
-                if (!lastActive || lastActive.getTime() < today.getTime() - 86400000) {
-                    await userRef.update({
-                        streak: 1,
-                        lastActive: new Date().toISOString()
-                    });
+                let streak = userData.streak || 0;
+                
+                if (!lastActive) {
+                    streak = 1;
+                } else if (lastActive.getTime() < today.getTime() - 86400000) {
+                    streak = 1;
                 } else if (lastActive.getTime() < today.getTime()) {
-                    await userRef.update({
-                        streak: (userData.streak || 0) + 1,
-                        lastActive: new Date().toISOString()
-                    });
+                    streak = (userData.streak || 0) + 1;
                 }
+                
+                await userRef.update({
+                    streak: streak,
+                    lastActive: new Date().toISOString()
+                });
             }
         } catch (error) {
             console.error('Streak update error:', error);
@@ -1258,9 +1492,11 @@ class ReverbitAuth {
             // Reload profile
             await this.loadUserProfile();
             
+            this.showToast('Profile updated successfully!', 'success');
             return true;
         } catch (error) {
             console.error('Error updating user profile:', error);
+            this.showToast('Failed to update profile', 'error');
             return false;
         }
     }
@@ -1276,41 +1512,108 @@ class ReverbitAuth {
     getUserProfile() {
         return this.userProfile;
     }
+
+    // Debug method to get current auth state
+    async getProfileDebugInfo() {
+        return {
+            user: this.user,
+            profile: this.userProfile,
+            isAuthenticated: this.isAuthenticated(),
+            uid: this.user?.uid,
+            dbInitialized: !!this.db,
+            authInitialized: !!this.auth
+        };
+    }
 }
 
 // Create global instance
 window.ReverbitAuth = new ReverbitAuth();
 
-// Auto-initialize
+// Add debug function to window
+window.debugAuth = async function() {
+    console.log('=== AUTH DEBUG INFO ===');
+    const info = await window.ReverbitAuth.getProfileDebugInfo();
+    console.log('Auth state:', info);
+    console.log('Local storage:', {
+        uid: localStorage.getItem('reverbit_user_uid'),
+        email: localStorage.getItem('reverbit_user_email'),
+        user: localStorage.getItem('reverbit_user'),
+        profile: localStorage.getItem('reverbit_user_profile')
+    });
+    console.log('Current URL:', window.location.href);
+    console.log('=== END DEBUG ===');
+    
+    // Try to load profile directly if we have UID
+    if (info.uid && window.ReverbitAuth.db) {
+        try {
+            const userDoc = await window.ReverbitAuth.db.collection('users').doc(info.uid).get();
+            console.log('Direct Firestore load:', userDoc.exists ? 'EXISTS' : 'NOT FOUND');
+            if (userDoc.exists) {
+                console.log('Firestore data:', userDoc.data());
+            }
+        } catch (error) {
+            console.error('Direct Firestore load error:', error);
+        }
+    }
+};
+
+// Add profile link helper
+window.getMyProfileLink = async function() {
+    const link = await window.ReverbitAuth.generateProfileLink();
+    if (link) {
+        return link;
+    }
+    return 'https://aditya-cmd-max.github.io/signin';
+};
+
+// Auto-initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        console.log('Page loaded, initializing auth...');
         await window.ReverbitAuth.init();
         
         const user = window.ReverbitAuth.getUser();
         if (user) {
+            console.log('User found on page load:', user.email);
+            
             // Track usage for current app
             const appName = getCurrentAppName();
             if (appName) {
                 window.ReverbitAuth.trackUsage(appName, 1);
                 
-                setInterval(() => {
+                // Track every 5 minutes if user stays on page
+                const usageInterval = setInterval(() => {
+                    if (!window.ReverbitAuth.isAuthenticated()) {
+                        clearInterval(usageInterval);
+                        return;
+                    }
                     window.ReverbitAuth.trackUsage(appName, 5);
                 }, 5 * 60 * 1000);
+                
+                // Clear interval on page unload
+                window.addEventListener('beforeunload', () => {
+                    clearInterval(usageInterval);
+                });
             }
+        } else {
+            console.log('No user found on page load');
         }
     } catch (error) {
         console.error('Auth initialization failed:', error);
+        window.ReverbitAuth.showToast('Failed to initialize authentication', 'error');
     }
 });
 
+// Helper function to get current app name
 function getCurrentAppName() {
     const pathname = window.location.pathname;
     const title = document.title.toLowerCase();
+    const hostname = window.location.hostname;
     
-    if (pathname.includes('cloverai') || title.includes('clover')) return 'cloverAI';
-    if (pathname.includes('mindscribe') || title.includes('mindscribe')) return 'mindscribe';
-    if (pathname.includes('peo') || title.includes('peo')) return 'peo';
-    if (pathname.includes('reverbit') || title.includes('reverbit')) return 'reverbit';
+    if (pathname.includes('cloverai') || title.includes('clover') || hostname.includes('clover')) return 'cloverAI';
+    if (pathname.includes('mindscribe') || title.includes('mindscribe') || hostname.includes('mindscribe')) return 'mindscribe';
+    if (pathname.includes('peo') || title.includes('peo') || hostname.includes('peo')) return 'peo';
+    if (pathname.includes('reverbit') || title.includes('reverbit') || hostname.includes('reverbit')) return 'reverbit';
     
     return 'other';
 }
@@ -1319,6 +1622,7 @@ function getCurrentAppName() {
 window.viewPublicProfile = async function() {
     if (!window.ReverbitAuth) {
         console.error('Auth system not available');
+        window.ReverbitAuth.showToast('Authentication system not available', 'error');
         return;
     }
     
@@ -1326,51 +1630,9 @@ window.viewPublicProfile = async function() {
     if (link) {
         window.open(link, '_blank');
     } else {
-        // Show toast if user not logged in
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ea4335;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 10000;
-        `;
-        toast.textContent = 'Please sign in first';
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            document.body.removeChild(toast);
-        }, 3000);
+        window.ReverbitAuth.showToast('Please sign in to view your profile', 'info');
     }
 };
 
-// Debug function
-window.debugUserProfile = async function() {
-    console.log('=== DEBUG USER PROFILE ===');
-    
-    if (!window.ReverbitAuth) {
-        console.error('Auth system not available');
-        return;
-    }
-    
-    const user = window.ReverbitAuth.getUser();
-    console.log('Current user:', user);
-    
-    const profile = window.ReverbitAuth.getUserProfile();
-    console.log('User profile:', profile);
-    
-    const username = window.ReverbitAuth.getUserUsername();
-    console.log('User username (internal):', username);
-    
-    if (user) {
-        const profileLink = await window.ReverbitAuth.generateProfileLink();
-        console.log('Profile link:', profileLink);
-    }
-    
-    console.log('=== END DEBUG ===');
-};
+// Make auth instance globally accessible
+window.auth = window.ReverbitAuth;
