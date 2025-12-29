@@ -2428,24 +2428,29 @@ body.menu-open {
             }
         }
 
-        // Mobile menu handling - SIMPLIFIED
         function toggleMobileMenu() {
-            if (window.innerWidth > 768) return;
-            
-            isMobileMenuOpen = !isMobileMenuOpen;
-            
-            if (isMobileMenuOpen) {
-                sidebar.classList.add('mobile-open');
-                hamburgerMenu.classList.add('active');
-                sidebarOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            } else {
-                sidebar.classList.remove('mobile-open');
-                hamburgerMenu.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        }
+    if (window.innerWidth > 768) return;
+    
+    isMobileMenuOpen = !isMobileMenuOpen;
+    
+    if (isMobileMenuOpen) {
+        sidebar.classList.add('mobile-open');
+        hamburgerMenu.classList.add('active');
+        sidebarOverlay.classList.add('active');
+        document.body.classList.add('menu-open');
+        
+        // Temporarily hide profile popup if open
+        hideProfilePopup();
+    } else {
+        sidebar.classList.remove('mobile-open');
+        hamburgerMenu.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    }
+    
+    // Prevent event bubbling
+    return false;
+}
 
         // Profile Popup Functions
         let isProfilePopupVisible = false;
