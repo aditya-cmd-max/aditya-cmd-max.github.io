@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reverbit Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Reverbit - Profile</title>
+    <meta name="description" content="Reverbit Profile - Showcase your achievements and connect with others">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,385 +23,578 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
     <style>
-        /* Material Design 3 Color System */
+        /* Material Design 3 Color System with Enhanced Blue/Green - MATCHING REVERBIT DASHBOARD */
         :root {
+            /* Primary Colors - Blue Theme */
             --md-primary: #1a73e8;
             --md-primary-light: #4285f4;
+            --md-primary-dark: #0d47a1;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #d2e3fc;
+            --md-on-primary-container: #001d3d;
+            
+            /* Secondary Colors - Green Theme */
             --md-secondary: #0d8a72;
             --md-secondary-light: #34a853;
+            --md-secondary-dark: #0a5c42;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #b8f2e6;
+            --md-on-secondary-container: #00201a;
+            
+            /* Surface Colors */
             --md-surface: #FFFFFF;
             --md-on-surface: #202124;
             --md-surface-variant: #F8F9FA;
             --md-on-surface-variant: #5f6368;
+            
+            /* Background Colors */
             --md-background: #FFFFFF;
+            --md-on-background: #202124;
+            
+            /* Outline Colors */
             --md-outline: #DADCE0;
+            --md-outline-variant: #E8EAED;
+            
+            /* Shadow Elevations */
             --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
             --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
-            --md-elevation-3: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --md-elevation-5: 0 8px 24px rgba(0, 0, 0, 0.15);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-slow: all 0.5s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
             --md-radius-small: 8px;
             --md-radius-medium: 12px;
             --md-radius-large: 16px;
+            --md-radius-extra-large: 28px;
             --md-radius-pill: 9999px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            --md-spacing-xxl: 48px;
+            
+            /* Typography */
             --md-font-logo: 'Playfair Display', serif;
             --md-font-heading: 'Inter', sans-serif;
             --md-font-body: 'Lora', serif;
+            
+            /* Gradient Colors */
             --md-gradient-1: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            --md-gradient-2: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            --md-gradient-3: linear-gradient(135deg, #1a73e8, #34a853);
         }
 
+        /* Dark Theme */
         .dark-theme {
             --md-surface: #202124;
             --md-on-surface: #FFFFFF;
             --md-surface-variant: #303134;
             --md-on-surface-variant: #E8EAED;
             --md-background: #202124;
+            --md-on-background: #FFFFFF;
+            --md-primary: #8ab4f8;
+            --md-primary-light: #aecbfa;
+            --md-primary-container: #174ea6;
+            --md-on-primary-container: #E8EAED;
+            --md-secondary: #81c995;
+            --md-secondary-light: #a8dab5;
+            --md-secondary-container: #0d8a72;
+            --md-on-secondary-container: #E8EAED;
             --md-outline: #3C4043;
+            --md-outline-variant: #5F6368;
+            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body {
             font-family: var(--md-font-body);
-            background: var(--md-background);
+            background-color: var(--md-background);
             color: var(--md-on-surface);
             line-height: 1.6;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+            position: relative;
             min-height: 100vh;
-            transition: background-color 0.3s ease;
         }
 
-        .container {
+        /* Improved Touch Targets */
+        button, 
+        a, 
+        .nav-item, 
+        .btn,
+        .profile-avatar-button {
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+
+        /* Container */
+        .profile-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: var(--md-spacing-lg);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Header */
-        .main-header {
-            padding: 20px 0;
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--md-outline);
-        }
-
-        .header-content {
+        .profile-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            justify-content: space-between;
+            padding: var(--md-spacing-xl) 0;
+            margin-bottom: var(--md-spacing-xl);
+            border-bottom: 1px solid var(--md-outline);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--md-spacing-sm);
             text-decoration: none;
             color: var(--md-on-surface);
+            transition: var(--md-transition);
+        }
+
+        .logo:hover {
+            transform: translateX(-4px);
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--md-gradient-1);
             border-radius: var(--md-radius-medium);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.25rem;
+            color: var(--md-on-primary);
+            font-size: 1.5rem;
+            box-shadow: var(--md-elevation-2);
+            transition: var(--md-transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg) scale(1.1);
         }
 
         .logo-text {
             font-family: var(--md-font-logo);
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .header-actions {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: var(--md-spacing-md);
         }
 
-        .auth-btn {
-            padding: 10px 20px;
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
             border-radius: var(--md-radius-pill);
             border: none;
             font-family: var(--md-font-heading);
+            font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--md-transition);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            min-height: 44px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .auth-btn-primary {
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-filled {
             background: var(--md-gradient-1);
-            color: white;
-        }
-
-        .auth-btn-primary:hover {
-            transform: translateY(-2px);
+            color: var(--md-on-primary);
             box-shadow: var(--md-elevation-2);
         }
 
-        .auth-btn-secondary {
-            background: var(--md-surface-variant);
-            color: var(--md-on-surface);
+        .btn-filled:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .btn-outlined {
+            background: transparent;
+            color: var(--md-primary);
             border: 1px solid var(--md-outline);
         }
 
-        .auth-btn-secondary:hover {
-            background: var(--md-primary);
-            color: white;
+        .btn-outlined:hover {
+            background: var(--md-primary-container);
             border-color: var(--md-primary);
+            transform: translateY(-2px);
         }
 
-        /* Profile Header */
-        .profile-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 40px 20px;
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            box-shadow: var(--md-elevation-1);
+        /* Instagram Style Profile Layout */
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xl);
+        }
+
+        .profile-info-section {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        @media (max-width: 768px) {
+            .profile-info-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* Profile Avatar */
+        .profile-avatar-container {
             position: relative;
         }
 
         .profile-avatar-large {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 20px;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
             position: relative;
+            cursor: pointer;
         }
 
-        .profile-avatar-large img {
+        @media (max-width: 768px) {
+            .profile-avatar-large {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        .profile-avatar-large-img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--md-surface);
-            box-shadow: var(--md-elevation-3);
+            box-shadow: var(--md-elevation-4);
+            transition: var(--md-transition);
             background: var(--md-gradient-1);
         }
 
-        .profile-name {
-            font-family: var(--md-font-logo);
+        .profile-avatar-large:hover .profile-avatar-large-img {
+            transform: scale(1.05);
+            border-color: var(--md-primary);
+        }
+
+        .avatar-upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: var(--md-transition);
+            cursor: pointer;
+        }
+
+        .profile-avatar-large:hover .avatar-upload-overlay {
+            opacity: 1;
+        }
+
+        /* Profile Details */
+        .profile-details {
+            flex: 1;
+        }
+
+        .profile-username-section {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-lg);
+            margin-bottom: var(--md-spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .profile-username {
+            font-family: var(--md-font-heading);
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 16px;
+            color: var(--md-on-surface);
             background: var(--md-gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-username {
+                font-size: 2rem;
+            }
+        }
+
+        .profile-bio {
+            color: var(--md-on-surface);
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: var(--md-spacing-lg);
+            max-width: 600px;
         }
 
         .profile-email {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--md-spacing-sm);
             color: var(--md-on-surface-variant);
             font-size: 1.1rem;
-            margin-bottom: 16px;
-            padding: 8px 16px;
+            margin-bottom: var(--md-spacing-lg);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
             background: var(--md-surface-variant);
             border-radius: var(--md-radius-pill);
         }
 
-        .profile-bio {
-            max-width: 600px;
-            margin: 0 auto;
-            color: var(--md-on-surface);
-            font-size: 1.125rem;
-            line-height: 1.8;
-        }
-
-        /* Profile Stats */
+        /* Instagram Style Stats */
         .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
+            display: flex;
+            gap: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-xl);
+            padding: var(--md-spacing-lg);
             background: var(--md-surface);
-            padding: 24px;
             border-radius: var(--md-radius-large);
-            text-align: center;
+            border: 1px solid var(--md-outline);
             box-shadow: var(--md-elevation-1);
-            transition: transform 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--md-elevation-2);
+        @media (max-width: 768px) {
+            .profile-stats {
+                flex-wrap: wrap;
+                gap: var(--md-spacing-lg);
+                justify-content: center;
+            }
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 100px;
         }
 
         .stat-number {
             font-family: var(--md-font-logo);
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            background: var(--md-gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            color: var(--md-primary);
+            margin-bottom: var(--md-spacing-xs);
         }
 
         .stat-label {
             color: var(--md-on-surface-variant);
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
-        /* Owner Controls */
-        .owner-controls {
-            margin-top: 40px;
-            padding: 24px;
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            box-shadow: var(--md-elevation-1);
-        }
-
-        .control-buttons {
+        /* Instagram Style Content Tabs */
+        .profile-tabs {
             display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
+            border-bottom: 1px solid var(--md-outline);
+            margin-bottom: var(--md-spacing-xl);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .btn {
-            padding: 12px 24px;
-            border-radius: var(--md-radius-pill);
+        .profile-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: var(--md-spacing-lg) var(--md-spacing-md);
+            background: transparent;
             border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--md-on-surface-variant);
             font-family: var(--md-font-heading);
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--md-gradient-1);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--md-elevation-2);
-        }
-
-        .btn-secondary {
-            background: var(--md-surface-variant);
-            color: var(--md-on-surface);
-            border: 1px solid var(--md-outline);
-        }
-
-        .btn-secondary:hover {
-            background: var(--md-primary);
-            color: white;
-            border-color: var(--md-primary);
-        }
-
-        /* Share Section */
-        .share-section {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--md-outline);
-        }
-
-        .profile-url {
-            background: var(--md-surface-variant);
-            padding: 12px 16px;
-            border-radius: var(--md-radius-medium);
-            margin-top: 12px;
-            font-family: monospace;
-            word-break: break-all;
-            color: var(--md-on-surface);
-        }
-
-        /* Apps Grid */
-        .apps-section {
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--md-on-surface);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .app-card {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: 24px;
-            text-decoration: none;
-            color: inherit;
-            box-shadow: var(--md-elevation-1);
-            transition: all 0.3s ease;
-            border: 1px solid var(--md-outline);
-        }
-
-        .app-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--md-elevation-3);
-            border-color: var(--md-primary);
-        }
-
-        .app-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-medium);
+            transition: var(--md-transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 16px;
+            gap: var(--md-spacing-sm);
+            white-space: nowrap;
         }
 
-        .app-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.25rem;
+        .profile-tab:hover {
+            color: var(--md-primary);
+            background: var(--md-surface-variant);
+        }
+
+        .profile-tab.active {
+            color: var(--md-primary);
+            border-bottom-color: var(--md-primary);
             font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--md-on-surface);
         }
 
-        .app-description {
-            color: var(--md-on-surface-variant);
-            font-size: 0.95rem;
-            line-height: 1.6;
+        /* Instagram Style Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-xl);
         }
 
-        /* Visitor Message */
-        .visitor-message {
-            text-align: center;
-            padding: 40px;
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            margin-top: 40px;
-            box-shadow: var(--md-elevation-1);
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--md-spacing-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .content-item {
+            aspect-ratio: 1;
+            border-radius: var(--md-radius-medium);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .content-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--md-elevation-4);
+        }
+
+        .content-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--md-gradient-1);
+            opacity: 0;
+            transition: var(--md-transition);
+            z-index: 1;
+        }
+
+        .content-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .content-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--md-transition);
+        }
+
+        .content-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--md-spacing-md);
+            color: white;
+            opacity: 0;
+            transition: var(--md-transition);
+            z-index: 2;
+        }
+
+        .content-item:hover .content-overlay {
+            opacity: 1;
+        }
+
+        .content-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .content-stats {
+            display: flex;
+            gap: var(--md-spacing-md);
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .content-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* Loading */
@@ -413,16 +610,22 @@
             align-items: center;
             justify-content: center;
             z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
 
         .loader {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border: 4px solid var(--md-surface-variant);
             border-top: 4px solid var(--md-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: var(--md-spacing-lg);
         }
 
         @keyframes spin {
@@ -430,10 +633,86 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: var(--md-spacing-lg);
+            right: var(--md-spacing-lg);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            box-shadow: var(--md-elevation-3);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--md-primary);
+            font-size: 1.25rem;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--md-spacing-xs) var(--md-spacing-sm);
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-radius: var(--md-radius-pill);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-left: var(--md-spacing-sm);
+        }
+
+        /* Avatar Error Handling */
+        .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            background: var(--md-gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-weight: 700;
+            font-size: 3rem;
+            text-transform: uppercase;
+        }
+
+        /* Profile Controls */
+        .profile-controls {
+            display: flex;
+            gap: var(--md-spacing-md);
+            margin-top: var(--md-spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        /* Visitor Message */
+        .visitor-message {
+            text-align: center;
+            padding: var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            box-shadow: var(--md-elevation-1);
+            margin: var(--md-spacing-xl) 0;
+        }
+
         /* Not Found */
         .not-found {
             text-align: center;
-            padding: 80px 20px;
+            padding: var(--md-spacing-xxl) var(--md-spacing-lg);
             max-width: 600px;
             margin: 0 auto;
         }
@@ -441,81 +720,279 @@
         .not-found h1 {
             font-family: var(--md-font-logo);
             font-size: 3rem;
-            margin-bottom: 20px;
+            margin-bottom: var(--md-spacing-lg);
             background: var(--md-gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            background: var(--md-surface-variant);
+        }
+
+        .theme-toggle:hover {
+            background: var(--md-primary-container);
+            transform: rotate(15deg);
         }
 
         /* Footer */
-        .footer {
-            margin-top: auto;
-            padding: 40px 0;
+        .profile-footer {
+            margin-top: var(--md-spacing-xl);
+            padding: var(--md-spacing-xl) 0;
             text-align: center;
             color: var(--md-on-surface-variant);
             border-top: 1px solid var(--md-outline);
         }
 
-        /* Toast Notification */
-        #toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-            padding: 16px 24px;
-            border-radius: var(--md-radius-medium);
-            box-shadow: var(--md-elevation-3);
+        .profile-footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--md-spacing-lg);
+            margin-top: var(--md-spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .profile-footer-links a {
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            transition: var(--md-transition);
+        }
+
+        .profile-footer-links a:hover {
+            color: var(--md-primary);
+        }
+
+        /* Modal */
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
             z-index: 1000;
-            max-width: 400px;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        #toast.show {
-            transform: translateY(0);
-            opacity: 1;
-            display: block;
+        .modal-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--md-outline);
+            position: relative;
+            animation: slideInUp 0.3s ease-out;
         }
 
-        /* Responsive */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+            .profile-container {
+                padding: var(--md-spacing-md);
             }
-
-            .profile-name {
-                font-size: 2rem;
-            }
-
-            .profile-email {
-                font-size: 1rem;
-                padding: 6px 12px;
-            }
-
-            .control-buttons {
+            
+            .profile-header {
                 flex-direction: column;
+                gap: var(--md-spacing-lg);
+                text-align: center;
+                padding: var(--md-spacing-lg) 0;
             }
-
-            .btn {
+            
+            .header-actions {
                 width: 100%;
                 justify-content: center;
             }
+            
+            .btn {
+                min-height: 44px;
+                padding: var(--md-spacing-sm) var(--md-spacing-lg);
+                font-size: 0.95rem;
+            }
+            
+            .profile-controls {
+                justify-content: center;
+            }
+            
+            .profile-tabs {
+                justify-content: flex-start;
+            }
+        }
 
+        @media (max-width: 480px) {
             .profile-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
                 flex-direction: column;
-                text-align: center;
+                align-items: center;
             }
+            
+            .stat-item {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        /* Instagram Style Activity Feed */
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md);
+            background: var(--md-surface);
+            border-radius: var(--md-radius-medium);
+            border: 1px solid var(--md-outline);
+            transition: var(--md-transition);
+        }
+
+        .activity-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--md-elevation-2);
+            border-color: var(--md-primary);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--md-gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-family: var(--md-font-heading);
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--md-on-surface-variant);
+        }
+
+        /* Achievement Badges */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--md-spacing-md);
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .achievement-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--md-spacing-md);
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            transition: var(--md-transition);
+            text-align: center;
+        }
+
+        .achievement-badge:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-2);
+            border-color: var(--md-primary);
+        }
+
+        .achievement-badge.unlocked {
+            background: var(--md-gradient-1);
+            border-color: transparent;
+        }
+
+        .achievement-badge.unlocked .badge-icon {
+            background: white;
+            color: var(--md-primary);
+        }
+
+        .achievement-badge.unlocked .achievement-title {
+            color: white;
+        }
+
+        .badge-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--md-surface-variant);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-surface-variant);
+            font-size: 1.5rem;
+            margin-bottom: var(--md-spacing-sm);
+            transition: var(--md-transition);
+        }
+
+        .achievement-title {
+            font-family: var(--md-font-heading);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        /* Share Profile Button */
+        .share-profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            background: var(--md-gradient-1);
+            color: var(--md-on-primary);
+            border: none;
+            border-radius: var(--md-radius-medium);
+            cursor: pointer;
+            transition: var(--md-transition);
+            font-family: var(--md-font-heading);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .share-profile-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--md-elevation-2);
         }
     </style>
 </head>
@@ -523,24 +1000,22 @@
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="loader"></div>
-        <p id="loadingText">Loading profile...</p>
+        <p style="color: var(--md-on-surface-variant);">Loading profile...</p>
     </div>
 
-    <!-- Main Content -->
-    <div class="container" style="display: none;" id="mainContent">
-        <!-- Main Header -->
-        <header class="main-header">
-            <div class="header-content">
-                <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-infinity"></i>
-                    </div>
-                    <span class="logo-text">Reverbit</span>
-                </a>
-                
-                <div class="header-actions" id="headerActions">
-                    <!-- Will be populated by JavaScript -->
+    <!-- Profile Container -->
+    <div class="profile-container" id="mainContent" style="display: none;">
+        <!-- Header -->
+        <header class="profile-header">
+            <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-infinity"></i>
                 </div>
+                <span class="logo-text">Reverbit</span>
+            </a>
+            
+            <div class="header-actions" id="headerActions">
+                <!-- Will be populated by JavaScript -->
             </div>
         </header>
 
@@ -552,13 +1027,15 @@
         <!-- Not Found Message -->
         <div class="not-found" id="notFound" style="display: none;">
             <h1>Profile Not Found</h1>
-            <p style="margin-bottom: 20px;">The profile you're looking for doesn't exist or is set to private.</p>
-            <div class="control-buttons" style="justify-content: center;">
-                <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-primary">
+            <p style="margin-bottom: var(--md-spacing-lg); color: var(--md-on-surface-variant);">
+                The profile you're looking for doesn't exist or is set to private.
+            </p>
+            <div class="profile-controls" style="justify-content: center;">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-filled">
                     <i class="fas fa-home"></i>
                     Go Home
                 </a>
-                <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-secondary">
+                <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
                     <i class="fas fa-user"></i>
                     Your Dashboard
                 </a>
@@ -566,598 +1043,814 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer">
+        <footer class="profile-footer">
             <p>© 2024 Reverbit. All rights reserved.</p>
-            <p style="margin-top: 8px;">
-                <a href="https://aditya-cmd-max.github.io/reverbit/privacy" style="color: var(--md-primary); margin: 0 8px;">Privacy</a>
-                •
-                <a href="https://aditya-cmd-max.github.io/reverbit/terms" style="color: var(--md-primary); margin: 0 8px;">Terms</a>
-                •
-                <a href="https://aditya-cmd-max.github.io/reverbit/contact" style="color: var(--md-primary); margin: 0 8px;">Contact</a>
-            </p>
+            <div class="profile-footer-links">
+                <a href="https://aditya-cmd-max.github.io/reverbit/privacy">Privacy</a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/terms">Terms</a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/contact">Contact</a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/about">About</a>
+            </div>
         </footer>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast">
-        <span id="toastMessage"></span>
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Profile link copied!</span>
     </div>
 
-<script>
-    // Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-        authDomain: "reverbit11.firebaseapp.com",
-        projectId: "reverbit11",
-        storageBucket: "reverbit11.firebasestorage.app",
-        messagingSenderId: "607495314412",
-        appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-        measurementId: "G-DMWMRM1M47"
-    };
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Share Profile</h2>
+            <p style="margin-bottom: var(--md-spacing-lg); color: var(--md-on-surface);">Copy and share this link with others:</p>
+            <div class="profile-url" style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg); font-family: monospace; word-break: break-all;" id="shareUrl"></div>
+            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
+                <button class="btn btn-outlined" onclick="closeModal('shareModal')">Cancel</button>
+                <button class="btn btn-filled" onclick="copyShareLink()">Copy Link</button>
+            </div>
+        </div>
+    </div>
 
-    // DOM Elements
-    const loadingScreen = document.getElementById('loading');
-    const loadingText = document.getElementById('loadingText');
-    const mainContent = document.getElementById('mainContent');
-    const profileContent = document.getElementById('profileContent');
-    const notFound = document.getElementById('notFound');
-    const headerActions = document.getElementById('headerActions');
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
 
-    // Global variables
-    let currentUser = null;
-    let profileOwner = null;
-    let profileData = null;
-    let isOwner = false;
-    let auth, db;
+        // DOM Elements
+        const loadingScreen = document.getElementById('loading');
+        const mainContent = document.getElementById('mainContent');
+        const profileContent = document.getElementById('profileContent');
+        const notFound = document.getElementById('notFound');
+        const headerActions = document.getElementById('headerActions');
 
-    // Initialize app
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            console.log('Profile Page: Initializing...');
-            
-            // Initialize Firebase
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            
-            auth = firebase.auth();
-            db = firebase.firestore();
+        // Global variables
+        let currentUser = null;
+        let profileOwner = null;
+        let profileData = null;
+        let isOwner = false;
+        let auth, db;
+        let currentTab = 'posts';
 
-            // Listen for auth state
-            auth.onAuthStateChanged(async (user) => {
-                currentUser = user;
-                updateHeaderActions(user);
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                console.log('Profile Page: Initializing...');
                 
-                // Check URL for user ID parameter
-                const urlParams = new URLSearchParams(window.location.search);
-                const userId = urlParams.get('id');
-                
-                if (userId) {
-                    // Viewing specific user's profile
-                    await loadProfileByUserId(userId);
-                } else if (user) {
-                    // Viewing own profile
-                    await loadOwnProfile(user);
-                } else {
-                    // No user specified and not logged in
-                    showVisitorLanding();
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
                 }
-            });
+                
+                auth = firebase.auth();
+                db = firebase.firestore();
 
-        } catch (error) {
-            console.error('Initialization error:', error);
-            showToast('Error loading profile');
-            loadingScreen.style.display = 'none';
-            mainContent.style.display = 'block';
+                // Load theme preference
+                loadThemePreference();
+
+                // Listen for auth state
+                auth.onAuthStateChanged(async (user) => {
+                    currentUser = user;
+                    updateHeaderActions(user);
+                    
+                    // Check URL for user ID parameter
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const userId = urlParams.get('id');
+                    
+                    if (userId) {
+                        // Viewing specific user's profile
+                        await loadProfileByUserId(userId);
+                    } else if (user) {
+                        // Viewing own profile
+                        await loadOwnProfile(user);
+                    } else {
+                        // No user specified and not logged in
+                        showVisitorLanding();
+                    }
+                });
+
+                // Setup theme toggle
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('#themeToggle')) {
+                        toggleTheme();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('Error loading profile');
+                loadingScreen.classList.add('hidden');
+                mainContent.style.display = 'block';
+            }
+        });
+
+        // Theme functions
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+            } else {
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+            }
         }
-    });
 
-    // Show visitor landing page when no user and not logged in
-    function showVisitorLanding() {
-        loadingScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-        
-        profileContent.innerHTML = `
-            <div class="visitor-message">
-                <h1 style="margin-bottom: 20px; font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 24px; font-size: 1.1rem;">
-                    Share your unique profile link: <strong>https://aditya-cmd-max.github.io/profile/?id=YOUR_USER_ID</strong>
-                </p>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 30px;">
-                    Sign in to view your profile or visit a profile using the link above.
-                </p>
-                <div class="control-buttons" style="justify-content: center; gap: 20px;">
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Show visitor landing page when no user and not logged in
+        function showVisitorLanding() {
+            loadingScreen.classList.add('hidden');
+            mainContent.style.display = 'block';
+            
+            profileContent.innerHTML = `
+                <div class="visitor-message">
+                    <h1 style="margin-bottom: var(--md-spacing-lg); font-family: var(--md-font-logo);">Welcome to Reverbit Profiles</h1>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg); font-size: 1.1rem;">
+                        Explore amazing creators and share your own journey on Reverbit.
+                    </p>
+                    <div class="profile-controls" style="justify-content: center; gap: var(--md-spacing-lg);">
+                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-filled">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-outlined">
+                            <i class="fas fa-user-plus"></i>
+                            Sign Up
+                        </a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-outlined">
+                            <i class="fas fa-home"></i>
+                            Go Home
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update header actions based on auth state
+        function updateHeaderActions(user) {
+            headerActions.innerHTML = '';
+            
+            const themeButton = `
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
+                </button>
+            `;
+            
+            if (user) {
+                // User is logged in
+                headerActions.innerHTML = `
+                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </a>
+                    ${themeButton}
+                    <button class="btn btn-outlined" onclick="signOut()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                `;
+            } else {
+                // User is not logged in
+                headerActions.innerHTML = `
+                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
                         <i class="fas fa-sign-in-alt"></i>
                         Sign In
                     </a>
-                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">
+                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
                         <i class="fas fa-user-plus"></i>
                         Sign Up
                     </a>
-                    <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-secondary">
-                        <i class="fas fa-home"></i>
-                        Go Home
-                    </a>
-                </div>
-            </div>
-        `;
-    }
-
-    // Update header actions based on auth state
-    function updateHeaderActions(user) {
-        headerActions.innerHTML = '';
-        
-        if (user) {
-            // User is logged in
-            headerActions.innerHTML = `
-                <a href="https://aditya-cmd-max.github.io/dashboard" class="auth-btn auth-btn-secondary">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="auth-btn auth-btn-secondary">
-                    <i class="fas fa-user"></i>
-                    My Profile
-                </a>
-                <button class="auth-btn auth-btn-primary" onclick="signOut()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Sign Out
-                </button>
-            `;
-        } else {
-            // User is not logged in
-            headerActions.innerHTML = `
-                <a href="https://aditya-cmd-max.github.io/signin" class="auth-btn auth-btn-secondary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Sign In
-                </a>
-                <a href="https://aditya-cmd-max.github.io/signup" class="auth-btn auth-btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Sign Up
-                </a>
-            `;
-        }
-    }
-
-    // Load own profile
-    async function loadOwnProfile(user) {
-        try {
-            isOwner = true;
-            profileOwner = user.uid;
-            loadingText.textContent = 'Loading your profile...';
-            
-            const userDoc = await db.collection('users').doc(user.uid).get();
-            
-            if (userDoc.exists) {
-                profileData = userDoc.data();
-                profileData.uid = user.uid;
-                console.log('Loaded user data:', profileData);
-                
-                // Update URL with user ID for sharing
-                const newUrl = `${window.location.origin}/profile/?id=${user.uid}`;
-                window.history.replaceState({}, '', newUrl);
-                
-                await displayProfile(profileData, true);
-                loadingScreen.style.display = 'none';
-                mainContent.style.display = 'block';
-            } else {
-                console.log('User document not found');
-                showNotFound();
+                    ${themeButton}
+                `;
             }
-            
-        } catch (error) {
-            console.error('Error loading own profile:', error);
-            showToast('Error loading profile');
-            showNotFound();
         }
-    }
 
-    // Load profile by user ID
-    async function loadProfileByUserId(userId) {
-        console.log('Loading profile for user ID:', userId);
-        
-        try {
-            loadingText.textContent = 'Loading profile...';
-            
-            const userDoc = await db.collection('users').doc(userId).get();
-            
-            if (userDoc.exists) {
-                profileData = userDoc.data();
-                profileData.uid = userId;
-                console.log('Found user data:', profileData);
+        // Load own profile
+        async function loadOwnProfile(user) {
+            try {
+                isOwner = true;
+                profileOwner = user.uid;
                 
-                profileOwner = userId;
+                const userDoc = await db.collection('users').doc(user.uid).get();
                 
-                // Check if profile is public
-                if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
-                    console.log('Profile is private and user is not owner');
+                if (userDoc.exists) {
+                    profileData = userDoc.data();
+                    profileData.uid = user.uid;
+                    console.log('Loaded user data:', profileData);
+                    
+                    // Update URL with user ID for sharing
+                    const newUrl = `${window.location.origin}/profile/?id=${user.uid}`;
+                    window.history.replaceState({}, '', newUrl);
+                    
+                    await displayProfile(profileData, true);
+                    loadingScreen.classList.add('hidden');
+                    mainContent.style.display = 'block';
+                } else {
+                    console.log('User document not found');
                     showNotFound();
-                    return;
                 }
                 
-                // Check if current user is the owner
-                isOwner = currentUser && currentUser.uid === profileOwner;
-                console.log('Is owner?', isOwner);
-                
-                await displayProfile(profileData, isOwner);
-                
-                // Update page title
-                const displayName = profileData.displayName || 'User';
-                document.title = `${displayName} - Reverbit Profile`;
-                
-                loadingScreen.style.display = 'none';
-                mainContent.style.display = 'block';
-                
-            } else {
-                console.log('User document not found');
+            } catch (error) {
+                console.error('Error loading own profile:', error);
+                showToast('Error loading profile');
                 showNotFound();
             }
+        }
+
+        // Load profile by user ID
+        async function loadProfileByUserId(userId) {
+            console.log('Loading profile for user ID:', userId);
             
-        } catch (error) {
-            console.error('Error loading profile by user ID:', error);
-            showNotFound();
-        }
-    }
-
-    // Display profile
-    async function displayProfile(data, isOwnerView) {
-        console.log('Displaying profile for:', data.displayName, 'isOwner:', isOwnerView);
-        
-        // Create profile HTML
-        const profileHTML = `
-            <div class="profile-header">
-                <div class="profile-avatar-large">
-                    <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" onerror="handleAvatarError(this)">
-                </div>
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
                 
-                <h1 class="profile-name">${data.displayName || 'User'}</h1>
-                
-                <div class="profile-email">
-                    <i class="fas fa-envelope"></i>
-                    ${data.email || 'No email available'}
-                </div>
-                
-                <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
-                
-                ${!isOwnerView && currentUser ? `
-                    <div style="margin-top: 20px;">
-                        <a href="https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}" class="btn btn-secondary">
-                            <i class="fas fa-user"></i>
-                            View Your Profile
-                        </a>
-                    </div>
-                ` : ''}
-            </div>
-
-            ${isOwnerView ? createOwnerControls(data) : ''}
-
-            ${createProfileStats(data, isOwnerView)}
-
-            ${data.showApps !== false ? createAppsSection() : ''}
-
-            ${!isOwnerView && !currentUser ? createVisitorMessage() : ''}
-        `;
-        
-        profileContent.innerHTML = profileHTML;
-        
-        // Initialize interactive elements
-        if (isOwnerView) {
-            initializeOwnerControls(data);
-            loadUsageData();
-        }
-    }
-
-    // Create owner controls HTML
-    function createOwnerControls(data) {
-        const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${data.uid}`;
-        
-        return `
-            <div class="owner-controls" id="ownerControls">
-                <h2 class="section-title">
-                    <i class="fas fa-user-cog"></i>
-                    Profile Settings
-                </h2>
-                <div class="control-buttons">
-                    <button class="btn btn-primary" onclick="editProfile()">
-                        <i class="fas fa-edit"></i>
-                        Edit Profile
-                    </button>
-                    <button class="btn btn-secondary" onclick="toggleProfileVisibility()" id="visibilityBtn">
-                        <i class="fas fa-globe"></i>
-                        ${data.isPublic ? 'Make Profile Private' : 'Make Profile Public'}
-                    </button>
-                </div>
-                
-                <!-- Share Section -->
-                <div class="share-section">
-                    <div style="margin-bottom: 15px;">
-                        <strong>Your Profile URL:</strong>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.95rem; margin-top: 5px;">
-                            Share this link with others!
-                        </p>
-                    </div>
-                    <div class="profile-url">${profileUrl}</div>
-                    <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
-                        <i class="fas fa-copy"></i>
-                        Copy Profile Link
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    // Create profile stats HTML
-    function createProfileStats(data, isOwnerView) {
-        return `
-            <div class="profile-stats" id="profileStats">
-                <div class="stat-card">
-                    <div class="stat-number" id="streakStat">${data.streak || 0}</div>
-                    <div class="stat-label">Day Streak</div>
-                </div>
-                ${isOwnerView ? `
-                    <div class="stat-card">
-                        <div class="stat-number" id="appsStat">0</div>
-                        <div class="stat-label">Apps Used</div>
-                    </div>
-                ` : ''}
-                <div class="stat-card">
-                    <div class="stat-number" id="memberStat">
-                        ${calculateMemberDays(data.createdAt)}
-                    </div>
-                    <div class="stat-label">Days as Member</div>
-                </div>
-                ${isOwnerView ? `
-                    <div class="stat-card">
-                        <div class="stat-number" id="lastActiveStat">${formatLastActive(data.lastLogin || data.updatedAt)}</div>
-                        <div class="stat-label">Last Active</div>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }
-
-    // Create apps section HTML
-    function createAppsSection() {
-        return `
-            <div class="apps-section">
-                <h2 class="section-title">
-                    <i class="fas fa-th-large"></i>
-                    Favorite Apps
-                </h2>
-                <div class="apps-grid" id="appsGrid">
-                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
-                        <div class="app-icon">
-                            <i class="fas fa-leaf"></i>
-                        </div>
-                        <h3 class="app-title">Clover AI</h3>
-                        <p class="app-description">Intelligent tutoring system with personalized learning</p>
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
-                        <div class="app-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <h3 class="app-title">MindScribe</h3>
-                        <p class="app-description">AI-powered note-taking and organization</p>
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
-                        <div class="app-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3 class="app-title">Peo</h3>
-                        <p class="app-description">Natural text-to-speech with emotion</p>
-                    </a>
-                </div>
-            </div>
-        `;
-    }
-
-    // Create visitor message HTML
-    function createVisitorMessage() {
-        return `
-            <div class="visitor-message">
-                <h2 style="margin-bottom: 16px;">Sign in to see more</h2>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
-                    Create your own Reverbit account to explore all features!
-                </p>
-                <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Sign In / Sign Up
-                </button>
-            </div>
-        `;
-    }
-
-    // Get avatar URL
-    function getAvatarUrl(data) {
-        if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
-            return data.photoURL + '?t=' + Date.now();
-        } else {
-            const displayName = data.displayName || 'User';
-            return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
-        }
-    }
-
-    // Calculate member days
-    function calculateMemberDays(createdAt) {
-        if (!createdAt) return '0';
-        const joinDate = new Date(createdAt);
-        const today = new Date();
-        const diffTime = Math.abs(today - joinDate);
-        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
-    // Format last active time
-    function formatLastActive(dateString) {
-        if (!dateString) return 'Never';
-        
-        const lastActive = new Date(dateString);
-        const today = new Date();
-        const diffMs = today - lastActive;
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        
-        if (diffDays === 0) {
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-            if (diffHours === 0) {
-                const diffMinutes = Math.floor(diffMs / (1000 * 60));
-                return diffMinutes <= 1 ? 'Just now' : `${diffMinutes} min ago`;
-            }
-            return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
-        } else if (diffDays === 1) {
-            return 'Yesterday';
-        } else if (diffDays < 7) {
-            return `${diffDays} days ago`;
-        } else if (diffDays < 30) {
-            const weeks = Math.floor(diffDays / 7);
-            return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-        } else {
-            return lastActive.toLocaleDateString();
-        }
-    }
-
-    // Initialize owner controls
-    function initializeOwnerControls(data) {
-        // Update visibility button
-        const visibilityBtn = document.getElementById('visibilityBtn');
-        if (visibilityBtn) {
-            if (data.isPublic) {
-                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
-                visibilityBtn.classList.remove('btn-secondary');
-                visibilityBtn.classList.add('btn-primary');
-            } else {
-                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
-                visibilityBtn.classList.remove('btn-primary');
-                visibilityBtn.classList.add('btn-secondary');
-            }
-        }
-    }
-
-    // Load usage data
-    async function loadUsageData() {
-        try {
-            if (!profileOwner) return;
-            
-            const usageDoc = await db.collection('usage').doc(profileOwner).get();
-            
-            if (usageDoc.exists) {
-                const usageData = usageDoc.data();
-                
-                // Calculate apps used
-                if (document.getElementById('appsStat')) {
-                    const apps = ['cloverAI', 'mindscribe', 'peo'];
-                    const appsUsed = apps.filter(app => usageData[app] > 0).length;
-                    document.getElementById('appsStat').textContent = appsUsed;
+                if (userDoc.exists) {
+                    profileData = userDoc.data();
+                    profileData.uid = userId;
+                    console.log('Found user data:', profileData);
+                    
+                    profileOwner = userId;
+                    
+                    // Check if profile is public
+                    if (!profileData.isPublic && (!currentUser || currentUser.uid !== profileOwner)) {
+                        console.log('Profile is private and user is not owner');
+                        showNotFound();
+                        return;
+                    }
+                    
+                    // Check if current user is the owner
+                    isOwner = currentUser && currentUser.uid === profileOwner;
+                    console.log('Is owner?', isOwner);
+                    
+                    await displayProfile(profileData, isOwner);
+                    
+                    // Update page title
+                    const displayName = profileData.displayName || 'User';
+                    document.title = `${displayName} - Reverbit Profile`;
+                    
+                    loadingScreen.classList.add('hidden');
+                    mainContent.style.display = 'block';
+                    
+                } else {
+                    console.log('User document not found');
+                    showNotFound();
                 }
+                
+            } catch (error) {
+                console.error('Error loading profile by user ID:', error);
+                showNotFound();
             }
-        } catch (error) {
-            console.error('Error loading usage data:', error);
         }
-    }
 
-    // Edit profile (redirect to dashboard)
-    function editProfile() {
-        window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
-    }
-
-    // Toggle profile visibility
-    async function toggleProfileVisibility() {
-        if (!isOwner || !profileData) return;
-        
-        try {
-            const newVisibility = !profileData.isPublic;
+        // Display profile with Instagram-style layout
+        async function displayProfile(data, isOwnerView) {
+            console.log('Displaying profile for:', data.displayName, 'isOwner:', isOwnerView);
             
-            // Update Firestore
-            await db.collection('users').doc(profileOwner).update({
-                isPublic: newVisibility,
-                updatedAt: new Date().toISOString()
+            // Calculate member days
+            const memberDays = calculateMemberDays(data.createdAt);
+            
+            // Create profile HTML
+            const profileHTML = `
+                <div class="profile-main">
+                    <div class="profile-info-section">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar-large">
+                                <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" class="profile-avatar-large-img" onerror="handleAvatarError(this)">
+                                ${isOwnerView ? `
+                                    <div class="avatar-upload-overlay" onclick="editProfile()">
+                                        <i class="fas fa-camera" style="font-size: 2rem;"></i>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="profile-details">
+                            <div class="profile-username-section">
+                                <h1 class="profile-username">${data.displayName || 'User'}</h1>
+                                ${isOwnerView ? `
+                                    <button class="btn btn-outlined" onclick="editProfile()">
+                                        <i class="fas fa-edit"></i>
+                                        Edit Profile
+                                    </button>
+                                    <button class="btn btn-filled" onclick="shareProfile()">
+                                        <i class="fas fa-share"></i>
+                                        Share
+                                    </button>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="streakStat">${data.streak || 0}</span>
+                                    <span class="stat-label">Day Streak</span>
+                                </div>
+                                ${isOwnerView ? `
+                                    <div class="stat-item">
+                                        <span class="stat-number" id="appsStat">0</span>
+                                        <span class="stat-label">Apps Used</span>
+                                    </div>
+                                ` : ''}
+                                <div class="stat-item">
+                                    <span class="stat-number" id="memberStat">${memberDays}</span>
+                                    <span class="stat-label">Days as Member</span>
+                                </div>
+                                ${isOwnerView ? `
+                                    <div class="stat-item">
+                                        <span class="stat-number" id="lastActiveStat">${formatLastActive(data.lastLogin || data.updatedAt)}</span>
+                                        <span class="stat-label">Last Active</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="profile-email">
+                                <i class="fas fa-envelope"></i>
+                                ${data.email || 'No email available'}
+                            </div>
+                            
+                            <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
+                            
+                            ${!isOwnerView && currentUser ? `
+                                <div class="profile-controls">
+                                    <button class="btn btn-filled" onclick="window.location.href='https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}'">
+                                        <i class="fas fa-user"></i>
+                                        View Your Profile
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Instagram Style Tabs -->
+                    <div class="profile-tabs">
+                        <button class="profile-tab ${currentTab === 'posts' ? 'active' : ''}" onclick="switchTab('posts')">
+                            <i class="fas fa-th-large"></i>
+                            Posts
+                        </button>
+                        <button class="profile-tab ${currentTab === 'activity' ? 'active' : ''}" onclick="switchTab('activity')">
+                            <i class="fas fa-history"></i>
+                            Activity
+                        </button>
+                        <button class="profile-tab ${currentTab === 'achievements' ? 'active' : ''}" onclick="switchTab('achievements')">
+                            <i class="fas fa-trophy"></i>
+                            Achievements
+                        </button>
+                        ${isOwnerView ? `
+                            <button class="profile-tab ${currentTab === 'settings' ? 'active' : ''}" onclick="switchTab('settings')">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div id="tabContent">
+                        ${getTabContent(currentTab, data, isOwnerView)}
+                    </div>
+                </div>
+            `;
+            
+            profileContent.innerHTML = profileHTML;
+            
+            // Initialize interactive elements
+            if (isOwnerView) {
+                loadUsageData();
+            }
+        }
+
+        // Get tab content based on selected tab
+        function getTabContent(tab, data, isOwnerView) {
+            switch(tab) {
+                case 'posts':
+                    return createPostsGrid();
+                case 'activity':
+                    return createActivityFeed(data);
+                case 'achievements':
+                    return createAchievementsGrid(data);
+                case 'settings':
+                    return isOwnerView ? createSettingsPanel(data) : '';
+                default:
+                    return createPostsGrid();
+            }
+        }
+
+        // Switch between tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.profile-tab').forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.includes(tab.charAt(0).toUpperCase() + tab.slice(1))) {
+                    button.classList.add('active');
+                }
             });
             
-            // Update local data
-            profileData.isPublic = newVisibility;
+            // Update content
+            const tabContent = document.getElementById('tabContent');
+            if (tabContent) {
+                tabContent.innerHTML = getTabContent(tab, profileData, isOwner);
+            }
+        }
+
+        // Create Instagram-style posts grid
+        function createPostsGrid() {
+            // Sample posts data - in a real app, this would come from a database
+            const posts = [
+                { id: 1, type: 'app', title: 'Clover AI Session', stats: { likes: 24, time: '45m' }, color: '#34a853' },
+                { id: 2, type: 'note', title: 'MindScribe Notes', stats: { likes: 18, time: '2h' }, color: '#4285f4' },
+                { id: 3, type: 'audio', title: 'Peo Recording', stats: { likes: 32, time: '1h' }, color: '#ea4335' },
+                { id: 4, type: 'achievement', title: '7 Day Streak!', stats: { likes: 42, time: '1d' }, color: '#fbbc05' },
+                { id: 5, type: 'app', title: 'Study Session', stats: { likes: 15, time: '3h' }, color: '#1a73e8' },
+                { id: 6, type: 'milestone', title: '100 Hours Total', stats: { likes: 56, time: '2d' }, color: '#0d8a72' }
+            ];
             
-            // Update UI
-            const visibilityBtn = document.getElementById('visibilityBtn');
-            if (newVisibility) {
-                visibilityBtn.innerHTML = '<i class="fas fa-lock"></i> Make Profile Private';
-                visibilityBtn.classList.remove('btn-secondary');
-                visibilityBtn.classList.add('btn-primary');
+            return `
+                <div class="content-grid" id="postsGrid">
+                    ${posts.map(post => `
+                        <div class="content-item" onclick="viewPost(${post.id})" style="background: ${post.color}20;">
+                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: ${post.color}; font-size: 3rem;">
+                                <i class="fas fa-${getPostIcon(post.type)}"></i>
+                            </div>
+                            <div class="content-overlay">
+                                <div class="content-title">${post.title}</div>
+                                <div class="content-stats">
+                                    <div class="content-stat">
+                                        <i class="fas fa-heart"></i>
+                                        ${post.stats.likes}
+                                    </div>
+                                    <div class="content-stat">
+                                        <i class="fas fa-clock"></i>
+                                        ${post.stats.time}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${posts.length === 0 ? `
+                    <div class="visitor-message">
+                        <p style="color: var(--md-on-surface-variant);">No posts yet. Start creating to build your profile!</p>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // Get icon for post type
+        function getPostIcon(type) {
+            const icons = {
+                'app': 'leaf',
+                'note': 'sticky-note',
+                'audio': 'music',
+                'achievement': 'trophy',
+                'milestone': 'flag'
+            };
+            return icons[type] || 'file';
+        }
+
+        // Create activity feed
+        function createActivityFeed(data) {
+            const activities = [
+                { id: 1, type: 'login', title: 'Logged into Reverbit', time: 'Just now' },
+                { id: 2, type: 'app_used', title: 'Used Clover AI for 45 minutes', time: '2 hours ago' },
+                { id: 3, type: 'achievement', title: 'Earned "7-Day Streak" badge', time: 'Yesterday' },
+                { id: 4, type: 'profile', title: 'Updated profile picture', time: '2 days ago' },
+                { id: 5, type: 'share', title: 'Shared profile with friends', time: '3 days ago' }
+            ];
+            
+            return `
+                <div class="activity-feed">
+                    ${activities.map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-${getActivityIcon(activity.type)}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">${activity.title}</div>
+                                <div class="activity-time">${activity.time}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${activities.length === 0 ? `
+                    <div class="visitor-message">
+                        <p style="color: var(--md-on-surface-variant);">No recent activity.</p>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // Get icon for activity type
+        function getActivityIcon(type) {
+            const icons = {
+                'login': 'sign-in-alt',
+                'app_used': 'play',
+                'achievement': 'trophy',
+                'profile': 'user-edit',
+                'share': 'share'
+            };
+            return icons[type] || 'bell';
+        }
+
+        // Create achievements grid
+        function createAchievementsGrid(data) {
+            const achievements = [
+                { id: 1, title: 'First Login', icon: 'sign-in-alt', unlocked: true },
+                { id: 2, title: '7-Day Streak', icon: 'fire', unlocked: data.streak >= 7 },
+                { id: 3, title: 'App Explorer', icon: 'compass', unlocked: false },
+                { id: 4, title: 'Profile Complete', icon: 'check-circle', unlocked: data.bio && data.country },
+                { id: 5, title: 'Social Butterfly', icon: 'users', unlocked: false },
+                { id: 6, title: 'Power User', icon: 'bolt', unlocked: false }
+            ];
+            
+            return `
+                <div class="achievements-grid">
+                    ${achievements.map(achievement => `
+                        <div class="achievement-badge ${achievement.unlocked ? 'unlocked' : ''}">
+                            <div class="badge-icon">
+                                <i class="fas fa-${achievement.icon}"></i>
+                            </div>
+                            <div class="achievement-title">${achievement.title}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="visitor-message" style="margin-top: var(--md-spacing-lg);">
+                    <p style="color: var(--md-on-surface-variant);">
+                        ${achievements.filter(a => a.unlocked).length} of ${achievements.length} achievements unlocked
+                    </p>
+                </div>
+            `;
+        }
+
+        // Create settings panel (owner only)
+        function createSettingsPanel(data) {
+            return `
+                <div class="owner-controls" style="background: var(--md-surface); border-radius: var(--md-radius-large); padding: var(--md-spacing-xl); border: 1px solid var(--md-outline);">
+                    <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Profile Settings</h2>
+                    
+                    <div style="margin-bottom: var(--md-spacing-xl);">
+                        <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">Profile Visibility</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
+                            Control who can see your profile
+                        </p>
+                        <button class="btn ${data.isPublic ? 'btn-filled' : 'btn-outlined'}" onclick="toggleProfileVisibility()" style="margin-bottom: var(--md-spacing-md);">
+                            <i class="fas fa-${data.isPublic ? 'lock' : 'globe'}"></i>
+                            ${data.isPublic ? 'Make Profile Private' : 'Make Profile Public'}
+                        </button>
+                        <p style="font-size: 0.875rem; color: var(--md-on-surface-variant);">
+                            ${data.isPublic ? 'Your profile is currently public' : 'Your profile is currently private'}
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom: var(--md-spacing-xl);">
+                        <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">Share Profile</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
+                            Share your profile with others
+                        </p>
+                        <button class="btn btn-filled" onclick="shareProfile()" style="width: 100%; margin-bottom: var(--md-spacing-md);">
+                            <i class="fas fa-share"></i>
+                            Share Profile Link
+                        </button>
+                        <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium); font-family: monospace; word-break: break-all; font-size: 0.875rem;">
+                            https://aditya-cmd-max.github.io/profile/?id=${data.uid}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">Danger Zone</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
+                            Permanent actions
+                        </p>
+                        <button class="btn btn-outlined" onclick="deleteProfile()" style="color: #ea4335; border-color: #ea4335;">
+                            <i class="fas fa-trash"></i>
+                            Delete Profile
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get avatar URL
+        function getAvatarUrl(data) {
+            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
+                return data.photoURL + '?t=' + Date.now();
             } else {
-                visibilityBtn.innerHTML = '<i class="fas fa-globe"></i> Make Profile Public';
-                visibilityBtn.classList.remove('btn-primary');
-                visibilityBtn.classList.add('btn-secondary');
+                const displayName = data.displayName || 'User';
+                return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=400`;
+            }
+        }
+
+        // Calculate member days
+        function calculateMemberDays(createdAt) {
+            if (!createdAt) return '0';
+            const joinDate = new Date(createdAt);
+            const today = new Date();
+            const diffTime = Math.abs(today - joinDate);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Format last active time
+        function formatLastActive(dateString) {
+            if (!dateString) return 'Never';
+            
+            const lastActive = new Date(dateString);
+            const today = new Date();
+            const diffMs = today - lastActive;
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) {
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                if (diffHours === 0) {
+                    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+                    return diffMinutes <= 1 ? 'Just now' : `${diffMinutes}m`;
+                }
+                return diffHours === 1 ? '1h' : `${diffHours}h`;
+            } else if (diffDays === 1) {
+                return '1d';
+            } else if (diffDays < 7) {
+                return `${diffDays}d`;
+            } else if (diffDays < 30) {
+                const weeks = Math.floor(diffDays / 7);
+                return `${weeks}w`;
+            } else {
+                return lastActive.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+        }
+
+        // Load usage data
+        async function loadUsageData() {
+            try {
+                if (!profileOwner) return;
+                
+                const usageDoc = await db.collection('usage').doc(profileOwner).get();
+                
+                if (usageDoc.exists) {
+                    const usageData = usageDoc.data();
+                    
+                    // Calculate apps used
+                    if (document.getElementById('appsStat')) {
+                        const apps = ['cloverAI', 'mindscribe', 'peo'];
+                        const appsUsed = apps.filter(app => usageData[app] > 0).length;
+                        document.getElementById('appsStat').textContent = appsUsed;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading usage data:', error);
+            }
+        }
+
+        // Edit profile (redirect to dashboard)
+        function editProfile() {
+            window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
+        }
+
+        // Share profile
+        function shareProfile() {
+            if (!profileData || !profileData.uid) {
+                showToast('Profile not loaded');
+                return;
             }
             
-            showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
+            const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${profileData.uid}`;
+            document.getElementById('shareUrl').textContent = profileUrl;
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+
+        // Copy share link
+        async function copyShareLink() {
+            const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${profileData.uid}`;
             
-        } catch (error) {
-            console.error('Error toggling visibility:', error);
-            showToast('Error updating profile visibility');
+            try {
+                await navigator.clipboard.writeText(profileUrl);
+                showToast('Profile link copied to clipboard!');
+                closeModal('shareModal');
+            } catch (error) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = profileUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Profile link copied!');
+                closeModal('shareModal');
+            }
         }
-    }
 
-    // Copy profile link
-    async function copyProfileLink() {
-        if (!profileData || !profileData.uid) {
-            showToast('Profile not loaded');
-            return;
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
-        
-        const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${profileData.uid}`;
-        
-        try {
-            await navigator.clipboard.writeText(profileUrl);
-            showToast('Profile link copied to clipboard!');
-        } catch (error) {
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = profileUrl;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            showToast('Profile link copied!');
+
+        // Toggle profile visibility
+        async function toggleProfileVisibility() {
+            if (!isOwner || !profileData) return;
+            
+            try {
+                const newVisibility = !profileData.isPublic;
+                
+                // Update Firestore
+                await db.collection('users').doc(profileOwner).update({
+                    isPublic: newVisibility,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Update local data
+                profileData.isPublic = newVisibility;
+                
+                // Refresh settings panel
+                if (currentTab === 'settings') {
+                    switchTab('settings');
+                }
+                
+                showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
+                
+            } catch (error) {
+                console.error('Error toggling visibility:', error);
+                showToast('Error updating profile visibility');
+            }
         }
-    }
 
-    // Sign out
-    async function signOut() {
-        try {
-            await auth.signOut();
-            window.location.href = 'https://aditya-cmd-max.github.io/signin';
-        } catch (error) {
-            console.error('Error signing out:', error);
-            showToast('Error signing out');
+        // View post (placeholder function)
+        function viewPost(postId) {
+            showToast(`Viewing post ${postId} - This would open a detailed view in a real app`);
         }
-    }
 
-    // Show not found
-    function showNotFound() {
-        profileContent.style.display = 'none';
-        notFound.style.display = 'block';
-        loadingScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-    }
+        // Delete profile (placeholder function)
+        function deleteProfile() {
+            if (confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
+                showToast('Profile deletion would be processed here in a real app');
+            }
+        }
 
-    // Show toast notification
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-        
-        toastMessage.textContent = message;
-        toast.classList.add('show');
-        
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
+        // Sign out
+        async function signOut() {
+            try {
+                await auth.signOut();
+                window.location.href = 'https://aditya-cmd-max.github.io/signin';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showToast('Error signing out');
+            }
+        }
 
-    // Avatar error handler
-    function handleAvatarError(img) {
-        const displayName = profileData?.displayName || 'User';
-        const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-        img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a73e8&color=fff&bold=true`;
-    }
+        // Show not found
+        function showNotFound() {
+            profileContent.style.display = 'none';
+            notFound.style.display = 'block';
+            loadingScreen.classList.add('hidden');
+            mainContent.style.display = 'block';
+        }
 
-    console.log('Profile page JavaScript loaded successfully');
-</script>
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Avatar error handler
+        function handleAvatarError(img) {
+            const displayName = profileData?.displayName || 'User';
+            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            // Replace with fallback
+            img.style.display = 'none';
+            img.parentNode.innerHTML = `
+                <div class="avatar-fallback">
+                    ${initials}
+                </div>
+            `;
+        }
+
+        console.log('Profile page JavaScript loaded successfully');
+    </script>
 </body>
 </html>
