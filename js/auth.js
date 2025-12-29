@@ -704,6 +704,61 @@ class ReverbitAuth {
         }
     }
 
+    // ================= VERIFICATION HELPERS =================
+    getVerificationLevel() {
+        if (!this.userProfile?.verified) return 'none';
+        
+        // Check for premium verification
+        if (this.userProfile.verifiedLevel === 'premium' || this.userProfile.premiumVerified) {
+            return 'premium';
+        }
+        
+        // Check for admin verification
+        if (this.userProfile.verifiedBy === 'admin' || this.userProfile.verifiedBy === 'adityajha1104@gmail.com') {
+            return 'basic';
+        }
+        
+        return this.userProfile.verifiedLevel || 'basic';
+    }
+
+    isVerified() {
+        return this.getVerificationLevel() !== 'none';
+    }
+
+    getVerificationBadgeHTML(level = null) {
+        const verificationLevel = level || this.getVerificationLevel();
+        
+        if (verificationLevel === 'none') return '';
+        
+        const isPremium = verificationLevel === 'premium';
+        const icon = isPremium ? 'crown' : 'check-circle';
+        const text = isPremium ? 'Premium Verified' : 'Verified';
+        const colorClass = isPremium ? 'premium' : '';
+        
+        return `
+            <div class="verified-badge-popup ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
+                <i class="fas fa-${icon}"></i>
+                ${text}
+            </div>
+        `;
+    }
+
+    getAvatarBadgeHTML() {
+        const verificationLevel = this.getVerificationLevel();
+        
+        if (verificationLevel === 'none') return '';
+        
+        const isPremium = verificationLevel === 'premium';
+        const icon = isPremium ? 'crown' : 'check';
+        const colorClass = isPremium ? 'premium' : '';
+        
+        return `
+            <div class="avatar-verified-badge ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
+                <i class="fas fa-${icon}"></i>
+            </div>
+        `;
+    }
+
     // ================= PROFILE AVATAR UI =================
     addOrUpdateProfileAvatar() {
         console.log('Auth: Managing profile avatar UI...');
@@ -808,11 +863,25 @@ class ReverbitAuth {
         this.profileAvatar.setAttribute('role', 'button');
         this.profileAvatar.setAttribute('tabindex', '0');
         
+        // Create avatar image container
+        const avatarContainer = document.createElement('div');
+        avatarContainer.className = 'reverbit-avatar-container';
+        avatarContainer.style.cssText = `
+            position: relative;
+            width: 100%;
+            height: 100%;
+        `;
+        
         // Create avatar image
         const avatarImg = document.createElement('img');
         avatarImg.className = 'reverbit-avatar-img';
         avatarImg.alt = 'Profile avatar';
         avatarImg.loading = 'lazy';
+        
+        // Create verification badge (if verified)
+        if (this.isVerified()) {
+            avatarContainer.innerHTML += this.getAvatarBadgeHTML();
+        }
         
         // Create upload overlay
         const uploadOverlay = document.createElement('div');
@@ -833,7 +902,8 @@ class ReverbitAuth {
         loadingSpinner.style.display = 'none';
         
         // Assemble avatar
-        this.profileAvatar.appendChild(avatarImg);
+        avatarContainer.appendChild(avatarImg);
+        this.profileAvatar.appendChild(avatarContainer);
         this.profileAvatar.appendChild(uploadOverlay);
         this.profileAvatar.appendChild(loadingSpinner);
         
@@ -952,7 +1022,26 @@ class ReverbitAuth {
         // Show loading state
         this.profileAvatar.classList.add('loading');
         
+        // Update verification badge
+        this.updateAvatarVerificationBadge();
+        
         console.log('Auth: Avatar updated');
+    }
+
+    updateAvatarVerificationBadge() {
+        const avatarContainer = this.profileAvatar.querySelector('.reverbit-avatar-container');
+        if (!avatarContainer) return;
+        
+        // Remove existing badge
+        const existingBadge = avatarContainer.querySelector('.avatar-verified-badge');
+        if (existingBadge) {
+            existingBadge.remove();
+        }
+        
+        // Add new badge if verified
+        if (this.isVerified()) {
+            avatarContainer.innerHTML += this.getAvatarBadgeHTML();
+        }
     }
 
     showAvatarContextMenu(event) {
@@ -1105,25 +1194,44 @@ class ReverbitAuth {
         const photoURL = this.userProfile.photoURL;
         const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
         
+        // Verification status
+        const verificationLevel = this.getVerificationLevel();
+        const isVerified = verificationLevel !== 'none';
+        const verificationBadge = isVerified ? this.getVerificationBadgeHTML() : '';
+        
         // Streak display
         const streak = this.userProfile.streak || 0;
         const streakDisplay = streak > 0 ? `<span class="streak-badge">${streak} day${streak !== 1 ? 's' : ''}</span>` : '';
+        
+        // Verified status text
+        const verifiedStatus = isVerified ? 
+            (verificationLevel === 'premium' ? 
+                '<span class="verified-status premium">Premium Verified</span>' : 
+                '<span class="verified-status">Verified</span>') : 
+            '';
         
         return `
             <div class="profile-popup-container">
                 <div class="profile-header">
                     <div class="profile-avatar-large" id="profile-avatar-large" role="button" tabindex="0" aria-label="Upload profile picture">
-                        <img src="${photoURL}" alt="${displayName}" 
-                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff&bold=true'">
+                        <div class="avatar-container">
+                            <img src="${photoURL}" alt="${displayName}" 
+                                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff&bold=true'">
+                            ${this.getAvatarBadgeHTML()}
+                            ${streakDisplay}
+                        </div>
                         <button class="avatar-upload-btn" id="avatar-upload-btn" title="Upload new profile picture">
                             <i class="fas fa-camera"></i>
                         </button>
-                        ${streakDisplay}
                     </div>
                     <div class="profile-info">
-                        <div class="profile-name">${displayName}</div>
+                        <div class="profile-name-container">
+                            <div class="profile-name">${displayName}</div>
+                            ${verificationBadge}
+                        </div>
                         <div class="profile-email">${email}</div>
                         <div class="profile-meta">
+                            ${verifiedStatus}
                             <span class="meta-item">
                                 <i class="fas fa-calendar"></i>
                                 Joined ${this.formatDate(this.userProfile.createdAt)}
@@ -1158,6 +1266,16 @@ class ReverbitAuth {
                         <span class="profile-menu-text">My Profile</span>
                         <span class="menu-arrow">›</span>
                     </a>
+                    
+                    ${isVerified ? `
+                    <a href="${profileUrl}#verification" target="_blank" class="profile-menu-item" id="profile-verification">
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </span>
+                        <span class="profile-menu-text">Verification</span>
+                        <span class="menu-arrow">›</span>
+                    </a>
+                    ` : ''}
                     
                     <button class="profile-menu-item" id="settings-btn">
                         <span class="profile-menu-icon">
@@ -1273,103 +1391,103 @@ class ReverbitAuth {
         }
     }
 
-   showProfilePopup() {
-    if (!this.profilePopup || !this.profileAvatar) {
-        console.error('Auth: Cannot show popup - missing elements');
-        return;
-    }
-    
-    // Update content
-    this.profilePopup.innerHTML = this.getPopupHTML();
-    this.attachPopupEventListeners();
-    
-    // Force a reflow to get accurate popup dimensions
-    this.profilePopup.style.display = 'block';
-    this.profilePopup.style.visibility = 'hidden';
-    this.profilePopup.style.opacity = '0';
-    
-    // Get dimensions
-    const avatarRect = this.profileAvatar.getBoundingClientRect();
-    const popupRect = this.profilePopup.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    
-    // Default position: below and aligned to left of avatar
-    let top = avatarRect.bottom + 8;
-    let left = avatarRect.left;
-    
-    // Calculate available space
-    const spaceBelow = viewportHeight - avatarRect.bottom - 16;
-    const spaceAbove = avatarRect.top - 16;
-    const spaceRight = viewportWidth - avatarRect.right - 16;
-    const spaceLeft = avatarRect.left - 16;
-    
-    console.log('Positioning debug:', {
-        avatarRect,
-        popupRect,
-        viewportWidth,
-        viewportHeight,
-        spaceBelow,
-        spaceAbove,
-        spaceRight,
-        spaceLeft
-    });
-    
-    // ===== FIXED POSITIONING LOGIC =====
-    
-    // 1. Check if popup would go off the right edge
-    if (left + popupRect.width > viewportWidth) {
-        // Try to position from the right edge of the avatar
-        left = avatarRect.right - popupRect.width;
+    showProfilePopup() {
+        if (!this.profilePopup || !this.profileAvatar) {
+            console.error('Auth: Cannot show popup - missing elements');
+            return;
+        }
         
-        // If that still goes off left edge, position at right edge of viewport
+        // Update content
+        this.profilePopup.innerHTML = this.getPopupHTML();
+        this.attachPopupEventListeners();
+        
+        // Force a reflow to get accurate popup dimensions
+        this.profilePopup.style.display = 'block';
+        this.profilePopup.style.visibility = 'hidden';
+        this.profilePopup.style.opacity = '0';
+        
+        // Get dimensions
+        const avatarRect = this.profileAvatar.getBoundingClientRect();
+        const popupRect = this.profilePopup.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Default position: below and aligned to left of avatar
+        let top = avatarRect.bottom + 8;
+        let left = avatarRect.left;
+        
+        // Calculate available space
+        const spaceBelow = viewportHeight - avatarRect.bottom - 16;
+        const spaceAbove = avatarRect.top - 16;
+        const spaceRight = viewportWidth - avatarRect.right - 16;
+        const spaceLeft = avatarRect.left - 16;
+        
+        console.log('Positioning debug:', {
+            avatarRect,
+            popupRect,
+            viewportWidth,
+            viewportHeight,
+            spaceBelow,
+            spaceAbove,
+            spaceRight,
+            spaceLeft
+        });
+        
+        // ===== FIXED POSITIONING LOGIC =====
+        
+        // 1. Check if popup would go off the right edge
+        if (left + popupRect.width > viewportWidth) {
+            // Try to position from the right edge of the avatar
+            left = avatarRect.right - popupRect.width;
+            
+            // If that still goes off left edge, position at right edge of viewport
+            if (left < 16) {
+                left = viewportWidth - popupRect.width - 16;
+            }
+        }
+        
+        // 2. Check if popup would go off the left edge
         if (left < 16) {
-            left = viewportWidth - popupRect.width - 16;
+            left = 16;
         }
-    }
-    
-    // 2. Check if popup would go off the left edge
-    if (left < 16) {
-        left = 16;
-    }
-    
-    // 3. Vertical positioning - check if enough space below
-    if (spaceBelow < popupRect.height) {
-        // Not enough space below, try above
-        if (spaceAbove >= popupRect.height) {
-            top = avatarRect.top - popupRect.height - 8;
-        } else {
-            // Not enough space above either, position at bottom of viewport
-            top = viewportHeight - popupRect.height - 16;
-        }
-    }
-    
-    // 4. Ensure final position is within bounds
-    left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
-    top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
-    
-    console.log('Final position:', { top, left });
-    
-    // Apply position
-    this.profilePopup.style.top = `${top}px`;
-    this.profilePopup.style.left = `${left}px`;
-    this.profilePopup.style.visibility = 'visible';
-    
-    // Animate in
-    setTimeout(() => {
-        this.profilePopup.style.opacity = '1';
-        this.profilePopup.style.transform = 'scale(1)';
         
-        // Focus first interactive element for accessibility
-        const firstButton = this.profilePopup.querySelector('button, a');
-        if (firstButton) firstButton.focus();
-    }, 10);
-    
-    // Add backdrop
-    this.addPopupBackdrop();
-    
-    console.log('Auth: Profile popup shown at', { top, left });
-}
+        // 3. Vertical positioning - check if enough space below
+        if (spaceBelow < popupRect.height) {
+            // Not enough space below, try above
+            if (spaceAbove >= popupRect.height) {
+                top = avatarRect.top - popupRect.height - 8;
+            } else {
+                // Not enough space above either, position at bottom of viewport
+                top = viewportHeight - popupRect.height - 16;
+            }
+        }
+        
+        // 4. Ensure final position is within bounds
+        left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
+        top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
+        
+        console.log('Final position:', { top, left });
+        
+        // Apply position
+        this.profilePopup.style.top = `${top}px`;
+        this.profilePopup.style.left = `${left}px`;
+        this.profilePopup.style.visibility = 'visible';
+        
+        // Animate in
+        setTimeout(() => {
+            this.profilePopup.style.opacity = '1';
+            this.profilePopup.style.transform = 'scale(1)';
+            
+            // Focus first interactive element for accessibility
+            const firstButton = this.profilePopup.querySelector('button, a');
+            if (firstButton) firstButton.focus();
+        }, 10);
+        
+        // Add backdrop
+        this.addPopupBackdrop();
+        
+        console.log('Auth: Profile popup shown at', { top, left });
+    }
 
     hideProfilePopup() {
         if (!this.profilePopup) return;
@@ -2121,6 +2239,12 @@ class ReverbitAuth {
                 pointer-events: none;
             }
             
+            .reverbit-avatar-container {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            
             .reverbit-avatar-img {
                 width: 100%;
                 height: 100%;
@@ -2129,6 +2253,46 @@ class ReverbitAuth {
                 display: block;
                 background: linear-gradient(135deg, #f5f5f5, #e8eaed);
                 transition: opacity 0.3s ease;
+            }
+            
+            /* Avatar Verification Badge */
+            .avatar-verified-badge {
+                position: absolute;
+                bottom: -2px;
+                right: -2px;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #1a73e8, #0d8a72);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+                z-index: 2;
+                font-size: 8px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                animation: verified-pulse 2s infinite;
+            }
+            
+            .dark-theme .avatar-verified-badge {
+                border-color: #202124;
+            }
+            
+            .avatar-verified-badge.premium {
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #000;
+            }
+            
+            @keyframes verified-pulse {
+                0%, 100% { 
+                    opacity: 0.9;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                }
+                50% { 
+                    opacity: 1;
+                    box-shadow: 0 0 12px rgba(26, 115, 232, 0.4);
+                }
             }
             
             .reverbit-avatar-upload-overlay {
@@ -2225,11 +2389,17 @@ class ReverbitAuth {
             }
             
             .profile-avatar-large {
+                position: relative;
                 width: 80px;
                 height: 80px;
+                flex-shrink: 0;
+            }
+            
+            .profile-avatar-large .avatar-container {
+                width: 100%;
+                height: 100%;
                 border-radius: 50%;
                 overflow: hidden;
-                flex-shrink: 0;
                 border: 4px solid #f5f5f5;
                 background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
                 padding: 4px;
@@ -2273,6 +2443,7 @@ class ReverbitAuth {
                 transition: all 0.3s ease;
                 padding: 0;
                 font-size: 12px;
+                z-index: 3;
             }
             
             .streak-badge {
@@ -2286,7 +2457,7 @@ class ReverbitAuth {
                 padding: 3px 6px;
                 border-radius: 10px;
                 border: 2px solid white;
-                z-index: 1;
+                z-index: 2;
             }
             
             .profile-info {
@@ -2294,15 +2465,49 @@ class ReverbitAuth {
                 min-width: 0;
             }
             
+            .profile-name-container {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-bottom: 4px;
+            }
+            
             .profile-name {
                 font-size: 18px;
                 font-weight: 600;
                 color: #202124;
                 line-height: 1.4;
-                margin-bottom: 4px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+            
+            /* Popup Verification Badge */
+            .verified-badge-popup {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: linear-gradient(135deg, #1a73e8, #0d8a72);
+                color: white;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: 600;
+                box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
+                animation: verified-pulse 2s infinite;
+                white-space: nowrap;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .verified-badge-popup i {
+                font-size: 9px;
+            }
+            
+            .verified-badge-popup.premium {
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #000;
+                box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
             }
             
             .profile-email {
@@ -2322,6 +2527,24 @@ class ReverbitAuth {
                 margin-bottom: 12px;
                 font-size: 12px;
                 color: #5f6368;
+            }
+            
+            .verified-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                color: #0d8a72;
+                font-weight: 600;
+                font-size: 11px;
+                background: rgba(13, 138, 114, 0.1);
+                padding: 2px 6px;
+                border-radius: 8px;
+                margin-bottom: 4px;
+            }
+            
+            .verified-status.premium {
+                color: #FFA500;
+                background: rgba(255, 215, 0, 0.1);
             }
             
             .meta-item {
@@ -2561,7 +2784,7 @@ class ReverbitAuth {
                 color: #8ab4f8;
             }
             
-            .dark-theme .profile-avatar-large {
+            .dark-theme .profile-avatar-large .avatar-container {
                 border-color: #303134;
             }
             
