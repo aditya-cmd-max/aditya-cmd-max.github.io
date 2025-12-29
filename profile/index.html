@@ -282,7 +282,7 @@
             transform: translateY(-2px);
         }
 
-        /* Instagram Style Profile Layout */
+        /* Profile Layout */
         .profile-main {
             display: flex;
             flex-direction: column;
@@ -411,7 +411,7 @@
             border-radius: var(--md-radius-pill);
         }
 
-        /* Instagram Style Stats */
+        /* Profile Stats */
         .profile-stats {
             display: flex;
             gap: var(--md-spacing-xl);
@@ -453,148 +453,12 @@
             font-weight: 500;
         }
 
-        /* Instagram Style Content Tabs */
-        .profile-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--md-outline);
-            margin-bottom: var(--md-spacing-xl);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .profile-tab {
-            flex: 1;
-            min-width: 120px;
-            padding: var(--md-spacing-lg) var(--md-spacing-md);
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--md-on-surface-variant);
-            font-family: var(--md-font-heading);
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--md-spacing-sm);
-            white-space: nowrap;
-        }
-
-        .profile-tab:hover {
-            color: var(--md-primary);
-            background: var(--md-surface-variant);
-        }
-
-        .profile-tab.active {
-            color: var(--md-primary);
-            border-bottom-color: var(--md-primary);
-            font-weight: 600;
-        }
-
-        /* Instagram Style Content Grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--md-spacing-md);
-            margin-bottom: var(--md-spacing-xl);
-        }
-
-        @media (max-width: 768px) {
-            .content-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--md-spacing-sm);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .content-item {
-            aspect-ratio: 1;
-            border-radius: var(--md-radius-medium);
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: var(--md-transition);
-        }
-
-        .content-item:hover {
-            transform: scale(1.02);
-            box-shadow: var(--md-elevation-4);
-        }
-
-        .content-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--md-gradient-1);
-            opacity: 0;
-            transition: var(--md-transition);
-            z-index: 1;
-        }
-
-        .content-item:hover::before {
-            opacity: 0.1;
-        }
-
-        .content-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--md-transition);
-        }
-
-        .content-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .content-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: var(--md-spacing-md);
-            color: white;
-            opacity: 0;
-            transition: var(--md-transition);
-            z-index: 2;
-        }
-
-        .content-item:hover .content-overlay {
-            opacity: 1;
-        }
-
-        .content-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: var(--md-spacing-xs);
-        }
-
-        .content-stats {
+        /* Profile Controls */
+        .profile-controls {
             display: flex;
             gap: var(--md-spacing-md);
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .content-stat {
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            margin-top: var(--md-spacing-lg);
+            flex-wrap: wrap;
         }
 
         /* Loading */
@@ -688,14 +552,6 @@
             font-weight: 700;
             font-size: 3rem;
             text-transform: uppercase;
-        }
-
-        /* Profile Controls */
-        .profile-controls {
-            display: flex;
-            gap: var(--md-spacing-md);
-            margin-top: var(--md-spacing-lg);
-            flex-wrap: wrap;
         }
 
         /* Visitor Message */
@@ -842,10 +698,6 @@
             .profile-controls {
                 justify-content: center;
             }
-            
-            .profile-tabs {
-                justify-content: flex-start;
-            }
         }
 
         @media (max-width: 480px) {
@@ -860,139 +712,100 @@
             }
         }
 
-        /* Instagram Style Activity Feed */
-        .activity-feed {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-md);
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--md-spacing-md);
-            padding: var(--md-spacing-md);
-            background: var(--md-surface);
-            border-radius: var(--md-radius-medium);
-            border: 1px solid var(--md-outline);
-            transition: var(--md-transition);
-        }
-
-        .activity-item:hover {
-            transform: translateX(4px);
-            box-shadow: var(--md-elevation-2);
-            border-color: var(--md-primary);
-        }
-
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--md-gradient-1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            flex-shrink: 0;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-family: var(--md-font-heading);
-            font-weight: 600;
-            color: var(--md-on-surface);
-            margin-bottom: var(--md-spacing-xs);
-        }
-
-        .activity-time {
-            font-size: 0.875rem;
-            color: var(--md-on-surface-variant);
-        }
-
-        /* Achievement Badges */
-        .achievements-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: var(--md-spacing-md);
-            margin: var(--md-spacing-lg) 0;
-        }
-
-        .achievement-badge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: var(--md-spacing-md);
+        /* Legal Info Section */
+        .legal-info-section {
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
             border: 1px solid var(--md-outline);
-            transition: var(--md-transition);
-            text-align: center;
+            margin-top: var(--md-spacing-xl);
         }
 
-        .achievement-badge:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--md-elevation-2);
-            border-color: var(--md-primary);
-        }
-
-        .achievement-badge.unlocked {
-            background: var(--md-gradient-1);
-            border-color: transparent;
-        }
-
-        .achievement-badge.unlocked .badge-icon {
-            background: white;
+        .legal-info-section h2 {
+            font-family: var(--md-font-heading);
+            margin-bottom: var(--md-spacing-lg);
             color: var(--md-primary);
         }
 
-        .achievement-badge.unlocked .achievement-title {
-            color: white;
+        .legal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--md-spacing-lg);
         }
 
-        .badge-icon {
-            width: 48px;
-            height: 48px;
+        .legal-item {
+            padding: var(--md-spacing-md);
             background: var(--md-surface-variant);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-surface-variant);
-            font-size: 1.5rem;
-            margin-bottom: var(--md-spacing-sm);
-            transition: var(--md-transition);
+            border-radius: var(--md-radius-medium);
         }
 
-        .achievement-title {
+        .legal-item h3 {
             font-family: var(--md-font-heading);
-            font-size: 0.95rem;
-            font-weight: 600;
+            margin-bottom: var(--md-spacing-sm);
             color: var(--md-on-surface);
         }
 
-        /* Share Profile Button */
-        .share-profile-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-            padding: var(--md-spacing-sm) var(--md-spacing-md);
-            background: var(--md-gradient-1);
-            color: var(--md-on-primary);
-            border: none;
-            border-radius: var(--md-radius-medium);
-            cursor: pointer;
-            transition: var(--md-transition);
-            font-family: var(--md-font-heading);
-            font-weight: 500;
-            text-decoration: none;
+        .legal-item p {
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
         }
 
-        .share-profile-btn:hover {
-            transform: scale(1.05);
-            box-shadow: var(--md-elevation-2);
+        /* Settings Panel */
+        .settings-panel {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+        }
+
+        .settings-section {
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .settings-section h3 {
+            font-family: var(--md-font-heading);
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        /* Profile Tabs */
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--md-outline);
+            margin-bottom: var(--md-spacing-xl);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .profile-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: var(--md-spacing-lg) var(--md-spacing-md);
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--md-on-surface-variant);
+            font-family: var(--md-font-heading);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+            white-space: nowrap;
+        }
+
+        .profile-tab:hover {
+            color: var(--md-primary);
+            background: var(--md-surface-variant);
+        }
+
+        .profile-tab.active {
+            color: var(--md-primary);
+            border-bottom-color: var(--md-primary);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -1098,7 +911,7 @@
         let profileData = null;
         let isOwner = false;
         let auth, db;
-        let currentTab = 'posts';
+        let currentTab = 'overview';
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1324,7 +1137,7 @@
             }
         }
 
-        // Display profile with Instagram-style layout
+        // Display profile with clean layout
         async function displayProfile(data, isOwnerView) {
             console.log('Displaying profile for:', data.displayName, 'isOwner:', isOwnerView);
             
@@ -1402,19 +1215,11 @@
                         </div>
                     </div>
 
-                    <!-- Instagram Style Tabs -->
+                    <!-- Profile Tabs -->
                     <div class="profile-tabs">
-                        <button class="profile-tab ${currentTab === 'posts' ? 'active' : ''}" onclick="switchTab('posts')">
-                            <i class="fas fa-th-large"></i>
-                            Posts
-                        </button>
-                        <button class="profile-tab ${currentTab === 'activity' ? 'active' : ''}" onclick="switchTab('activity')">
-                            <i class="fas fa-history"></i>
-                            Activity
-                        </button>
-                        <button class="profile-tab ${currentTab === 'achievements' ? 'active' : ''}" onclick="switchTab('achievements')">
-                            <i class="fas fa-trophy"></i>
-                            Achievements
+                        <button class="profile-tab ${currentTab === 'overview' ? 'active' : ''}" onclick="switchTab('overview')">
+                            <i class="fas fa-user"></i>
+                            Overview
                         </button>
                         ${isOwnerView ? `
                             <button class="profile-tab ${currentTab === 'settings' ? 'active' : ''}" onclick="switchTab('settings')">
@@ -1427,6 +1232,29 @@
                     <!-- Tab Content -->
                     <div id="tabContent">
                         ${getTabContent(currentTab, data, isOwnerView)}
+                    </div>
+
+                    <!-- Legal Information Section -->
+                    <div class="legal-info-section">
+                        <h2>Legal Information</h2>
+                        <div class="legal-grid">
+                            <div class="legal-item">
+                                <h3>Account Status</h3>
+                                <p>${data.isPublic ? 'Public Profile' : 'Private Profile'}</p>
+                            </div>
+                            <div class="legal-item">
+                                <h3>Member Since</h3>
+                                <p>${formatDate(data.createdAt)}</p>
+                            </div>
+                            <div class="legal-item">
+                                <h3>Profile ID</h3>
+                                <p style="font-family: monospace; font-size: 0.85rem;">${data.uid.substring(0, 8)}...</p>
+                            </div>
+                            <div class="legal-item">
+                                <h3>Last Updated</h3>
+                                <p>${formatDate(data.updatedAt)}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1442,16 +1270,12 @@
         // Get tab content based on selected tab
         function getTabContent(tab, data, isOwnerView) {
             switch(tab) {
-                case 'posts':
-                    return createPostsGrid();
-                case 'activity':
-                    return createActivityFeed(data);
-                case 'achievements':
-                    return createAchievementsGrid(data);
+                case 'overview':
+                    return createOverviewContent(data);
                 case 'settings':
                     return isOwnerView ? createSettingsPanel(data) : '';
                 default:
-                    return createPostsGrid();
+                    return createOverviewContent(data);
             }
         }
 
@@ -1474,131 +1298,34 @@
             }
         }
 
-        // Create Instagram-style posts grid
-        function createPostsGrid() {
-            // Sample posts data - in a real app, this would come from a database
-            const posts = [
-                { id: 1, type: 'app', title: 'Clover AI Session', stats: { likes: 24, time: '45m' }, color: '#34a853' },
-                { id: 2, type: 'note', title: 'MindScribe Notes', stats: { likes: 18, time: '2h' }, color: '#4285f4' },
-                { id: 3, type: 'audio', title: 'Peo Recording', stats: { likes: 32, time: '1h' }, color: '#ea4335' },
-                { id: 4, type: 'achievement', title: '7 Day Streak!', stats: { likes: 42, time: '1d' }, color: '#fbbc05' },
-                { id: 5, type: 'app', title: 'Study Session', stats: { likes: 15, time: '3h' }, color: '#1a73e8' },
-                { id: 6, type: 'milestone', title: '100 Hours Total', stats: { likes: 56, time: '2d' }, color: '#0d8a72' }
-            ];
-            
+        // Create overview content
+        function createOverviewContent(data) {
             return `
-                <div class="content-grid" id="postsGrid">
-                    ${posts.map(post => `
-                        <div class="content-item" onclick="viewPost(${post.id})" style="background: ${post.color}20;">
-                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: ${post.color}; font-size: 3rem;">
-                                <i class="fas fa-${getPostIcon(post.type)}"></i>
-                            </div>
-                            <div class="content-overlay">
-                                <div class="content-title">${post.title}</div>
-                                <div class="content-stats">
-                                    <div class="content-stat">
-                                        <i class="fas fa-heart"></i>
-                                        ${post.stats.likes}
-                                    </div>
-                                    <div class="content-stat">
-                                        <i class="fas fa-clock"></i>
-                                        ${post.stats.time}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                ${posts.length === 0 ? `
-                    <div class="visitor-message">
-                        <p style="color: var(--md-on-surface-variant);">No posts yet. Start creating to build your profile!</p>
+                <div class="settings-panel">
+                    <div class="settings-section">
+                        <h3>About</h3>
+                        <p style="color: var(--md-on-surface-variant);">
+                            This is a verified Reverbit user profile. All information displayed is managed 
+                            through the Reverbit dashboard and connected to Firebase authentication.
+                        </p>
                     </div>
-                ` : ''}
-            `;
-        }
-
-        // Get icon for post type
-        function getPostIcon(type) {
-            const icons = {
-                'app': 'leaf',
-                'note': 'sticky-note',
-                'audio': 'music',
-                'achievement': 'trophy',
-                'milestone': 'flag'
-            };
-            return icons[type] || 'file';
-        }
-
-        // Create activity feed
-        function createActivityFeed(data) {
-            const activities = [
-                { id: 1, type: 'login', title: 'Logged into Reverbit', time: 'Just now' },
-                { id: 2, type: 'app_used', title: 'Used Clover AI for 45 minutes', time: '2 hours ago' },
-                { id: 3, type: 'achievement', title: 'Earned "7-Day Streak" badge', time: 'Yesterday' },
-                { id: 4, type: 'profile', title: 'Updated profile picture', time: '2 days ago' },
-                { id: 5, type: 'share', title: 'Shared profile with friends', time: '3 days ago' }
-            ];
-            
-            return `
-                <div class="activity-feed">
-                    ${activities.map(activity => `
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-${getActivityIcon(activity.type)}"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">${activity.title}</div>
-                                <div class="activity-time">${activity.time}</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                ${activities.length === 0 ? `
-                    <div class="visitor-message">
-                        <p style="color: var(--md-on-surface-variant);">No recent activity.</p>
+                    
+                    ${data.country ? `
+                    <div class="settings-section">
+                        <h3>Location</h3>
+                        <p style="color: var(--md-on-surface-variant);">
+                            <i class="fas fa-map-marker-alt"></i> ${data.country}
+                        </p>
                     </div>
-                ` : ''}
-            `;
-        }
-
-        // Get icon for activity type
-        function getActivityIcon(type) {
-            const icons = {
-                'login': 'sign-in-alt',
-                'app_used': 'play',
-                'achievement': 'trophy',
-                'profile': 'user-edit',
-                'share': 'share'
-            };
-            return icons[type] || 'bell';
-        }
-
-        // Create achievements grid
-        function createAchievementsGrid(data) {
-            const achievements = [
-                { id: 1, title: 'First Login', icon: 'sign-in-alt', unlocked: true },
-                { id: 2, title: '7-Day Streak', icon: 'fire', unlocked: data.streak >= 7 },
-                { id: 3, title: 'App Explorer', icon: 'compass', unlocked: false },
-                { id: 4, title: 'Profile Complete', icon: 'check-circle', unlocked: data.bio && data.country },
-                { id: 5, title: 'Social Butterfly', icon: 'users', unlocked: false },
-                { id: 6, title: 'Power User', icon: 'bolt', unlocked: false }
-            ];
-            
-            return `
-                <div class="achievements-grid">
-                    ${achievements.map(achievement => `
-                        <div class="achievement-badge ${achievement.unlocked ? 'unlocked' : ''}">
-                            <div class="badge-icon">
-                                <i class="fas fa-${achievement.icon}"></i>
-                            </div>
-                            <div class="achievement-title">${achievement.title}</div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="visitor-message" style="margin-top: var(--md-spacing-lg);">
-                    <p style="color: var(--md-on-surface-variant);">
-                        ${achievements.filter(a => a.unlocked).length} of ${achievements.length} achievements unlocked
-                    </p>
+                    ` : ''}
+                    
+                    <div class="settings-section">
+                        <h3>Profile Information</h3>
+                        <p style="color: var(--md-on-surface-variant);">
+                            This profile contains only legal and verified information from the Reverbit platform.
+                            No fake posts or content are displayed.
+                        </p>
+                    </div>
                 </div>
             `;
         }
@@ -1606,11 +1333,9 @@
         // Create settings panel (owner only)
         function createSettingsPanel(data) {
             return `
-                <div class="owner-controls" style="background: var(--md-surface); border-radius: var(--md-radius-large); padding: var(--md-spacing-xl); border: 1px solid var(--md-outline);">
-                    <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Profile Settings</h2>
-                    
-                    <div style="margin-bottom: var(--md-spacing-xl);">
-                        <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">Profile Visibility</h3>
+                <div class="settings-panel">
+                    <div class="settings-section">
+                        <h3>Profile Visibility</h3>
                         <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
                             Control who can see your profile
                         </p>
@@ -1623,8 +1348,8 @@
                         </p>
                     </div>
                     
-                    <div style="margin-bottom: var(--md-spacing-xl);">
-                        <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">Share Profile</h3>
+                    <div class="settings-section">
+                        <h3>Share Profile</h3>
                         <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
                             Share your profile with others
                         </p>
@@ -1637,11 +1362,15 @@
                         </div>
                     </div>
                     
-                    <div>
-                        <h3 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-md); color: var(--md-on-surface);">Danger Zone</h3>
+                    <div class="settings-section">
+                        <h3>Account Management</h3>
                         <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
-                            Permanent actions
+                            Manage your account settings
                         </p>
+                        <button class="btn btn-outlined" onclick="editProfile()" style="margin-bottom: var(--md-spacing-md);">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile Details
+                        </button>
                         <button class="btn btn-outlined" onclick="deleteProfile()" style="color: #ea4335; border-color: #ea4335;">
                             <i class="fas fa-trash"></i>
                             Delete Profile
@@ -1668,6 +1397,17 @@
             const today = new Date();
             const diffTime = Math.abs(today - joinDate);
             return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'Not available';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
         }
 
         // Format last active time
@@ -1790,11 +1530,6 @@
                 console.error('Error toggling visibility:', error);
                 showToast('Error updating profile visibility');
             }
-        }
-
-        // View post (placeholder function)
-        function viewPost(postId) {
-            showToast(`Viewing post ${postId} - This would open a detailed view in a real app`);
         }
 
         // Delete profile (placeholder function)
