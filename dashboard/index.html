@@ -1594,6 +1594,38 @@
         .dark-theme .logo-svg {
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) brightness(1.2);
         }
+
+
+/* Prevent body scroll when menu is open - ADD THIS */
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+/* Improve mobile touch targets */
+@media (max-width: 768px) {
+    .nav-item, .btn, .profile-avatar-button {
+        min-height: 44px; /* Apple recommended minimum touch target */
+        min-width: 44px;
+    }
+    
+    /* Prevent text selection on interactive elements */
+    .nav-item, .btn, .profile-avatar-button, .hamburger-menu {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
+    
+    /* Improve button responsiveness */
+    .btn:active, .nav-item:active {
+        opacity: 0.7;
+        transform: scale(0.98);
+    }
+}
+
+        
     </style>
 </head>
 <body class="light-theme">
@@ -3054,38 +3086,50 @@
             logout();
         });
 
-        // Mobile menu event handlers
-        hamburgerMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleMobileMenu();
-        });
+       // Mobile menu event handlers - SIMPLIFIED
+function setupMobileMenu() {
+    // Clean up any existing listeners first
+    const oldHamburger = hamburgerMenu.cloneNode(true);
+    const oldSidebarClose = sidebarClose.cloneNode(true);
+    const oldOverlay = sidebarOverlay.cloneNode(true);
+    
+    hamburgerMenu.parentNode.replaceChild(oldHamburger, hamburgerMenu);
+    sidebarClose.parentNode.replaceChild(oldSidebarClose, sidebarClose);
+    sidebarOverlay.parentNode.replaceChild(oldOverlay, sidebarOverlay);
+    
+    // Get fresh references
+    const newHamburger = document.getElementById('hamburgerMenu');
+    const newSidebarClose = document.getElementById('sidebarClose');
+    const newSidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    // Set up clean event listeners
+    newHamburger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMobileMenu();
+    });
+    
+    newSidebarClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMobileMenu();
+    });
+    
+    newSidebarOverlay.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMobileMenu();
+    });
+    
+    // Remove problematic touchstart listener entirely
+    // Mobile browsers handle clicks fine without it
+    
+    return { newHamburger, newSidebarClose, newSidebarOverlay };
+}
 
-        sidebarClose.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleMobileMenu();
-        });
-
-        sidebarOverlay.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleMobileMenu();
-        });
-
-        // Simple touch handling - close menu when clicking outside on mobile
-        document.addEventListener('touchstart', function(e) {
-            if (isMobileMenuOpen && window.innerWidth <= 768) {
-                const isHamburger = e.target.closest('.hamburger-menu');
-                const isSidebar = e.target.closest('.sidebar');
-                const isSidebarClose = e.target.closest('.sidebar-close');
-                const isOverlay = e.target.closest('.sidebar-overlay');
-                
-                if (!isSidebar && !isHamburger && !isSidebarClose && !isOverlay) {
-                    toggleMobileMenu();
-                }
-            }
-        }, { passive: true });
+// Initialize mobile menu
+setupMobileMenu();
+    
     </script>
 </body>
 </html>
