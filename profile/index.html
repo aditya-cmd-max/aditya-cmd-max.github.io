@@ -1011,6 +1011,355 @@
             background: rgba(234, 67, 53, 0.1);
             color: #ea4335;
         }
+
+
+/* Search System Styles */
+.search-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--md-surface-variant);
+    border-radius: var(--md-radius-large);
+    margin: var(--md-spacing-xl) 0;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    color: var(--md-outline);
+    margin-bottom: 20px;
+}
+
+.search-suggestions {
+    max-width: 400px;
+    margin: 24px auto 0;
+}
+
+.suggestion-tags {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.suggestion-tag {
+    padding: 8px 16px;
+    border-radius: var(--md-radius-pill);
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--md-transition);
+}
+
+.suggestion-tag:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    transform: translateY(-2px);
+}
+
+.search-no-results {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.no-results-icon {
+    font-size: 48px;
+    color: var(--md-outline);
+    margin-bottom: 20px;
+}
+
+.no-results-suggestions {
+    max-width: 400px;
+    margin: 24px auto 0;
+    text-align: left;
+    background: var(--md-surface);
+    padding: 20px;
+    border-radius: var(--md-radius-medium);
+    border: 1px solid var(--md-outline);
+}
+
+.no-results-suggestions p {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--md-on-surface);
+}
+
+.no-results-suggestions ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--md-on-surface-variant);
+}
+
+.no-results-suggestions li {
+    margin-bottom: 6px;
+}
+
+/* User Cards in Search */
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: var(--md-surface);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-large);
+    margin-bottom: 16px;
+    transition: var(--md-transition);
+    cursor: pointer;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--md-primary);
+    box-shadow: var(--md-elevation-3);
+}
+
+.user-card-avatar {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+}
+
+.user-card-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--md-surface);
+    box-shadow: var(--md-elevation-1);
+}
+
+.user-avatar-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--verified-badge-bg);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--md-surface);
+    font-size: 10px;
+}
+
+.user-avatar-badge.premium {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+}
+
+.user-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin: 0;
+}
+
+.user-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--verified-badge-bg);
+    color: white;
+    padding: 4px 10px;
+    border-radius: var(--md-radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: var(--verified-badge-glow);
+}
+
+.user-verified-badge.premium {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+}
+
+.user-email {
+    font-size: 14px;
+    color: var(--md-on-surface-variant);
+    margin: 0 0 12px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.user-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--md-on-surface-variant);
+}
+
+.user-stat i {
+    font-size: 12px;
+}
+
+.user-bio {
+    font-size: 14px;
+    color: var(--md-on-surface-variant);
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+}
+
+.user-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--md-on-surface-variant);
+}
+
+.user-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.user-card-action {
+    padding: 8px 16px;
+    border-radius: var(--md-radius-pill);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--md-transition);
+    border: 1px solid var(--md-outline);
+    background: var(--md-surface);
+    color: var(--md-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.user-card-action:hover {
+    background: var(--md-primary-container);
+    border-color: var(--md-primary);
+}
+
+.copy-link-btn {
+    padding: 8px;
+    min-width: 36px;
+    justify-content: center;
+}
+
+/* Search Loading */
+.search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--md-outline);
+    border-top-color: var(--md-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Search Error */
+.search-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+}
+
+.search-error i {
+    font-size: 48px;
+    color: #ea4335;
+}
+
+.retry-btn {
+    padding: 10px 20px;
+    border-radius: var(--md-radius-pill);
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--md-transition);
+}
+
+.retry-btn:hover {
+    background: var(--md-primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Dark theme adjustments */
+.dark-theme .suggestion-tag {
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+}
+
+.dark-theme .suggestion-tag:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+}
+
+.dark-theme .user-avatar-badge {
+    border-color: var(--md-surface);
+}
+
+.dark-theme .no-results-suggestions {
+    background: var(--md-surface-variant);
+    border-color: var(--md-outline-variant);
+}
+
+@media (max-width: 768px) {
+    .user-card {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .user-card-avatar {
+        align-self: center;
+    }
+    
+    .user-stats {
+        justify-content: center;
+    }
+    
+    .user-card-actions {
+        justify-content: center;
+    }
+}
+
+        
     </style>
 </head>
 <body class="light-theme">
@@ -1068,7 +1417,7 @@
 
         <!-- Footer -->
         <footer class="profile-footer">
-            <p>© 2024 Reverbit. All rights reserved.</p>
+            <p>© 2025 Reverbit. All rights reserved.</p>
             <div class="profile-footer-links">
                 <a href="https://aditya-cmd-max.github.io/reverbit/privacy">Privacy</a>
                 <a href="https://aditya-cmd-max.github.io/reverbit/terms">Terms</a>
@@ -1251,56 +1600,66 @@
         }
 
         // Update header actions based on auth state
-        function updateHeaderActions(user) {
-            headerActions.innerHTML = '';
-            
-            const themeButton = `
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
+function updateHeaderActions(user) {
+    headerActions.innerHTML = '';
+    
+    const themeButton = `
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
+        </button>
+    `;
+    
+    // Add search button to header
+    const searchButton = `
+        <button class="btn btn-outlined" onclick="openProfileSearch()" id="searchButton">
+            <i class="fas fa-search"></i>
+            Search Profiles
+        </button>
+    `;
+    
+    if (user) {
+        // Check if user is admin (you)
+        const isAdmin = user.email === 'adityajha1104@gmail.com';
+        
+        // User is logged in
+        headerActions.innerHTML = `
+            ${searchButton}
+            <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
+                <i class="fas fa-user"></i>
+                My Profile
+            </a>
+            ${isAdmin ? `
+                <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
+                    <i class="fas fa-user-shield"></i>
+                    Admin
                 </button>
-            `;
-            
-            if (user) {
-                // Check if user is admin (you)
-                const isAdmin = user.email === 'adityajha1104@gmail.com';
-                
-                // User is logged in
-                headerActions.innerHTML = `
-                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
-                        <i class="fas fa-user"></i>
-                        My Profile
-                    </a>
-                    ${isAdmin ? `
-                        <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
-                            <i class="fas fa-user-shield"></i>
-                            Admin
-                        </button>
-                    ` : ''}
-                    ${themeButton}
-                    <button class="btn btn-outlined" onclick="signOut()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sign Out
-                    </button>
-                `;
-            } else {
-                // User is not logged in
-                headerActions.innerHTML = `
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up
-                    </a>
-                    ${themeButton}
-                `;
-            }
-        }
+            ` : ''}
+            ${themeButton}
+            <button class="btn btn-outlined" onclick="signOut()">
+                <i class="fas fa-sign-out-alt"></i>
+                Sign Out
+            </button>
+        `;
+    } else {
+        // User is not logged in
+        headerActions.innerHTML = `
+            ${searchButton}
+            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </a>
+            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
+                <i class="fas fa-user-plus"></i>
+                Sign Up
+            </a>
+            ${themeButton}
+        `;
+    }
+}
 
         // Load own profile
         async function loadOwnProfile(user) {
@@ -2367,6 +2726,698 @@
         }
 
         console.log('Profile page JavaScript loaded successfully');
+
+// Search functions
+function openProfileSearch() {
+    if (window.ReverbitSearch) {
+        window.ReverbitSearch.openSearch();
+    } else {
+        console.warn('Search system not loaded');
+        // Fallback to simple search
+        showSimpleSearch();
+    }
+}
+
+function showSimpleSearch() {
+    const query = prompt('Search for users (name, username, email):');
+    if (query) {
+        performSimpleSearch(query);
+    }
+}
+
+async function performSimpleSearch(query) {
+    try {
+        showToast('Searching...', 'info');
+        
+        const usersRef = db.collection('users');
+        const snapshot = await usersRef.where('isPublic', '==', true).get();
+        
+        if (snapshot.empty) {
+            showToast('No users found', 'info');
+            return;
+        }
+        
+        const results = [];
+        const searchTerm = query.toLowerCase();
+        
+        snapshot.forEach(doc => {
+            const user = doc.data();
+            const displayName = user.displayName?.toLowerCase() || '';
+            const email = user.email?.toLowerCase() || '';
+            const username = user.username?.toLowerCase() || '';
+            
+            if (displayName.includes(searchTerm) || 
+                email.includes(searchTerm) || 
+                username.includes(searchTerm)) {
+                user.id = doc.id;
+                results.push(user);
+            }
+        });
+        
+        if (results.length === 0) {
+            showToast('No matching users found', 'info');
+            return;
+        }
+        
+        // Show results in a modal
+        showSearchResultsModal(results, query);
+        
+    } catch (error) {
+        console.error('Search error:', error);
+        showToast('Search failed', 'error');
+    }
+}
+
+function showSearchResultsModal(results, query) {
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    
+    let resultsHTML = '';
+    
+    if (results.length === 0) {
+        resultsHTML = `
+            <div class="search-no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No results found for "${query}"</h3>
+                <p>Try different keywords or check the spelling</p>
+            </div>
+        `;
+    } else {
+        resultsHTML = results.map(user => `
+            <div class="user-card" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank')">
+                <div class="user-card-avatar">
+                    <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                         alt="${user.displayName || 'User'}">
+                    ${user.verified ? `
+                        <div class="user-avatar-badge ${user.verifiedLevel === 'premium' ? 'premium' : ''}">
+                            <i class="fas fa-${user.verifiedLevel === 'premium' ? 'crown' : 'check'}"></i>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="user-card-info">
+                    <div class="user-card-header">
+                        <h4 class="user-name">${user.displayName || 'User'}</h4>
+                        ${user.verified ? `
+                            <div class="user-verified-badge ${user.verifiedLevel === 'premium' ? 'premium' : ''}">
+                                <i class="fas fa-${user.verifiedLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
+                                ${user.verifiedLevel === 'premium' ? 'Premium' : 'Verified'}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <p class="user-email">${user.email || ''}</p>
+                    
+                    <div class="user-stats">
+                        ${user.streak ? `
+                            <div class="user-stat">
+                                <i class="fas fa-fire"></i>
+                                <span>${user.streak} day streak</span>
+                            </div>
+                        ` : ''}
+                        ${user.country ? `
+                            <div class="user-stat">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${user.country}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${user.bio ? `<p class="user-bio">${truncateText(user.bio, 80)}</p>` : ''}
+                </div>
+                
+                <div class="user-card-actions">
+                    <button class="user-card-action view-profile-btn" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
+                        <i class="fas fa-eye"></i>
+                        View
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2 style="font-family: var(--md-font-heading); margin: 0;">
+                    <i class="fas fa-search" style="margin-right: 10px;"></i>
+                    Search Results
+                </h2>
+                <button class="btn btn-outlined" onclick="this.closest('.modal').style.display='none'">
+                    <i class="fas fa-times"></i>
+                    Close
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 20px; color: var(--md-on-surface-variant);">
+                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
+            </div>
+            
+            <div id="search-results-container">
+                ${resultsHTML}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+            }, 300);
+        }
+    });
+}
+
+function truncateText(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+}
+
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        console.log('Profile Page: Initializing...');
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        auth = firebase.auth();
+        db = firebase.firestore();
+
+        // Load theme preference
+        loadThemePreference();
+
+        // Initialize search system
+        await initializeSearchSystem();
+
+        // Rest of your existing code...
+        
+    } catch (error) {
+        console.error('Initialization error:', error);
+        showToast('Error loading profile');
+        loadingScreen.classList.add('hidden');
+        mainContent.style.display = 'block';
+    }
+});
+
+async function initializeSearchSystem() {
+    try {
+        // Load search system if not already loaded
+        if (!window.ReverbitSearch) {
+            const script = document.createElement('script');
+            script.src = 'search-system.js';
+            script.async = true;
+            script.onload = () => {
+                console.log('Search system loaded');
+                window.ReverbitSearch.init();
+            };
+            script.onerror = () => {
+                console.warn('Failed to load search system, using fallback');
+            };
+            document.body.appendChild(script);
+        } else {
+            await window.ReverbitSearch.init();
+        }
+    } catch (error) {
+        console.warn('Search system initialization failed:', error);
+    }
+}
+        
+      // ================= SEARCH SYSTEM =================
+class SimpleSearchSystem {
+    constructor() {
+        this.modal = null;
+        this.results = [];
+        this.isSearching = false;
+    }
+
+    async init() {
+        console.log('Simple search system initialized');
+    }
+
+    openSearch() {
+        this.createSearchModal();
+    }
+
+    createSearchModal() {
+        // Remove existing modal
+        if (this.modal && this.modal.parentNode) {
+            this.modal.parentNode.removeChild(this.modal);
+        }
+
+        this.modal = document.createElement('div');
+        this.modal.className = 'modal';
+        this.modal.style.display = 'flex';
+        
+        this.modal.innerHTML = `
+            <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-shrink: 0;">
+                    <h2 style="font-family: var(--md-font-heading); margin: 0;">
+                        <i class="fas fa-search" style="margin-right: 10px; color: var(--md-primary);"></i>
+                        Search Profiles
+                    </h2>
+                    <button class="btn btn-outlined" onclick="window.simpleSearch.closeSearch()" style="margin-left: auto;">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+                
+                <div style="position: relative; margin-bottom: 24px; flex-shrink: 0;">
+                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--md-on-surface-variant);"></i>
+                    <input type="text" 
+                           id="search-input" 
+                           class="search-input" 
+                           placeholder="Search by name, username, or email..." 
+                           style="width: 100%; padding: 16px 20px 16px 48px; border: 2px solid var(--md-outline); border-radius: var(--md-radius-pill); background: var(--md-surface); color: var(--md-on-surface); font-size: 16px; transition: var(--md-transition);">
+                    <div id="search-loading" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+                        <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                    </div>
+                </div>
+                
+                <div id="search-filters" style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; flex-shrink: 0;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="filter-verified" style="margin: 0;">
+                        <span style="color: var(--md-on-surface-variant); font-size: 14px;">Verified only</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="filter-active" style="margin: 0;">
+                        <span style="color: var(--md-on-surface-variant); font-size: 14px;">Active users</span>
+                    </label>
+                </div>
+                
+                <div id="search-results-container" style="flex: 1; overflow-y: auto; min-height: 300px;">
+                    <div class="search-empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Find users by name, username, or email address</p>
+                        <div class="search-suggestions">
+                            <h4 style="margin-bottom: 12px; color: var(--md-on-surface-variant); font-size: 14px;">Try searching for:</h4>
+                            <div class="suggestion-tags">
+                                <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('verified')">Verified users</button>
+                                <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('active')">Active members</button>
+                                <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('premium')">Premium users</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--md-outline); color: var(--md-on-surface-variant); font-size: 12px; text-align: center; flex-shrink: 0;">
+                    <i class="fas fa-lightbulb" style="margin-right: 6px;"></i>
+                    Tip: Use quotes for exact matches (e.g., "john doe")
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(this.modal);
+        
+        // Add event listeners
+        const searchInput = this.modal.querySelector('#search-input');
+        const searchLoading = this.modal.querySelector('#search-loading');
+        
+        let debounceTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            const query = e.target.value.trim();
+            
+            if (!query) {
+                this.showEmptyState();
+                return;
+            }
+            
+            searchLoading.style.display = 'block';
+            
+            debounceTimer = setTimeout(async () => {
+                await this.performSearch(query);
+                searchLoading.style.display = 'none';
+            }, 300);
+        });
+        
+        searchInput.focus();
+        
+        // Close on backdrop click
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+                this.closeSearch();
+            }
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.modal.style.display === 'flex') {
+                this.closeSearch();
+            }
+        });
+    }
+
+    async performSearch(query) {
+        if (this.isSearching || !query.trim()) return;
+        
+        this.isSearching = true;
+        
+        try {
+            const verifiedOnly = document.getElementById('filter-verified')?.checked || false;
+            const activeOnly = document.getElementById('filter-active')?.checked || false;
+            
+            const usersRef = db.collection('users');
+            let queryRef = usersRef.where('isPublic', '==', true);
+            
+            const snapshot = await queryRef.get();
+            
+            if (snapshot.empty) {
+                this.showNoResults(query);
+                return;
+            }
+            
+            this.results = [];
+            const searchTerm = query.toLowerCase().trim();
+            const now = new Date();
+            
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                user.id = doc.id;
+                
+                // Apply filters
+                if (verifiedOnly && !user.verified) return;
+                
+                if (activeOnly && user.lastActive) {
+                    const lastActive = new Date(user.lastActive);
+                    const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
+                    if (daysSinceActive > 7) return; // Not active in last 7 days
+                }
+                
+                // Search matching
+                const displayName = user.displayName?.toLowerCase() || '';
+                const email = user.email?.toLowerCase() || '';
+                const username = user.username?.toLowerCase() || '';
+                const bio = user.bio?.toLowerCase() || '';
+                const country = user.country?.toLowerCase() || '';
+                
+                let matchScore = 0;
+                
+                // Exact match scoring
+                if (displayName === searchTerm) matchScore += 5;
+                if (username === searchTerm) matchScore += 4;
+                if (email === searchTerm) matchScore += 3;
+                
+                // Partial match scoring
+                if (displayName.includes(searchTerm)) matchScore += 3;
+                if (username.includes(searchTerm)) matchScore += 2;
+                if (email.includes(searchTerm)) matchScore += 2;
+                if (bio.includes(searchTerm)) matchScore += 1;
+                if (country.includes(searchTerm)) matchScore += 1;
+                
+                // Special keywords
+                if (searchTerm.includes('verified') && user.verified) matchScore += 2;
+                if (searchTerm.includes('premium') && (user.verifiedLevel === 'premium' || user.premiumVerified)) matchScore += 3;
+                if (searchTerm.includes('active') && user.lastActive) {
+                    const lastActive = new Date(user.lastActive);
+                    const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
+                    if (daysSinceActive < 7) matchScore += 2;
+                }
+                
+                if (matchScore > 0) {
+                    user.matchScore = matchScore;
+                    this.results.push(user);
+                }
+            });
+            
+            // Sort by match score
+            this.results.sort((a, b) => b.matchScore - a.matchScore);
+            
+            // Display results
+            this.displayResults(this.results, query);
+            
+        } catch (error) {
+            console.error('Search error:', error);
+            this.showError();
+        } finally {
+            this.isSearching = false;
+        }
+    }
+
+    displayResults(results, query) {
+        const container = this.modal.querySelector('#search-results-container');
+        
+        if (results.length === 0) {
+            this.showNoResults(query);
+            return;
+        }
+        
+        const resultsHTML = results.map(user => this.createUserCard(user)).join('');
+        
+        container.innerHTML = `
+            <div style="margin-bottom: 16px; color: var(--md-on-surface-variant);">
+                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
+            </div>
+            ${resultsHTML}
+        `;
+        
+        // Add click handlers
+        container.querySelectorAll('.user-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const userId = card.dataset.userId;
+                if (userId) {
+                    window.open(`https://aditya-cmd-max.github.io/profile/?id=${userId}`, '_blank');
+                }
+            });
+        });
+    }
+
+    createUserCard(user) {
+        const isVerified = user.verified;
+        const isPremium = user.verifiedLevel === 'premium' || user.premiumVerified;
+        const memberDays = user.createdAt ? this.calculateMemberDays(user.createdAt) : '0';
+        
+        return `
+            <div class="user-card" data-user-id="${user.id}">
+                <div class="user-card-avatar">
+                    <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                         alt="${user.displayName || 'User'}"
+                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                    ${isVerified ? `
+                        <div class="user-avatar-badge ${isPremium ? 'premium' : ''}">
+                            <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="user-card-info">
+                    <div class="user-card-header">
+                        <h4 class="user-name">${user.displayName || 'User'}</h4>
+                        ${isVerified ? `
+                            <div class="user-verified-badge ${isPremium ? 'premium' : ''}">
+                                <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
+                                ${isPremium ? 'Premium Verified' : 'Verified'}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <p class="user-email">${user.email || ''}</p>
+                    
+                    <div class="user-stats">
+                        ${user.streak ? `
+                            <div class="user-stat">
+                                <i class="fas fa-fire"></i>
+                                <span>${user.streak} day streak</span>
+                            </div>
+                        ` : ''}
+                        <div class="user-stat">
+                            <i class="fas fa-calendar"></i>
+                            <span>${memberDays} days</span>
+                        </div>
+                        ${user.lastActive ? `
+                            <div class="user-stat">
+                                <i class="fas fa-clock"></i>
+                                <span>${this.formatLastActive(user.lastActive)}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${user.bio ? `<p class="user-bio">${this.truncateText(user.bio, 100)}</p>` : ''}
+                    
+                    ${user.country ? `<div class="user-location"><i class="fas fa-map-marker-alt"></i> ${user.country}</div>` : ''}
+                </div>
+                
+                <div class="user-card-actions">
+                    <button class="user-card-action" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
+                        <i class="fas fa-eye"></i>
+                        View Profile
+                    </button>
+                    <button class="user-card-action copy-link-btn" onclick="navigator.clipboard.writeText('https://aditya-cmd-max.github.io/profile/?id=${user.id}'); showToast('Profile link copied!'); event.stopPropagation();">
+                        <i class="fas fa-link"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    searchBySuggestion(type) {
+        const searchInput = this.modal.querySelector('#search-input');
+        let query = '';
+        
+        switch(type) {
+            case 'verified':
+                query = 'verified';
+                document.getElementById('filter-verified').checked = true;
+                break;
+            case 'active':
+                query = 'active';
+                document.getElementById('filter-active').checked = true;
+                break;
+            case 'premium':
+                query = 'premium';
+                document.getElementById('filter-verified').checked = true;
+                break;
+        }
+        
+        searchInput.value = query;
+        searchInput.focus();
+        searchInput.dispatchEvent(new Event('input'));
+    }
+
+    showEmptyState() {
+        const container = this.modal.querySelector('#search-results-container');
+        container.innerHTML = `
+            <div class="search-empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Find users by name, username, or email address</p>
+                <div class="search-suggestions">
+                    <h4 style="margin-bottom: 12px; color: var(--md-on-surface-variant); font-size: 14px;">Try searching for:</h4>
+                    <div class="suggestion-tags">
+                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('verified')">Verified users</button>
+                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('active')">Active members</button>
+                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('premium')">Premium users</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    showNoResults(query) {
+        const container = this.modal.querySelector('#search-results-container');
+        container.innerHTML = `
+            <div class="search-no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No results found for "${query}"</h3>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Try different keywords or check the spelling</p>
+                <div class="no-results-suggestions">
+                    <p style="margin-bottom: 8px; font-weight: 600;">Suggestions:</p>
+                    <ul>
+                        <li>Try using fewer keywords</li>
+                        <li>Check for typos in your search</li>
+                        <li>Try more general terms</li>
+                        <li>Make sure the profile is public</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    }
+
+    showError() {
+        const container = this.modal.querySelector('#search-results-container');
+        container.innerHTML = `
+            <div class="search-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <p style="color: var(--md-on-surface); margin: 12px 0;">Failed to load search results</p>
+                <button class="retry-btn" onclick="window.simpleSearch.retrySearch()">Try again</button>
+            </div>
+        `;
+    }
+
+    retrySearch() {
+        const searchInput = this.modal.querySelector('#search-input');
+        if (searchInput.value.trim()) {
+            searchInput.dispatchEvent(new Event('input'));
+        }
+    }
+
+    calculateMemberDays(dateString) {
+        if (!dateString) return '0';
+        const joinDate = new Date(dateString);
+        const today = new Date();
+        const diffTime = Math.abs(today - joinDate);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    formatLastActive(dateString) {
+        if (!dateString) return 'Never';
+        
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffHours < 1) return 'Just now';
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+        
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    truncateText(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+
+    closeSearch() {
+        if (this.modal) {
+            this.modal.style.display = 'none';
+            setTimeout(() => {
+                if (this.modal && this.modal.parentNode) {
+                    this.modal.parentNode.removeChild(this.modal);
+                    this.modal = null;
+                }
+            }, 300);
+        }
+    }
+}
+
+// Initialize simple search system
+window.simpleSearch = new SimpleSearchSystem();
+
+// Global function to open search
+function openProfileSearch() {
+    window.simpleSearch.openSearch();
+}
+
+// Initialize search system
+document.addEventListener('DOMContentLoaded', async () => {
+    // Your existing initialization code...
+    
+    // Initialize search system
+    await window.simpleSearch.init();
+    
+    // Rest of your code...
+});  
+      
+      
     </script>
+
+<script src="https://aditya-cmd-max.github.io/js/search-system.js"></script>
+    
 </body>
 </html>
