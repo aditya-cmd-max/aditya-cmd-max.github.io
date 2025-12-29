@@ -192,22 +192,21 @@
             font-family: var(--md-font-logo);
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 16px;
             background: var(--md-gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .profile-handle {
+        .profile-email {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            color: var(--md-primary);
-            font-size: 1.25rem;
-            font-weight: 600;
+            gap: 8px;
+            color: var(--md-on-surface-variant);
+            font-size: 1.1rem;
             margin-bottom: 16px;
-            padding: 6px 12px;
+            padding: 8px 16px;
             background: var(--md-surface-variant);
             border-radius: var(--md-radius-pill);
         }
@@ -315,35 +314,14 @@
             border-top: 1px solid var(--md-outline);
         }
 
-        .share-link {
+        .profile-url {
             background: var(--md-surface-variant);
-            padding: 16px;
+            padding: 12px 16px;
             border-radius: var(--md-radius-medium);
             margin-top: 12px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .share-link input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-medium);
-            background: var(--md-surface);
+            font-family: monospace;
+            word-break: break-all;
             color: var(--md-on-surface);
-            font-family: var(--md-font-body);
-        }
-
-        .share-link button {
-            padding: 12px 24px;
-            background: var(--md-primary);
-            color: white;
-            border: none;
-            border-radius: var(--md-radius-medium);
-            cursor: pointer;
-            font-family: var(--md-font-heading);
-            font-weight: 500;
         }
 
         /* Apps Grid */
@@ -478,44 +456,28 @@
             border-top: 1px solid var(--md-outline);
         }
 
-        /* Modal Styles */
-        .modal-overlay {
+        /* Toast Notification */
+        #toast {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
+            bottom: 20px;
+            right: 20px;
             background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--md-elevation-4);
+            color: var(--md-on-surface);
+            padding: 16px 24px;
+            border-radius: var(--md-radius-medium);
+            box-shadow: var(--md-elevation-3);
+            display: none;
+            z-index: 1000;
+            max-width: 400px;
             transform: translateY(20px);
-            transition: transform 0.3s ease;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .modal-overlay.active .modal-content {
+        #toast.show {
             transform: translateY(0);
+            opacity: 1;
+            display: block;
         }
 
         /* Responsive */
@@ -528,6 +490,11 @@
                 font-size: 2rem;
             }
 
+            .profile-email {
+                font-size: 1rem;
+                padding: 6px 12px;
+            }
+
             .control-buttons {
                 flex-direction: column;
             }
@@ -535,14 +502,6 @@
             .btn {
                 width: 100%;
                 justify-content: center;
-            }
-
-            .share-link {
-                flex-direction: column;
-            }
-
-            .share-link input {
-                width: 100%;
             }
 
             .profile-stats {
@@ -620,7 +579,7 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" style="position: fixed; bottom: 20px; right: 20px; background: var(--md-surface); color: var(--md-on-surface); padding: 16px 24px; border-radius: var(--md-radius-medium); box-shadow: var(--md-elevation-3); display: none; z-index: 1000; max-width: 400px;">
+    <div id="toast">
         <span id="toastMessage"></span>
     </div>
 
@@ -716,7 +675,7 @@
                         <i class="fas fa-user-plus"></i>
                         Sign Up
                     </a>
-                    <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-outlined">
+                    <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-secondary">
                         <i class="fas fa-home"></i>
                         Go Home
                     </a>
@@ -844,9 +803,6 @@
     async function displayProfile(data, isOwnerView) {
         console.log('Displaying profile for:', data.displayName, 'isOwner:', isOwnerView);
         
-        // Generate a simple handle from email or display name
-        let handle = data.handle || generateSimpleHandle(data);
-        
         // Create profile HTML
         const profileHTML = `
             <div class="profile-header">
@@ -856,16 +812,16 @@
                 
                 <h1 class="profile-name">${data.displayName || 'User'}</h1>
                 
-                <div class="profile-handle">
-                    <i class="fas fa-at"></i>
-                    ${handle}
+                <div class="profile-email">
+                    <i class="fas fa-envelope"></i>
+                    ${data.email || 'No email available'}
                 </div>
                 
                 <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
                 
                 ${!isOwnerView && currentUser ? `
                     <div style="margin-top: 20px;">
-                        <a href="https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}" class="btn btn-outlined">
+                        <a href="https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}" class="btn btn-secondary">
                             <i class="fas fa-user"></i>
                             View Your Profile
                         </a>
@@ -891,18 +847,6 @@
         }
     }
 
-    // Generate simple handle from user data
-    function generateSimpleHandle(data) {
-        if (data.displayName) {
-            // Take first part of display name, lowercase it, remove spaces
-            return data.displayName.split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
-        } else if (data.email) {
-            // Take username part of email
-            return data.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
-        }
-        return 'user';
-    }
-
     // Create owner controls HTML
     function createOwnerControls(data) {
         const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${data.uid}`;
@@ -926,21 +870,17 @@
                 
                 <!-- Share Section -->
                 <div class="share-section">
-                    <div class="handle-section">
-                        <div style="margin-bottom: 15px;">
-                            <strong>Your Profile URL:</strong>
-                            <p style="color: var(--md-on-surface-variant); font-size: 0.95rem; margin-top: 5px;">
-                                Share this link with others!
-                            </p>
-                        </div>
-                        <div class="profile-url">
-                            ${profileUrl}
-                        </div>
-                        <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
-                            <i class="fas fa-copy"></i>
-                            Copy Profile Link
-                        </button>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Your Profile URL:</strong>
+                        <p style="color: var(--md-on-surface-variant); font-size: 0.95rem; margin-top: 5px;">
+                            Share this link with others!
+                        </p>
                     </div>
+                    <div class="profile-url">${profileUrl}</div>
+                    <button class="btn btn-primary" onclick="copyProfileLink()" style="margin-top: 15px; width: 100%;">
+                        <i class="fas fa-copy"></i>
+                        Copy Profile Link
+                    </button>
                 </div>
             </div>
         `;
@@ -1203,10 +1143,10 @@
         const toastMessage = document.getElementById('toastMessage');
         
         toastMessage.textContent = message;
-        toast.style.display = 'block';
+        toast.classList.add('show');
         
         setTimeout(() => {
-            toast.style.display = 'none';
+            toast.classList.remove('show');
         }, 3000);
     }
 
