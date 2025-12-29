@@ -149,14 +149,14 @@ class ReverbitAuth {
                                   this.user.email?.split('@')[0] || 
                                   'User';
                 
-                // Generate a simple username
+                // Generate a simple username (for internal use only)
                 const username = this.generateSimpleUsername(displayName, this.user.email);
                 
                 this.userProfile = {
                     uid: this.user.uid,
                     email: this.user.email,
                     displayName: displayName,
-                    username: username,
+                    username: username, // Internal use only
                     photoURL: this.user.photoURL || 
                              `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4285f4&color=fff`,
                     isPublic: true, // Default to public profile
@@ -175,7 +175,7 @@ class ReverbitAuth {
                 };
                 
                 await userRef.set(this.userProfile);
-                console.log('New user profile created with username:', username);
+                console.log('New user profile created');
             }
             
             // Update avatar if exists
@@ -188,7 +188,7 @@ class ReverbitAuth {
         }
     }
 
-    // Simple username generator (no handle system)
+    // Simple username generator (internal use only)
     generateSimpleUsername(displayName, email) {
         if (displayName && displayName.trim()) {
             // Clean the display name
@@ -433,7 +433,6 @@ class ReverbitAuth {
         const displayName = this.userProfile.displayName || 'User';
         const email = this.userProfile.email || '';
         const photoURL = this.userProfile.photoURL;
-        const username = this.userProfile.username || this.generateSimpleUsername(displayName, email);
         const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
         
         return `
@@ -449,7 +448,6 @@ class ReverbitAuth {
                     </div>
                     <div class="profile-info">
                         <div class="profile-name">${displayName}</div>
-                        <div class="profile-handle">@${username}</div>
                         <div class="profile-email">${email}</div>
                         <button class="change-avatar-btn" id="change-avatar-btn">
                             Change profile picture
@@ -475,7 +473,7 @@ class ReverbitAuth {
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                         </span>
-                        <span class="profile-menu-text">View Public Profile</span>
+                        <span class="profile-menu-text">My Profile</span>
                     </a>
                     
                     <button class="profile-menu-item" id="profile-signout">
@@ -826,17 +824,7 @@ class ReverbitAuth {
                 font-weight: 500;
                 color: #202124;
                 line-height: 1.5;
-                margin-bottom: 2px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            
-            .profile-handle {
-                font-size: 14px;
-                color: #1a73e8;
-                font-weight: 500;
-                margin-bottom: 2px;
+                margin-bottom: 4px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -991,10 +979,6 @@ class ReverbitAuth {
                     color: #e8eaed;
                 }
                 
-                .profile-handle {
-                    color: #8ab4f8;
-                }
-                
                 .profile-email {
                     color: #9aa0a6;
                 }
@@ -1061,10 +1045,6 @@ class ReverbitAuth {
             
             .dark-theme .profile-name {
                 color: #e8eaed;
-            }
-            
-            .dark-theme .profile-handle {
-                color: #8ab4f8;
             }
             
             .dark-theme .profile-email {
@@ -1253,7 +1233,7 @@ class ReverbitAuth {
         return null;
     }
 
-    // Get user username
+    // Get user username (internal use only)
     getUserUsername() {
         return this.userProfile?.username || null;
     }
@@ -1385,7 +1365,7 @@ window.debugUserProfile = async function() {
     console.log('User profile:', profile);
     
     const username = window.ReverbitAuth.getUserUsername();
-    console.log('User username:', username);
+    console.log('User username (internal):', username);
     
     if (user) {
         const profileLink = await window.ReverbitAuth.generateProfileLink();
