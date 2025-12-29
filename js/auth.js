@@ -1273,78 +1273,103 @@ class ReverbitAuth {
         }
     }
 
-    showProfilePopup() {
-        if (!this.profilePopup || !this.profileAvatar) {
-            console.error('Auth: Cannot show popup - missing elements');
-            return;
-        }
+   showProfilePopup() {
+    if (!this.profilePopup || !this.profileAvatar) {
+        console.error('Auth: Cannot show popup - missing elements');
+        return;
+    }
+    
+    // Update content
+    this.profilePopup.innerHTML = this.getPopupHTML();
+    this.attachPopupEventListeners();
+    
+    // Force a reflow to get accurate popup dimensions
+    this.profilePopup.style.display = 'block';
+    this.profilePopup.style.visibility = 'hidden';
+    this.profilePopup.style.opacity = '0';
+    
+    // Get dimensions
+    const avatarRect = this.profileAvatar.getBoundingClientRect();
+    const popupRect = this.profilePopup.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Default position: below and aligned to left of avatar
+    let top = avatarRect.bottom + 8;
+    let left = avatarRect.left;
+    
+    // Calculate available space
+    const spaceBelow = viewportHeight - avatarRect.bottom - 16;
+    const spaceAbove = avatarRect.top - 16;
+    const spaceRight = viewportWidth - avatarRect.right - 16;
+    const spaceLeft = avatarRect.left - 16;
+    
+    console.log('Positioning debug:', {
+        avatarRect,
+        popupRect,
+        viewportWidth,
+        viewportHeight,
+        spaceBelow,
+        spaceAbove,
+        spaceRight,
+        spaceLeft
+    });
+    
+    // ===== FIXED POSITIONING LOGIC =====
+    
+    // 1. Check if popup would go off the right edge
+    if (left + popupRect.width > viewportWidth) {
+        // Try to position from the right edge of the avatar
+        left = avatarRect.right - popupRect.width;
         
-        // Update content
-        this.profilePopup.innerHTML = this.getPopupHTML();
-        this.attachPopupEventListeners();
-        
-        // Calculate position
-        const avatarRect = this.profileAvatar.getBoundingClientRect();
-        const popupRect = this.profilePopup.getBoundingClientRect();
-        
-        // Get viewport dimensions
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
-        // Try positioning below the avatar first
-        let top = avatarRect.bottom + 8;
-        let left = avatarRect.left;
-        
-        // Calculate if popup would go off-screen
-        const spaceBelow = viewportHeight - avatarRect.bottom - 8;
-        const spaceAbove = avatarRect.top - 8;
-        const spaceRight = viewportWidth - avatarRect.left;
-        const spaceLeft = avatarRect.right;
-        
-        // Check vertical positioning
-        if (spaceBelow < popupRect.height && spaceAbove >= popupRect.height) {
-            // Not enough space below, but enough above - position above
-            top = avatarRect.top - popupRect.height - 8;
-        } else if (spaceBelow < popupRect.height) {
-            // Not enough space above or below - position at bottom of viewport
-            top = viewportHeight - popupRect.height - 16;
-        }
-        
-        // Check horizontal positioning
-        if (left + popupRect.width > viewportWidth) {
-            // Would go off right edge - align with right edge
+        // If that still goes off left edge, position at right edge of viewport
+        if (left < 16) {
             left = viewportWidth - popupRect.width - 16;
         }
-        
-        if (left < 16) {
-            // Would go off left edge
-            left = 16;
-        }
-        
-        // Ensure popup is within viewport bounds
-        top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
-        left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
-        
-        // Position popup
-        this.profilePopup.style.top = `${top}px`;
-        this.profilePopup.style.left = `${left}px`;
-        this.profilePopup.style.display = 'block';
-        
-        // Animate in
-        setTimeout(() => {
-            this.profilePopup.style.opacity = '1';
-            this.profilePopup.style.transform = 'scale(1)';
-            
-            // Focus first interactive element for accessibility
-            const firstButton = this.profilePopup.querySelector('button, a');
-            if (firstButton) firstButton.focus();
-        }, 10);
-        
-        // Add backdrop
-        this.addPopupBackdrop();
-        
-        console.log('Auth: Profile popup shown at', { top, left });
     }
+    
+    // 2. Check if popup would go off the left edge
+    if (left < 16) {
+        left = 16;
+    }
+    
+    // 3. Vertical positioning - check if enough space below
+    if (spaceBelow < popupRect.height) {
+        // Not enough space below, try above
+        if (spaceAbove >= popupRect.height) {
+            top = avatarRect.top - popupRect.height - 8;
+        } else {
+            // Not enough space above either, position at bottom of viewport
+            top = viewportHeight - popupRect.height - 16;
+        }
+    }
+    
+    // 4. Ensure final position is within bounds
+    left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
+    top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
+    
+    console.log('Final position:', { top, left });
+    
+    // Apply position
+    this.profilePopup.style.top = `${top}px`;
+    this.profilePopup.style.left = `${left}px`;
+    this.profilePopup.style.visibility = 'visible';
+    
+    // Animate in
+    setTimeout(() => {
+        this.profilePopup.style.opacity = '1';
+        this.profilePopup.style.transform = 'scale(1)';
+        
+        // Focus first interactive element for accessibility
+        const firstButton = this.profilePopup.querySelector('button, a');
+        if (firstButton) firstButton.focus();
+    }, 10);
+    
+    // Add backdrop
+    this.addPopupBackdrop();
+    
+    console.log('Auth: Profile popup shown at', { top, left });
+}
 
     hideProfilePopup() {
         if (!this.profilePopup) return;
