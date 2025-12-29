@@ -2755,27 +2755,37 @@ body.menu-open {
             }
         });
 
-        // Setup profile popup click handlers
-        function setupProfilePopupHandlers() {
-            desktopProfileAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleProfilePopup(e);
-            });
-            
-            mobileProfileAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleProfilePopup(e);
-            });
-            
-            sidebarProfileAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleProfilePopup(e);
-            });
-        }
-
+       function setupProfilePopupHandlers() {
+    // Remove any existing listeners
+    [desktopProfileAvatar, mobileProfileAvatar, sidebarProfileAvatar].forEach(el => {
+        const newEl = el.cloneNode(true);
+        el.parentNode.replaceChild(newEl, el);
+    });
+    
+    // Get fresh references
+    const newDesktopAvatar = document.getElementById('desktopProfileAvatar');
+    const newMobileAvatar = document.getElementById('mobileProfileAvatar');
+    const newSidebarAvatar = document.getElementById('sidebarProfileAvatar');
+    
+    // Setup clean listeners
+    newDesktopAvatar.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleProfilePopup(e);
+    });
+    
+    newMobileAvatar.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleProfilePopup(e);
+    });
+    
+    newSidebarAvatar.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleProfilePopup(e);
+    });
+}
         // Load user data from Firestore
         async function loadUserData(user) {
             try {
