@@ -2036,7 +2036,7 @@
                 if (userId) {
                     await this.loadConnections();
                     await this.setupConnectionListeners();
-                    this.checkConnectionStatus();
+                    await this.checkConnectionStatus();
                 }
             }
 
@@ -2133,25 +2133,32 @@
 
                 try {
                     // Check if already friends
-                    if (this.connections.friends.includes(currentUser.uid)) {
-                        this.connectionStatus = 'connected';
-                        return;
+                    const connectionsDoc = await db.collection('connections').doc(this.userId).get();
+                    if (connectionsDoc.exists) {
+                        const data = connectionsDoc.data();
+                        const friends = data.friends || [];
+                        if (friends.includes(currentUser.uid)) {
+                            this.connectionStatus = 'connected';
+                            return;
+                        }
                     }
 
                     // Check pending requests
-                    const pendingRequest = this.connections.sentRequests.find(req => 
-                        req.from === currentUser.uid && req.to === this.userId
-                    );
-                    
-                    if (pendingRequest) {
+                    const requestId = `${currentUser.uid}_${this.userId}`;
+                    const requestDoc = await db.collection('connectionRequests').doc(requestId).get();
+                    if (requestDoc.exists && requestDoc.data().status === 'pending') {
                         this.connectionStatus = 'pending';
                         return;
                     }
 
                     // Check if following
-                    if (this.connections.followers.includes(currentUser.uid)) {
-                        this.connectionStatus = 'following';
-                        return;
+                    const currentUserConnections = await db.collection('connections').doc(currentUser.uid).get();
+                    if (currentUserConnections.exists) {
+                        const following = currentUserConnections.data().following || [];
+                        if (following.includes(this.userId)) {
+                            this.connectionStatus = 'following';
+                            return;
+                        }
                     }
 
                     this.connectionStatus = null;
@@ -2440,63 +2447,79 @@
 
             updateConnectionButton() {
                 const controlsContainer = document.getElementById('connectionControls');
-                if (!controlsContainer || this.isOwner) return;
+                if (!controlsContainer) return;
                 
                 let buttonHTML = '';
                 
-                switch(this.connectionStatus) {
-                    case 'connected':
-                        buttonHTML = `
-                            <button class="connection-btn connected-btn">
-                                <i class="fas fa-user-check"></i>
-                                Connected
-                            </button>
-                            <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.removeConnection('${this.userId}')">
-                                <i class="fas fa-user-times"></i>
-                                Remove
-                            </button>
-                        `;
-                        break;
-                        
-                    case 'pending':
-                        buttonHTML = `
-                            <button class="connection-btn pending-btn">
-                                <i class="fas fa-clock"></i>
-                                Request Pending
-                            </button>
-                            <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.cancelRequest()">
-                                <i class="fas fa-times"></i>
-                                Cancel
-                            </button>
-                        `;
-                        break;
-                        
-                    case 'following':
-                        buttonHTML = `
-                            <button class="connection-btn following-btn">
-                                <i class="fas fa-user-plus"></i>
-                                Following
-                            </button>
-                            <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.unfollowUser()">
-                                <i class="fas fa-user-minus"></i>
-                                Unfollow
-                            </button>
-                        `;
-                        break;
-                        
-                    default:
-                        buttonHTML = `
-                            <div class="connection-actions">
-                                <button class="connection-btn connect-btn" onclick="window.connectionSystem.sendConnectionRequest()">
+                // Always show connect buttons for non-owners
+                if (!this.isOwner && currentUser) {
+                    switch(this.connectionStatus) {
+                        case 'connected':
+                            buttonHTML = `
+                                <button class="connection-btn connected-btn">
+                                    <i class="fas fa-user-check"></i>
+                                    Connected
+                                </button>
+                                <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.removeConnection('${this.userId}')">
+                                    <i class="fas fa-user-times"></i>
+                                    Remove
+                                </button>
+                            `;
+                            break;
+                            
+                        case 'pending':
+                            buttonHTML = `
+                                <button class="connection-btn pending-btn">
+                                    <i class="fas fa-clock"></i>
+                                    Request Pending
+                                </button>
+                                <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.cancelRequest()">
+                                    <i class="fas fa-times"></i>
+                                    Cancel
+                                </button>
+                            `;
+                            break;
+                            
+                        case 'following':
+                            buttonHTML = `
+                                <button class="connection-btn following-btn">
                                     <i class="fas fa-user-plus"></i>
-                                    Connect
+                                    Following
                                 </button>
-                                <button class="connection-btn" onclick="window.connectionSystem.followUser()" style="background: var(--md-surface-variant); color: var(--md-on-surface-variant); border: 1px solid var(--md-outline);">
-                                    <i class="fas fa-plus"></i>
-                                    Follow
+                                <button class="connection-btn unfriend-btn" onclick="window.connectionSystem.unfollowUser()">
+                                    <i class="fas fa-user-minus"></i>
+                                    Unfollow
                                 </button>
-                            </div>
-                        `;
+                            `;
+                            break;
+                            
+                        default:
+                            buttonHTML = `
+                                <div class="connection-actions">
+                                    <button class="connection-btn connect-btn" onclick="window.connectionSystem.sendConnectionRequest()">
+                                        <i class="fas fa-user-plus"></i>
+                                        Connect
+                                    </button>
+                                    <button class="connection-btn" onclick="window.connectionSystem.followUser()" style="background: var(--md-surface-variant); color: var(--md-on-surface-variant); border: 1px solid var(--md-outline);">
+                                        <i class="fas fa-plus"></i>
+                                        Follow
+                                    </button>
+                                </div>
+                            `;
+                    }
+                } else if (!currentUser) {
+                    // Not logged in
+                    buttonHTML = `
+                        <div class="connection-actions">
+                            <button class="connection-btn connect-btn" onclick="window.location.href='https://aditya-cmd-max.github.io/signin'">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Sign In to Connect
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    // Owner or no buttons needed
+                    buttonHTML = '';
                 }
                 
                 controlsContainer.innerHTML = buttonHTML;
@@ -2586,7 +2609,7 @@
                         <div class="no-connections">
                             <i class="fas fa-users"></i>
                             <p>${noResultsText[type]}</p>
-                            ${type === 'friends' && !this.isOwner ? `
+                            ${type === 'friends' && !this.isOwner && currentUser ? `
                                 <button class="btn btn-filled" onclick="window.connectionSystem.sendConnectionRequest()" style="margin-top: 16px;">
                                     <i class="fas fa-user-plus"></i>
                                     Connect with this user
@@ -2899,6 +2922,25 @@
                     showToast('Error unfollowing user');
                 }
             }
+
+            // New method to initialize for profile display
+            async initializeForProfile() {
+                if (this.userId) {
+                    // Load connections first
+                    await this.loadConnections();
+                    
+                    // Check connection status
+                    await this.checkConnectionStatus();
+                    
+                    // Force update UI
+                    this.updateConnectionUI();
+                }
+            }
+
+            // New method to get connection status for display
+            async getConnectionStatusForDisplay() {
+                return this.connectionStatus;
+            }
         }
 
         // Initialize connection system
@@ -3114,6 +3156,7 @@
             
             // Initialize connection system
             await window.connectionSystem.init(profileOwner, isOwnerView);
+            await window.connectionSystem.initializeForProfile();
             
             // Create profile HTML
             const profileHTML = `
@@ -3802,7 +3845,7 @@
             }
         }
 
-        // Admin toggle verification
+        // Admin toggle verification - FIXED VERSION
         async function adminToggleVerification(userId, verify, level) {
             // Check if user is admin (you)
             if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
@@ -3811,24 +3854,68 @@
             }
             
             try {
+                // Prepare updates object
                 const updates = {
-                    verified: verify,
-                    verifiedLevel: verify ? level : null,
-                    verifiedAt: verify ? new Date().toISOString() : null,
-                    verifiedBy: verify ? 'admin' : null,
                     updatedAt: new Date().toISOString()
                 };
                 
-                if (level === 'premium') {
-                    updates.premiumVerified = verify;
+                if (verify) {
+                    // Adding verification
+                    updates.verified = true;
+                    updates.verifiedLevel = level;
+                    updates.verifiedAt = new Date().toISOString();
+                    updates.verifiedBy = 'admin';
+                    
+                    if (level === 'premium') {
+                        updates.premiumVerified = true;
+                    } else {
+                        updates.premiumVerified = firebase.firestore.FieldValue.delete();
+                    }
+                } else {
+                    // Removing verification
+                    if (level === 'premium') {
+                        // Remove premium but keep basic verification
+                        updates.verifiedLevel = 'basic';
+                        updates.premiumVerified = false;
+                    } else {
+                        // Remove all verification
+                        updates.verified = false;
+                        updates.verifiedLevel = firebase.firestore.FieldValue.delete();
+                        updates.verifiedAt = firebase.firestore.FieldValue.delete();
+                        updates.verifiedBy = firebase.firestore.FieldValue.delete();
+                        updates.premiumVerified = firebase.firestore.FieldValue.delete();
+                    }
                 }
                 
                 // Update the verification status in Firestore
                 await db.collection('users').doc(userId).update(updates);
                 
-                // Update local data
+                // Update local data if it's the current profile
                 if (profileData && profileData.uid === userId) {
-                    Object.assign(profileData, updates);
+                    // Apply updates to local data
+                    if (verify) {
+                        profileData.verified = true;
+                        profileData.verifiedLevel = level;
+                        profileData.verifiedAt = updates.verifiedAt;
+                        profileData.verifiedBy = 'admin';
+                        if (level === 'premium') {
+                            profileData.premiumVerified = true;
+                        } else {
+                            delete profileData.premiumVerified;
+                        }
+                    } else {
+                        if (level === 'premium') {
+                            profileData.verifiedLevel = 'basic';
+                            profileData.premiumVerified = false;
+                        } else {
+                            profileData.verified = false;
+                            delete profileData.verifiedLevel;
+                            delete profileData.verifiedAt;
+                            delete profileData.verifiedBy;
+                            delete profileData.premiumVerified;
+                        }
+                    }
+                    profileData.updatedAt = updates.updatedAt;
                     
                     // Refresh the display
                     await displayProfile(profileData, isOwner);
@@ -3838,13 +3925,16 @@
                     showToast('Verification status updated');
                 }
                 
+                // Close the modal
+                closeModal('verificationModal');
+                
             } catch (error) {
                 console.error('Error toggling verification:', error);
-                showToast('Error updating verification status');
+                showToast('Error updating verification status: ' + error.message);
             }
         }
 
-        // Admin verification prompt
+        // Admin verification prompt - FIXED VERSION
         function adminVerifyUserPrompt(userId, userName) {
             if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
                 showToast('Admin access required');
@@ -3853,6 +3943,10 @@
             
             const modal = document.getElementById('verificationModal');
             const content = document.getElementById('verificationContent');
+            
+            // Get current verification status
+            const isVerified = profileData?.verified || false;
+            const isPremium = profileData?.verifiedLevel === 'premium' || profileData?.premiumVerified || false;
             
             content.innerHTML = `
                 <div style="text-align: center; margin-bottom: var(--md-spacing-xl);">
@@ -3863,10 +3957,16 @@
                     <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg);">
                         Select verification level for this user
                     </p>
+                    <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg);">
+                        <p style="margin: 0; color: var(--md-on-surface-variant);">
+                            Current Status: ${isVerified ? (isPremium ? 'Premium Verified' : 'Standard Verified') : 'Not Verified'}
+                        </p>
+                    </div>
                 </div>
                 
                 <div style="display: grid; gap: var(--md-spacing-md);">
-                    <button class="btn btn-filled" onclick="adminToggleVerification('${userId}', true, 'basic'); closeModal('verificationModal')" style="width: 100%; text-align: left; justify-content: flex-start;">
+                    ${!isVerified ? `
+                    <button class="btn btn-filled" onclick="adminToggleVerification('${userId}', true, 'basic')" style="width: 100%; text-align: left; justify-content: flex-start;">
                         <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
                             <div style="background: var(--md-primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-check"></i>
@@ -3877,8 +3977,10 @@
                             </div>
                         </div>
                     </button>
+                    ` : ''}
                     
-                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', true, 'premium'); closeModal('verificationModal')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #FFD700; color: #FFA500;">
+                    ${!isPremium ? `
+                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', true, 'premium')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #FFD700; color: #FFA500;">
                         <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
                             <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-crown"></i>
@@ -3889,18 +3991,35 @@
                             </div>
                         </div>
                     </button>
+                    ` : ''}
                     
-                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', false, 'basic'); closeModal('verificationModal')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #ea4335; color: #ea4335;">
+                    ${isPremium ? `
+                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', false, 'premium')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #FFA500; color: #FFA500;">
+                        <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
+                            <div style="background: #FFA500; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Downgrade to Standard</div>
+                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Remove premium badge, keep verification</div>
+                            </div>
+                        </div>
+                    </button>
+                    ` : ''}
+                    
+                    ${isVerified ? `
+                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', false, 'basic')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #ea4335; color: #ea4335;">
                         <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
                             <div style="background: #ea4335; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-times"></i>
                             </div>
                             <div>
-                                <div style="font-weight: 600;">Remove Verification</div>
+                                <div style="font-weight: 600;">Remove All Verification</div>
                                 <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Remove all verification badges</div>
                             </div>
                         </div>
                     </button>
+                    ` : ''}
                 </div>
             `;
             
