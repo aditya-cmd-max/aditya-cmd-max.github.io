@@ -91,6 +91,11 @@
             --md-gradient-1: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             --md-gradient-2: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
             --md-gradient-3: linear-gradient(135deg, #1a73e8, #34a853);
+            
+            /* Verified Badge Colors */
+            --verified-badge-bg: linear-gradient(135deg, #1a73e8 0%, #0d8a72 100%);
+            --verified-badge-glow: 0 0 20px rgba(26, 115, 232, 0.4);
+            --verified-badge-animation: verifiedGlow 2s ease-in-out infinite;
         }
 
         /* Dark Theme */
@@ -115,6 +120,8 @@
             --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
             --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
             --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --verified-badge-bg: linear-gradient(135deg, #8ab4f8 0%, #81c995 100%);
+            --verified-badge-glow: 0 0 20px rgba(138, 180, 248, 0.4);
         }
 
         /* Base Styles */
@@ -202,10 +209,29 @@
             font-size: 1.5rem;
             box-shadow: var(--md-elevation-2);
             transition: var(--md-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+            transform: translateX(-100%);
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         .logo:hover .logo-icon {
             transform: rotate(15deg) scale(1.1);
+            box-shadow: var(--md-elevation-3);
         }
 
         .logo-text {
@@ -213,6 +239,10 @@
             font-size: 1.75rem;
             font-weight: 700;
             letter-spacing: -0.5px;
+            background: var(--md-gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header-actions {
@@ -544,61 +574,124 @@
             margin-left: var(--md-spacing-sm);
         }
 
-        /* Verified Badge Styles */
+        /* ENHANCED Verified Badge Styles */
         .verified-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: linear-gradient(135deg, #1a73e8, #0d8a72);
+            background: var(--verified-badge-bg);
             color: white;
             padding: 6px 14px;
             border-radius: var(--md-radius-pill);
             font-size: 0.8rem;
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-            animation: pulse 2s infinite;
+            box-shadow: var(--verified-badge-glow);
+            animation: var(--verified-badge-animation);
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.3px;
+        }
+
+        .verified-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 3s infinite;
         }
 
         .verified-badge i {
             font-size: 0.9rem;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
         }
 
-        @keyframes pulse {
-            0% { 
-                opacity: 0.9;
-                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+        @keyframes verifiedGlow {
+            0%, 100% {
+                box-shadow: var(--verified-badge-glow);
+                transform: scale(1);
             }
-            50% { 
-                opacity: 1;
-                box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
-            }
-            100% { 
-                opacity: 0.9;
-                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+            50% {
+                box-shadow: 0 0 25px rgba(26, 115, 232, 0.6);
+                transform: scale(1.02);
             }
         }
 
-        /* Avatar Badge */
+        @keyframes shine {
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* ENHANCED Avatar Badge */
         .avatar-verified-badge {
             position: absolute;
             bottom: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #1a73e8, #0d8a72);
+            background: var(--verified-badge-bg);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 3px solid var(--md-surface);
             z-index: 2;
-            box-shadow: var(--md-elevation-3);
+            box-shadow: var(--md-elevation-4);
+            animation: var(--verified-badge-animation);
+            cursor: help;
+            transition: var(--md-transition);
+        }
+
+        .avatar-verified-badge:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 30px rgba(26, 115, 232, 0.6);
         }
 
         .avatar-verified-badge i {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+        }
+
+        .avatar-verified-badge::after {
+            content: 'Verified Account';
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--md-transition);
+            box-shadow: var(--md-elevation-2);
+            pointer-events: none;
+            border: 1px solid var(--md-outline);
+        }
+
+        .avatar-verified-badge:hover::after {
+            opacity: 1;
+            transform: translateY(-5px);
+        }
+
+        /* Premium verified badge variant */
+        .verified-badge.premium {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .avatar-verified-badge.premium {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
         }
 
         /* For smaller screens */
@@ -609,10 +702,18 @@
             }
             
             .avatar-verified-badge {
-                width: 32px;
-                height: 32px;
+                width: 36px;
+                height: 36px;
                 bottom: 10px;
                 right: 10px;
+            }
+            
+            .avatar-verified-badge i {
+                font-size: 1rem;
+            }
+            
+            .avatar-verified-badge::after {
+                display: none;
             }
         }
 
@@ -884,6 +985,32 @@
             border-bottom-color: var(--md-primary);
             font-weight: 600;
         }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-xs);
+            padding: var(--md-spacing-xs) var(--md-spacing-sm);
+            border-radius: var(--md-radius-pill);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: rgba(52, 168, 83, 0.1);
+            color: #34a853;
+        }
+
+        .status-offline {
+            background: rgba(95, 99, 104, 0.1);
+            color: var(--md-on-surface-variant);
+        }
+
+        .status-busy {
+            background: rgba(234, 67, 53, 0.1);
+            color: #ea4335;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -899,7 +1026,14 @@
         <header class="profile-header">
             <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
                 <div class="logo-icon">
-                    <i class="fas fa-infinity"></i>
+                    <!-- Updated Logo SVG -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="white"/>
+                        <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6Z" fill="#1a73e8"/>
+                        <path d="M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z" fill="white"/>
+                        <path d="M12 20C7.59 20 4 16.41 4 12H0C0 18.63 5.37 24 12 24V20Z" fill="#34a853"/>
+                        <path d="M20 12C20 16.41 16.41 20 12 20V24C18.63 24 24 18.63 24 12H20Z" fill="#4285f4"/>
+                    </svg>
                 </div>
                 <span class="logo-text">Reverbit</span>
             </a>
@@ -959,6 +1093,22 @@
             <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
                 <button class="btn btn-outlined" onclick="closeModal('shareModal')">Cancel</button>
                 <button class="btn btn-filled" onclick="copyShareLink()">Copy Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg); display: flex; align-items: center; gap: var(--md-spacing-sm);">
+                <i class="fas fa-shield-alt" style="color: var(--md-primary);"></i>
+                Account Verification
+            </h2>
+            <div id="verificationContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end; margin-top: var(--md-spacing-xl);">
+                <button class="btn btn-outlined" onclick="closeModal('verificationModal')">Close</button>
             </div>
         </div>
     </div>
@@ -1063,6 +1213,12 @@
             } else {
                 localStorage.setItem('theme', 'light');
             }
+            
+            // Update theme toggle icon
+            const themeIcon = document.querySelector('#themeToggle .material-icons-round');
+            if (themeIcon) {
+                themeIcon.textContent = document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode';
+            }
         }
 
         // Show visitor landing page when no user and not logged in
@@ -1119,8 +1275,8 @@
                         My Profile
                     </a>
                     ${isAdmin ? `
-                        <button class="btn btn-outlined" onclick="adminVerifyUser()" title="Admin: Verify Users">
-                            <i class="fas fa-check-circle"></i>
+                        <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
+                            <i class="fas fa-user-shield"></i>
                             Admin
                         </button>
                     ` : ''}
@@ -1230,8 +1386,12 @@
             // Calculate member days
             const memberDays = calculateMemberDays(data.createdAt);
             
-            // Check if user is verified
-            const isVerified = data.verified === true;
+            // Check if user is verified and get verification level
+            const verificationLevel = getVerificationLevel(data);
+            const isVerified = verificationLevel !== 'none';
+            
+            // Get status indicator
+            const statusIndicator = getStatusIndicator(data);
             
             // Create profile HTML
             const profileHTML = `
@@ -1241,8 +1401,10 @@
                             <div class="profile-avatar-large">
                                 <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" class="profile-avatar-large-img" onerror="handleAvatarError(this)">
                                 ${isVerified ? `
-                                    <div class="avatar-verified-badge" title="Verified Account">
-                                        <i class="fas fa-check"></i>
+                                    <div class="avatar-verified-badge ${verificationLevel === 'premium' ? 'premium' : ''}" 
+                                         title="${getVerificationTooltip(verificationLevel)}"
+                                         onclick="showVerificationInfo('${verificationLevel}')">
+                                        <i class="fas fa-${verificationLevel === 'premium' ? 'crown' : 'check'}"></i>
                                     </div>
                                 ` : ''}
                                 ${isOwnerView ? `
@@ -1256,10 +1418,13 @@
                         <div class="profile-details">
                             <div class="profile-username-section">
                                 <h1 class="profile-username">${data.displayName || 'User'}
+                                    ${statusIndicator}
                                     ${isVerified ? `
-                                        <span class="verified-badge">
-                                            <i class="fas fa-check-circle"></i>
-                                            Verified
+                                        <span class="verified-badge ${verificationLevel === 'premium' ? 'premium' : ''}" 
+                                              onclick="showVerificationInfo('${verificationLevel}')"
+                                              style="cursor: pointer;">
+                                            <i class="fas fa-${verificationLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
+                                            ${verificationLevel === 'premium' ? 'Premium Verified' : 'Verified'}
                                         </span>
                                     ` : ''}
                                 </h1>
@@ -1273,6 +1438,12 @@
                                             <i class="fas fa-share"></i>
                                             Share
                                         </button>
+                                        ${!isVerified ? `
+                                            <button class="btn btn-outlined" onclick="requestVerification()" style="border-color: var(--md-secondary); color: var(--md-secondary);">
+                                                <i class="fas fa-shield-alt"></i>
+                                                Get Verified
+                                            </button>
+                                        ` : ''}
                                     </div>
                                 ` : ''}
                             </div>
@@ -1303,6 +1474,12 @@
                             <div class="profile-email">
                                 <i class="fas fa-envelope"></i>
                                 ${data.email || 'No email available'}
+                                ${data.emailVerified ? `
+                                    <span class="status-indicator status-online" style="margin-left: var(--md-spacing-sm);">
+                                        <i class="fas fa-check-circle"></i>
+                                        Verified
+                                    </span>
+                                ` : ''}
                             </div>
                             
                             <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
@@ -1313,6 +1490,12 @@
                                         <i class="fas fa-user"></i>
                                         View Your Profile
                                     </button>
+                                    ${currentUser.email === 'adityajha1104@gmail.com' ? `
+                                        <button class="btn btn-outlined" onclick="adminVerifyUserPrompt('${data.uid}', '${data.displayName || 'User'}')">
+                                            <i class="fas fa-user-shield"></i>
+                                            Verify User
+                                        </button>
+                                    ` : ''}
                                 </div>
                             ` : ''}
                         </div>
@@ -1330,6 +1513,12 @@
                                 Settings
                             </button>
                         ` : ''}
+                        ${isVerified ? `
+                            <button class="profile-tab ${currentTab === 'verification' ? 'active' : ''}" onclick="switchTab('verification')">
+                                <i class="fas fa-shield-alt"></i>
+                                Verification
+                            </button>
+                        ` : ''}
                     </div>
 
                     <!-- Tab Content -->
@@ -1339,11 +1528,15 @@
 
                     <!-- Legal Information Section -->
                     <div class="legal-info-section">
-                        <h2>Legal Information</h2>
+                        <h2>Account Information</h2>
                         <div class="legal-grid">
                             <div class="legal-item">
                                 <h3>Account Status</h3>
                                 <p>${data.isPublic ? 'Public Profile' : 'Private Profile'}</p>
+                            </div>
+                            <div class="legal-item">
+                                <h3>Verification Level</h3>
+                                <p>${verificationLevel === 'none' ? 'Not Verified' : verificationLevel === 'basic' ? 'Basic Verified' : 'Premium Verified'}</p>
                             </div>
                             <div class="legal-item">
                                 <h3>Member Since</h3>
@@ -1357,6 +1550,12 @@
                                 <h3>Last Updated</h3>
                                 <p>${formatDate(data.updatedAt)}</p>
                             </div>
+                            ${isVerified ? `
+                            <div class="legal-item">
+                                <h3>Verified Since</h3>
+                                <p>${formatDate(data.verifiedAt || data.updatedAt)}</p>
+                            </div>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -1370,6 +1569,50 @@
             }
         }
 
+        // Get verification level
+        function getVerificationLevel(data) {
+            if (!data.verified) return 'none';
+            
+            // Check for premium verification
+            if (data.verifiedLevel === 'premium' || data.premiumVerified) {
+                return 'premium';
+            }
+            
+            // Check for admin verification
+            if (data.verifiedBy === 'admin' || data.verifiedBy === 'adityajha1104@gmail.com') {
+                return 'basic';
+            }
+            
+            return data.verifiedLevel || 'basic';
+        }
+
+        // Get verification tooltip
+        function getVerificationTooltip(level) {
+            const tooltips = {
+                'basic': 'Verified Account ✓\nIdentity confirmed by Reverbit',
+                'premium': 'Premium Verified Account 👑\nEnhanced trust level with additional verification',
+                'admin': 'Admin Verified Account ⚡\nVerified by Reverbit administrators'
+            };
+            return tooltips[level] || 'Verified Account';
+        }
+
+        // Get status indicator
+        function getStatusIndicator(data) {
+            if (!data.lastLogin) return '';
+            
+            const lastActive = new Date(data.lastLogin);
+            const now = new Date();
+            const diffHours = Math.floor((now - lastActive) / (1000 * 60 * 60));
+            
+            if (diffHours < 1) {
+                return '<span class="status-indicator status-online"><i class="fas fa-circle"></i> Online</span>';
+            } else if (diffHours < 24) {
+                return `<span class="status-indicator status-online"><i class="fas fa-circle"></i> Active ${diffHours}h ago</span>`;
+            } else {
+                return '<span class="status-indicator status-offline"><i class="fas fa-circle"></i> Offline</span>';
+            }
+        }
+
         // Get tab content based on selected tab
         function getTabContent(tab, data, isOwnerView) {
             switch(tab) {
@@ -1377,6 +1620,8 @@
                     return createOverviewContent(data);
                 case 'settings':
                     return isOwnerView ? createSettingsPanel(data) : '';
+                case 'verification':
+                    return createVerificationPanel(data);
                 default:
                     return createOverviewContent(data);
             }
@@ -1408,7 +1653,7 @@
                     <div class="settings-section">
                         <h3>About</h3>
                         <p style="color: var(--md-on-surface-variant);">
-                            This is a verified Reverbit user profile. All information displayed is managed 
+                            This is a Reverbit user profile. All information displayed is managed 
                             through the Reverbit dashboard and connected to Firebase authentication.
                         </p>
                     </div>
@@ -1422,13 +1667,125 @@
                     </div>
                     ` : ''}
                     
+                    ${data.website ? `
                     <div class="settings-section">
-                        <h3>Profile Information</h3>
+                        <h3>Website</h3>
                         <p style="color: var(--md-on-surface-variant);">
-                            This profile contains only legal and verified information from the Reverbit platform.
-                            No fake posts or content are displayed.
+                            <i class="fas fa-link"></i> 
+                            <a href="${data.website}" target="_blank" style="color: var(--md-primary);">${data.website}</a>
                         </p>
                     </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Create verification panel
+        function createVerificationPanel(data) {
+            const verificationLevel = getVerificationLevel(data);
+            const isVerified = verificationLevel !== 'none';
+            
+            if (!isVerified) {
+                return `
+                    <div class="settings-panel">
+                        <div class="settings-section" style="text-align: center; padding: var(--md-spacing-xxl);">
+                            <div style="font-size: 4rem; color: var(--md-outline); margin-bottom: var(--md-spacing-lg);">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 style="margin-bottom: var(--md-spacing-md);">Get Verified</h3>
+                            <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-xl);">
+                                Get a verified badge on your profile to build trust with other users.
+                            </p>
+                            <button class="btn btn-filled" onclick="requestVerification()">
+                                <i class="fas fa-shield-alt"></i>
+                                Request Verification
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="settings-panel">
+                    <div class="settings-section">
+                        <div style="background: var(--md-surface-variant); padding: var(--md-spacing-xl); border-radius: var(--md-radius-large); border-left: 4px solid var(--md-primary);">
+                            <div style="display: flex; align-items: center; gap: var(--md-spacing-lg); margin-bottom: var(--md-spacing-lg);">
+                                <div class="verified-badge ${verificationLevel === 'premium' ? 'premium' : ''}" style="font-size: 1rem; padding: var(--md-spacing-md) var(--md-spacing-lg);">
+                                    <i class="fas fa-${verificationLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
+                                    ${verificationLevel === 'premium' ? 'Premium Verified' : 'Verified Account'}
+                                </div>
+                                <div>
+                                    <h3 style="margin-bottom: var(--md-spacing-xs);">${verificationLevel === 'premium' ? 'Premium Verification' : 'Account Verified'}</h3>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.95rem;">
+                                        ${verificationLevel === 'premium' ? 'Highest trust level with enhanced features' : 'Identity confirmed by Reverbit'}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--md-spacing-lg); margin-bottom: var(--md-spacing-xl);">
+                                <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium);">
+                                    <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: var(--md-spacing-sm);">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h4 style="margin-bottom: var(--md-spacing-xs);">Identity Verified</h4>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
+                                        Your identity has been confirmed
+                                    </p>
+                                </div>
+                                
+                                <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium);">
+                                    <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: var(--md-spacing-sm);">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <h4 style="margin-bottom: var(--md-spacing-xs);">Trust Indicator</h4>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
+                                        Builds trust with other users
+                                    </p>
+                                </div>
+                                
+                                ${verificationLevel === 'premium' ? `
+                                <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium);">
+                                    <div style="font-size: 2rem; color: #FFD700; margin-bottom: var(--md-spacing-sm);">
+                                        <i class="fas fa-crown"></i>
+                                    </div>
+                                    <h4 style="margin-bottom: var(--md-spacing-xs);">Premium Features</h4>
+                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
+                                        Access to exclusive features
+                                    </p>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
+                                <h4 style="margin-bottom: var(--md-spacing-sm);">Verification Details</h4>
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--md-spacing-sm);">
+                                    <span style="color: var(--md-on-surface-variant);">Level:</span>
+                                    <span style="font-weight: 500;">${verificationLevel === 'premium' ? 'Premium' : 'Standard'}</span>
+                                    
+                                    <span style="color: var(--md-on-surface-variant);">Verified Since:</span>
+                                    <span>${formatDate(data.verifiedAt || data.updatedAt)}</span>
+                                    
+                                    ${data.verifiedBy ? `
+                                        <span style="color: var(--md-on-surface-variant);">Verified By:</span>
+                                        <span>${data.verifiedBy === 'admin' ? 'Reverbit Admin' : 'System'}</span>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${verificationLevel === 'basic' && isOwner ? `
+                    <div class="settings-section">
+                        <h3>Upgrade to Premium</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
+                            Get the premium verification badge with exclusive features.
+                        </p>
+                        <button class="btn btn-filled" onclick="upgradeToPremium()" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
+                            <i class="fas fa-crown"></i>
+                            Upgrade to Premium
+                        </button>
+                    </div>
+                    ` : ''}
                 </div>
             `;
         }
@@ -1436,6 +1793,8 @@
         // Create settings panel (owner only)
         function createSettingsPanel(data) {
             const isAdmin = currentUser && currentUser.email === 'adityajha1104@gmail.com';
+            const verificationLevel = getVerificationLevel(data);
+            const isVerified = verificationLevel !== 'none';
             
             return `
                 <div class="settings-panel">
@@ -1443,16 +1802,24 @@
                     <div class="settings-section">
                         <h3><i class="fas fa-user-shield" style="color: var(--md-primary); margin-right: 8px;"></i>Admin Controls</h3>
                         <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg); border-left: 4px solid var(--md-primary);">
-                            <h4 style="margin-bottom: var(--md-spacing-sm); color: var(--md-primary);">Verification Status</h4>
+                            <h4 style="margin-bottom: var(--md-spacing-sm); color: var(--md-primary);">Verification Management</h4>
                             <p style="margin-bottom: var(--md-spacing-md); color: var(--md-on-surface-variant);">
-                                <strong>Current status:</strong> ${data.verified ? '<span style="color: #34a853;">✓ Verified Account</span>' : '<span style="color: var(--md-on-surface-variant);">Not Verified</span>'}
+                                <strong>Current status:</strong> 
+                                ${isVerified ? 
+                                    `<span style="color: #34a853;">✓ ${verificationLevel === 'premium' ? 'Premium Verified' : 'Verified'}</span>` : 
+                                    '<span style="color: var(--md-on-surface-variant);">Not Verified</span>'
+                                }
                             </p>
                             <div style="display: flex; gap: var(--md-spacing-sm); flex-wrap: wrap;">
-                                <button class="btn ${data.verified ? 'btn-outlined' : 'btn-filled'}" onclick="toggleVerifiedStatus('${data.uid}', ${!data.verified})">
-                                    <i class="fas fa-${data.verified ? 'times' : 'check'}"></i>
-                                    ${data.verified ? 'Remove Verification' : 'Verify This Account'}
+                                <button class="btn ${isVerified ? 'btn-outlined' : 'btn-filled'}" onclick="adminToggleVerification('${data.uid}', ${!isVerified}, 'basic')">
+                                    <i class="fas fa-${isVerified ? 'times' : 'check'}"></i>
+                                    ${isVerified ? 'Remove Verification' : 'Verify Account'}
                                 </button>
-                                <button class="btn btn-outlined" onclick="adminVerifyUser()">
+                                <button class="btn ${verificationLevel === 'premium' ? 'btn-filled' : 'btn-outlined'}" onclick="adminToggleVerification('${data.uid}', ${verificationLevel !== 'premium'}, 'premium')">
+                                    <i class="fas fa-crown"></i>
+                                    ${verificationLevel === 'premium' ? 'Remove Premium' : 'Make Premium'}
+                                </button>
+                                <button class="btn btn-outlined" onclick="showAdminVerificationPanel()">
                                     <i class="fas fa-user-plus"></i>
                                     Verify Other User
                                 </button>
@@ -1659,8 +2026,8 @@
             }
         }
 
-        // Toggle verified status (admin only)
-        async function toggleVerifiedStatus(userId, newStatus) {
+        // Admin toggle verification
+        async function adminToggleVerification(userId, verify, level) {
             // Check if user is admin (you)
             if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
                 showToast('Admin access required');
@@ -1668,45 +2035,282 @@
             }
             
             try {
-                // Update the verified status in Firestore
-                await db.collection('users').doc(userId).update({
-                    verified: newStatus,
+                const updates = {
+                    verified: verify,
+                    verifiedLevel: verify ? level : null,
+                    verifiedAt: verify ? new Date().toISOString() : null,
+                    verifiedBy: verify ? 'admin' : null,
                     updatedAt: new Date().toISOString()
-                });
+                };
+                
+                if (level === 'premium') {
+                    updates.premiumVerified = verify;
+                }
+                
+                // Update the verification status in Firestore
+                await db.collection('users').doc(userId).update(updates);
                 
                 // Update local data
                 if (profileData && profileData.uid === userId) {
-                    profileData.verified = newStatus;
+                    Object.assign(profileData, updates);
                     
                     // Refresh the display
                     await displayProfile(profileData, isOwner);
                     
-                    showToast(`User ${newStatus ? 'verified successfully! ✓' : 'unverified'}`);
+                    showToast(`User ${verify ? level === 'premium' ? 'premium verified! 👑' : 'verified! ✓' : 'unverified'}`);
                 } else {
-                    showToast('Status updated');
+                    showToast('Verification status updated');
                 }
                 
             } catch (error) {
-                console.error('Error toggling verified status:', error);
+                console.error('Error toggling verification:', error);
                 showToast('Error updating verification status');
             }
         }
 
-        // Add this function for admin to manually verify
-        function adminVerifyUser() {
+        // Admin verification prompt
+        function adminVerifyUserPrompt(userId, userName) {
             if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
                 showToast('Admin access required');
                 return;
             }
             
-            // Prompt for user ID
-            const userId = prompt('Enter the User ID to verify:');
+            const modal = document.getElementById('verificationModal');
+            const content = document.getElementById('verificationContent');
+            
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: var(--md-spacing-xl);">
+                    <div style="font-size: 4rem; color: var(--md-primary); margin-bottom: var(--md-spacing-lg);">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3 style="margin-bottom: var(--md-spacing-sm);">Verify User: ${userName}</h3>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg);">
+                        Select verification level for this user
+                    </p>
+                </div>
+                
+                <div style="display: grid; gap: var(--md-spacing-md);">
+                    <button class="btn btn-filled" onclick="adminToggleVerification('${userId}', true, 'basic'); closeModal('verificationModal')" style="width: 100%; text-align: left; justify-content: flex-start;">
+                        <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
+                            <div style="background: var(--md-primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Standard Verification</div>
+                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Basic verified badge</div>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', true, 'premium'); closeModal('verificationModal')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #FFD700; color: #FFA500;">
+                        <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
+                            <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Premium Verification</div>
+                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Gold badge with exclusive features</div>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="btn btn-outlined" onclick="adminToggleVerification('${userId}', false, 'basic'); closeModal('verificationModal')" style="width: 100%; text-align: left; justify-content: flex-start; border-color: #ea4335; color: #ea4335;">
+                        <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
+                            <div style="background: #ea4335; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Remove Verification</div>
+                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Remove all verification badges</div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Show admin verification panel
+        function showAdminVerificationPanel() {
+            if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
+                showToast('Admin access required');
+                return;
+            }
+            
+            const userId = prompt('Enter the User ID to manage verification:');
             if (!userId) return;
             
-            const confirmVerify = confirm(`Verify user ${userId}?\nThey will get a verified badge on their profile.`);
-            if (confirmVerify) {
-                toggleVerifiedStatus(userId, true);
+            // Try to fetch user data
+            db.collection('users').doc(userId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        adminVerifyUserPrompt(userId, userData.displayName || 'User');
+                    } else {
+                        showToast('User not found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user:', error);
+                    showToast('Error loading user');
+                });
+        }
+
+        // Show verification info
+        function showVerificationInfo(level) {
+            const modal = document.getElementById('verificationModal');
+            const content = document.getElementById('verificationContent');
+            
+            const info = {
+                basic: {
+                    title: 'Verified Account',
+                    icon: 'check-circle',
+                    color: 'var(--md-primary)',
+                    description: 'This account has been verified by Reverbit. Identity confirmation adds trust and authenticity to the profile.',
+                    benefits: [
+                        'Identity verified by Reverbit',
+                        'Increased profile credibility',
+                        'Trust indicator for other users'
+                    ]
+                },
+                premium: {
+                    title: 'Premium Verified Account',
+                    icon: 'crown',
+                    color: '#FFD700',
+                    description: 'Premium verification indicates enhanced trust level with additional verification steps completed.',
+                    benefits: [
+                        'Enhanced identity verification',
+                        'Premium badge display',
+                        'Priority support access',
+                        'Exclusive feature access'
+                    ]
+                }
+            };
+            
+            const data = info[level] || info.basic;
+            
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: var(--md-spacing-xl);">
+                    <div style="font-size: 4rem; color: ${data.color}; margin-bottom: var(--md-spacing-lg);">
+                        <i class="fas fa-${data.icon}"></i>
+                    </div>
+                    <h3 style="margin-bottom: var(--md-spacing-sm);">${data.title}</h3>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg);">
+                        ${data.description}
+                    </p>
+                </div>
+                
+                <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-large); margin-bottom: var(--md-spacing-xl);">
+                    <h4 style="margin-bottom: var(--md-spacing-md);">Benefits</h4>
+                    <ul style="color: var(--md-on-surface-variant); padding-left: var(--md-spacing-lg);">
+                        ${data.benefits.map(benefit => `<li style="margin-bottom: var(--md-spacing-sm);">${benefit}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
+                    <h4 style="margin-bottom: var(--md-spacing-sm);">About Verification</h4>
+                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
+                        Reverbit verification helps users identify authentic accounts. Verified badges are awarded 
+                        to accounts that have completed identity confirmation.
+                    </p>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Request verification
+        function requestVerification() {
+            const modal = document.getElementById('verificationModal');
+            const content = document.getElementById('verificationContent');
+            
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: var(--md-spacing-xl);">
+                    <div style="font-size: 4rem; color: var(--md-primary); margin-bottom: var(--md-spacing-lg);">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 style="margin-bottom: var(--md-spacing-sm);">Request Verification</h3>
+                    <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg);">
+                        Get a verified badge to build trust with other users
+                    </p>
+                </div>
+                
+                <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-large); margin-bottom: var(--md-spacing-xl);">
+                    <h4 style="margin-bottom: var(--md-spacing-md);">Requirements</h4>
+                    <ul style="color: var(--md-on-surface-variant); padding-left: var(--md-spacing-lg);">
+                        <li style="margin-bottom: var(--md-spacing-sm);">Complete profile information</li>
+                        <li style="margin-bottom: var(--md-spacing-sm);">Verified email address</li>
+                        <li style="margin-bottom: var(--md-spacing-sm);">Active account for at least 30 days</li>
+                        <li style="margin-bottom: var(--md-spacing-sm);">No violations of terms of service</li>
+                    </ul>
+                </div>
+                
+                <div style="display: grid; gap: var(--md-spacing-md);">
+                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-md); background: var(--md-surface); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
+                        <i class="fas fa-check-circle" style="color: #34a853;"></i>
+                        <span>Email Verified: ${currentUser?.emailVerified ? '✓' : 'Required'}</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-md); background: var(--md-surface); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
+                        <i class="fas fa-user" style="color: ${profileData?.displayName ? '#34a853' : '#ea4335'};"></i>
+                        <span>Profile Complete: ${profileData?.displayName ? '✓' : 'Required'}</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-md); background: var(--md-surface); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
+                        <i class="fas fa-calendar" style="color: ${calculateMemberDays(profileData?.createdAt) >= 30 ? '#34a853' : '#ea4335'};"></i>
+                        <span>Account Age: ${calculateMemberDays(profileData?.createdAt)}/30 days</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: var(--md-spacing-xl); text-align: center;">
+                    ${calculateMemberDays(profileData?.createdAt) >= 30 && currentUser?.emailVerified && profileData?.displayName ? `
+                        <button class="btn btn-filled" onclick="submitVerificationRequest()" style="width: 100%; margin-bottom: var(--md-spacing-md);">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Verification Request
+                        </button>
+                    ` : `
+                        <button class="btn btn-outlined" onclick="closeModal('verificationModal')" style="width: 100%; margin-bottom: var(--md-spacing-md);">
+                            Complete Requirements First
+                        </button>
+                    `}
+                    <p style="font-size: 0.75rem; color: var(--md-on-surface-variant);">
+                        Verification requests are reviewed manually and may take 3-5 business days.
+                    </p>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Submit verification request
+        async function submitVerificationRequest() {
+            try {
+                // Create verification request
+                const requestData = {
+                    userId: currentUser.uid,
+                    email: currentUser.email,
+                    displayName: profileData?.displayName,
+                    requestedAt: new Date().toISOString(),
+                    status: 'pending',
+                    reviewNotes: ''
+                };
+                
+                // Save request to Firestore
+                await db.collection('verificationRequests').doc(currentUser.uid).set(requestData);
+                
+                showToast('Verification request submitted!');
+                closeModal('verificationModal');
+                
+            } catch (error) {
+                console.error('Error submitting verification request:', error);
+                showToast('Error submitting request');
             }
+        }
+
+        // Upgrade to premium
+        function upgradeToPremium() {
+            alert('Premium verification upgrade would be processed here. This is a demo feature.');
         }
 
         // Delete profile (placeholder function)
