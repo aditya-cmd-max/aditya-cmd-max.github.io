@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,157 +175,6 @@
             to { opacity: 1; }
         }
 
-        /* Mobile Hamburger Menu */
-        .mobile-menu-toggle {
-            display: none;
-            background: transparent;
-            border: none;
-            color: var(--md-on-surface);
-            cursor: pointer;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            align-items: center;
-            justify-content: center;
-            transition: var(--md-transition);
-            z-index: 1000;
-            position: relative;
-        }
-
-        .mobile-menu-toggle:hover {
-            background: var(--md-surface-variant);
-        }
-
-        .mobile-menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: currentColor;
-            margin: 5px 0;
-            transition: var(--md-transition);
-            border-radius: 2px;
-        }
-
-        .mobile-menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-
-        .mobile-menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-
-        /* Mobile Navigation Overlay */
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 998;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--md-transition);
-        }
-
-        .mobile-nav-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Mobile Navigation Menu */
-        .mobile-nav-menu {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 300px;
-            height: 100%;
-            background: var(--md-surface);
-            border-left: 1px solid var(--md-outline);
-            box-shadow: var(--md-elevation-5);
-            z-index: 999;
-            transition: var(--md-transition);
-            padding: var(--md-spacing-xl);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .mobile-nav-menu.active {
-            right: 0;
-        }
-
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--md-spacing-xl);
-            padding-bottom: var(--md-spacing-md);
-            border-bottom: 1px solid var(--md-outline);
-        }
-
-        .mobile-nav-logo {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-            text-decoration: none;
-        }
-
-        .mobile-nav-logo-text {
-            font-family: var(--md-font-logo);
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--md-gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .mobile-nav-items {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-            flex: 1;
-        }
-
-        .mobile-nav-item {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            padding: var(--md-spacing-md);
-            border-radius: var(--md-radius-medium);
-            text-decoration: none;
-            color: var(--md-on-surface);
-            transition: var(--md-transition);
-            font-family: var(--md-font-heading);
-            font-weight: 500;
-        }
-
-        .mobile-nav-item:hover,
-        .mobile-nav-item.active {
-            background: var(--md-primary-container);
-            color: var(--md-primary);
-        }
-
-        .mobile-nav-item i {
-            width: 24px;
-            text-align: center;
-        }
-
-        .mobile-nav-footer {
-            margin-top: auto;
-            padding-top: var(--md-spacing-xl);
-            border-top: 1px solid var(--md-outline);
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-md);
-        }
-
         /* Header */
         .profile-header {
             display: flex;
@@ -351,20 +201,17 @@
         .logo-icon {
             width: 48px;
             height: 48px;
+            background: var(--md-gradient-1);
             border-radius: var(--md-radius-medium);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            color: var(--md-on-primary);
+            font-size: 1.5rem;
+            box-shadow: var(--md-elevation-2);
             transition: var(--md-transition);
             position: relative;
-        }
-
-        .logo-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            overflow: hidden;
         }
 
         .logo-icon::after {
@@ -464,57 +311,6 @@
             background: var(--md-primary-container);
             border-color: var(--md-primary);
             transform: translateY(-2px);
-        }
-
-        /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 32px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--md-outline);
-            transition: var(--md-transition);
-            border-radius: var(--md-radius-pill);
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--md-surface);
-            transition: var(--md-transition);
-            border-radius: 50%;
-            box-shadow: var(--md-elevation-1);
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-            background-color: var(--md-secondary);
-        }
-
-        .toggle-switch input:checked + .toggle-slider:before {
-            transform: translateX(28px);
-        }
-
-        .toggle-switch input:focus + .toggle-slider {
-            box-shadow: 0 0 1px var(--md-secondary);
         }
 
         /* Profile Layout */
@@ -1054,114 +850,44 @@
             }
         }
 
-        /* Responsive Design - Mobile First Approach */
-        @media (max-width: 1024px) {
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .profile-container {
                 padding: var(--md-spacing-md);
             }
             
-            .header-actions .btn:not(.theme-toggle) {
-                display: none;
-            }
-            
-            .mobile-menu-toggle {
-                display: flex;
-            }
-            
-            .logo-text {
-                font-size: 1.5rem;
-            }
-            
-            .profile-username {
-                font-size: 2rem;
-            }
-            
-            .profile-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
             .profile-header {
+                flex-direction: column;
+                gap: var(--md-spacing-lg);
+                text-align: center;
                 padding: var(--md-spacing-lg) 0;
-                flex-wrap: wrap;
-                gap: var(--md-spacing-md);
-            }
-            
-            .logo {
-                order: 1;
-            }
-            
-            .mobile-menu-toggle {
-                order: 2;
             }
             
             .header-actions {
-                order: 3;
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .profile-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .profile-controls {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .btn {
                 width: 100%;
                 justify-content: center;
             }
             
-            .mobile-nav-menu {
-                width: 100%;
-                right: -100%;
+            .btn {
+                min-height: 44px;
+                padding: var(--md-spacing-sm) var(--md-spacing-lg);
+                font-size: 0.95rem;
             }
             
-            .mobile-nav-menu.active {
-                right: 0;
+            .profile-controls {
+                justify-content: center;
             }
         }
 
         @media (max-width: 480px) {
-            .profile-container {
-                padding: var(--md-spacing-sm);
+            .profile-stats {
+                flex-direction: column;
+                align-items: center;
             }
             
-            .logo-text {
-                font-size: 1.25rem;
-            }
-            
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .profile-username {
-                font-size: 1.75rem;
-                text-align: center;
-                justify-content: center;
-            }
-            
-            .profile-bio {
-                font-size: 1rem;
-            }
-            
-            .stat-number {
-                font-size: 1.5rem;
-            }
-            
-            .stat-label {
-                font-size: 0.85rem;
-            }
-            
-            .toast {
-                left: var(--md-spacing-md);
-                right: var(--md-spacing-md);
-                bottom: var(--md-spacing-md);
+            .stat-item {
+                width: 100%;
+                max-width: 200px;
             }
         }
 
@@ -1287,472 +1013,354 @@
             color: #ea4335;
         }
 
-        /* Enhanced Mobile Organization */
-        .mobile-actions-stack {
-            display: none;
-        }
 
-        @media (max-width: 768px) {
-            .mobile-actions-stack {
-                display: flex;
-                flex-direction: column;
-                gap: var(--md-spacing-md);
-                margin: var(--md-spacing-lg) 0;
-                padding: var(--md-spacing-md);
-                background: var(--md-surface-variant);
-                border-radius: var(--md-radius-large);
-                border: 1px solid var(--md-outline);
-            }
-            
-            .mobile-action-row {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: var(--md-spacing-md) 0;
-                border-bottom: 1px solid var(--md-outline);
-            }
-            
-            .mobile-action-row:last-child {
-                border-bottom: none;
-            }
-            
-            .mobile-action-label {
-                display: flex;
-                align-items: center;
-                gap: var(--md-spacing-sm);
-                color: var(--md-on-surface);
-                font-weight: 500;
-            }
-            
-            .mobile-action-label i {
-                color: var(--md-primary);
-                width: 24px;
-            }
-            
-            .mobile-action-value {
-                color: var(--md-on-surface-variant);
-                font-size: 0.9rem;
-            }
-        }
+/* Search System Styles */
+.search-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--md-surface-variant);
+    border-radius: var(--md-radius-large);
+    margin: var(--md-spacing-xl) 0;
+}
 
-        /* Improved Organization Cards */
-        .organization-card {
-            background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-md);
-            transition: var(--md-transition);
-        }
+.empty-state-icon {
+    font-size: 48px;
+    color: var(--md-outline);
+    margin-bottom: 20px;
+}
 
-        .organization-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--md-elevation-3);
-            border-color: var(--md-primary);
-        }
+.search-suggestions {
+    max-width: 400px;
+    margin: 24px auto 0;
+}
 
-        .organization-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--md-spacing-md);
-        }
+.suggestion-tags {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
 
-        .organization-card-title {
-            font-family: var(--md-font-heading);
-            font-weight: 600;
-            color: var(--md-on-surface);
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-        }
+.suggestion-tag {
+    padding: 8px 16px;
+    border-radius: var(--md-radius-pill);
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--md-transition);
+}
 
-        .organization-card-content {
-            color: var(--md-on-surface-variant);
-        }
+.suggestion-tag:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    transform: translateY(-2px);
+}
 
-        /* Public/Private Toggle */
-        .visibility-toggle-container {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            background: var(--md-surface-variant);
-            padding: var(--md-spacing-md) var(--md-spacing-lg);
-            border-radius: var(--md-radius-large);
-            border: 1px solid var(--md-outline);
-        }
+.search-no-results {
+    text-align: center;
+    padding: 60px 20px;
+}
 
-        .visibility-toggle-label {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-xs);
-        }
+.no-results-icon {
+    font-size: 48px;
+    color: var(--md-outline);
+    margin-bottom: 20px;
+}
 
-        .visibility-toggle-title {
-            font-weight: 600;
-            color: var(--md-on-surface);
-        }
+.no-results-suggestions {
+    max-width: 400px;
+    margin: 24px auto 0;
+    text-align: left;
+    background: var(--md-surface);
+    padding: 20px;
+    border-radius: var(--md-radius-medium);
+    border: 1px solid var(--md-outline);
+}
 
-        .visibility-toggle-description {
-            font-size: 0.875rem;
-            color: var(--md-on-surface-variant);
-        }
+.no-results-suggestions p {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--md-on-surface);
+}
 
-        /* Loading animation for mobile */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+.no-results-suggestions ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--md-on-surface-variant);
+}
 
-        .loading-mobile {
-            animation: pulse 1.5s ease-in-out infinite;
-        }
+.no-results-suggestions li {
+    margin-bottom: 6px;
+}
 
-        /* Search System Styles */
-        .search-empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-large);
-            margin: var(--md-spacing-xl) 0;
-        }
+/* User Cards in Search */
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: var(--md-surface);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-large);
+    margin-bottom: 16px;
+    transition: var(--md-transition);
+    cursor: pointer;
+}
 
-        .empty-state-icon {
-            font-size: 48px;
-            color: var(--md-outline);
-            margin-bottom: 20px;
-        }
+.user-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--md-primary);
+    box-shadow: var(--md-elevation-3);
+}
 
-        .search-suggestions {
-            max-width: 400px;
-            margin: 24px auto 0;
-        }
+.user-card-avatar {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+}
 
-        .suggestion-tags {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
+.user-card-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--md-surface);
+    box-shadow: var(--md-elevation-1);
+}
 
-        .suggestion-tag {
-            padding: 8px 16px;
-            border-radius: var(--md-radius-pill);
-            background: var(--md-primary-container);
-            color: var(--md-on-primary-container);
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
-        }
+.user-avatar-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--verified-badge-bg);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--md-surface);
+    font-size: 10px;
+}
 
-        .suggestion-tag:hover {
-            background: var(--md-primary);
-            color: var(--md-on-primary);
-            transform: translateY(-2px);
-        }
+.user-avatar-badge.premium {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+}
 
-        .search-no-results {
-            text-align: center;
-            padding: 60px 20px;
-        }
+.user-card-info {
+    flex: 1;
+    min-width: 0;
+}
 
-        .no-results-icon {
-            font-size: 48px;
-            color: var(--md-outline);
-            margin-bottom: 20px;
-        }
+.user-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
 
-        .no-results-suggestions {
-            max-width: 400px;
-            margin: 24px auto 0;
-            text-align: left;
-            background: var(--md-surface);
-            padding: 20px;
-            border-radius: var(--md-radius-medium);
-            border: 1px solid var(--md-outline);
-        }
+.user-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin: 0;
+}
 
-        .no-results-suggestions p {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--md-on-surface);
-        }
+.user-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--verified-badge-bg);
+    color: white;
+    padding: 4px 10px;
+    border-radius: var(--md-radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: var(--verified-badge-glow);
+}
 
-        .no-results-suggestions ul {
-            margin: 0;
-            padding-left: 20px;
-            color: var(--md-on-surface-variant);
-        }
+.user-verified-badge.premium {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+}
 
-        .no-results-suggestions li {
-            margin-bottom: 6px;
-        }
+.user-email {
+    font-size: 14px;
+    color: var(--md-on-surface-variant);
+    margin: 0 0 12px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-        /* User Cards in Search */
-        .user-card {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-large);
-            margin-bottom: 16px;
-            transition: var(--md-transition);
-            cursor: pointer;
-        }
+.user-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
 
-        .user-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--md-primary);
-            box-shadow: var(--md-elevation-3);
-        }
+.user-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--md-on-surface-variant);
+}
 
-        .user-card-avatar {
-            position: relative;
-            width: 60px;
-            height: 60px;
-            flex-shrink: 0;
-        }
+.user-stat i {
+    font-size: 12px;
+}
 
-        .user-card-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--md-surface);
-            box-shadow: var(--md-elevation-1);
-        }
+.user-bio {
+    font-size: 14px;
+    color: var(--md-on-surface-variant);
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+}
 
-        .user-avatar-badge {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--verified-badge-bg);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--md-surface);
-            font-size: 10px;
-        }
+.user-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--md-on-surface-variant);
+}
 
-        .user-avatar-badge.premium {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #000;
-        }
+.user-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
 
-        .user-card-info {
-            flex: 1;
-            min-width: 0;
-        }
+.user-card-action {
+    padding: 8px 16px;
+    border-radius: var(--md-radius-pill);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--md-transition);
+    border: 1px solid var(--md-outline);
+    background: var(--md-surface);
+    color: var(--md-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
 
-        .user-card-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 4px;
-            flex-wrap: wrap;
-        }
+.user-card-action:hover {
+    background: var(--md-primary-container);
+    border-color: var(--md-primary);
+}
 
-        .user-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--md-on-surface);
-            margin: 0;
-        }
+.copy-link-btn {
+    padding: 8px;
+    min-width: 36px;
+    justify-content: center;
+}
 
-        .user-verified-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--verified-badge-bg);
-            color: white;
-            padding: 4px 10px;
-            border-radius: var(--md-radius-pill);
-            font-size: 12px;
-            font-weight: 600;
-            box-shadow: var(--verified-badge-glow);
-        }
+/* Search Loading */
+.search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+}
 
-        .user-verified-badge.premium {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #000;
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-        }
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--md-outline);
+    border-top-color: var(--md-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
 
-        .user-email {
-            font-size: 14px;
-            color: var(--md-on-surface-variant);
-            margin: 0 0 12px 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+/* Search Error */
+.search-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+}
 
-        .user-stats {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
+.search-error i {
+    font-size: 48px;
+    color: #ea4335;
+}
 
-        .user-stat {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: var(--md-on-surface-variant);
-        }
+.retry-btn {
+    padding: 10px 20px;
+    border-radius: var(--md-radius-pill);
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--md-transition);
+}
 
-        .user-stat i {
-            font-size: 12px;
-        }
+.retry-btn:hover {
+    background: var(--md-primary-dark);
+    transform: translateY(-2px);
+}
 
-        .user-bio {
-            font-size: 14px;
-            color: var(--md-on-surface-variant);
-            margin: 0 0 8px 0;
-            line-height: 1.4;
-        }
+/* Dark theme adjustments */
+.dark-theme .suggestion-tag {
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+}
 
-        .user-location {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: var(--md-on-surface-variant);
-        }
+.dark-theme .suggestion-tag:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+}
 
-        .user-card-actions {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
+.dark-theme .user-avatar-badge {
+    border-color: var(--md-surface);
+}
 
-        .user-card-action {
-            padding: 8px 16px;
-            border-radius: var(--md-radius-pill);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
-            border: 1px solid var(--md-outline);
-            background: var(--md-surface);
-            color: var(--md-primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
+.dark-theme .no-results-suggestions {
+    background: var(--md-surface-variant);
+    border-color: var(--md-outline-variant);
+}
 
-        .user-card-action:hover {
-            background: var(--md-primary-container);
-            border-color: var(--md-primary);
-        }
+@media (max-width: 768px) {
+    .user-card {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .user-card-avatar {
+        align-self: center;
+    }
+    
+    .user-stats {
+        justify-content: center;
+    }
+    
+    .user-card-actions {
+        justify-content: center;
+    }
+}
 
-        .copy-link-btn {
-            padding: 8px;
-            min-width: 36px;
-            justify-content: center;
-        }
-
-        /* Search Loading */
-        .search-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            gap: 16px;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--md-outline);
-            border-top-color: var(--md-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        /* Search Error */
-        .search-error {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            gap: 16px;
-        }
-
-        .search-error i {
-            font-size: 48px;
-            color: #ea4335;
-        }
-
-        .retry-btn {
-            padding: 10px 20px;
-            border-radius: var(--md-radius-pill);
-            background: var(--md-primary);
-            color: var(--md-on-primary);
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
-        }
-
-        .retry-btn:hover {
-            background: var(--md-primary-dark);
-            transform: translateY(-2px);
-        }
-
-        /* Dark theme adjustments */
-        .dark-theme .suggestion-tag {
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-        }
-
-        .dark-theme .suggestion-tag:hover {
-            background: var(--md-primary);
-            color: var(--md-on-primary);
-        }
-
-        .dark-theme .user-avatar-badge {
-            border-color: var(--md-surface);
-        }
-
-        .dark-theme .no-results-suggestions {
-            background: var(--md-surface-variant);
-            border-color: var(--md-outline-variant);
-        }
-
-        @media (max-width: 768px) {
-            .user-card {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            
-            .user-card-avatar {
-                align-self: center;
-            }
-            
-            .user-stats {
-                justify-content: center;
-            }
-            
-            .user-card-actions {
-                justify-content: center;
-            }
-        }
+        
     </style>
 </head>
 <body class="light-theme">
@@ -1762,64 +1370,23 @@
         <p style="color: var(--md-on-surface-variant);">Loading profile...</p>
     </div>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-
-    <!-- Mobile Navigation Menu -->
-    <div class="mobile-nav-menu" id="mobileNavMenu">
-        <div class="mobile-nav-header">
-            <a href="https://aditya-cmd-max.github.io/reverbit/" class="mobile-nav-logo">
-                <div class="logo-icon">
-                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
-                </div>
-                <span class="mobile-nav-logo-text">Reverbit</span>
-            </a>
-            <button class="mobile-menu-toggle active" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        
-        <div class="mobile-nav-items" id="mobileNavItems">
-            <!-- Will be populated by JavaScript -->
-        </div>
-        
-        <div class="mobile-nav-footer">
-            <button class="theme-toggle" id="mobileThemeToggle">
-                <span class="material-icons-round" id="mobileThemeIcon">dark_mode</span>
-                <span>Toggle Theme</span>
-            </button>
-            <div class="mobile-action-row">
-                <div class="mobile-action-label">
-                    <i class="fas fa-globe"></i>
-                    <span>Profile Visibility</span>
-                </div>
-                <label class="toggle-switch" id="mobileVisibilityToggle">
-                    <input type="checkbox">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-        </div>
-    </div>
-
     <!-- Profile Container -->
     <div class="profile-container" id="mainContent" style="display: none;">
         <!-- Header -->
         <header class="profile-header">
             <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
                 <div class="logo-icon">
-                    <!-- Real Reverbit Logo -->
-                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
+                    <!-- Updated Logo SVG -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="white"/>
+                        <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6Z" fill="#1a73e8"/>
+                        <path d="M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z" fill="white"/>
+                        <path d="M12 20C7.59 20 4 16.41 4 12H0C0 18.63 5.37 24 12 24V20Z" fill="#34a853"/>
+                        <path d="M20 12C20 16.41 16.41 20 12 20V24C18.63 24 24 18.63 24 12H20Z" fill="#4285f4"/>
+                    </svg>
                 </div>
                 <span class="logo-text">Reverbit</span>
             </a>
-            
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
             
             <div class="header-actions" id="headerActions">
                 <!-- Will be populated by JavaScript -->
@@ -1829,11 +1396,6 @@
         <!-- Profile Content -->
         <div id="profileContent">
             <!-- Profile will be loaded here dynamically -->
-        </div>
-
-        <!-- Mobile Actions Stack (Hidden on desktop) -->
-        <div class="mobile-actions-stack" id="mobileActionsStack">
-            <!-- Will be populated by JavaScript -->
         </div>
 
         <!-- Not Found Message -->
@@ -1919,11 +1481,6 @@
         const profileContent = document.getElementById('profileContent');
         const notFound = document.getElementById('notFound');
         const headerActions = document.getElementById('headerActions');
-        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-        const mobileNavMenu = document.getElementById('mobileNavMenu');
-        const mobileNavItems = document.getElementById('mobileNavItems');
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const mobileActionsStack = document.getElementById('mobileActionsStack');
 
         // Global variables
         let currentUser = null;
@@ -1953,7 +1510,6 @@
                 auth.onAuthStateChanged(async (user) => {
                     currentUser = user;
                     updateHeaderActions(user);
-                    updateMobileNav(user);
                     
                     // Check URL for user ID parameter
                     const urlParams = new URLSearchParams(window.location.search);
@@ -1972,7 +1528,11 @@
                 });
 
                 // Setup theme toggle
-                setupThemeToggle();
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('#themeToggle')) {
+                        toggleTheme();
+                    }
+                });
 
             } catch (error) {
                 console.error('Initialization error:', error);
@@ -1982,49 +1542,7 @@
             }
         });
 
-        // Mobile menu functions
-        function toggleMobileMenu() {
-            const isActive = mobileNavMenu.classList.contains('active');
-            
-            if (isActive) {
-                closeMobileMenu();
-            } else {
-                openMobileMenu();
-            }
-        }
-
-        function openMobileMenu() {
-            mobileNavMenu.classList.add('active');
-            mobileNavOverlay.classList.add('active');
-            mobileMenuToggle.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMobileMenu() {
-            mobileNavMenu.classList.remove('active');
-            mobileNavOverlay.classList.remove('active');
-            mobileMenuToggle.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Close mobile menu when clicking overlay
-        mobileNavOverlay.addEventListener('click', closeMobileMenu);
-
         // Theme functions
-        function setupThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const mobileThemeToggle = document.getElementById('mobileThemeToggle');
-            const mobileThemeIcon = document.getElementById('mobileThemeIcon');
-            
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-            
-            if (mobileThemeToggle) {
-                mobileThemeToggle.addEventListener('click', toggleTheme);
-            }
-        }
-
         function loadThemePreference() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -2034,9 +1552,6 @@
                 document.body.classList.add('light-theme');
                 document.body.classList.remove('dark-theme');
             }
-            
-            // Update theme toggle icons
-            updateThemeIcons();
         }
 
         function toggleTheme() {
@@ -2049,19 +1564,10 @@
                 localStorage.setItem('theme', 'light');
             }
             
-            updateThemeIcons();
-        }
-
-        function updateThemeIcons() {
+            // Update theme toggle icon
             const themeIcon = document.querySelector('#themeToggle .material-icons-round');
-            const mobileThemeIcon = document.getElementById('mobileThemeIcon');
-            
             if (themeIcon) {
                 themeIcon.textContent = document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode';
-            }
-            
-            if (mobileThemeIcon) {
-                mobileThemeIcon.textContent = document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode';
             }
         }
 
@@ -2095,125 +1601,66 @@
         }
 
         // Update header actions based on auth state
-        function updateHeaderActions(user) {
-            headerActions.innerHTML = '';
-            
-            const themeButton = `
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
+function updateHeaderActions(user) {
+    headerActions.innerHTML = '';
+    
+    const themeButton = `
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
+        </button>
+    `;
+    
+    // Add search button to header
+    const searchButton = `
+        <button class="btn btn-outlined" onclick="openProfileSearch()" id="searchButton">
+            <i class="fas fa-search"></i>
+            Search Profiles
+        </button>
+    `;
+    
+    if (user) {
+        // Check if user is admin (you)
+        const isAdmin = user.email === 'adityajha1104@gmail.com';
+        
+        // User is logged in
+        headerActions.innerHTML = `
+            ${searchButton}
+            <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
+                <i class="fas fa-user"></i>
+                My Profile
+            </a>
+            ${isAdmin ? `
+                <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
+                    <i class="fas fa-user-shield"></i>
+                    Admin
                 </button>
-            `;
-            
-            // Add search button to header (desktop only)
-            const searchButton = `
-                <button class="btn btn-outlined" onclick="openProfileSearch()" id="searchButton" style="display: none;">
-                    <i class="fas fa-search"></i>
-                    Search
-                </button>
-            `;
-            
-            if (user) {
-                // Check if user is admin (you)
-                const isAdmin = user.email === 'adityajha1104@gmail.com';
-                
-                // User is logged in
-                headerActions.innerHTML = `
-                    ${searchButton}
-                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined" style="display: none;">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled" style="display: none;">
-                        <i class="fas fa-user"></i>
-                        My Profile
-                    </a>
-                    ${isAdmin ? `
-                        <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users" style="display: none;">
-                            <i class="fas fa-user-shield"></i>
-                            Admin
-                        </button>
-                    ` : ''}
-                    ${themeButton}
-                    <button class="btn btn-outlined" onclick="signOut()" style="display: none;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sign Out
-                    </button>
-                `;
-            } else {
-                // User is not logged in
-                headerActions.innerHTML = `
-                    ${searchButton}
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined" style="display: none;">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled" style="display: none;">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up
-                    </a>
-                    ${themeButton}
-                `;
-            }
-            
-            // Show buttons on desktop
-            if (window.innerWidth > 768) {
-                headerActions.querySelectorAll('.btn').forEach(btn => {
-                    btn.style.display = 'inline-flex';
-                });
-            }
-        }
-
-        // Update mobile navigation
-        function updateMobileNav(user) {
-            mobileNavItems.innerHTML = '';
-            
-            let navItems = [];
-            
-            if (user) {
-                // User is logged in
-                const isAdmin = user.email === 'adityajha1104@gmail.com';
-                
-                navItems = [
-                    { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'https://aditya-cmd-max.github.io/dashboard' },
-                    { icon: 'fa-user', text: 'My Profile', href: `https://aditya-cmd-max.github.io/profile/?id=${user.uid}` },
-                    { icon: 'fa-search', text: 'Search Profiles', action: 'openProfileSearch()' },
-                    isAdmin ? { icon: 'fa-user-shield', text: 'Admin Panel', action: 'showAdminVerificationPanel()' } : null,
-                    { icon: 'fa-home', text: 'Home', href: 'https://aditya-cmd-max.github.io/reverbit/' },
-                    { icon: 'fa-sign-out-alt', text: 'Sign Out', action: 'signOut()' }
-                ].filter(item => item !== null);
-            } else {
-                // User is not logged in
-                navItems = [
-                    { icon: 'fa-sign-in-alt', text: 'Sign In', href: 'https://aditya-cmd-max.github.io/signin' },
-                    { icon: 'fa-user-plus', text: 'Sign Up', href: 'https://aditya-cmd-max.github.io/signup' },
-                    { icon: 'fa-search', text: 'Search Profiles', action: 'openProfileSearch()' },
-                    { icon: 'fa-home', text: 'Home', href: 'https://aditya-cmd-max.github.io/reverbit/' }
-                ];
-            }
-            
-            navItems.forEach(item => {
-                const navItem = document.createElement('a');
-                navItem.className = 'mobile-nav-item';
-                
-                if (item.href) {
-                    navItem.href = item.href;
-                    navItem.onclick = () => closeMobileMenu();
-                } else if (item.action) {
-                    navItem.href = '#';
-                    navItem.onclick = () => {
-                        eval(item.action);
-                        closeMobileMenu();
-                    };
-                }
-                
-                navItem.innerHTML = `
-                    <i class="fas ${item.icon}"></i>
-                    <span>${item.text}</span>
-                `;
-                
-                mobileNavItems.appendChild(navItem);
-            });
-        }
+            ` : ''}
+            ${themeButton}
+            <button class="btn btn-outlined" onclick="signOut()">
+                <i class="fas fa-sign-out-alt"></i>
+                Sign Out
+            </button>
+        `;
+    } else {
+        // User is not logged in
+        headerActions.innerHTML = `
+            ${searchButton}
+            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </a>
+            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
+                <i class="fas fa-user-plus"></i>
+                Sign Up
+            </a>
+            ${themeButton}
+        `;
+    }
+}
 
         // Load own profile
         async function loadOwnProfile(user) {
@@ -2414,9 +1861,6 @@
                         </div>
                     </div>
 
-                    <!-- Mobile Actions Stack -->
-                    ${isOwnerView ? createMobileActionsStack(data) : ''}
-
                     <!-- Profile Tabs -->
                     <div class="profile-tabs">
                         <button class="profile-tab ${currentTab === 'overview' ? 'active' : ''}" onclick="switchTab('overview')">
@@ -2448,18 +1892,7 @@
                         <div class="legal-grid">
                             <div class="legal-item">
                                 <h3>Account Status</h3>
-                                <div class="visibility-toggle-container">
-                                    <div class="visibility-toggle-label">
-                                        <span class="visibility-toggle-title">${data.isPublic ? 'Public Profile' : 'Private Profile'}</span>
-                                        <span class="visibility-toggle-description">${data.isPublic ? 'Visible to everyone' : 'Only visible to you'}</span>
-                                    </div>
-                                    ${isOwnerView ? `
-                                        <label class="toggle-switch" onclick="toggleProfileVisibility()" style="cursor: pointer;">
-                                            <input type="checkbox" ${data.isPublic ? 'checked' : ''}>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    ` : ''}
-                                </div>
+                                <p>${data.isPublic ? 'Public Profile' : 'Private Profile'}</p>
                             </div>
                             <div class="legal-item">
                                 <h3>Verification Level</h3>
@@ -2493,76 +1926,7 @@
             // Initialize interactive elements
             if (isOwnerView) {
                 loadUsageData();
-                updateMobileActionsStack(data);
             }
-            
-            // Update mobile visibility toggle
-            if (isOwnerView) {
-                const mobileToggle = document.getElementById('mobileVisibilityToggle');
-                if (mobileToggle) {
-                    const checkbox = mobileToggle.querySelector('input');
-                    checkbox.checked = data.isPublic || false;
-                    checkbox.onchange = toggleProfileVisibility;
-                }
-            }
-        }
-
-        // Create mobile actions stack
-        function createMobileActionsStack(data) {
-            return '';
-        }
-
-        // Update mobile actions stack
-        function updateMobileActionsStack(data) {
-            mobileActionsStack.innerHTML = '';
-            
-            if (!isOwner) return;
-            
-            const actions = [
-                {
-                    icon: 'fa-share-alt',
-                    label: 'Share Profile',
-                    action: 'shareProfile()'
-                },
-                {
-                    icon: 'fa-edit',
-                    label: 'Edit Profile',
-                    action: 'editProfile()'
-                },
-                {
-                    icon: 'fa-shield-alt',
-                    label: 'Get Verified',
-                    action: 'requestVerification()',
-                    condition: !getVerificationLevel(data) || getVerificationLevel(data) === 'none'
-                },
-                {
-                    icon: 'fa-cog',
-                    label: 'Settings',
-                    action: 'switchTab(\'settings\')'
-                }
-            ];
-            
-            actions.forEach(action => {
-                if (action.condition === false) return;
-                
-                const actionRow = document.createElement('div');
-                actionRow.className = 'mobile-action-row';
-                actionRow.innerHTML = `
-                    <div class="mobile-action-label">
-                        <i class="fas ${action.icon}"></i>
-                        <span>${action.label}</span>
-                    </div>
-                    <div class="mobile-action-value">
-                        <i class="fas fa-chevron-right" style="color: var(--md-on-surface-variant);"></i>
-                    </div>
-                `;
-                
-                actionRow.addEventListener('click', () => {
-                    eval(action.action);
-                });
-                
-                mobileActionsStack.appendChild(actionRow);
-            });
         }
 
         // Get verification level
@@ -2597,7 +1961,7 @@
             if (!data.lastLogin) return '';
             
             const lastActive = new Date(data.lastLogin);
-            const today = new Date();
+            const now = new Date();
             const diffHours = Math.floor((now - lastActive) / (1000 * 60 * 60));
             
             if (diffHours < 1) {
@@ -2640,9 +2004,6 @@
             if (tabContent) {
                 tabContent.innerHTML = getTabContent(tab, profileData, isOwner);
             }
-            
-            // Close mobile menu if open
-            closeMobileMenu();
         }
 
         // Create overview content
@@ -2832,16 +2193,13 @@
                         <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
                             Control who can see your profile
                         </p>
-                        <div class="visibility-toggle-container">
-                            <div class="visibility-toggle-label">
-                                <span class="visibility-toggle-title">${data.isPublic ? 'Public Profile' : 'Private Profile'}</span>
-                                <span class="visibility-toggle-description">${data.isPublic ? 'Visible to everyone' : 'Only visible to you'}</span>
-                            </div>
-                            <label class="toggle-switch" onclick="toggleProfileVisibility()" style="cursor: pointer;">
-                                <input type="checkbox" ${data.isPublic ? 'checked' : ''}>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
+                        <button class="btn ${data.isPublic ? 'btn-filled' : 'btn-outlined'}" onclick="toggleProfileVisibility()" style="margin-bottom: var(--md-spacing-md);">
+                            <i class="fas fa-${data.isPublic ? 'lock' : 'globe'}"></i>
+                            ${data.isPublic ? 'Make Profile Private' : 'Make Profile Public'}
+                        </button>
+                        <p style="font-size: 0.875rem; color: var(--md-on-surface-variant);">
+                            ${data.isPublic ? 'Your profile is currently public' : 'Your profile is currently private'}
+                        </p>
                     </div>
                     
                     <div class="settings-section">
@@ -2959,7 +2317,6 @@
         // Edit profile (redirect to dashboard)
         function editProfile() {
             window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
-            closeMobileMenu();
         }
 
         // Share profile
@@ -2972,7 +2329,6 @@
             const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${profileData.uid}`;
             document.getElementById('shareUrl').textContent = profileUrl;
             document.getElementById('shareModal').style.display = 'flex';
-            closeMobileMenu();
         }
 
         // Copy share link
@@ -3020,13 +2376,6 @@
                 // Refresh settings panel
                 if (currentTab === 'settings') {
                     switchTab('settings');
-                }
-                
-                // Update mobile toggle
-                const mobileToggle = document.getElementById('mobileVisibilityToggle');
-                if (mobileToggle) {
-                    const checkbox = mobileToggle.querySelector('input');
-                    checkbox.checked = newVisibility;
                 }
                 
                 showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
@@ -3166,8 +2515,6 @@
                     console.error('Error fetching user:', error);
                     showToast('Error loading user');
                 });
-            
-            closeMobileMenu();
         }
 
         // Show verification info
@@ -3379,35 +2726,699 @@
             `;
         }
 
-        // Open profile search (simplified for demo)
-        function openProfileSearch() {
-            showToast('Search feature would open here');
-            closeMobileMenu();
-        }
+        console.log('Profile page JavaScript loaded successfully');
 
-        // Handle window resize for responsive behavior
-        window.addEventListener('resize', () => {
-            // Update header actions visibility
-            const buttons = headerActions.querySelectorAll('.btn');
-            if (window.innerWidth > 768) {
-                buttons.forEach(btn => {
-                    if (!btn.classList.contains('theme-toggle')) {
-                        btn.style.display = 'inline-flex';
-                    }
-                });
-            } else {
-                buttons.forEach(btn => {
-                    if (!btn.classList.contains('theme-toggle')) {
-                        btn.style.display = 'none';
-                    }
-                });
+// Search functions
+function openProfileSearch() {
+    if (window.ReverbitSearch) {
+        window.ReverbitSearch.openSearch();
+    } else {
+        console.warn('Search system not loaded');
+        // Fallback to simple search
+        showSimpleSearch();
+    }
+}
+
+function showSimpleSearch() {
+    const query = prompt('Search for users (name, username, email):');
+    if (query) {
+        performSimpleSearch(query);
+    }
+}
+
+async function performSimpleSearch(query) {
+    try {
+        showToast('Searching...', 'info');
+        
+        const usersRef = db.collection('users');
+        const snapshot = await usersRef.where('isPublic', '==', true).get();
+        
+        if (snapshot.empty) {
+            showToast('No users found', 'info');
+            return;
+        }
+        
+        const results = [];
+        const searchTerm = query.toLowerCase();
+        
+        snapshot.forEach(doc => {
+            const user = doc.data();
+            const displayName = user.displayName?.toLowerCase() || '';
+            const email = user.email?.toLowerCase() || '';
+            const username = user.username?.toLowerCase() || '';
+            
+            if (displayName.includes(searchTerm) || 
+                email.includes(searchTerm) || 
+                username.includes(searchTerm)) {
+                user.id = doc.id;
+                results.push(user);
             }
         });
+        
+        if (results.length === 0) {
+            showToast('No matching users found', 'info');
+            return;
+        }
+        
+        // Show results in a modal
+        showSearchResultsModal(results, query);
+        
+    } catch (error) {
+        console.error('Search error:', error);
+        showToast('Search failed', 'error');
+    }
+}
 
-        // Initialize window resize handler
-        window.dispatchEvent(new Event('resize'));
+function showSearchResultsModal(results, query) {
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    
+    let resultsHTML = '';
+    
+    if (results.length === 0) {
+        resultsHTML = `
+            <div class="search-no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No results found for "${query}"</h3>
+                <p>Try different keywords or check the spelling</p>
+            </div>
+        `;
+    } else {
+        resultsHTML = results.map(user => `
+            <div class="user-card" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank')">
+                <div class="user-card-avatar">
+                    <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                         alt="${user.displayName || 'User'}">
+                    ${user.verified ? `
+                        <div class="user-avatar-badge ${user.verifiedLevel === 'premium' ? 'premium' : ''}">
+                            <i class="fas fa-${user.verifiedLevel === 'premium' ? 'crown' : 'check'}"></i>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="user-card-info">
+                    <div class="user-card-header">
+                        <h4 class="user-name">${user.displayName || 'User'}</h4>
+                        ${user.verified ? `
+                            <div class="user-verified-badge ${user.verifiedLevel === 'premium' ? 'premium' : ''}">
+                                <i class="fas fa-${user.verifiedLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
+                                ${user.verifiedLevel === 'premium' ? 'Premium' : 'Verified'}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <p class="user-email">${user.email || ''}</p>
+                    
+                    <div class="user-stats">
+                        ${user.streak ? `
+                            <div class="user-stat">
+                                <i class="fas fa-fire"></i>
+                                <span>${user.streak} day streak</span>
+                            </div>
+                        ` : ''}
+                        ${user.country ? `
+                            <div class="user-stat">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${user.country}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${user.bio ? `<p class="user-bio">${truncateText(user.bio, 80)}</p>` : ''}
+                </div>
+                
+                <div class="user-card-actions">
+                    <button class="user-card-action view-profile-btn" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
+                        <i class="fas fa-eye"></i>
+                        View
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2 style="font-family: var(--md-font-heading); margin: 0;">
+                    <i class="fas fa-search" style="margin-right: 10px;"></i>
+                    Search Results
+                </h2>
+                <button class="btn btn-outlined" onclick="this.closest('.modal').style.display='none'">
+                    <i class="fas fa-times"></i>
+                    Close
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 20px; color: var(--md-on-surface-variant);">
+                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
+            </div>
+            
+            <div id="search-results-container">
+                ${resultsHTML}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+            }, 300);
+        }
+    });
+}
 
-        console.log('Profile page JavaScript loaded successfully');
+function truncateText(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+}
+
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        console.log('Profile Page: Initializing...');
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        auth = firebase.auth();
+        db = firebase.firestore();
+
+        // Load theme preference
+        loadThemePreference();
+
+        // Initialize search system
+        await initializeSearchSystem();
+
+        // Rest of your existing code...
+        
+    } catch (error) {
+        console.error('Initialization error:', error);
+        showToast('Error loading profile');
+        loadingScreen.classList.add('hidden');
+        mainContent.style.display = 'block';
+    }
+});
+
+async function initializeSearchSystem() {
+    try {
+        // Load search system if not already loaded
+        if (!window.ReverbitSearch) {
+            const script = document.createElement('script');
+            script.src = 'search-system.js';
+            script.async = true;
+            script.onload = () => {
+                console.log('Search system loaded');
+                window.ReverbitSearch.init();
+            };
+            script.onerror = () => {
+                console.warn('Failed to load search system, using fallback');
+            };
+            document.body.appendChild(script);
+        } else {
+            await window.ReverbitSearch.init();
+        }
+    } catch (error) {
+        console.warn('Search system initialization failed:', error);
+    }
+}
+        
+      // ================= SEARCH SYSTEM =================
+class SimpleSearchSystem {
+    constructor() {
+        this.modal = null;
+        this.results = [];
+        this.isSearching = false;
+    }
+
+    async init() {
+        console.log('Simple search system initialized');
+    }
+
+    openSearch() {
+        this.createSearchModal();
+    }
+
+    createSearchModal() {
+        // Remove existing modal
+        if (this.modal && this.modal.parentNode) {
+            this.modal.parentNode.removeChild(this.modal);
+        }
+
+        this.modal = document.createElement('div');
+        this.modal.className = 'modal';
+        this.modal.style.display = 'flex';
+        
+        this.modal.innerHTML = `
+            <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-shrink: 0;">
+                    <h2 style="font-family: var(--md-font-heading); margin: 0;">
+                        <i class="fas fa-search" style="margin-right: 10px; color: var(--md-primary);"></i>
+                        Search Profiles
+                    </h2>
+                    <button class="btn btn-outlined" onclick="window.simpleSearch.closeSearch()" style="margin-left: auto;">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+                
+                <div style="position: relative; margin-bottom: 24px; flex-shrink: 0;">
+                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--md-on-surface-variant);"></i>
+                    <input type="text" 
+                           id="search-input" 
+                           class="search-input" 
+                           placeholder="Search by name, username, or email..." 
+                           style="width: 100%; padding: 16px 20px 16px 48px; border: 2px solid var(--md-outline); border-radius: var(--md-radius-pill); background: var(--md-surface); color: var(--md-on-surface); font-size: 16px; transition: var(--md-transition);">
+                    <div id="search-loading" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+                        <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                    </div>
+                </div>
+                
+                <div id="search-filters" style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; flex-shrink: 0;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="filter-verified" style="margin: 0;">
+                        <span style="color: var(--md-on-surface-variant); font-size: 14px;">Verified only</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="filter-active" style="margin: 0;">
+                        <span style="color: var(--md-on-surface-variant); font-size: 14px;">Active users</span>
+                    </label>
+                </div>
+                
+                <div id="search-results-container" style="flex: 1; overflow-y: auto; min-height: 300px;">
+                    <div class="search-empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                        <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Find users by name, username, or email address</p>
+                        <div class="search-suggestions">
+                            <h4 style="margin-bottom: 12px; color: var(--md-on-surface-variant); font-size: 14px;">Try searching for:</h4>
+                            <div class="suggestion-tags">
+                                <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('verified')">Verified users</button>
+                                <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('active')">Active members</button>
+                                <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('premium')">Premium users</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--md-outline); color: var(--md-on-surface-variant); font-size: 12px; text-align: center; flex-shrink: 0;">
+                    <i class="fas fa-lightbulb" style="margin-right: 6px;"></i>
+                    Tip: Use quotes for exact matches (e.g., "john doe")
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(this.modal);
+        
+        // Add event listeners
+        const searchInput = this.modal.querySelector('#search-input');
+        const searchLoading = this.modal.querySelector('#search-loading');
+        
+        let debounceTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            const query = e.target.value.trim();
+            
+            if (!query) {
+                this.showEmptyState();
+                return;
+            }
+            
+            searchLoading.style.display = 'block';
+            
+            debounceTimer = setTimeout(async () => {
+                await this.performSearch(query);
+                searchLoading.style.display = 'none';
+            }, 300);
+        });
+        
+        searchInput.focus();
+        
+        // Close on backdrop click
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+                this.closeSearch();
+            }
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.modal.style.display === 'flex') {
+                this.closeSearch();
+            }
+        });
+    }
+
+    async performSearch(query) {
+        if (this.isSearching || !query.trim()) return;
+        
+        this.isSearching = true;
+        
+        try {
+            const verifiedOnly = document.getElementById('filter-verified')?.checked || false;
+            const activeOnly = document.getElementById('filter-active')?.checked || false;
+            
+            const usersRef = db.collection('users');
+            let queryRef = usersRef.where('isPublic', '==', true);
+            
+            const snapshot = await queryRef.get();
+            
+            if (snapshot.empty) {
+                this.showNoResults(query);
+                return;
+            }
+            
+            this.results = [];
+            const searchTerm = query.toLowerCase().trim();
+            const now = new Date();
+            
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                user.id = doc.id;
+                
+                // Apply filters
+                if (verifiedOnly && !user.verified) return;
+                
+                if (activeOnly && user.lastActive) {
+                    const lastActive = new Date(user.lastActive);
+                    const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
+                    if (daysSinceActive > 7) return; // Not active in last 7 days
+                }
+                
+                // Search matching
+                const displayName = user.displayName?.toLowerCase() || '';
+                const email = user.email?.toLowerCase() || '';
+                const username = user.username?.toLowerCase() || '';
+                const bio = user.bio?.toLowerCase() || '';
+                const country = user.country?.toLowerCase() || '';
+                
+                let matchScore = 0;
+                
+                // Exact match scoring
+                if (displayName === searchTerm) matchScore += 5;
+                if (username === searchTerm) matchScore += 4;
+                if (email === searchTerm) matchScore += 3;
+                
+                // Partial match scoring
+                if (displayName.includes(searchTerm)) matchScore += 3;
+                if (username.includes(searchTerm)) matchScore += 2;
+                if (email.includes(searchTerm)) matchScore += 2;
+                if (bio.includes(searchTerm)) matchScore += 1;
+                if (country.includes(searchTerm)) matchScore += 1;
+                
+                // Special keywords
+                if (searchTerm.includes('verified') && user.verified) matchScore += 2;
+                if (searchTerm.includes('premium') && (user.verifiedLevel === 'premium' || user.premiumVerified)) matchScore += 3;
+                if (searchTerm.includes('active') && user.lastActive) {
+                    const lastActive = new Date(user.lastActive);
+                    const daysSinceActive = (now - lastActive) / (1000 * 60 * 60 * 24);
+                    if (daysSinceActive < 7) matchScore += 2;
+                }
+                
+                if (matchScore > 0) {
+                    user.matchScore = matchScore;
+                    this.results.push(user);
+                }
+            });
+            
+            // Sort by match score
+            this.results.sort((a, b) => b.matchScore - a.matchScore);
+            
+            // Display results
+            this.displayResults(this.results, query);
+            
+        } catch (error) {
+            console.error('Search error:', error);
+            this.showError();
+        } finally {
+            this.isSearching = false;
+        }
+    }
+
+    displayResults(results, query) {
+        const container = this.modal.querySelector('#search-results-container');
+        
+        if (results.length === 0) {
+            this.showNoResults(query);
+            return;
+        }
+        
+        const resultsHTML = results.map(user => this.createUserCard(user)).join('');
+        
+        container.innerHTML = `
+            <div style="margin-bottom: 16px; color: var(--md-on-surface-variant);">
+                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
+            </div>
+            ${resultsHTML}
+        `;
+        
+        // Add click handlers
+        container.querySelectorAll('.user-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const userId = card.dataset.userId;
+                if (userId) {
+                    window.open(`https://aditya-cmd-max.github.io/profile/?id=${userId}`, '_blank');
+                }
+            });
+        });
+    }
+
+    createUserCard(user) {
+        const isVerified = user.verified;
+        const isPremium = user.verifiedLevel === 'premium' || user.premiumVerified;
+        const memberDays = user.createdAt ? this.calculateMemberDays(user.createdAt) : '0';
+        
+        return `
+            <div class="user-card" data-user-id="${user.id}">
+                <div class="user-card-avatar">
+                    <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                         alt="${user.displayName || 'User'}"
+                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                    ${isVerified ? `
+                        <div class="user-avatar-badge ${isPremium ? 'premium' : ''}">
+                            <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="user-card-info">
+                    <div class="user-card-header">
+                        <h4 class="user-name">${user.displayName || 'User'}</h4>
+                        ${isVerified ? `
+                            <div class="user-verified-badge ${isPremium ? 'premium' : ''}">
+                                <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
+                                ${isPremium ? 'Premium Verified' : 'Verified'}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <p class="user-email">${user.email || ''}</p>
+                    
+                    <div class="user-stats">
+                        ${user.streak ? `
+                            <div class="user-stat">
+                                <i class="fas fa-fire"></i>
+                                <span>${user.streak} day streak</span>
+                            </div>
+                        ` : ''}
+                        <div class="user-stat">
+                            <i class="fas fa-calendar"></i>
+                            <span>${memberDays} days</span>
+                        </div>
+                        ${user.lastActive ? `
+                            <div class="user-stat">
+                                <i class="fas fa-clock"></i>
+                                <span>${this.formatLastActive(user.lastActive)}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${user.bio ? `<p class="user-bio">${this.truncateText(user.bio, 100)}</p>` : ''}
+                    
+                    ${user.country ? `<div class="user-location"><i class="fas fa-map-marker-alt"></i> ${user.country}</div>` : ''}
+                </div>
+                
+                <div class="user-card-actions">
+                    <button class="user-card-action" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
+                        <i class="fas fa-eye"></i>
+                        View Profile
+                    </button>
+                    <button class="user-card-action copy-link-btn" onclick="navigator.clipboard.writeText('https://aditya-cmd-max.github.io/profile/?id=${user.id}'); showToast('Profile link copied!'); event.stopPropagation();">
+                        <i class="fas fa-link"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    searchBySuggestion(type) {
+        const searchInput = this.modal.querySelector('#search-input');
+        let query = '';
+        
+        switch(type) {
+            case 'verified':
+                query = 'verified';
+                document.getElementById('filter-verified').checked = true;
+                break;
+            case 'active':
+                query = 'active';
+                document.getElementById('filter-active').checked = true;
+                break;
+            case 'premium':
+                query = 'premium';
+                document.getElementById('filter-verified').checked = true;
+                break;
+        }
+        
+        searchInput.value = query;
+        searchInput.focus();
+        searchInput.dispatchEvent(new Event('input'));
+    }
+
+    showEmptyState() {
+        const container = this.modal.querySelector('#search-results-container');
+        container.innerHTML = `
+            <div class="search-empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Find users by name, username, or email address</p>
+                <div class="search-suggestions">
+                    <h4 style="margin-bottom: 12px; color: var(--md-on-surface-variant); font-size: 14px;">Try searching for:</h4>
+                    <div class="suggestion-tags">
+                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('verified')">Verified users</button>
+                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('active')">Active members</button>
+                        <button class="suggestion-tag" onclick="window.simpleSearch.searchBySuggestion('premium')">Premium users</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    showNoResults(query) {
+        const container = this.modal.querySelector('#search-results-container');
+        container.innerHTML = `
+            <div class="search-no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No results found for "${query}"</h3>
+                <p style="color: var(--md-on-surface-variant); margin-bottom: 20px;">Try different keywords or check the spelling</p>
+                <div class="no-results-suggestions">
+                    <p style="margin-bottom: 8px; font-weight: 600;">Suggestions:</p>
+                    <ul>
+                        <li>Try using fewer keywords</li>
+                        <li>Check for typos in your search</li>
+                        <li>Try more general terms</li>
+                        <li>Make sure the profile is public</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    }
+
+    showError() {
+        const container = this.modal.querySelector('#search-results-container');
+        container.innerHTML = `
+            <div class="search-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <p style="color: var(--md-on-surface); margin: 12px 0;">Failed to load search results</p>
+                <button class="retry-btn" onclick="window.simpleSearch.retrySearch()">Try again</button>
+            </div>
+        `;
+    }
+
+    retrySearch() {
+        const searchInput = this.modal.querySelector('#search-input');
+        if (searchInput.value.trim()) {
+            searchInput.dispatchEvent(new Event('input'));
+        }
+    }
+
+    calculateMemberDays(dateString) {
+        if (!dateString) return '0';
+        const joinDate = new Date(dateString);
+        const today = new Date();
+        const diffTime = Math.abs(today - joinDate);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    formatLastActive(dateString) {
+        if (!dateString) return 'Never';
+        
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffHours < 1) return 'Just now';
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+        
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    truncateText(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+
+    closeSearch() {
+        if (this.modal) {
+            this.modal.style.display = 'none';
+            setTimeout(() => {
+                if (this.modal && this.modal.parentNode) {
+                    this.modal.parentNode.removeChild(this.modal);
+                    this.modal = null;
+                }
+            }, 300);
+        }
+    }
+}
+
+// Initialize simple search system
+window.simpleSearch = new SimpleSearchSystem();
+
+// Global function to open search
+function openProfileSearch() {
+    window.simpleSearch.openSearch();
+}
+
+// Initialize search system
+document.addEventListener('DOMContentLoaded', async () => {
+    // Your existing initialization code...
+    
+    // Initialize search system
+    await window.simpleSearch.init();
+    
+    // Rest of your code...
+});  
+      
+      
     </script>
+
+
+    
 </body>
 </html>
