@@ -1538,11 +1538,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // Initialize simple search system
-        if (typeof simpleSearch !== 'undefined') {
-            await simpleSearch.init();
-        }
-
     } catch (error) {
         console.error('Initialization error:', error);
         showNotFound('Error loading profile page');
@@ -1619,7 +1614,7 @@ function updateHeaderActions(user) {
     
     // Add search button to header
     const searchButton = `
-        <button class="btn btn-outlined" onclick="openProfileSearch()" id="searchButton">
+        <button class="btn btn-outlined" onclick="openSearchModal()" id="searchButton">
             <i class="fas fa-search"></i>
             Search Profiles
         </button>
@@ -2446,7 +2441,10 @@ async function copyShareLink() {
 
 // Close modal
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
 // Toggle profile visibility
@@ -2829,191 +2827,362 @@ function handleAvatarError(img) {
     `;
 }
 
-// Open profile search
-function openProfileSearch() {
-    if (typeof simpleSearch !== 'undefined' && simpleSearch.openSearch) {
-        simpleSearch.openSearch();
-    } else {
-        // Fallback search
-        showSimpleSearch();
-    }
-}
+// ================= SEARCH MODAL =================
 
-// Simple search fallback
-function showSimpleSearch() {
-    const query = prompt('Search for users (name, username, email):');
-    if (query) {
-        performSimpleSearch(query);
-    }
-}
+let searchModal = null;
+let isSearching = false;
+let searchTimeout = null;
 
-// Simple search implementation
-async function performSimpleSearch(query) {
-    try {
-        showToast('Searching...');
-        
-        const usersRef = db.collection('users');
-        const snapshot = await usersRef.where('isPublic', '==', true).get();
-        
-        if (snapshot.empty) {
-            showToast('No users found');
-            return;
-        }
-        
-        const results = [];
-        const searchTerm = query.toLowerCase();
-        
-        snapshot.forEach(doc => {
-            const user = doc.data();
-            const displayName = user.displayName?.toLowerCase() || '';
-            const email = user.email?.toLowerCase() || '';
-            const username = user.username?.toLowerCase() || '';
-            
-            if (displayName.includes(searchTerm) || 
-                email.includes(searchTerm) || 
-                username.includes(searchTerm)) {
-                user.id = doc.id;
-                results.push(user);
-            }
-        });
-        
-        if (results.length === 0) {
-            showToast('No matching users found');
-            return;
-        }
-        
-        showSearchResultsModal(results, query);
-        
-    } catch (error) {
-        console.error('Search error:', error);
-        showToast('Search failed');
-    }
-}
-
-// Show search results modal
-function showSearchResultsModal(results, query) {
-    // Create modal
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.style.display = 'flex';
-    
-    let resultsHTML = '';
-    
-    if (results.length === 0) {
-        resultsHTML = `
-            <div class="search-no-results">
-                <div class="no-results-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3>No results found for "${query}"</h3>
-                <p>Try different keywords or check the spelling</p>
-            </div>
-        `;
-    } else {
-        resultsHTML = results.map(user => {
-            const verificationLevel = getVerificationLevel(user);
-            const isVerified = verificationLevel !== 'none';
-            const isPremium = verificationLevel === 'premium';
-            
-            return `
-                <div class="user-card" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank')">
-                    <div class="user-card-avatar">
-                        <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
-                             alt="${user.displayName || 'User'}">
-                        ${isVerified ? `
-                            <div class="user-avatar-badge ${isPremium ? 'premium' : ''}">
-                                <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div class="user-card-info">
-                        <div class="user-card-header">
-                            <h4 class="user-name">${user.displayName || 'User'}</h4>
-                            ${isVerified ? `
-                                <div class="user-verified-badge ${isPremium ? 'premium' : ''}">
-                                    <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
-                                    ${isPremium ? 'Premium' : 'Verified'}
-                                </div>
-                            ` : ''}
-                        </div>
-                        
-                        <p class="user-email">${user.email || ''}</p>
-                        
-                        <div class="user-stats">
-                            ${user.streak ? `
-                                <div class="user-stat">
-                                    <i class="fas fa-fire"></i>
-                                    <span>${user.streak} day streak</span>
-                                </div>
-                            ` : ''}
-                            ${user.country ? `
-                                <div class="user-stat">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>${user.country}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                        
-                        ${user.bio ? `<p class="user-bio">${truncateText(user.bio, 80)}</p>` : ''}
-                    </div>
-                    
-                    <div class="user-card-actions">
-                        <button class="user-card-action view-profile-btn" onclick="window.open('https://aditya-cmd-max.github.io/profile/?id=${user.id}', '_blank'); event.stopPropagation();">
-                            <i class="fas fa-eye"></i>
-                            View
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+// Open search modal
+function openSearchModal() {
+    if (searchModal && document.body.contains(searchModal)) {
+        searchModal.style.display = 'flex';
+        searchModal.querySelector('input').focus();
+        return;
     }
     
-    modal.innerHTML = `
-        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+    // Create search modal
+    searchModal = document.createElement('div');
+    searchModal.className = 'modal';
+    searchModal.id = 'searchModal';
+    searchModal.style.display = 'flex';
+    
+    searchModal.innerHTML = `
+        <div class="modal-content" style="max-width: 800px; max-height: 80vh; width: 90%;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h2 style="font-family: var(--md-font-heading); margin: 0;">
-                    <i class="fas fa-search" style="margin-right: 10px;"></i>
-                    Search Results
+                <h2 style="font-family: var(--md-font-heading); margin: 0; color: var(--md-on-surface);">
+                    <i class="fas fa-search" style="margin-right: 10px; color: var(--md-primary);"></i>
+                    Search Profiles
                 </h2>
-                <button class="btn btn-outlined" onclick="this.closest('.modal').style.display='none'">
+                <button class="btn btn-outlined" onclick="closeSearchModal()" style="min-width: 44px; min-height: 44px; padding: 0; width: 44px; height: 44px;">
                     <i class="fas fa-times"></i>
-                    Close
                 </button>
             </div>
             
-            <div style="margin-bottom: 20px; color: var(--md-on-surface-variant);">
-                Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"
+            <div style="position: relative; margin-bottom: 20px;">
+                <div style="position: relative;">
+                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--md-on-surface-variant); z-index: 1;"></i>
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Search by name, email, or username..." 
+                           style="width: 100%; padding: 16px 20px 16px 48px; border: 2px solid var(--md-outline); border-radius: var(--md-radius-pill); background: var(--md-surface); color: var(--md-on-surface); font-size: 16px; transition: var(--md-transition); box-sizing: border-box;"
+                           oninput="handleSearchInput(event)">
+                    <div id="searchLoading" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+                        <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                    </div>
+                </div>
             </div>
             
-            <div id="search-results-container">
-                ${resultsHTML}
+            <div id="searchFilters" style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--md-on-surface);">
+                    <input type="checkbox" id="showVerifiedOnly" onchange="performSearch()" style="accent-color: var(--md-primary);">
+                    <span>Verified only</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--md-on-surface);">
+                    <input type="checkbox" id="showPublicOnly" checked onchange="performSearch()" style="accent-color: var(--md-primary);">
+                    <span>Public profiles</span>
+                </label>
+            </div>
+            
+            <div id="searchResults" style="max-height: 50vh; overflow-y: auto; padding-right: 10px;">
+                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                    <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                    <p>Enter a name, email, or username to find users</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--md-outline); color: var(--md-on-surface-variant); font-size: 12px; text-align: center;">
+                <i class="fas fa-info-circle" style="margin-right: 6px;"></i>
+                Search only works for public profiles with complete information
             </div>
         </div>
     `;
     
-    document.body.appendChild(modal);
+    document.body.appendChild(searchModal);
+    
+    // Focus on input
+    setTimeout(() => {
+        const input = searchModal.querySelector('#searchInput');
+        if (input) input.focus();
+    }, 100);
     
     // Close on backdrop click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-            setTimeout(() => {
-                if (modal.parentNode) {
-                    modal.parentNode.removeChild(modal);
-                }
-            }, 300);
+    searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) {
+            closeSearchModal();
+        }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && searchModal && searchModal.style.display === 'flex') {
+            closeSearchModal();
         }
     });
 }
 
+// Close search modal
+function closeSearchModal() {
+    if (searchModal) {
+        searchModal.style.display = 'none';
+    }
+}
+
+// Handle search input with debounce
+function handleSearchInput(event) {
+    const query = event.target.value.trim();
+    
+    // Clear previous timeout
+    if (searchTimeout) {
+        clearTimeout(searchTimeout);
+    }
+    
+    // Show loading if query is not empty
+    const searchLoading = document.getElementById('searchLoading');
+    if (searchLoading) {
+        searchLoading.style.display = query ? 'block' : 'none';
+    }
+    
+    // Set new timeout for search
+    searchTimeout = setTimeout(() => {
+        performSearch(query);
+    }, 500); // 500ms debounce
+}
+
+// Perform search
+async function performSearch(query = null) {
+    if (isSearching) return;
+    
+    const searchInput = document.getElementById('searchInput');
+    const actualQuery = query || (searchInput ? searchInput.value.trim() : '');
+    const showVerifiedOnly = document.getElementById('showVerifiedOnly')?.checked || false;
+    const showPublicOnly = document.getElementById('showPublicOnly')?.checked || true;
+    const searchResults = document.getElementById('searchResults');
+    const searchLoading = document.getElementById('searchLoading');
+    
+    if (!searchResults) return;
+    
+    // Show loading
+    if (searchLoading && actualQuery) {
+        searchLoading.style.display = 'block';
+    }
+    
+    isSearching = true;
+    
+    try {
+        if (!actualQuery) {
+            // Show empty state
+            searchResults.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                    <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
+                    <p>Enter a name, email, or username to find users</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Fetch users from Firestore
+        let queryRef = db.collection('users');
+        
+        // Add filters
+        if (showPublicOnly) {
+            queryRef = queryRef.where('isPublic', '==', true);
+        }
+        
+        const snapshot = await queryRef.get();
+        
+        if (snapshot.empty) {
+            searchResults.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                    <i class="fas fa-users-slash" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No users found</h3>
+                    <p>No public profiles available to search</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Filter and search
+        const searchTerm = actualQuery.toLowerCase();
+        const results = [];
+        
+        snapshot.forEach(doc => {
+            const user = doc.data();
+            user.id = doc.id;
+            
+            // Apply verified filter
+            if (showVerifiedOnly && !user.verified) {
+                return;
+            }
+            
+            // Search in fields
+            const displayName = user.displayName?.toLowerCase() || '';
+            const email = user.email?.toLowerCase() || '';
+            const username = user.username?.toLowerCase() || '';
+            const bio = user.bio?.toLowerCase() || '';
+            
+            let match = false;
+            let matchScore = 0;
+            
+            // Exact matches get higher scores
+            if (displayName === searchTerm) {
+                match = true;
+                matchScore += 10;
+            } else if (email === searchTerm) {
+                match = true;
+                matchScore += 9;
+            } else if (username === searchTerm) {
+                match = true;
+                matchScore += 8;
+            }
+            
+            // Partial matches
+            if (displayName.includes(searchTerm)) {
+                match = true;
+                matchScore += 5;
+            }
+            if (email.includes(searchTerm)) {
+                match = true;
+                matchScore += 4;
+            }
+            if (username.includes(searchTerm)) {
+                match = true;
+                matchScore += 3;
+            }
+            if (bio.includes(searchTerm)) {
+                match = true;
+                matchScore += 2;
+            }
+            
+            if (match) {
+                user.matchScore = matchScore;
+                results.push(user);
+            }
+        });
+        
+        // Sort by match score
+        results.sort((a, b) => b.matchScore - a.matchScore);
+        
+        // Display results
+        if (results.length === 0) {
+            searchResults.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                    <i class="fas fa-search-minus" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No results found</h3>
+                    <p>No profiles match your search for "${actualQuery}"</p>
+                    <p style="font-size: 14px; margin-top: 10px;">Try different keywords or check spelling</p>
+                </div>
+            `;
+        } else {
+            let resultsHTML = `
+                <div style="margin-bottom: 16px; color: var(--md-on-surface-variant); font-size: 14px;">
+                    Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${actualQuery}"
+                </div>
+            `;
+            
+            results.forEach(user => {
+                const verificationLevel = getVerificationLevel(user);
+                const isVerified = verificationLevel !== 'none';
+                const isPremium = verificationLevel === 'premium';
+                const memberDays = calculateMemberDays(user.createdAt);
+                
+                resultsHTML += `
+                    <div class="user-card" onclick="viewUserProfile('${user.id}')" style="cursor: pointer; margin-bottom: 16px;">
+                        <div class="user-card-avatar">
+                            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
+                                 alt="${user.displayName || 'User'}"
+                                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid var(--md-surface);">
+                            ${isVerified ? `
+                                <div class="user-avatar-badge ${isPremium ? 'premium' : ''}" 
+                                     style="position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-radius: 50%; background: ${isPremium ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)' : 'var(--verified-badge-bg)'}; color: ${isPremium ? '#000' : 'white'}; display: flex; align-items: center; justify-content: center; border: 2px solid var(--md-surface); font-size: 10px;">
+                                    <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="user-card-info">
+                            <div class="user-card-header">
+                                <h4 class="user-name" style="margin: 0; font-size: 16px; color: var(--md-on-surface);">${user.displayName || 'User'}</h4>
+                                ${isVerified ? `
+                                    <div class="user-verified-badge ${isPremium ? 'premium' : ''}" 
+                                         style="display: inline-flex; align-items: center; gap: 4px; background: ${isPremium ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)' : 'var(--verified-badge-bg)'}; color: ${isPremium ? '#000' : 'white'}; padding: 4px 10px; border-radius: var(--md-radius-pill); font-size: 11px; font-weight: 600;">
+                                        <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
+                                        ${isPremium ? 'Premium' : 'Verified'}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <p class="user-email" style="margin: 4px 0; font-size: 14px; color: var(--md-on-surface-variant);">${user.email || ''}</p>
+                            
+                            <div class="user-stats" style="display: flex; gap: 12px; margin: 8px 0; flex-wrap: wrap;">
+                                ${user.streak ? `
+                                    <div class="user-stat" style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--md-on-surface-variant);">
+                                        <i class="fas fa-fire" style="font-size: 11px;"></i>
+                                        <span>${user.streak} day streak</span>
+                                    </div>
+                                ` : ''}
+                                <div class="user-stat" style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--md-on-surface-variant);">
+                                    <i class="fas fa-calendar" style="font-size: 11px;"></i>
+                                    <span>${memberDays} days</span>
+                                </div>
+                            </div>
+                            
+                            ${user.bio ? `
+                                <p class="user-bio" style="margin: 8px 0; font-size: 13px; color: var(--md-on-surface-variant); line-height: 1.4;">
+                                    ${truncateText(user.bio, 100)}
+                                </p>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="user-card-actions">
+                            <button class="user-card-action" onclick="event.stopPropagation(); viewUserProfile('${user.id}')" style="padding: 8px 16px; border-radius: var(--md-radius-pill); font-size: 13px; font-weight: 500; cursor: pointer; transition: var(--md-transition); border: 1px solid var(--md-outline); background: var(--md-surface); color: var(--md-primary); display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-eye"></i>
+                                View
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            searchResults.innerHTML = resultsHTML;
+        }
+        
+    } catch (error) {
+        console.error('Search error:', error);
+        searchResults.innerHTML = `
+            <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 16px; color: #ea4335;"></i>
+                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search Error</h3>
+                <p>Failed to load search results. Please try again.</p>
+                <button onclick="performSearch()" style="margin-top: 16px; padding: 10px 20px; border-radius: var(--md-radius-pill); background: var(--md-primary); color: var(--md-on-primary); border: none; font-size: 14px; cursor: pointer;">
+                    Retry Search
+                </button>
+            </div>
+        `;
+    } finally {
+        isSearching = false;
+        if (searchLoading) {
+            searchLoading.style.display = 'none';
+        }
+    }
+}
+
+// View user profile from search
+function viewUserProfile(userId) {
+    closeSearchModal();
+    window.location.href = `https://aditya-cmd-max.github.io/profile/?id=${userId}`;
+}
+
+// Helper function to truncate text
 function truncateText(text, maxLength) {
     if (!text || text.length <= maxLength) return text || '';
     return text.substring(0, maxLength) + '...';
 }
 
 // Console log success
-console.log('Profile page JavaScript loaded successfully');
+console.log('Profile page JavaScript loaded successfully with separate search modal');
     </script>
 
 
