@@ -3117,5 +3117,48 @@
 
         console.log('Profile page fully loaded and ready');
     </script>
+
+<script>
+
+// Add this function to check admin status
+async function checkAdminStatus() {
+  try {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const isAdmin = user.email === 'adityajha1104@gmail.com';
+      console.log('Admin check:', isAdmin);
+      
+      if (isAdmin) {
+        // Force token refresh to ensure custom claims are loaded
+        await user.getIdToken(true);
+        
+        // Get token result to check claims
+        const tokenResult = await user.getIdTokenResult();
+        console.log('Admin claims:', tokenResult.claims);
+      }
+      
+      return isAdmin;
+    }
+    return false;
+  } catch (error) {
+    console.error('Admin check error:', error);
+    return false;
+  }
+}
+
+// Call this when page loads
+checkAdminStatus().then(isAdmin => {
+  if (isAdmin) {
+    console.log('✅ Admin access confirmed');
+    // Show admin panel elements
+    document.querySelectorAll('.admin-only').forEach(el => {
+      el.style.display = 'block';
+    });
+  }
+});
+    
+</script>
+
+    
 </body>
 </html>
