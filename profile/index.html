@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Reverbit - Profile</title>
     <meta name="description" content="Reverbit Profile - Showcase your achievements and connect with others">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase -->
@@ -24,108 +24,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
-        /* Material Design 3 Color System with Enhanced Blue/Green - MATCHING REVERBIT DASHBOARD */
-        :root {
-            /* Primary Colors - Blue Theme */
-            --md-primary: #1a73e8;
-            --md-primary-light: #4285f4;
-            --md-primary-dark: #0d47a1;
-            --md-on-primary: #FFFFFF;
-            --md-primary-container: #d2e3fc;
-            --md-on-primary-container: #001d3d;
-            
-            /* Secondary Colors - Green Theme */
-            --md-secondary: #0d8a72;
-            --md-secondary-light: #34a853;
-            --md-secondary-dark: #0a5c42;
-            --md-on-secondary: #FFFFFF;
-            --md-secondary-container: #b8f2e6;
-            --md-on-secondary-container: #00201a;
-            
-            /* Surface Colors */
-            --md-surface: #FFFFFF;
-            --md-on-surface: #202124;
-            --md-surface-variant: #F8F9FA;
-            --md-on-surface-variant: #5f6368;
-            
-            /* Background Colors */
-            --md-background: #FFFFFF;
-            --md-on-background: #202124;
-            
-            /* Outline Colors */
-            --md-outline: #DADCE0;
-            --md-outline-variant: #E8EAED;
-            
-            /* Shadow Elevations */
-            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
-            --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
-            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --md-elevation-5: 0 8px 24px rgba(0, 0, 0, 0.15);
-            
-            /* Animation */
-            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
-            --md-transition-slow: all 0.5s cubic-bezier(0.2, 0, 0, 1);
-            
-            /* Border Radius */
-            --md-radius-small: 8px;
-            --md-radius-medium: 12px;
-            --md-radius-large: 16px;
-            --md-radius-extra-large: 28px;
-            --md-radius-pill: 9999px;
-            
-            /* Spacing */
-            --md-spacing-xs: 4px;
-            --md-spacing-sm: 8px;
-            --md-spacing-md: 16px;
-            --md-spacing-lg: 24px;
-            --md-spacing-xl: 32px;
-            --md-spacing-xxl: 48px;
-            
-            /* Typography */
-            --md-font-logo: 'Playfair Display', serif;
-            --md-font-heading: 'Inter', sans-serif;
-            --md-font-body: 'Lora', serif;
-            
-            /* Gradient Colors */
-            --md-gradient-1: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            --md-gradient-2: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            --md-gradient-3: linear-gradient(135deg, #1a73e8, #34a853);
-            
-            /* Verified Badge Colors */
-            --verified-badge-bg: linear-gradient(135deg, #1a73e8 0%, #0d8a72 100%);
-            --verified-badge-glow: 0 0 20px rgba(26, 115, 232, 0.4);
-            --verified-badge-animation: verifiedGlow 2s ease-in-out infinite;
-        }
-
-        /* Dark Theme */
-        .dark-theme {
-            --md-surface: #202124;
-            --md-on-surface: #FFFFFF;
-            --md-surface-variant: #303134;
-            --md-on-surface-variant: #E8EAED;
-            --md-background: #202124;
-            --md-on-background: #FFFFFF;
-            --md-primary: #8ab4f8;
-            --md-primary-light: #aecbfa;
-            --md-primary-container: #174ea6;
-            --md-on-primary-container: #E8EAED;
-            --md-secondary: #81c995;
-            --md-secondary-light: #a8dab5;
-            --md-secondary-container: #0d8a72;
-            --md-on-secondary-container: #E8EAED;
-            --md-outline: #3C4043;
-            --md-outline-variant: #5F6368;
-            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
-            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
-            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
-            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.2);
-            --verified-badge-bg: linear-gradient(135deg, #8ab4f8 0%, #81c995 100%);
-            --verified-badge-glow: 0 0 20px rgba(138, 180, 248, 0.4);
-        }
-
-        /* Base Styles */
+        /* ==================== RESET & VARIABLES ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -133,141 +32,229 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        :root {
+            /* Light Theme Colors */
+            --primary-50: #e8f0fe;
+            --primary-100: #d2e3fc;
+            --primary-200: #a6c8f9;
+            --primary-300: #7aacf5;
+            --primary-400: #4e91f2;
+            --primary-500: #1a73e8;
+            --primary-600: #155cc0;
+            --primary-700: #0f4598;
+            --primary-800: #0a2e70;
+            --primary-900: #051748;
+            
+            --secondary-50: #e6f4ea;
+            --secondary-100: #cee8d6;
+            --secondary-200: #9dd1b0;
+            --secondary-300: #6dba8a;
+            --secondary-400: #3ca364;
+            --secondary-500: #0d8a72;
+            --secondary-600: #0a6e5b;
+            --secondary-700: #075344;
+            --secondary-800: #04372d;
+            --secondary-900: #021c16;
+            
+            --premium-50: #fff7e0;
+            --premium-100: #ffefc2;
+            --premium-200: #ffe085;
+            --premium-300: #ffd048;
+            --premium-400: #ffc10b;
+            --premium-500: #FFD700;
+            --premium-600: #e6c200;
+            --premium-700: #ccad00;
+            --premium-800: #b39700;
+            --premium-900: #997a00;
+            
+            --neutral-50: #f8f9fa;
+            --neutral-100: #f1f3f4;
+            --neutral-200: #e8eaed;
+            --neutral-300: #dadce0;
+            --neutral-400: #bdc1c6;
+            --neutral-500: #9aa0a6;
+            --neutral-600: #80868b;
+            --neutral-700: #5f6368;
+            --neutral-800: #3c4043;
+            --neutral-900: #202124;
+            
+            --success-50: #e6f4ea;
+            --success-500: #34a853;
+            --success-700: #0d652d;
+            
+            --warning-50: #fef7e0;
+            --warning-500: #fbbc04;
+            --warning-700: #b45f06;
+            
+            --error-50: #fce8e6;
+            --error-500: #ea4335;
+            --error-700: #a50e0e;
+            
+            /* Semantic Colors - Light */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f1f3f4;
+            
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --text-tertiary: #80868b;
+            --text-inverse: #ffffff;
+            
+            --border-light: #dadce0;
+            --border-medium: #bdc1c6;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+            --gradient-premium: linear-gradient(135deg, var(--premium-500), var(--premium-700));
+            --gradient-verified: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+            
+            /* Badge Colors */
+            --badge-verified-bg: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+            --badge-premium-bg: linear-gradient(135deg, #FFD700, #FFA500, #FF6347);
+            --badge-verified-glow: 0 0 20px rgba(26, 115, 232, 0.3);
+            --badge-premium-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 40px;
+            --space-3xl: 48px;
+            --space-4xl: 64px;
+            
+            /* Typography */
+            --font-logo: 'Playfair Display', serif;
+            --font-heading: 'Inter', sans-serif;
+            --font-body: 'Lora', serif;
+            
+            /* Border Radius */
+            --radius-xs: 4px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            /* Z-Index */
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-popover: 1060;
+            --z-toast: 1070;
+            --z-tooltip: 1080;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --bg-primary: #202124;
+            --bg-secondary: #2d2e30;
+            --bg-tertiary: #3c4043;
+            
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --text-tertiary: #80868b;
+            --text-inverse: #202124;
+            
+            --border-light: #3c4043;
+            --border-medium: #5f6368;
+            
+            --primary-500: #8ab4f8;
+            --secondary-500: #81c995;
+            
+            --badge-verified-glow: 0 0 20px rgba(138, 180, 248, 0.3);
+            --badge-premium-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* ==================== BASE STYLES ==================== */
         html {
+            font-size: 16px;
             scroll-behavior: smooth;
             -webkit-text-size-adjust: 100%;
             text-size-adjust: 100%;
         }
 
         body {
-            font-family: var(--md-font-body);
-            background-color: var(--md-background);
-            color: var(--md-on-surface);
+            font-family: var(--font-body);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
-            transition: var(--md-transition);
-            position: relative;
+            transition: background-color var(--transition-base), color var(--transition-base);
             min-height: 100vh;
         }
 
-        /* Improved Touch Targets */
-        button, 
-        a, 
-        .nav-item, 
-        .btn,
-        .profile-avatar-button {
-            touch-action: manipulation;
-            -ms-touch-action: manipulation;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        /* ==================== TYPOGRAPHY ==================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-primary);
         }
 
-        /* Container */
-        .profile-container {
-            max-width: 1200px;
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+        }
+
+        /* ==================== LAYOUT ==================== */
+        .container {
+            max-width: 1280px;
             margin: 0 auto;
-            padding: var(--md-spacing-lg);
-            min-height: 100vh;
-            animation: fadeIn 0.5s ease-out;
+            padding: 0 var(--space-md);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Header */
-        .profile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--md-spacing-xl) 0;
-            margin-bottom: var(--md-spacing-xl);
-            border-bottom: 1px solid var(--md-outline);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-            text-decoration: none;
-            color: var(--md-on-surface);
-            transition: var(--md-transition);
-        }
-
-        .logo:hover {
-            transform: translateX(-4px);
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-medium);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-size: 1.5rem;
-            box-shadow: var(--md-elevation-2);
-            transition: var(--md-transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
-            animation: shimmer 3s infinite;
-            transform: translateX(-100%);
-        }
-
-        @keyframes shimmer {
-            100% {
-                transform: translateX(100%);
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 var(--space-xl);
             }
         }
 
-        .logo:hover .logo-icon {
-            transform: rotate(15deg) scale(1.1);
-            box-shadow: var(--md-elevation-3);
-        }
-
-        .logo-text {
-            font-family: var(--md-font-logo);
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: var(--md-gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-        }
-
-        /* Buttons */
+        /* ==================== BUTTONS ==================== */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: var(--md-spacing-sm);
-            padding: var(--md-spacing-md) var(--md-spacing-xl);
-            border-radius: var(--md-radius-pill);
-            border: none;
-            font-family: var(--md-font-heading);
-            font-size: 1rem;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-full);
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
             font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
+            line-height: 1.5;
             text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            border: none;
+            outline: none;
             min-height: 44px;
+            min-width: 44px;
+            white-space: nowrap;
             position: relative;
             overflow: hidden;
         }
@@ -283,6 +270,7 @@
             background: rgba(255, 255, 255, 0.2);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
+            pointer-events: none;
         }
 
         .btn:hover::before {
@@ -290,567 +278,233 @@
             height: 300px;
         }
 
-        .btn-filled {
-            background: var(--md-gradient-1);
-            color: var(--md-on-primary);
-            box-shadow: var(--md-elevation-2);
+        .btn:active {
+            transform: scale(0.96);
         }
 
-        .btn-filled:hover {
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-lg);
             transform: translateY(-2px);
-            box-shadow: var(--md-elevation-3);
         }
 
-        .btn-outlined {
+        .btn-outline {
             background: transparent;
-            color: var(--md-primary);
-            border: 1px solid var(--md-outline);
+            color: var(--primary-500);
+            border: 1px solid var(--border-light);
         }
 
-        .btn-outlined:hover {
-            background: var(--md-primary-container);
-            border-color: var(--md-primary);
-            transform: translateY(-2px);
+        .btn-outline:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-500);
         }
 
-        /* Admin Button */
-        .btn-admin {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
+        .btn-outline:active {
+            background: var(--primary-100);
         }
 
-        .btn-admin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
         }
 
-        /* Profile Layout */
-        .profile-main {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-xl);
+        .btn-ghost:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
         }
 
-        .profile-info-section {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: var(--md-spacing-xl);
-            margin-bottom: var(--md-spacing-xl);
+        .btn-icon {
+            padding: var(--space-sm);
+            border-radius: var(--radius-full);
+            aspect-ratio: 1;
         }
 
-        @media (max-width: 768px) {
-            .profile-info-section {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-        }
-
-        /* Profile Avatar */
-        .profile-avatar-container {
-            position: relative;
-        }
-
-        .profile-avatar-large {
-            width: 280px;
-            height: 280px;
-            margin: 0 auto;
-            position: relative;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .profile-avatar-large {
-                width: 200px;
-                height: 200px;
-            }
-        }
-
-        .profile-avatar-large-img {
+        .btn-block {
             width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--md-surface);
-            box-shadow: var(--md-elevation-4);
-            transition: var(--md-transition);
-            background: var(--md-gradient-1);
         }
 
-        .profile-avatar-large:hover .profile-avatar-large-img {
-            transform: scale(1.05);
-            border-color: var(--md-primary);
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
-        .avatar-upload-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            opacity: 0;
-            transition: var(--md-transition);
-            cursor: pointer;
-        }
-
-        .profile-avatar-large:hover .avatar-upload-overlay {
-            opacity: 1;
-        }
-
-        /* Profile Details */
-        .profile-details {
-            flex: 1;
-        }
-
-        .profile-username-section {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-lg);
-            flex-wrap: wrap;
-        }
-
-        .profile-username {
-            font-family: var(--md-font-heading);
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--md-on-surface);
-            background: var(--md-gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-            flex-wrap: wrap;
-        }
-
-        @media (max-width: 768px) {
-            .profile-username {
-                font-size: 2rem;
-                justify-content: center;
-            }
-        }
-
-        .profile-bio {
-            color: var(--md-on-surface);
-            font-size: 1.125rem;
-            line-height: 1.8;
-            margin-bottom: var(--md-spacing-lg);
-            max-width: 600px;
-        }
-
-        .profile-email {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-            color: var(--md-on-surface-variant);
-            font-size: 1.1rem;
-            margin-bottom: var(--md-spacing-lg);
-            padding: var(--md-spacing-sm) var(--md-spacing-md);
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-pill);
-        }
-
-        /* Profile Stats */
-        .profile-stats {
-            display: flex;
-            gap: var(--md-spacing-xl);
-            margin-bottom: var(--md-spacing-xl);
-            padding: var(--md-spacing-lg);
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            border: 1px solid var(--md-outline);
-            box-shadow: var(--md-elevation-1);
-        }
-
-        @media (max-width: 768px) {
-            .profile-stats {
-                flex-wrap: wrap;
-                gap: var(--md-spacing-lg);
-                justify-content: center;
-            }
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            min-width: 100px;
-        }
-
-        .stat-number {
-            font-family: var(--md-font-logo);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--md-primary);
-            margin-bottom: var(--md-spacing-xs);
-        }
-
-        .stat-label {
-            color: var(--md-on-surface-variant);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        /* Profile Controls */
-        .profile-controls {
-            display: flex;
-            gap: var(--md-spacing-md);
-            margin-top: var(--md-spacing-lg);
-            flex-wrap: wrap;
-        }
-
-        /* Loading */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--md-background);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .loading.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--md-surface-variant);
-            border-top: 4px solid var(--md-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: var(--md-spacing-lg);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: var(--md-spacing-lg);
-            right: var(--md-spacing-lg);
-            background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-md) var(--md-spacing-lg);
-            box-shadow: var(--md-elevation-3);
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast i {
-            color: var(--md-primary);
-            font-size: 1.25rem;
-        }
-
-        .toast.success {
-            background: #34a853;
-            color: white;
-        }
-
-        .toast.error {
-            background: #ea4335;
-            color: white;
-        }
-
-        .toast.warning {
-            background: #fbbc05;
-            color: #202124;
-        }
-
-        /* Badge */
+        /* ==================== BADGES ==================== */
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: var(--md-spacing-xs) var(--md-spacing-sm);
-            background: var(--md-primary-container);
-            color: var(--md-on-primary-container);
-            border-radius: var(--md-radius-pill);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-left: var(--md-spacing-sm);
-        }
-
-        /* ENHANCED Verified Badge Styles */
-        .verified-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--verified-badge-bg);
-            color: white;
-            padding: 6px 14px;
-            border-radius: var(--md-radius-pill);
-            font-size: 0.8rem;
-            font-weight: 600;
-            box-shadow: var(--verified-badge-glow);
-            animation: var(--verified-badge-animation);
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            letter-spacing: 0.3px;
-        }
-
-        .verified-badge::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shine 3s infinite;
-        }
-
-        .verified-badge i {
-            font-size: 0.9rem;
-            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
-        }
-
-        @keyframes verifiedGlow {
-            0%, 100% {
-                box-shadow: var(--verified-badge-glow);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 25px rgba(26, 115, 232, 0.6);
-                transform: scale(1.02);
-            }
-        }
-
-        @keyframes shine {
-            100% {
-                left: 100%;
-            }
-        }
-
-        /* ENHANCED Avatar Badge */
-        .avatar-verified-badge {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: var(--verified-badge-bg);
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--md-surface);
-            z-index: 2;
-            box-shadow: var(--md-elevation-4);
-            animation: var(--verified-badge-animation);
-            cursor: help;
-            transition: var(--md-transition);
-        }
-
-        .avatar-verified-badge:hover {
-            transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 0 30px rgba(26, 115, 232, 0.6);
-        }
-
-        .avatar-verified-badge i {
-            font-size: 1.3rem;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
-        }
-
-        .avatar-verified-badge::after {
-            content: 'Verified Account';
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-            padding: var(--md-spacing-sm) var(--md-spacing-md);
-            border-radius: var(--md-radius-medium);
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
             font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             white-space: nowrap;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: var(--md-transition);
-            box-shadow: var(--md-elevation-2);
-            pointer-events: none;
-            border: 1px solid var(--md-outline);
+            transition: all var(--transition-base);
         }
 
-        .avatar-verified-badge:hover::after {
-            opacity: 1;
-            transform: translateY(-5px);
+        .badge-verified {
+            background: var(--gradient-verified);
+            color: white;
+            box-shadow: var(--badge-verified-glow);
         }
 
-        /* Premium verified badge variant */
-        .verified-badge.premium {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #000;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+        .badge-premium {
+            background: var(--gradient-premium);
+            color: black;
+            box-shadow: var(--badge-premium-glow);
         }
 
-        .avatar-verified-badge.premium {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #000;
+        .badge-admin {
+            background: var(--primary-500);
+            color: white;
         }
 
-        /* For smaller screens */
-        @media (max-width: 768px) {
-            .verified-badge {
-                padding: 4px 10px;
-                font-size: 0.75rem;
-            }
-            
-            .avatar-verified-badge {
-                width: 36px;
-                height: 36px;
-                bottom: 10px;
-                right: 10px;
-            }
-            
-            .avatar-verified-badge i {
-                font-size: 1rem;
-            }
-            
-            .avatar-verified-badge::after {
-                display: none;
-            }
+        /* ==================== AVATAR ==================== */
+        .avatar {
+            position: relative;
+            display: inline-block;
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        /* Avatar Error Handling */
-        .avatar-fallback {
-            width: 100%;
-            height: 100%;
-            background: var(--md-gradient-1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-weight: 700;
-            font-size: 3rem;
-            text-transform: uppercase;
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
         }
 
-        /* Visitor Message */
-        .visitor-message {
-            text-align: center;
-            padding: var(--md-spacing-xl);
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            border: 1px solid var(--md-outline);
-            box-shadow: var(--md-elevation-1);
-            margin: var(--md-spacing-xl) 0;
-        }
-
-        /* Not Found */
-        .not-found {
-            text-align: center;
-            padding: var(--md-spacing-xxl) var(--md-spacing-lg);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .not-found h1 {
-            font-family: var(--md-font-logo);
-            font-size: 3rem;
-            margin-bottom: var(--md-spacing-lg);
-            background: var(--md-gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            background: transparent;
-            border: none;
-            color: var(--md-on-surface);
-            cursor: pointer;
+        .avatar-md {
             width: 48px;
             height: 48px;
-            border-radius: 50%;
+        }
+
+        .avatar-lg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .avatar-xl {
+            width: 120px;
+            height: 120px;
+        }
+
+        .avatar-2xl {
+            width: 200px;
+            height: 200px;
+        }
+
+        @media (min-width: 768px) {
+            .avatar-2xl {
+                width: 240px;
+                height: 240px;
+            }
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-base);
+        }
+
+        .avatar:hover img {
+            transform: scale(1.05);
+        }
+
+        .avatar-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--md-transition);
-            background: var(--md-surface-variant);
+            border: 2px solid var(--bg-primary);
+            box-shadow: var(--shadow-md);
+            font-size: 0.9rem;
+            z-index: 2;
+            animation: badgePulse 2s infinite;
         }
 
-        .theme-toggle:hover {
-            background: var(--md-primary-container);
-            transform: rotate(15deg);
+        .avatar-badge-verified {
+            background: var(--badge-verified-bg);
+            color: white;
         }
 
-        /* Footer */
-        .profile-footer {
-            margin-top: var(--md-spacing-xl);
-            padding: var(--md-spacing-xl) 0;
-            text-align: center;
-            color: var(--md-on-surface-variant);
-            border-top: 1px solid var(--md-outline);
+        .avatar-badge-premium {
+            background: var(--badge-premium-bg);
+            color: black;
         }
 
-        .profile-footer-links {
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: var(--md-spacing-lg);
-            margin-top: var(--md-spacing-md);
-            flex-wrap: wrap;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            cursor: pointer;
+            color: white;
+            font-size: 1.2rem;
         }
 
-        .profile-footer-links a {
-            color: var(--md-on-surface-variant);
-            text-decoration: none;
-            transition: var(--md-transition);
+        .avatar:hover .avatar-overlay {
+            opacity: 1;
         }
 
-        .profile-footer-links a:hover {
-            color: var(--md-primary);
+        /* ==================== CARDS ==================== */
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all var(--transition-base);
         }
 
-        /* Modal */
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .card-body {
+            padding: var(--space-lg);
+        }
+
+        .card-footer {
+            padding: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* ==================== MODAL ==================== */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
+            backdrop-filter: blur(8px);
             align-items: center;
             justify-content: center;
-            animation: fadeIn 0.3s ease-out;
+            z-index: var(--z-modal);
+            padding: var(--space-md);
         }
 
         .modal.active {
@@ -858,19 +512,17 @@
         }
 
         .modal-content {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-extra-large);
-            padding: var(--md-spacing-xl);
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
             max-width: 500px;
-            width: 90%;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            border: 1px solid var(--md-outline);
-            position: relative;
-            animation: slideInUp 0.3s ease-out;
+            animation: modalSlideUp var(--transition-bounce);
+            border: 1px solid var(--border-light);
         }
 
-        @keyframes slideInUp {
+        @keyframes modalSlideUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -881,298 +533,585 @@
             }
         }
 
-        /* Admin Panel Styles */
-        .admin-panel {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-xl);
-            border: 1px solid var(--md-outline);
-            margin-top: var(--md-spacing-xl);
-        }
-
-        .admin-header {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            margin-bottom: var(--md-spacing-xl);
-            padding-bottom: var(--md-spacing-lg);
-            border-bottom: 1px solid var(--md-outline);
-        }
-
-        .admin-header i {
-            font-size: 2rem;
-            color: var(--md-primary);
-        }
-
-        .admin-header h2 {
-            font-family: var(--md-font-heading);
-            color: var(--md-on-surface);
-        }
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-xl);
-        }
-
-        .admin-stat-card {
-            background: var(--md-surface-variant);
-            padding: var(--md-spacing-lg);
-            border-radius: var(--md-radius-large);
-            text-align: center;
-        }
-
-        .admin-stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--md-primary);
-            margin-bottom: var(--md-spacing-xs);
-        }
-
-        .admin-stat-label {
-            color: var(--md-on-surface-variant);
-            font-size: 0.9rem;
-        }
-
-        .admin-search {
-            margin-bottom: var(--md-spacing-xl);
-        }
-
-        .admin-search-input {
-            width: 100%;
-            padding: var(--md-spacing-lg);
-            border: 2px solid var(--md-outline);
-            border-radius: var(--md-radius-medium);
-            font-size: 1rem;
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-            transition: var(--md-transition);
-        }
-
-        .admin-search-input:focus {
-            border-color: var(--md-primary);
-            outline: none;
-            box-shadow: 0 0 0 3px var(--md-primary-container);
-        }
-
-        .admin-filters {
-            display: flex;
-            gap: var(--md-spacing-md);
-            margin-bottom: var(--md-spacing-xl);
-            flex-wrap: wrap;
-        }
-
-        .admin-filter-btn {
-            padding: var(--md-spacing-sm) var(--md-spacing-lg);
-            border-radius: var(--md-radius-pill);
-            border: 1px solid var(--md-outline);
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-            cursor: pointer;
-            transition: var(--md-transition);
-            font-size: 0.9rem;
-        }
-
-        .admin-filter-btn:hover {
-            background: var(--md-primary-container);
-            border-color: var(--md-primary);
-        }
-
-        .admin-filter-btn.active {
-            background: var(--md-primary);
-            color: white;
-            border-color: var(--md-primary);
-        }
-
-        .users-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-md);
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: var(--md-spacing-sm);
-        }
-
-        .users-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .users-list::-webkit-scrollbar-track {
-            background: var(--md-surface-variant);
-            border-radius: 4px;
-        }
-
-        .users-list::-webkit-scrollbar-thumb {
-            background: var(--md-primary);
-            border-radius: 4px;
-        }
-
-        .user-item {
+        .modal-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: var(--md-spacing-lg);
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-medium);
-            transition: var(--md-transition);
-            border: 1px solid transparent;
         }
 
-        .user-item:hover {
-            transform: translateX(4px);
-            background: var(--md-primary-container);
-            border-color: var(--md-primary);
+        .modal-body {
+            padding: var(--space-lg);
         }
 
-        .user-info {
+        .modal-footer {
+            padding: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: flex-end;
+        }
+
+        /* ==================== TOAST ==================== */
+        .toast {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-xl);
             display: flex;
             align-items: center;
-            gap: var(--md-spacing-lg);
+            gap: var(--space-sm);
+            z-index: var(--z-toast);
+            opacity: 0;
+            transition: all var(--transition-bounce);
+            border: 1px solid var(--border-light);
+            max-width: 90%;
+            min-width: 300px;
         }
 
-        .user-avatar {
-            width: 60px;
-            height: 60px;
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            background: var(--success-500);
+            color: white;
+        }
+
+        .toast-error {
+            background: var(--error-500);
+            color: white;
+        }
+
+        .toast-warning {
+            background: var(--warning-500);
+            color: var(--neutral-900);
+        }
+
+        .toast-info {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        /* ==================== LOADING ==================== */
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            transition: opacity var(--transition-base);
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary-500);
             border-radius: 50%;
-            background: var(--md-gradient-1);
+            animation: spin 1s linear infinite;
+            margin-bottom: var(--space-md);
+        }
+
+        .spinner-sm {
+            width: 20px;
+            height: 20px;
+            border-width: 2px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            backdrop-filter: blur(8px);
+            background: rgba(var(--bg-primary-rgb), 0.8);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
             font-size: 1.5rem;
-            text-transform: uppercase;
+            transition: transform var(--transition-base);
         }
 
-        .user-avatar img {
+        .logo:hover .logo-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .logo-text {
+            font-family: var(--font-logo);
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        /* ==================== SEARCH ==================== */
+        .search-section {
+            margin: var(--space-lg) 0;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-md) * 3);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            font-size: 1rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all var(--transition-base);
+            outline: none;
+            height: 52px;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px var(--primary-50);
+        }
+
+        .search-results {
+            position: absolute;
+            top: calc(100% + var(--space-sm));
+            left: 0;
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: var(--z-dropdown);
+        }
+
+        .search-results.show {
+            display: block;
+            animation: slideDown var(--transition-base);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .search-result-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            object-fit: cover;
+        }
+
+        .search-result-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-result-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .search-result-email {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .no-results {
+            padding: var(--space-xl);
+            text-align: center;
+            color: var(--text-tertiary);
+        }
+
+        /* ==================== PROFILE ==================== */
+        .profile-section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            margin-bottom: var(--space-xl);
+        }
+
+        .profile-header {
+            padding: var(--space-xl);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-xl);
+        }
+
+        @media (min-width: 768px) {
+            .profile-header {
+                grid-template-columns: 280px 1fr;
+            }
+        }
+
+        .profile-avatar-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-avatar {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        @media (min-width: 768px) {
+            .profile-avatar {
+                width: 240px;
+                height: 240px;
+            }
+        }
+
+        .profile-avatar-img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
+            border: 4px solid var(--primary-500);
+            box-shadow: var(--shadow-lg);
         }
 
-        .user-details h4 {
-            font-family: var(--md-font-heading);
-            margin-bottom: var(--md-spacing-xs);
-            color: var(--md-on-surface);
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .profile-name-section {
             display: flex;
             align-items: center;
-            gap: var(--md-spacing-sm);
+            gap: var(--space-sm);
+            flex-wrap: wrap;
         }
 
-        .user-details p {
-            color: var(--md-on-surface-variant);
-            font-size: 0.9rem;
-            margin-bottom: var(--md-spacing-xs);
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
         }
 
-        .user-meta {
+        @media (min-width: 768px) {
+            .profile-name {
+                font-size: 2.5rem;
+            }
+        }
+
+        .profile-badges {
             display: flex;
-            gap: var(--md-spacing-md);
+            align-items: center;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .profile-email {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            background: var(--bg-tertiary);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            width: fit-content;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin: var(--space-md) 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-500);
+            line-height: 1.2;
+        }
+
+        .stat-label {
             font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .user-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: var(--md-radius-pill);
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-verified {
-            background: #e6f4ea;
-            color: #137333;
-        }
-
-        .status-unverified {
-            background: #fee;
-            color: #c5221f;
-        }
-
-        .status-admin {
-            background: var(--md-primary-container);
-            color: var(--md-on-primary-container);
-        }
-
-        .admin-badge {
-            background: var(--md-primary);
-            color: white;
-            padding: 2px 8px;
-            border-radius: var(--md-radius-pill);
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .admin-actions {
+        .profile-actions {
             display: flex;
-            gap: var(--md-spacing-sm);
+            gap: var(--space-sm);
+            flex-wrap: wrap;
         }
 
-        .admin-btn {
-            padding: 8px 16px;
-            border-radius: var(--md-radius-pill);
-            border: none;
-            cursor: pointer;
+        .profile-meta {
+            display: flex;
+            gap: var(--space-lg);
+            color: var(--text-tertiary);
             font-size: 0.9rem;
-            font-weight: 500;
-            transition: var(--md-transition);
-            display: inline-flex;
+            flex-wrap: wrap;
+        }
+
+        /* ==================== ADMIN PANEL ==================== */
+        .admin-section {
+            margin-top: var(--space-xl);
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 768px) {
+            .admin-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-500);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-card-label {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        .admin-filters {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-lg);
+            overflow-x: auto;
+            padding-bottom: var(--space-xs);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-btn {
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        .users-grid {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .user-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 768px) {
+            .user-card {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .user-card-info {
+            display: flex;
             align-items: center;
-            gap: 5px;
+            gap: var(--space-md);
+            flex: 1;
+            min-width: 0;
         }
 
-        .admin-btn:hover {
-            transform: translateY(-2px);
+        .user-card-details {
+            flex: 1;
+            min-width: 0;
         }
 
-        .verify-btn {
-            background: #1a73e8;
-            color: white;
+        .user-card-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
         }
 
-        .unverify-btn {
-            background: #ea4335;
-            color: white;
+        .user-card-email {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .delete-btn {
-            background: #dc3545;
-            color: white;
+        .user-card-actions {
+            display: flex;
+            gap: var(--space-xs);
+            justify-content: flex-end;
+            flex-wrap: wrap;
         }
 
-        .view-btn {
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-            border: 1px solid var(--md-outline);
-        }
-
-        /* Pagination */
         .pagination {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: var(--md-spacing-md);
-            margin-top: var(--md-spacing-xl);
+            justify-content: center;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
         }
 
         .pagination-btn {
-            padding: var(--md-spacing-sm) var(--md-spacing-lg);
-            border-radius: var(--md-radius-pill);
-            border: 1px solid var(--md-outline);
-            background: var(--md-surface);
-            color: var(--md-on-surface);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             cursor: pointer;
-            transition: var(--md-transition);
+            transition: all var(--transition-fast);
+            min-width: 100px;
         }
 
         .pagination-btn:hover:not(:disabled) {
-            background: var(--md-primary);
+            background: var(--primary-500);
             color: white;
-            border-color: var(--md-primary);
         }
 
         .pagination-btn:disabled {
@@ -1180,566 +1119,204 @@
             cursor: not-allowed;
         }
 
-        .page-info {
-            font-size: 0.9rem;
-            color: var(--md-on-surface-variant);
-        }
-
-        /* Settings Panel */
-        .settings-panel {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-xl);
-            border: 1px solid var(--md-outline);
-            margin-top: var(--md-spacing-xl);
-        }
-
-        .settings-section {
-            margin-bottom: var(--md-spacing-xl);
-            padding-bottom: var(--md-spacing-xl);
-            border-bottom: 1px solid var(--md-outline);
-        }
-
-        .settings-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .settings-section h3 {
-            font-family: var(--md-font-heading);
-            margin-bottom: var(--md-spacing-lg);
-            color: var(--md-on-surface);
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-        }
-
-        .settings-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--md-spacing-md) 0;
-            border-bottom: 1px solid var(--md-outline-variant);
-        }
-
-        .settings-row:last-child {
-            border-bottom: none;
-        }
-
-        .settings-label {
-            font-weight: 500;
-            color: var(--md-on-surface);
-        }
-
-        .settings-value {
-            color: var(--md-on-surface-variant);
-        }
-
-        /* Profile Tabs */
-        .profile-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--md-outline);
-            margin-bottom: var(--md-spacing-xl);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .profile-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .profile-tab {
-            flex: 1;
-            min-width: 120px;
-            padding: var(--md-spacing-lg) var(--md-spacing-md);
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--md-on-surface-variant);
-            font-family: var(--md-font-heading);
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--md-spacing-sm);
-            white-space: nowrap;
-        }
-
-        .profile-tab:hover {
-            color: var(--md-primary);
-            background: var(--md-surface-variant);
-        }
-
-        .profile-tab.active {
-            color: var(--md-primary);
-            border-bottom-color: var(--md-primary);
-            font-weight: 600;
-        }
-
-        /* Status Indicators */
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--md-spacing-xs);
-            padding: var(--md-spacing-xs) var(--md-spacing-sm);
-            border-radius: var(--md-radius-pill);
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .status-online {
-            background: rgba(52, 168, 83, 0.1);
-            color: #34a853;
-        }
-
-        .status-offline {
-            background: rgba(95, 99, 104, 0.1);
-            color: var(--md-on-surface-variant);
-        }
-
-        .status-busy {
-            background: rgba(234, 67, 53, 0.1);
-            color: #ea4335;
-        }
-
-        /* Activity Timeline */
-        .activity-timeline {
-            margin-top: var(--md-spacing-xl);
-        }
-
-        .timeline-item {
-            display: flex;
-            gap: var(--md-spacing-lg);
-            padding: var(--md-spacing-lg);
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-medium);
-            margin-bottom: var(--md-spacing-md);
-            position: relative;
-        }
-
-        .timeline-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--md-primary-container);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-primary);
-        }
-
-        .timeline-content {
-            flex: 1;
-        }
-
-        .timeline-title {
-            font-weight: 600;
-            margin-bottom: var(--md-spacing-xs);
-        }
-
-        .timeline-time {
-            font-size: 0.85rem;
-            color: var(--md-on-surface-variant);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .profile-container {
-                padding: var(--md-spacing-md);
-            }
-            
-            .profile-header {
-                flex-direction: column;
-                gap: var(--md-spacing-lg);
-                text-align: center;
-                padding: var(--md-spacing-lg) 0;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            
-            .btn {
-                min-height: 44px;
-                padding: var(--md-spacing-sm) var(--md-spacing-lg);
-                font-size: 0.95rem;
-            }
-            
-            .profile-controls {
-                justify-content: center;
-            }
-
-            .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .user-item {
-                flex-direction: column;
-                gap: var(--md-spacing-md);
-            }
-
-            .user-info {
-                width: 100%;
-            }
-
-            .admin-actions {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .profile-stats {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .stat-item {
-                width: 100%;
-                max-width: 200px;
-            }
-
-            .admin-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .user-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .user-meta {
-                justify-content: center;
-            }
-        }
-
-        /* Legal Info Section */
-        .legal-info-section {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-xl);
-            border: 1px solid var(--md-outline);
-            margin-top: var(--md-spacing-xl);
-        }
-
-        .legal-info-section h2 {
-            font-family: var(--md-font-heading);
-            margin-bottom: var(--md-spacing-lg);
-            color: var(--md-primary);
-        }
-
-        .legal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--md-spacing-lg);
-        }
-
-        .legal-item {
-            padding: var(--md-spacing-md);
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-medium);
-        }
-
-        .legal-item h3 {
-            font-family: var(--md-font-heading);
-            margin-bottom: var(--md-spacing-sm);
-            color: var(--md-on-surface);
-        }
-
-        .legal-item p {
-            color: var(--md-on-surface-variant);
-            font-size: 0.95rem;
-        }
-
-        /* Achievement Badges */
-        .achievement-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: var(--md-spacing-md);
-            margin-top: var(--md-spacing-lg);
-        }
-
-        .achievement-card {
-            background: var(--md-surface-variant);
-            padding: var(--md-spacing-lg);
-            border-radius: var(--md-radius-medium);
+        /* ==================== NOT FOUND ==================== */
+        .not-found {
             text-align: center;
-            transition: var(--md-transition);
+            padding: var(--space-4xl) var(--space-lg);
         }
 
-        .achievement-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--md-elevation-3);
+        .not-found-icon {
+            font-size: 5rem;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-xl);
         }
 
-        .achievement-icon {
-            font-size: 2rem;
-            color: var(--md-primary);
-            margin-bottom: var(--md-spacing-sm);
+        .not-found-title {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-md);
         }
 
-        .achievement-title {
-            font-weight: 600;
-            margin-bottom: var(--md-spacing-xs);
+        .not-found-text {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .achievement-description {
-            font-size: 0.85rem;
-            color: var(--md-on-surface-variant);
+        /* ==================== UTILITIES ==================== */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+
+        .mt-1 { margin-top: var(--space-xs); }
+        .mt-2 { margin-top: var(--space-sm); }
+        .mt-3 { margin-top: var(--space-md); }
+        .mt-4 { margin-top: var(--space-lg); }
+        .mt-5 { margin-top: var(--space-xl); }
+
+        .mb-1 { margin-bottom: var(--space-xs); }
+        .mb-2 { margin-bottom: var(--space-sm); }
+        .mb-3 { margin-bottom: var(--space-md); }
+        .mb-4 { margin-bottom: var(--space-lg); }
+        .mb-5 { margin-bottom: var(--space-xl); }
+
+        .ml-1 { margin-left: var(--space-xs); }
+        .ml-2 { margin-left: var(--space-sm); }
+        .ml-3 { margin-left: var(--space-md); }
+        .ml-4 { margin-left: var(--space-lg); }
+        .ml-5 { margin-left: var(--space-xl); }
+
+        .mr-1 { margin-right: var(--space-xs); }
+        .mr-2 { margin-right: var(--space-sm); }
+        .mr-3 { margin-right: var(--space-md); }
+        .mr-4 { margin-right: var(--space-lg); }
+        .mr-5 { margin-right: var(--space-xl); }
+
+        .p-1 { padding: var(--space-xs); }
+        .p-2 { padding: var(--space-sm); }
+        .p-3 { padding: var(--space-md); }
+        .p-4 { padding: var(--space-lg); }
+        .p-5 { padding: var(--space-xl); }
+
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: var(--space-xs); }
+        .gap-2 { gap: var(--space-sm); }
+        .gap-3 { gap: var(--space-md); }
+        .gap-4 { gap: var(--space-lg); }
+        .gap-5 { gap: var(--space-xl); }
+
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+
+        .hidden { display: none; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        /* Loading States */
-        .loading-spinner-small {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--md-outline);
-            border-top-color: var(--md-primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
         }
 
-        .skeleton {
-            background: linear-gradient(90deg, var(--md-surface-variant) 25%, var(--md-outline) 50%, var(--md-surface-variant) 75%);
-            background-size: 200% 100%;
-            animation: skeleton-loading 1.5s infinite;
+        ::-webkit-scrollbar-thumb {
+            background: var(--neutral-500);
+            border-radius: 4px;
         }
 
-        @keyframes skeleton-loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        /* Tooltips */
-        [data-tooltip] {
-            position: relative;
-            cursor: help;
-        }
-
-        [data-tooltip]:before {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-5px);
-            padding: var(--md-spacing-xs) var(--md-spacing-sm);
-            background: var(--md-surface);
-            color: var(--md-on-surface);
-            font-size: 0.75rem;
-            white-space: nowrap;
-            border-radius: var(--md-radius-small);
-            border: 1px solid var(--md-outline);
-            box-shadow: var(--md-elevation-2);
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--md-transition);
-            z-index: 100;
-        }
-
-        [data-tooltip]:hover:before {
-            opacity: 1;
-            transform: translateX(-50%) translateY(-10px);
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neutral-600);
         }
     </style>
 </head>
-<body class="light-theme">
+<body>
     <!-- Loading Screen -->
     <div class="loading" id="loading">
-        <div class="loader"></div>
-        <p style="color: var(--md-on-surface-variant);">Loading profile...</p>
+        <div class="spinner"></div>
+        <p>Loading Reverbit...</p>
     </div>
 
     <!-- Main Container -->
-    <div class="profile-container" id="mainContent" style="display: none;">
+    <div class="container" id="mainContent" style="display: none;">
         <!-- Header -->
-        <header class="profile-header">
-            <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
-                <div class="logo-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="white"/>
-                        <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6Z" fill="#1a73e8"/>
-                        <path d="M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z" fill="white"/>
-                        <path d="M12 20C7.59 20 4 16.41 4 12H0C0 18.63 5.37 24 12 24V20Z" fill="#34a853"/>
-                        <path d="M20 12C20 16.41 16.41 20 12 20V24C18.63 24 24 18.63 24 12H20Z" fill="#4285f4"/>
-                    </svg>
-                </div>
-                <span class="logo-text">Reverbit</span>
-            </a>
-            
-            <div class="header-actions" id="headerActions">
-                <!-- Populated by JavaScript -->
+        <header class="header">
+            <div class="header-content">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                    <span class="logo-text">Reverbit</span>
+                </a>
+                
+                <nav class="nav" id="nav"></nav>
             </div>
         </header>
 
-        <!-- Profile Content -->
-        <div id="profileContent">
-            <!-- Profile will be loaded here -->
-        </div>
-
-        <!-- Admin Panel -->
-        <div id="adminPanel" style="display: none;">
-            <div class="admin-panel">
-                <div class="admin-header">
-                    <i class="fas fa-user-shield"></i>
-                    <h2>Admin Verification Panel</h2>
-                </div>
-
-                <div class="admin-stats" id="adminStats">
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-number" id="totalUsers">0</div>
-                        <div class="admin-stat-label">Total Users</div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-number" id="verifiedUsers">0</div>
-                        <div class="admin-stat-label">Verified</div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-number" id="activeToday">0</div>
-                        <div class="admin-stat-label">Active Today</div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="admin-stat-number" id="newUsers">0</div>
-                        <div class="admin-stat-label">New This Week</div>
-                    </div>
-                </div>
-
-                <div class="admin-search">
-                    <input type="text" class="admin-search-input" id="searchUsers" placeholder="Search users by name, email, or user ID...">
-                </div>
-
-                <div class="admin-filters">
-                    <button class="admin-filter-btn active" data-filter="all" onclick="filterUsers('all')">All Users</button>
-                    <button class="admin-filter-btn" data-filter="verified" onclick="filterUsers('verified')">Verified</button>
-                    <button class="admin-filter-btn" data-filter="unverified" onclick="filterUsers('unverified')">Unverified</button>
-                    <button class="admin-filter-btn" data-filter="admin" onclick="filterUsers('admin')">Admin</button>
-                </div>
-
-                <div class="users-list" id="usersList">
-                    <!-- Users will be populated here -->
-                </div>
-
-                <div class="pagination" id="pagination">
-                    <button class="pagination-btn" id="prevPage" onclick="changePage('prev')" disabled>
-                        <i class="fas fa-chevron-left"></i> Previous
-                    </button>
-                    <span class="page-info" id="pageInfo">Page 1</span>
-                    <button class="pagination-btn" id="nextPage" onclick="changePage('next')">
-                        Next <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search users by name, email, or username...">
+                
+                <div class="search-results" id="searchResults"></div>
             </div>
         </div>
 
-        <!-- Not Found -->
-        <div class="not-found" id="notFound" style="display: none;">
-            <h1>Profile Not Found</h1>
-            <p style="margin-bottom: var(--md-spacing-lg); color: var(--md-on-surface-variant);">
-                The profile you're looking for doesn't exist or is set to private.
-            </p>
-            <div class="profile-controls" style="justify-content: center;">
-                <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-filled">
-                    <i class="fas fa-home"></i>
-                    Go Home
-                </a>
-                <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
-                    <i class="fas fa-user"></i>
-                    Your Dashboard
-                </a>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="profile-footer">
-            <p>© 2025 Reverbit. All rights reserved.</p>
-            <div class="profile-footer-links">
-                <a href="https://aditya-cmd-max.github.io/reverbit/privacy">Privacy</a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/terms">Terms</a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/contact">Contact</a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/about">About</a>
-            </div>
-        </footer>
+        <!-- Main Content Area -->
+        <div id="contentArea"></div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
+        <i class="fas fa-info-circle"></i>
         <span id="toastMessage"></span>
     </div>
 
     <!-- Verification Modal -->
     <div class="modal" id="verifyModal">
         <div class="modal-content">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--md-spacing-lg);">
-                <h2 style="font-family: var(--md-font-heading); display: flex; align-items: center; gap: var(--md-spacing-sm);">
-                    <i class="fas fa-shield-alt" style="color: var(--md-primary);"></i>
-                    Manage Verification
-                </h2>
-                <button class="btn btn-outlined" onclick="closeModal('verifyModal')" style="padding: 8px; min-width: auto;">
+            <div class="modal-header">
+                <h3>Manage Verification</h3>
+                <button class="btn btn-icon btn-ghost" onclick="closeModal('verifyModal')">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="modalUserInfo" style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg);">
-                <!-- Populated by JavaScript -->
+            <div class="modal-body">
+                <div id="modalUserInfo" class="card p-3 mb-4"></div>
+
+                <div class="mb-4">
+                    <label class="form-label">Verification Level</label>
+                    <select id="verifyLevel" class="search-input">
+                        <option value="none">Not Verified</option>
+                        <option value="basic">Basic Verified</option>
+                        <option value="premium">Premium Verified</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea id="verifyNotes" class="search-input" rows="4" placeholder="Add notes about this verification..."></textarea>
+                </div>
             </div>
 
-            <div style="margin-bottom: var(--md-spacing-lg);">
-                <label style="display: block; margin-bottom: var(--md-spacing-sm); font-weight: 500;">Verification Status</label>
-                <select id="verifyStatus" class="admin-search-input">
-                    <option value="false">Not Verified</option>
-                    <option value="true">Verified</option>
-                </select>
-            </div>
-
-            <div style="margin-bottom: var(--md-spacing-lg);">
-                <label style="display: block; margin-bottom: var(--md-spacing-sm); font-weight: 500;">Notes (Optional)</label>
-                <textarea id="verifyNotes" class="admin-search-input" rows="3" placeholder="Add notes about this verification..."></textarea>
-            </div>
-
-            <div class="modal-buttons" style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
-                <button class="btn btn-outlined" onclick="closeModal('verifyModal')">Cancel</button>
-                <button class="btn btn-primary" id="saveVerificationBtn" onclick="saveVerification()">
-                    <i class="fas fa-check-circle"></i>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('verifyModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveVerification()">
+                    <i class="fas fa-save"></i>
                     Save Changes
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Delete User Modal -->
+    <!-- Delete Modal -->
     <div class="modal" id="deleteModal">
         <div class="modal-content">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--md-spacing-lg);">
-                <h2 style="font-family: var(--md-font-heading); display: flex; align-items: center; gap: var(--md-spacing-sm); color: #ea4335;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Delete User
-                </h2>
-                <button class="btn btn-outlined" onclick="closeModal('deleteModal')" style="padding: 8px; min-width: auto;">
+            <div class="modal-header">
+                <h3 style="color: var(--error-500);">Delete User</h3>
+                <button class="btn btn-icon btn-ghost" onclick="closeModal('deleteModal')">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg);">
-                <p style="margin-bottom: var(--md-spacing-md);">Are you sure you want to delete this user? This action cannot be undone.</p>
-                <p style="color: var(--md-on-surface-variant); font-size: 0.9rem;" id="deleteUserInfo"></p>
+            <div class="modal-body">
+                <p class="mb-4">Are you sure you want to delete this user? This action cannot be undone.</p>
+                <p class="text-tertiary" id="deleteUserInfo"></p>
             </div>
 
-            <div class="modal-buttons" style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
-                <button class="btn btn-outlined" onclick="closeModal('deleteModal')">Cancel</button>
-                <button class="btn" style="background: #ea4335; color: white;" id="deleteUserBtn" onclick="confirmDelete()">
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
+                <button class="btn btn-primary" style="background: var(--error-500);" onclick="confirmDelete()">
                     <i class="fas fa-trash"></i>
-                    Delete Permanently
+                    Delete
                 </button>
             </div>
         </div>
@@ -1748,63 +1325,37 @@
     <!-- Share Modal -->
     <div class="modal" id="shareModal">
         <div class="modal-content">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--md-spacing-lg);">
-                <h2 style="font-family: var(--md-font-heading); display: flex; align-items: center; gap: var(--md-spacing-sm);">
-                    <i class="fas fa-share-alt" style="color: var(--md-primary);"></i>
-                    Share Profile
-                </h2>
-                <button class="btn btn-outlined" onclick="closeModal('shareModal')" style="padding: 8px; min-width: auto;">
+            <div class="modal-header">
+                <h3>Share Profile</h3>
+                <button class="btn btn-icon btn-ghost" onclick="closeModal('shareModal')">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div style="margin-bottom: var(--md-spacing-lg);">
-                <p style="margin-bottom: var(--md-spacing-sm);">Share this link with others:</p>
-                <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); word-break: break-all; font-family: monospace;" id="shareUrl"></div>
-            </div>
+            <div class="modal-body">
+                <p class="mb-3">Share this link with others:</p>
+                <div class="card p-3 mb-4" id="shareUrl" style="word-break: break-all;"></div>
 
-            <div style="display: flex; gap: var(--md-spacing-md); flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="copyShareLink()">
-                    <i class="fas fa-copy"></i>
-                    Copy Link
-                </button>
-                <button class="btn btn-outlined" onclick="shareViaTwitter()">
-                    <i class="fab fa-twitter"></i>
-                    Twitter
-                </button>
-                <button class="btn btn-outlined" onclick="shareViaFacebook()">
-                    <i class="fab fa-facebook"></i>
-                    Facebook
-                </button>
-                <button class="btn btn-outlined" onclick="shareViaLinkedIn()">
-                    <i class="fab fa-linkedin"></i>
-                    LinkedIn
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Activity Log Modal -->
-    <div class="modal" id="activityModal">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--md-spacing-lg);">
-                <h2 style="font-family: var(--md-font-heading); display: flex; align-items: center; gap: var(--md-spacing-sm);">
-                    <i class="fas fa-history" style="color: var(--md-primary);"></i>
-                    Activity Log
-                </h2>
-                <button class="btn btn-outlined" onclick="closeModal('activityModal')" style="padding: 8px; min-width: auto;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="activity-timeline" id="activityTimeline">
-                <!-- Activity will be populated here -->
+                <div class="flex gap-2">
+                    <button class="btn btn-primary flex-1" onclick="copyShareLink()">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-outline" onclick="shareViaTwitter()">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="btn btn-outline" onclick="shareViaFacebook()">
+                        <i class="fab fa-facebook"></i>
+                    </button>
+                    <button class="btn btn-outline" onclick="shareViaLinkedIn()">
+                        <i class="fab fa-linkedin"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ================= CONFIGURATION =================
+        // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
             authDomain: "reverbit11.firebaseapp.com",
@@ -1818,142 +1369,155 @@
         const ADMIN_EMAIL = 'adityajha1104@gmail.com';
         const USERS_PER_PAGE = 20;
 
-        // ================= INITIALIZE FIREBASE =================
+        // ==================== INITIALIZE FIREBASE ====================
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        
+        // Enable persistence
+        db.enablePersistence({ synchronizeTabs: true }).catch(err => {
+            console.warn('Firestore persistence error:', err);
+        });
 
-        // ================= GLOBAL VARIABLES =================
-        let currentUser = null;
-        let profileData = null;
-        let profileOwner = null;
-        let isOwner = false;
-        let allUsers = [];
-        let filteredUsers = [];
-        let currentPage = 1;
-        let selectedUserId = null;
-        let searchTimeout = null;
-        let currentFilter = 'all';
-        let currentTheme = localStorage.getItem('theme') || 'light';
+        // ==================== GLOBAL STATE ====================
+        const state = {
+            currentUser: null,
+            currentUserProfile: null,
+            profileData: null,
+            profileOwner: null,
+            isOwner: false,
+            allUsers: [],
+            filteredUsers: [],
+            currentPage: 1,
+            selectedUserId: null,
+            searchTimeout: null,
+            currentFilter: 'all',
+            theme: localStorage.getItem('theme') || 'light',
+            isLoading: false
+        };
 
-        // ================= DOM ELEMENTS =================
-        const loadingScreen = document.getElementById('loading');
-        const mainContent = document.getElementById('mainContent');
-        const profileContent = document.getElementById('profileContent');
-        const headerActions = document.getElementById('headerActions');
-        const adminPanel = document.getElementById('adminPanel');
-        const notFound = document.getElementById('notFound');
-        const usersList = document.getElementById('usersList');
-        const searchInput = document.getElementById('searchUsers');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-        const verifyModal = document.getElementById('verifyModal');
-        const deleteModal = document.getElementById('deleteModal');
-        const shareModal = document.getElementById('shareModal');
-        const activityModal = document.getElementById('activityModal');
-        const prevPageBtn = document.getElementById('prevPage');
-        const nextPageBtn = document.getElementById('nextPage');
-        const pageInfo = document.getElementById('pageInfo');
+        // ==================== DOM ELEMENTS ====================
+        const elements = {
+            loading: document.getElementById('loading'),
+            mainContent: document.getElementById('mainContent'),
+            contentArea: document.getElementById('contentArea'),
+            nav: document.getElementById('nav'),
+            searchInput: document.getElementById('searchInput'),
+            searchResults: document.getElementById('searchResults'),
+            toast: document.getElementById('toast'),
+            toastMessage: document.getElementById('toastMessage'),
+            verifyModal: document.getElementById('verifyModal'),
+            deleteModal: document.getElementById('deleteModal'),
+            shareModal: document.getElementById('shareModal'),
+            modalUserInfo: document.getElementById('modalUserInfo'),
+            verifyLevel: document.getElementById('verifyLevel'),
+            verifyNotes: document.getElementById('verifyNotes'),
+            deleteUserInfo: document.getElementById('deleteUserInfo'),
+            shareUrl: document.getElementById('shareUrl')
+        };
 
-        // ================= INITIALIZATION =================
+        // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('Profile page initializing...');
+            console.log('🚀 Reverbit Profile initializing...');
             
-            // Apply saved theme
-            applyTheme(currentTheme);
+            applyTheme(state.theme);
             
-            // Check for user ID in URL
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('id');
             
-            // Listen for auth state changes
+            // Setup auth listener
             auth.onAuthStateChanged(async (user) => {
-                console.log('Auth state changed:', user ? 'Logged in' : 'Logged out');
-                currentUser = user;
+                console.log('📋 Auth state changed:', user ? 'Logged in' : 'Logged out');
                 
-                // Update header
-                updateHeader();
+                state.currentUser = user;
+                
+                if (user) {
+                    await loadUserProfile(user.uid);
+                } else {
+                    state.currentUserProfile = null;
+                }
+                
+                updateNavigation();
                 
                 if (userId) {
-                    // Load specific profile
                     await loadProfile(userId);
                 } else if (user) {
-                    // Redirect to own profile
                     window.location.href = `?id=${user.uid}`;
                 } else {
-                    // Show landing page
                     showLanding();
                 }
+                
+                if (user) {
+                    await loadAllUsers();
+                }
             });
+
+            // Search input handler
+            elements.searchInput.addEventListener('input', (e) => {
+                clearTimeout(state.searchTimeout);
+                state.searchTimeout = setTimeout(() => {
+                    searchUsers(e.target.value);
+                }, 300);
+            });
+
+            // Close search results on outside click
+            document.addEventListener('click', (e) => {
+                if (!elements.searchResults.contains(e.target) && !elements.searchInput.contains(e.target)) {
+                    elements.searchResults.classList.remove('show');
+                }
+            });
+
+            console.log('✅ Reverbit Profile initialized');
         });
 
-        // ================= THEME FUNCTIONS =================
+        // ==================== THEME MANAGEMENT ====================
         function applyTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.body.classList.remove('light-theme');
-            } else {
-                document.body.classList.add('light-theme');
-                document.body.classList.remove('dark-theme');
-            }
+            document.body.className = theme === 'dark' ? 'dark-theme' : '';
             localStorage.setItem('theme', theme);
-            currentTheme = theme;
+            state.theme = theme;
         }
 
         function toggleTheme() {
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            const newTheme = state.theme === 'light' ? 'dark' : 'light';
             applyTheme(newTheme);
-            
-            // Update theme toggle icon
-            const themeIcon = document.querySelector('#themeToggle i');
-            if (themeIcon) {
-                themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            }
-            
-            showToast(`Theme set to ${newTheme} mode`, 'success');
+            updateNavigation();
+            showToast(`Theme switched to ${newTheme} mode`, 'info');
         }
 
-        // ================= HEADER FUNCTIONS =================
-        function updateHeader() {
-            if (!headerActions) return;
-
-            const isAdmin = currentUser?.email === ADMIN_EMAIL;
+        // ==================== NAVIGATION ====================
+        function updateNavigation() {
+            const isAdmin = state.currentUser?.email === ADMIN_EMAIL;
             
-            let html = '';
-            
-            // Theme toggle
-            html += `
-                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
-                    <i class="fas fa-${currentTheme === 'dark' ? 'sun' : 'moon'}"></i>
+            let navHtml = `
+                <button class="btn btn-icon btn-ghost" onclick="toggleTheme()" title="Toggle theme">
+                    <i class="fas fa-${state.theme === 'dark' ? 'sun' : 'moon'}"></i>
                 </button>
             `;
             
-            if (currentUser) {
-                // Logged in header
-                html += `
-                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
+            if (state.currentUser) {
+                navHtml += `
+                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outline">
                         <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
+                        <span class="hide-sm">Dashboard</span>
                     </a>
-                    <a href="?id=${currentUser.uid}" class="btn btn-primary">
+                    <a href="?id=${state.currentUser.uid}" class="btn btn-primary">
                         <i class="fas fa-user"></i>
-                        My Profile
+                        <span class="hide-sm">Profile</span>
                     </a>
                     ${isAdmin ? `
-                        <button class="btn btn-admin" onclick="showAdminPanel()">
-                            <i class="fas fa-user-shield"></i>
-                            Admin Panel
+                        <button class="btn btn-outline" onclick="showAdminPanel()">
+                            <i class="fas fa-shield-alt"></i>
+                            <span class="hide-sm">Admin</span>
                         </button>
                     ` : ''}
-                    <button class="btn btn-outlined" onclick="logout()">
+                    <button class="btn btn-outline" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        <span class="hide-sm">Logout</span>
                     </button>
                 `;
             } else {
-                // Logged out header
-                html += `
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
+                navHtml += `
+                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outline">
                         <i class="fas fa-sign-in-alt"></i>
                         Sign In
                     </a>
@@ -1964,290 +1528,296 @@
                 `;
             }
             
-            headerActions.innerHTML = html;
+            elements.nav.innerHTML = navHtml;
         }
 
-        // ================= PROFILE FUNCTIONS =================
+        // ==================== LOAD USER PROFILE ====================
+        async function loadUserProfile(uid) {
+            try {
+                const doc = await db.collection('users').doc(uid).get();
+                
+                if (doc.exists) {
+                    state.currentUserProfile = { uid: doc.id, ...doc.data() };
+                } else {
+                    // Create profile if it doesn't exist
+                    state.currentUserProfile = await createUserProfile(uid);
+                }
+                
+                console.log('👤 User profile loaded:', state.currentUserProfile);
+                
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
+        async function createUserProfile(uid) {
+            const displayName = state.currentUser.displayName || 
+                               state.currentUser.email.split('@')[0] || 
+                               'User';
+            
+            const profile = {
+                uid: uid,
+                email: state.currentUser.email,
+                displayName: displayName,
+                username: generateUsername(displayName),
+                photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=400`,
+                bio: '',
+                isPublic: true,
+                verified: false,
+                verifiedLevel: 'none',
+                premiumVerified: false,
+                streak: 0,
+                totalLogins: 1,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                lastActive: new Date().toISOString(),
+                lastLogin: new Date().toISOString(),
+                theme: 'auto'
+            };
+            
+            await db.collection('users').doc(uid).set(profile);
+            return profile;
+        }
+
+        function generateUsername(displayName) {
+            return displayName.toLowerCase()
+                .replace(/[^a-z0-9]/g, '')
+                .substring(0, 15) + 
+                Math.random().toString(36).substring(2, 6);
+        }
+
+        // ==================== LOAD PROFILE ====================
         async function loadProfile(userId) {
             showLoading(true);
             hideAllSections();
 
             try {
-                console.log('Loading profile for user:', userId);
-                
                 const doc = await db.collection('users').doc(userId).get();
                 
                 if (!doc.exists) {
-                    console.log('Profile not found');
                     showNotFound('Profile not found');
                     return;
                 }
 
-                profileData = doc.data();
-                profileData.uid = doc.id;
-                profileOwner = userId;
+                state.profileData = { uid: doc.id, ...doc.data() };
+                state.profileOwner = userId;
+                state.isOwner = state.currentUser && state.currentUser.uid === userId;
 
-                // Check if current user owns this profile
-                isOwner = currentUser && currentUser.uid === userId;
-
-                // Check privacy settings
-                if (!profileData.isPublic && !isOwner) {
-                    console.log('Profile is private');
+                // Check privacy
+                if (!state.profileData.isPublic && !state.isOwner) {
                     showNotFound('This profile is private');
                     return;
                 }
 
-                // Display the profile
-                displayProfile(profileData);
+                renderProfile(state.profileData);
                 
                 // Update last active if owner
-                if (isOwner) {
+                if (state.isOwner) {
                     updateLastActive();
                 }
 
             } catch (error) {
                 console.error('Error loading profile:', error);
-                showToast('Error loading profile: ' + error.message, 'error');
-                showNotFound('Error loading profile');
+                showToast('Error loading profile', 'error');
+                showNotFound();
             } finally {
                 showLoading(false);
             }
         }
 
-        function displayProfile(data) {
+        // ==================== RENDER PROFILE ====================
+        function renderProfile(data) {
             const memberDays = calculateMemberDays(data.createdAt);
-            const isVerified = data.verified === true;
-            const lastActive = formatLastActive(data.lastActive || data.lastLogin || data.updatedAt || data.createdAt);
+            const lastActive = formatLastActive(data.lastActive);
+            const verificationLevel = getVerificationLevel(data);
 
-            profileContent.innerHTML = `
-                <div class="profile-main">
-                    <div class="profile-info-section">
-                        <div class="profile-avatar-container">
-                            <div class="profile-avatar-large">
-                                <img src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" class="profile-avatar-large-img" onerror="handleAvatarError(this)">
-                                ${isVerified ? `
-                                    <div class="avatar-verified-badge" title="Verified Account">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                ` : ''}
-                                ${isOwner ? `
-                                    <div class="avatar-upload-overlay" onclick="openUploadModal()">
+            const content = `
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar-wrapper">
+                            <div class="profile-avatar">
+                                <img src="${getAvatarUrl(data)}" alt="${data.displayName}" class="profile-avatar-img" 
+                                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                                ${getAvatarBadge(data)}
+                                ${state.isOwner ? `
+                                    <div class="avatar-overlay" onclick="handleAvatarUpload()">
                                         <i class="fas fa-camera"></i>
-                                        <span>Upload</span>
                                     </div>
                                 ` : ''}
                             </div>
                         </div>
                         
-                        <div class="profile-details">
-                            <div class="profile-username-section">
-                                <h1 class="profile-username">${data.displayName || 'User'}</h1>
-                                ${isVerified ? `
-                                    <span class="verified-badge">
-                                        <i class="fas fa-check-circle"></i>
-                                        Verified
-                                    </span>
-                                ` : ''}
-                                ${data.email === ADMIN_EMAIL ? `
-                                    <span class="badge" style="background: var(--md-primary); color: white;">
-                                        <i class="fas fa-shield-alt"></i> Admin
-                                    </span>
-                                ` : ''}
+                        <div class="profile-info">
+                            <div>
+                                <div class="profile-name-section">
+                                    <h1 class="profile-name">${data.displayName || 'User'}</h1>
+                                    <div class="profile-badges">
+                                        ${getBadges(data)}
+                                        ${data.email === ADMIN_EMAIL ? `
+                                            <span class="badge badge-admin">
+                                                <i class="fas fa-shield-alt"></i> Admin
+                                            </span>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                                
+                                <div class="profile-email">
+                                    <i class="fas fa-envelope"></i>
+                                    ${data.email || 'No email'}
+                                </div>
                             </div>
                             
-                            <div class="profile-email">
-                                <i class="fas fa-envelope"></i>
-                                ${data.email || 'No email'}
-                                ${data.emailVerified ? `
-                                    <span class="status-indicator status-online">
-                                        <i class="fas fa-check-circle"></i> Verified
-                                    </span>
-                                ` : ''}
-                            </div>
-                            
-                            <p class="profile-bio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
+                            <p class="profile-bio">${data.bio || 'No bio added yet.'}</p>
                             
                             <div class="profile-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number">${data.streak || 0}</span>
-                                    <span class="stat-label">Day Streak</span>
+                                <div class="stat">
+                                    <div class="stat-value">${data.streak || 0}</div>
+                                    <div class="stat-label">Day Streak</div>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-number">${memberDays}</span>
-                                    <span class="stat-label">Days Active</span>
+                                <div class="stat">
+                                    <div class="stat-value">${memberDays}</div>
+                                    <div class="stat-label">Member Days</div>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-number">${data.totalLogins || 1}</span>
-                                    <span class="stat-label">Total Logins</span>
+                                <div class="stat">
+                                    <div class="stat-value">${data.totalLogins || 1}</div>
+                                    <div class="stat-label">Total Logins</div>
                                 </div>
                             </div>
                             
-                            <div class="profile-controls">
-                                ${isOwner ? `
-                                    <button class="btn btn-primary" onclick="window.location.href='https://aditya-cmd-max.github.io/dashboard#profile'">
-                                        <i class="fas fa-edit"></i>
-                                        Edit Profile
-                                    </button>
-                                    <button class="btn btn-outlined" onclick="togglePrivacy()">
+                            <div class="profile-actions">
+                                ${state.isOwner ? `
+                                    <a href="https://aditya-cmd-max.github.io/dashboard#profile" class="btn btn-primary">
+                                        <i class="fas fa-edit"></i> Edit Profile
+                                    </a>
+                                    <button class="btn btn-outline" onclick="togglePrivacy()">
                                         <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
                                         ${data.isPublic ? 'Make Private' : 'Make Public'}
                                     </button>
-                                    <button class="btn btn-outlined" onclick="viewActivityLog()">
-                                        <i class="fas fa-history"></i>
-                                        Activity
-                                    </button>
                                 ` : ''}
                                 
-                                <button class="btn btn-outlined" onclick="shareProfile()">
-                                    <i class="fas fa-share-alt"></i>
-                                    Share
+                                <button class="btn btn-outline" onclick="shareProfile()">
+                                    <i class="fas fa-share-alt"></i> Share
                                 </button>
                                 
-                                ${currentUser?.email === ADMIN_EMAIL && !isOwner ? `
-                                    <button class="btn btn-admin" onclick="openVerifyModal('${data.uid}', '${data.displayName || 'User'}', ${data.verified})">
-                                        <i class="fas fa-shield-alt"></i>
-                                        Manage Verification
+                                ${state.currentUser?.email === ADMIN_EMAIL && !state.isOwner ? `
+                                    <button class="btn btn-outline" onclick="openVerifyModal('${data.uid}', '${data.displayName || 'User'}', '${verificationLevel}')">
+                                        <i class="fas fa-shield-alt"></i> Manage Verification
                                     </button>
                                 ` : ''}
                             </div>
                             
-                            <div class="profile-meta" style="margin-top: var(--md-spacing-lg); color: var(--md-on-surface-variant); font-size: 0.9rem;">
+                            <div class="profile-meta">
                                 <span><i class="fas fa-clock"></i> Last active: ${lastActive}</span>
-                                <span style="margin-left: var(--md-spacing-md);"><i class="fas fa-calendar"></i> Joined: ${formatDate(data.createdAt)}</span>
+                                <span><i class="fas fa-calendar"></i> Joined: ${formatDate(data.createdAt)}</span>
+                                ${verificationLevel !== 'none' ? `
+                                    <span><i class="fas fa-check-circle"></i> Verified: ${formatDate(data.verifiedAt)}</span>
+                                ` : ''}
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Tabs -->
-                    <div class="profile-tabs">
-                        <button class="profile-tab active" onclick="switchTab('overview')">
-                            <i class="fas fa-user"></i>
-                            Overview
-                        </button>
-                        ${isVerified ? `
-                            <button class="profile-tab" onclick="switchTab('verification')">
-                                <i class="fas fa-shield-alt"></i>
-                                Verification
-                            </button>
-                        ` : ''}
-                        <button class="profile-tab" onclick="switchTab('activity')">
-                            <i class="fas fa-chart-line"></i>
-                            Activity
-                        </button>
-                        ${isOwner ? `
-                            <button class="profile-tab" onclick="switchTab('settings')">
-                                <i class="fas fa-cog"></i>
-                                Settings
-                            </button>
-                        ` : ''}
-                    </div>
-
-                    <!-- Tab Content -->
-                    <div id="tabContent">
-                        ${getOverviewTab(data)}
                     </div>
                 </div>
             `;
             
-            mainContent.style.display = 'block';
+            elements.contentArea.innerHTML = content;
         }
 
-        function getOverviewTab(data) {
-            return `
-                <div class="settings-panel">
-                    <div class="settings-section">
-                        <h3><i class="fas fa-info-circle"></i> About</h3>
-                        <p style="color: var(--md-on-surface-variant); line-height: 1.8;">
-                            ${data.bio || 'No bio available.'}
-                        </p>
-                    </div>
-                    
-                    ${data.country ? `
-                        <div class="settings-section">
-                            <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
-                            <p style="color: var(--md-on-surface-variant);">${data.country}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${data.website ? `
-                        <div class="settings-section">
-                            <h3><i class="fas fa-link"></i> Website</h3>
-                            <a href="${ensureHttp(data.website)}" target="_blank" style="color: var(--md-primary);">${data.website}</a>
-                        </div>
-                    ` : ''}
-                    
-                    ${data.socialLinks && Object.keys(data.socialLinks).length > 0 ? `
-                        <div class="settings-section">
-                            <h3><i class="fas fa-share-alt"></i> Social Links</h3>
-                            <div style="display: flex; gap: var(--md-spacing-md); flex-wrap: wrap;">
-                                ${Object.entries(data.socialLinks).map(([platform, url]) => `
-                                    <a href="${url}" target="_blank" class="btn btn-outlined" style="padding: var(--md-spacing-sm) var(--md-spacing-md);">
-                                        <i class="fab fa-${platform.toLowerCase()}"></i>
-                                        ${platform}
-                                    </a>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${data.achievements && data.achievements.length > 0 ? `
-                        <div class="settings-section">
-                            <h3><i class="fas fa-trophy"></i> Achievements</h3>
-                            <div class="achievement-grid">
-                                ${data.achievements.map(achievement => `
-                                    <div class="achievement-card">
-                                        <div class="achievement-icon">
-                                            <i class="fas fa-${achievement.icon || 'award'}"></i>
-                                        </div>
-                                        <div class="achievement-title">${achievement.title}</div>
-                                        <div class="achievement-description">${achievement.description}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    <!-- Account Information -->
-                    <div class="legal-info-section" style="margin-top: 0;">
-                        <h2>Account Information</h2>
-                        <div class="legal-grid">
-                            <div class="legal-item">
-                                <h3>Account Status</h3>
-                                <p>${data.isPublic ? 'Public Profile' : 'Private Profile'}</p>
-                            </div>
-                            <div class="legal-item">
-                                <h3>Verification</h3>
-                                <p>${data.verified ? '✓ Verified' : 'Not Verified'}</p>
-                            </div>
-                            <div class="legal-item">
-                                <h3>Member Since</h3>
-                                <p>${formatDate(data.createdAt)}</p>
-                            </div>
-                            <div class="legal-item">
-                                <h3>Last Updated</h3>
-                                <p>${formatDate(data.updatedAt || data.createdAt)}</p>
-                            </div>
-                            <div class="legal-item">
-                                <h3>User ID</h3>
-                                <p style="font-family: monospace; font-size: 0.85rem; cursor: pointer;" onclick="copyToClipboard('${data.uid}')">
-                                    ${data.uid.substring(0, 8)}... <i class="fas fa-copy"></i>
-                                </p>
-                            </div>
-                            ${data.verified ? `
-                                <div class="legal-item">
-                                    <h3>Verified Since</h3>
-                                    <p>${formatDate(data.verifiedAt || data.updatedAt)}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
+        function getVerificationLevel(data) {
+            if (data.verifiedLevel === 'premium') return 'premium';
+            if (data.verifiedLevel === 'basic' || data.verified) return 'basic';
+            return 'none';
         }
 
-        // ================= ADMIN PANEL FUNCTIONS =================
+        function getBadges(data) {
+            const level = getVerificationLevel(data);
+            
+            if (level === 'premium') {
+                return `<span class="badge badge-premium"><i class="fas fa-crown"></i> Premium Verified</span>`;
+            } else if (level === 'basic') {
+                return `<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
+            }
+            return '';
+        }
+
+        function getAvatarBadge(data) {
+            const level = getVerificationLevel(data);
+            
+            if (level === 'premium') {
+                return `<div class="avatar-badge avatar-badge-premium"><i class="fas fa-crown"></i></div>`;
+            } else if (level === 'basic') {
+                return `<div class="avatar-badge avatar-badge-verified"><i class="fas fa-check"></i></div>`;
+            }
+            return '';
+        }
+
+        // ==================== LOAD ALL USERS ====================
+        async function loadAllUsers() {
+            try {
+                const snapshot = await db.collection('users').get();
+                state.allUsers = snapshot.docs.map(doc => ({
+                    uid: doc.id,
+                    ...doc.data()
+                }));
+                
+                // Sort by last active
+                state.allUsers.sort((a, b) => {
+                    const dateA = a.lastActive ? new Date(a.lastActive) : new Date(0);
+                    const dateB = b.lastActive ? new Date(b.lastActive) : new Date(0);
+                    return dateB - dateA;
+                });
+                
+                console.log(`📊 Loaded ${state.allUsers.length} users`);
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // ==================== SEARCH USERS ====================
+        function searchUsers(query) {
+            query = query.trim().toLowerCase();
+            
+            if (!query) {
+                elements.searchResults.classList.remove('show');
+                return;
+            }
+            
+            const results = state.allUsers
+                .filter(user => 
+                    (user.displayName && user.displayName.toLowerCase().includes(query)) ||
+                    (user.email && user.email.toLowerCase().includes(query)) ||
+                    (user.username && user.username.toLowerCase().includes(query))
+                )
+                .slice(0, 10);
+            
+            if (results.length === 0) {
+                elements.searchResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 2rem; margin-bottom: var(--space-md);"></i>
+                        <p>No users found matching "${query}"</p>
+                    </div>
+                `;
+            } else {
+                elements.searchResults.innerHTML = results.map(user => `
+                    <div class="search-result-item" onclick="viewUserProfile('${user.uid}')">
+                        <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="search-result-avatar"
+                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                        <div class="search-result-info">
+                            <div class="search-result-name">
+                                ${user.displayName || 'User'}
+                                ${getBadges(user)}
+                            </div>
+                            <div class="search-result-email">${user.email || ''}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            elements.searchResults.classList.add('show');
+        }
+
+        // ==================== ADMIN PANEL ====================
         async function showAdminPanel() {
-            if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+            if (state.currentUser?.email !== ADMIN_EMAIL) {
                 showToast('Admin access required', 'error');
                 return;
             }
@@ -2255,200 +1825,153 @@
             showLoading(true);
             hideAllSections();
             
-            adminPanel.style.display = 'block';
-            mainContent.style.display = 'block';
-            
             await loadAllUsers();
+            
+            const stats = calculateAdminStats();
+            
+            const content = `
+                <div class="admin-section">
+                    <h2 class="mb-4">Admin Verification Panel</h2>
+                    
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-card-value">${stats.total}</div>
+                            <div class="stat-card-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-value">${stats.verified}</div>
+                            <div class="stat-card-label">Verified</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-value">${stats.premium}</div>
+                            <div class="stat-card-label">Premium</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-value">${stats.activeToday}</div>
+                            <div class="stat-card-label">Active Today</div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-filters" id="adminFilters">
+                        <button class="filter-btn active" onclick="filterUsers('all')">All Users</button>
+                        <button class="filter-btn" onclick="filterUsers('verified')">Verified</button>
+                        <button class="filter-btn" onclick="filterUsers('premium')">Premium</button>
+                        <button class="filter-btn" onclick="filterUsers('unverified')">Unverified</button>
+                    </div>
+                    
+                    <div class="users-grid" id="usersGrid"></div>
+                    
+                    <div class="pagination" id="pagination">
+                        <button class="pagination-btn" id="prevPage" onclick="changePage('prev')" disabled>
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <span id="pageInfo">Page 1</span>
+                        <button class="pagination-btn" id="nextPage" onclick="changePage('next')">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            elements.contentArea.innerHTML = content;
+            
+            filterUsers('all');
             showLoading(false);
         }
 
-        async function loadAllUsers() {
-            try {
-                console.log('Loading all users...');
-                
-                const snapshot = await db.collection('users').get();
-                
-                allUsers = snapshot.docs.map(doc => ({
-                    uid: doc.id,
-                    ...doc.data()
-                }));
-                
-                // Sort by creation date (newest first)
-                allUsers.sort((a, b) => {
-                    const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
-                    const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
-                    return dateB - dateA;
-                });
-                
-                // Update stats
-                updateAdminStats();
-                
-                // Apply current filter
-                applyFilter(currentFilter);
-                
-                // Setup search listener
-                if (searchInput) {
-                    searchInput.value = '';
-                    searchInput.addEventListener('input', (e) => {
-                        if (searchTimeout) clearTimeout(searchTimeout);
-                        searchTimeout = setTimeout(() => {
-                            searchUsers(e.target.value);
-                        }, 300);
-                    });
-                }
-                
-            } catch (error) {
-                console.error('Error loading users:', error);
-                showToast('Error loading users: ' + error.message, 'error');
-            }
+        function calculateAdminStats() {
+            const today = new Date().toDateString();
+            
+            return {
+                total: state.allUsers.length,
+                verified: state.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic').length,
+                premium: state.allUsers.filter(u => u.verifiedLevel === 'premium').length,
+                activeToday: state.allUsers.filter(u => {
+                    if (!u.lastActive) return false;
+                    return new Date(u.lastActive).toDateString() === today;
+                }).length
+            };
         }
 
-        function updateAdminStats() {
-            const totalUsers = allUsers.length;
-            const verifiedUsers = allUsers.filter(u => u.verified === true).length;
+        function filterUsers(filter) {
+            state.currentFilter = filter;
             
-            // Calculate active today
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const activeToday = allUsers.filter(u => {
-                if (!u.lastActive) return false;
-                const lastActive = new Date(u.lastActive);
-                return lastActive >= today;
-            }).length;
-            
-            // Calculate new this week
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            const newUsers = allUsers.filter(u => {
-                if (!u.createdAt) return false;
-                const createdAt = new Date(u.createdAt);
-                return createdAt >= weekAgo;
-            }).length;
-            
-            document.getElementById('totalUsers').textContent = totalUsers;
-            document.getElementById('verifiedUsers').textContent = verifiedUsers;
-            document.getElementById('activeToday').textContent = activeToday;
-            document.getElementById('newUsers').textContent = newUsers;
-        }
-
-        function applyFilter(filter) {
-            currentFilter = filter;
-            
-            // Update active filter button
-            document.querySelectorAll('.admin-filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.filter === filter) {
-                    btn.classList.add('active');
-                }
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter));
             });
             
+            // Apply filter
             switch (filter) {
                 case 'verified':
-                    filteredUsers = allUsers.filter(u => u.verified === true);
+                    state.filteredUsers = state.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic');
+                    break;
+                case 'premium':
+                    state.filteredUsers = state.allUsers.filter(u => u.verifiedLevel === 'premium');
                     break;
                 case 'unverified':
-                    filteredUsers = allUsers.filter(u => u.verified !== true);
-                    break;
-                case 'admin':
-                    filteredUsers = allUsers.filter(u => u.email === ADMIN_EMAIL);
+                    state.filteredUsers = state.allUsers.filter(u => !u.verified && !u.verifiedLevel);
                     break;
                 default:
-                    filteredUsers = [...allUsers];
+                    state.filteredUsers = [...state.allUsers];
             }
             
-            currentPage = 1;
-            displayUsers();
+            state.currentPage = 1;
+            renderUsers();
         }
 
-        function searchUsers(query) {
-            if (!query.trim()) {
-                applyFilter(currentFilter);
-                return;
-            }
-            
-            const searchTerm = query.toLowerCase();
-            filteredUsers = allUsers.filter(u => 
-                (u.displayName && u.displayName.toLowerCase().includes(searchTerm)) ||
-                (u.email && u.email.toLowerCase().includes(searchTerm)) ||
-                (u.uid && u.uid.toLowerCase().includes(searchTerm))
-            );
-            
-            currentPage = 1;
-            displayUsers();
-        }
-
-        function displayUsers() {
-            if (!usersList) return;
-            
-            const start = (currentPage - 1) * USERS_PER_PAGE;
+        function renderUsers() {
+            const start = (state.currentPage - 1) * USERS_PER_PAGE;
             const end = start + USERS_PER_PAGE;
-            const paginatedUsers = filteredUsers.slice(start, end);
-            const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
+            const paginatedUsers = state.filteredUsers.slice(start, end);
+            const totalPages = Math.ceil(state.filteredUsers.length / USERS_PER_PAGE);
             
             // Update pagination
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
-            prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+            document.getElementById('pageInfo').textContent = `Page ${state.currentPage} of ${totalPages || 1}`;
+            document.getElementById('prevPage').disabled = state.currentPage === 1;
+            document.getElementById('nextPage').disabled = state.currentPage === totalPages || totalPages === 0;
             
             if (paginatedUsers.length === 0) {
-                usersList.innerHTML = `
-                    <div style="text-align: center; padding: 60px 20px;">
-                        <i class="fas fa-users-slash" style="font-size: 48px; color: var(--md-outline); margin-bottom: 20px;"></i>
-                        <h3 style="margin-bottom: 10px;">No users found</h3>
-                        <p style="color: var(--md-on-surface-variant);">Try adjusting your search or filter</p>
+                document.getElementById('usersGrid').innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: var(--space-lg);"></i>
+                        <p>No users found</p>
                     </div>
                 `;
                 return;
             }
             
-            usersList.innerHTML = paginatedUsers.map(user => {
-                const isAdmin = user.email === ADMIN_EMAIL;
-                const isVerified = user.verified === true;
-                const memberDays = calculateMemberDays(user.createdAt);
-                const initials = (user.displayName || 'U').charAt(0).toUpperCase();
+            document.getElementById('usersGrid').innerHTML = paginatedUsers.map(user => {
+                const level = getVerificationLevel(user);
                 
                 return `
-                    <div class="user-item">
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                ${user.photoURL ? 
-                                    `<img src="${user.photoURL}" alt="${user.displayName || 'User'}">` : 
-                                    initials
-                                }
+                    <div class="user-card">
+                        <div class="user-card-info">
+                            <div class="avatar avatar-md">
+                                <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}"
+                                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
                             </div>
-                            <div class="user-details">
-                                <h4>
+                            <div class="user-card-details">
+                                <div class="user-card-name">
                                     ${user.displayName || 'User'}
-                                    ${isVerified ? '<i class="fas fa-check-circle" style="color: #34a853;"></i>' : ''}
-                                    ${isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
-                                </h4>
-                                <p>${user.email || 'No email'}</p>
-                                <div class="user-meta">
-                                    <span><i class="fas fa-calendar"></i> ${memberDays} days</span>
-                                    <span><i class="fas fa-fire"></i> ${user.streak || 0} streak</span>
+                                    ${getBadges(user)}
                                 </div>
+                                <div class="user-card-email">${user.email || ''}</div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <span class="user-status ${isVerified ? 'status-verified' : 'status-unverified'}">
-                                <i class="fas fa-${isVerified ? 'check-circle' : 'times-circle'}"></i>
-                                ${isVerified ? 'Verified' : 'Not Verified'}
-                            </span>
-                            
-                            <div class="admin-actions">
-                                <button class="admin-btn view-btn" onclick="viewUserProfile('${user.uid}')" title="View Profile">
-                                    <i class="fas fa-eye"></i>
+                        <div class="user-card-actions">
+                            <button class="btn btn-icon btn-ghost" onclick="viewUserProfile('${user.uid}')" title="View Profile">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-icon btn-ghost" onclick="openVerifyModal('${user.uid}', '${user.displayName || 'User'}', '${level}')" title="Manage Verification">
+                                <i class="fas fa-${level === 'premium' ? 'crown' : 'shield-alt'}"></i>
+                            </button>
+                            ${user.email !== ADMIN_EMAIL ? `
+                                <button class="btn btn-icon btn-ghost" style="color: var(--error-500);" onclick="openDeleteModal('${user.uid}', '${user.displayName || 'User'}')" title="Delete User">
+                                    <i class="fas fa-trash"></i>
                                 </button>
-                                <button class="admin-btn ${isVerified ? 'unverify-btn' : 'verify-btn'}" onclick="openVerifyModal('${user.uid}', '${user.displayName || 'User'}', ${isVerified})" title="${isVerified ? 'Unverify' : 'Verify'}">
-                                    <i class="fas fa-${isVerified ? 'times' : 'check'}"></i>
-                                </button>
-                                ${!isAdmin ? `
-                                    <button class="admin-btn delete-btn" onclick="openDeleteModal('${user.uid}', '${user.displayName || 'User'}')" title="Delete User">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                ` : ''}
-                            </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -2456,149 +1979,134 @@
         }
 
         function changePage(direction) {
-            if (direction === 'prev' && currentPage > 1) {
-                currentPage--;
-            } else if (direction === 'next' && currentPage < Math.ceil(filteredUsers.length / USERS_PER_PAGE)) {
-                currentPage++;
+            if (direction === 'prev' && state.currentPage > 1) {
+                state.currentPage--;
+            } else if (direction === 'next' && state.currentPage < Math.ceil(state.filteredUsers.length / USERS_PER_PAGE)) {
+                state.currentPage++;
             }
-            displayUsers();
+            renderUsers();
         }
 
-        function filterUsers(filter) {
-            applyFilter(filter);
-        }
-
-        // ================= VERIFICATION FUNCTIONS =================
-        function openVerifyModal(userId, userName, currentStatus) {
-            selectedUserId = userId;
+        // ==================== VERIFICATION FUNCTIONS ====================
+        function openVerifyModal(userId, userName, currentLevel) {
+            state.selectedUserId = userId;
             
-            document.getElementById('modalUserInfo').innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--md-gradient-1); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
-                        ${userName.charAt(0).toUpperCase()}
+            elements.modalUserInfo.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="avatar avatar-md">
+                        <div style="width: 100%; height: 100%; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            ${userName.charAt(0).toUpperCase()}
+                        </div>
                     </div>
                     <div>
-                        <h4 style="margin-bottom: 5px;">${userName}</h4>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.9rem;">User ID: ${userId}</p>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.9rem;">Current Status: ${currentStatus ? 'Verified ✓' : 'Not Verified'}</p>
+                        <h4>${userName}</h4>
+                        <p style="color: var(--text-tertiary); font-size: 0.85rem;">ID: ${userId}</p>
                     </div>
                 </div>
             `;
             
-            document.getElementById('verifyStatus').value = currentStatus ? 'true' : 'false';
-            document.getElementById('verifyNotes').value = '';
+            elements.verifyLevel.value = currentLevel;
+            elements.verifyNotes.value = '';
             
-            verifyModal.classList.add('active');
+            elements.verifyModal.classList.add('active');
         }
 
         async function saveVerification() {
-            if (!selectedUserId) return;
+            if (!state.selectedUserId) return;
             
-            const status = document.getElementById('verifyStatus').value === 'true';
-            const notes = document.getElementById('verifyNotes').value;
-            
-            const saveBtn = document.getElementById('saveVerificationBtn');
-            const originalText = saveBtn.innerHTML;
-            
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            saveBtn.disabled = true;
+            const level = elements.verifyLevel.value;
+            const notes = elements.verifyNotes.value;
             
             try {
                 const updateData = {
-                    verified: status,
-                    verifiedAt: status ? firebase.firestore.FieldValue.serverTimestamp() : null,
-                    verifiedBy: status ? ADMIN_EMAIL : null,
+                    verifiedLevel: level === 'none' ? null : level,
+                    verified: level !== 'none',
+                    verifiedAt: level !== 'none' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                    verifiedBy: level !== 'none' ? ADMIN_EMAIL : null,
                     verificationNotes: notes || null,
+                    premiumVerified: level === 'premium',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                await db.collection('users').doc(selectedUserId).update(updateData);
+                await db.collection('users').doc(state.selectedUserId).update(updateData);
                 
-                showToast(`User ${status ? 'verified ✓' : 'unverified'} successfully!`);
-                
-                // Log activity
-                await logActivity(selectedUserId, 'verification', {
-                    status: status,
-                    notes: notes,
-                    admin: currentUser?.email
-                });
+                showToast(`User ${level === 'premium' ? 'Premium Verified' : level === 'basic' ? 'Verified' : 'Unverified'} successfully!`);
                 
                 // Refresh data
-                if (adminPanel.style.display === 'block') {
+                if (elements.contentArea.querySelector('.admin-section')) {
                     await loadAllUsers();
+                    const stats = calculateAdminStats();
+                    
+                    // Update stats
+                    document.querySelectorAll('.stat-card-value')[0].textContent = stats.total;
+                    document.querySelectorAll('.stat-card-value')[1].textContent = stats.verified;
+                    document.querySelectorAll('.stat-card-value')[2].textContent = stats.premium;
+                    document.querySelectorAll('.stat-card-value')[3].textContent = stats.activeToday;
+                    
+                    filterUsers(state.currentFilter);
                 }
                 
-                // If this is the current profile, refresh it
-                if (profileData && profileData.uid === selectedUserId) {
-                    profileData.verified = status;
-                    displayProfile(profileData);
+                // Refresh profile if viewing this user
+                if (state.profileData && state.profileData.uid === state.selectedUserId) {
+                    const doc = await db.collection('users').doc(state.selectedUserId).get();
+                    state.profileData = { uid: doc.id, ...doc.data() };
+                    renderProfile(state.profileData);
                 }
                 
                 closeModal('verifyModal');
                 
             } catch (error) {
                 console.error('Error updating verification:', error);
-                showToast('Error: ' + error.message, 'error');
-            } finally {
-                saveBtn.innerHTML = originalText;
-                saveBtn.disabled = false;
+                showToast('Error updating verification', 'error');
             }
         }
 
-        // ================= DELETE FUNCTIONS =================
+        // ==================== DELETE FUNCTIONS ====================
         function openDeleteModal(userId, userName) {
-            selectedUserId = userId;
-            
-            document.getElementById('deleteUserInfo').innerHTML = `
-                <strong>User:</strong> ${userName}<br>
-                <strong>ID:</strong> ${userId}
-            `;
-            
-            deleteModal.classList.add('active');
+            state.selectedUserId = userId;
+            elements.deleteUserInfo.textContent = `User: ${userName}`;
+            elements.deleteModal.classList.add('active');
         }
 
         async function confirmDelete() {
-            if (!selectedUserId) return;
-            
-            const deleteBtn = document.getElementById('deleteUserBtn');
-            const originalText = deleteBtn.innerHTML;
-            
-            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-            deleteBtn.disabled = true;
-            
             try {
-                await db.collection('users').doc(selectedUserId).delete();
-                
+                await db.collection('users').doc(state.selectedUserId).delete();
                 showToast('User deleted successfully');
                 
-                // Refresh user list
-                await loadAllUsers();
+                if (elements.contentArea.querySelector('.admin-section')) {
+                    await loadAllUsers();
+                    const stats = calculateAdminStats();
+                    
+                    document.querySelectorAll('.stat-card-value')[0].textContent = stats.total;
+                    document.querySelectorAll('.stat-card-value')[1].textContent = stats.verified;
+                    document.querySelectorAll('.stat-card-value')[2].textContent = stats.premium;
+                    document.querySelectorAll('.stat-card-value')[3].textContent = stats.activeToday;
+                    
+                    filterUsers(state.currentFilter);
+                }
                 
                 closeModal('deleteModal');
                 
             } catch (error) {
                 console.error('Error deleting user:', error);
-                showToast('Error: ' + error.message, 'error');
-            } finally {
-                deleteBtn.innerHTML = originalText;
-                deleteBtn.disabled = false;
+                showToast('Error deleting user', 'error');
             }
         }
 
-        // ================= PROFILE ACTIONS =================
+        // ==================== PROFILE ACTIONS ====================
         async function togglePrivacy() {
-            if (!isOwner || !profileData) return;
+            if (!state.isOwner || !state.profileData) return;
             
             try {
-                const newStatus = !profileData.isPublic;
+                const newStatus = !state.profileData.isPublic;
                 
-                await db.collection('users').doc(profileData.uid).update({
+                await db.collection('users').doc(state.profileData.uid).update({
                     isPublic: newStatus,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                profileData.isPublic = newStatus;
-                displayProfile(profileData);
+                state.profileData.isPublic = newStatus;
+                renderProfile(state.profileData);
                 
                 showToast(`Profile is now ${newStatus ? 'public' : 'private'}`);
                 
@@ -2609,200 +2117,138 @@
         }
 
         function shareProfile() {
-            if (!profileData) return;
-            
             const url = window.location.href;
-            
-            document.getElementById('shareUrl').textContent = url;
-            shareModal.classList.add('active');
+            elements.shareUrl.textContent = url;
+            elements.shareModal.classList.add('active');
         }
 
         function copyShareLink() {
-            const url = document.getElementById('shareUrl').textContent;
-            copyToClipboard(url);
+            navigator.clipboard.writeText(elements.shareUrl.textContent);
             showToast('Link copied to clipboard!');
+            closeModal('shareModal');
         }
 
         function shareViaTwitter() {
-            const url = document.getElementById('shareUrl').textContent;
-            const text = `Check out ${profileData?.displayName || 'this user'}'s profile on Reverbit!`;
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+            const url = elements.shareUrl.textContent;
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`, '_blank');
         }
 
         function shareViaFacebook() {
-            const url = document.getElementById('shareUrl').textContent;
+            const url = elements.shareUrl.textContent;
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
         }
 
         function shareViaLinkedIn() {
-            const url = document.getElementById('shareUrl').textContent;
+            const url = elements.shareUrl.textContent;
             window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
         }
 
-        // ================= ACTIVITY FUNCTIONS =================
-        async function viewActivityLog() {
-            if (!profileData) return;
-            
-            activityModal.classList.add('active');
-            
-            const timeline = document.getElementById('activityTimeline');
-            timeline.innerHTML = '<div class="loader" style="margin: 40px auto;"></div>';
-            
-            try {
-                const logsSnapshot = await db.collection('activity')
-                    .where('userId', '==', profileData.uid)
-                    .orderBy('timestamp', 'desc')
-                    .limit(50)
-                    .get();
-                
-                if (logsSnapshot.empty) {
-                    timeline.innerHTML = `
-                        <div style="text-align: center; padding: 40px;">
-                            <i class="fas fa-history" style="font-size: 48px; color: var(--md-outline); margin-bottom: 20px;"></i>
-                            <p style="color: var(--md-on-surface-variant);">No activity logs yet</p>
-                        </div>
-                    `;
-                    return;
+        // ==================== AVATAR UPLOAD ====================
+        function handleAvatarUpload() {
+            // Create file input
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    await uploadAvatar(file);
                 }
-                
-                timeline.innerHTML = logsSnapshot.docs.map(doc => {
-                    const log = doc.data();
-                    const date = log.timestamp ? new Date(log.timestamp.toDate()) : new Date();
-                    
-                    return `
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <i class="fas fa-${getActivityIcon(log.type)}"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">${log.description || 'Activity'}</div>
-                                <div class="timeline-time">${formatDateTime(date)}</div>
-                                ${log.details ? `<div style="font-size: 0.85rem; color: var(--md-on-surface-variant); margin-top: 5px;">${log.details}</div>` : ''}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                
-            } catch (error) {
-                console.error('Error loading activity:', error);
-                timeline.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #ea4335;">
-                        <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <p>Error loading activity</p>
-                    </div>
-                `;
-            }
-        }
-
-        function getActivityIcon(type) {
-            const icons = {
-                'login': 'sign-in-alt',
-                'profile_update': 'user-edit',
-                'verification': 'shield-alt',
-                'streak': 'fire',
-                'achievement': 'trophy',
-                'privacy': 'eye',
-                'default': 'history'
             };
-            return icons[type] || icons.default;
+            input.click();
         }
 
-        async function logActivity(userId, type, details) {
+        async function uploadAvatar(file) {
+            if (!state.currentUser) return;
+            
+            // Validate file
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image must be less than 5MB', 'error');
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+            
+            showToast('Uploading...', 'info');
+            
             try {
-                await db.collection('activity').add({
-                    userId: userId,
-                    type: type,
-                    details: details,
-                    description: getActivityDescription(type, details),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                // Convert to base64 for demo (in production, use Cloudinary)
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64 = reader.result;
+                    
+                    // Update Firestore with base64 (demo only - use Cloudinary in production)
+                    await db.collection('users').doc(state.currentUser.uid).update({
+                        photoURL: base64,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Update local data
+                    state.currentUserProfile.photoURL = base64;
+                    if (state.profileData && state.profileData.uid === state.currentUser.uid) {
+                        state.profileData.photoURL = base64;
+                        renderProfile(state.profileData);
+                    }
+                    
+                    showToast('Profile picture updated!', 'success');
+                };
+                reader.readAsDataURL(file);
+                
             } catch (error) {
-                console.error('Error logging activity:', error);
+                console.error('Error uploading avatar:', error);
+                showToast('Error uploading image', 'error');
             }
         }
 
-        function getActivityDescription(type, details) {
-            const descriptions = {
-                'login': 'User logged in',
-                'profile_update': 'Profile updated',
-                'verification': `Verification ${details.status ? 'granted' : 'removed'}`,
-                'streak': `Streak reached ${details.streak} days`,
-                'achievement': `Earned achievement: ${details.achievement}`,
-                'privacy': `Profile made ${details.isPublic ? 'public' : 'private'}`
-            };
-            return descriptions[type] || 'Activity recorded';
-        }
-
-        // ================= UTILITY FUNCTIONS =================
+        // ==================== UTILITY FUNCTIONS ====================
         function showLoading(show) {
-            if (show) {
-                loadingScreen.classList.remove('hidden');
-                mainContent.style.display = 'none';
-            } else {
-                loadingScreen.classList.add('hidden');
-                mainContent.style.display = 'block';
-            }
+            state.isLoading = show;
+            elements.loading.classList.toggle('hidden', !show);
+            if (!show) elements.mainContent.style.display = 'block';
         }
 
         function hideAllSections() {
-            profileContent.innerHTML = '';
-            adminPanel.style.display = 'none';
-            notFound.style.display = 'none';
+            elements.contentArea.innerHTML = '';
         }
 
         function showLanding() {
-            showLoading(false);
-            hideAllSections();
-            
-            profileContent.innerHTML = `
-                <div class="visitor-message">
-                    <div style="text-align: center; margin-bottom: var(--md-spacing-xl);">
-                        <div class="logo-icon" style="width: 80px; height: 80px; margin: 0 auto var(--md-spacing-lg);">
-                            <i class="fas fa-users" style="font-size: 40px;"></i>
-                        </div>
-                        <h1 style="margin-bottom: var(--md-spacing-md); font-family: var(--md-font-logo);">Welcome to Reverbit</h1>
-                        <p style="color: var(--md-on-surface-variant); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
-                            Sign in to view your profile or explore other profiles.
-                        </p>
-                    </div>
-                    
-                    <div class="profile-controls" style="justify-content: center; gap: var(--md-spacing-lg);">
-                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Sign In
-                        </a>
-                        <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-outlined">
-                            <i class="fas fa-user-plus"></i>
-                            Sign Up
-                        </a>
+            elements.contentArea.innerHTML = `
+                <div class="card text-center p-5">
+                    <i class="fas fa-users" style="font-size: 4rem; color: var(--primary-500); margin-bottom: var(--space-lg);"></i>
+                    <h2 class="mb-3">Welcome to Reverbit</h2>
+                    <p class="text-secondary mb-4">Sign in to view your profile or explore other users.</p>
+                    <div class="flex gap-3 justify-center">
+                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">Sign In</a>
+                        <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-outline">Sign Up</a>
                     </div>
                 </div>
             `;
-            
-            mainContent.style.display = 'block';
         }
 
-        function showNotFound(message) {
-            showLoading(false);
-            hideAllSections();
-            
-            const title = notFound.querySelector('h1');
-            const desc = notFound.querySelector('p');
-            
-            if (title) title.textContent = 'Profile Not Found';
-            if (desc) desc.textContent = message || 'The profile you\'re looking for doesn\'t exist or is set to private.';
-            
-            notFound.style.display = 'block';
-            mainContent.style.display = 'block';
+        function showNotFound(message = 'Profile not found') {
+            elements.contentArea.innerHTML = `
+                <div class="not-found">
+                    <i class="fas fa-user-slash not-found-icon"></i>
+                    <h2 class="not-found-title">Profile Not Found</h2>
+                    <p class="not-found-text">${message}</p>
+                    <div class="flex gap-3 justify-center">
+                        <a href="https://aditya-cmd-max.github.io/reverbit/" class="btn btn-primary">Go Home</a>
+                        <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outline">Dashboard</a>
+                    </div>
+                </div>
+            `;
         }
 
         function showToast(message, type = 'success') {
-            toast.className = `toast ${type}`;
-            toastMessage.textContent = message;
-            toast.classList.add('show');
-
+            elements.toast.className = `toast toast-${type}`;
+            elements.toastMessage.textContent = message;
+            elements.toast.classList.add('show');
+            
             setTimeout(() => {
-                toast.classList.remove('show');
+                elements.toast.classList.remove('show');
             }, 3000);
         }
 
@@ -2810,168 +2256,27 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        function switchTab(tab) {
-            // Update tab buttons
-            document.querySelectorAll('.profile-tab').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.toLowerCase().includes(tab)) {
-                    btn.classList.add('active');
-                }
-            });
+        function viewUserProfile(userId) {
+            window.location.href = `?id=${userId}`;
+            elements.searchResults.classList.remove('show');
+            elements.searchInput.value = '';
+        }
+
+        async function updateLastActive() {
+            if (!state.isOwner || !state.profileData) return;
             
-            // Update content based on tab
-            const tabContent = document.getElementById('tabContent');
-            
-            switch (tab) {
-                case 'overview':
-                    tabContent.innerHTML = getOverviewTab(profileData);
-                    break;
-                case 'verification':
-                    tabContent.innerHTML = getVerificationTab(profileData);
-                    break;
-                case 'activity':
-                    tabContent.innerHTML = getActivityTab(profileData);
-                    break;
-                case 'settings':
-                    tabContent.innerHTML = getSettingsTab(profileData);
-                    break;
+            try {
+                await db.collection('users').doc(state.profileData.uid).update({
+                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error('Error updating last active:', error);
             }
         }
 
-        function getVerificationTab(data) {
-            if (!data.verified) return '';
-            
-            return `
-                <div class="settings-panel">
-                    <div class="settings-section">
-                        <div style="background: var(--md-surface-variant); padding: var(--md-spacing-xl); border-radius: var(--md-radius-large); text-align: center;">
-                            <div class="verified-badge" style="font-size: 1.2rem; padding: var(--md-spacing-lg) var(--md-spacing-xl); margin-bottom: var(--md-spacing-lg);">
-                                <i class="fas fa-check-circle"></i>
-                                Verified Account
-                            </div>
-                            <p style="color: var(--md-on-surface-variant);">
-                                This account has been verified by Reverbit administrators.
-                            </p>
-                            ${data.verifiedAt ? `
-                                <p style="margin-top: var(--md-spacing-lg); font-size: 0.9rem;">
-                                    <i class="fas fa-calendar"></i> Verified on: ${formatDate(data.verifiedAt)}
-                                </p>
-                            ` : ''}
-                            ${data.verifiedBy ? `
-                                <p style="font-size: 0.9rem;">
-                                    <i class="fas fa-user-shield"></i> Verified by: ${data.verifiedBy}
-                                </p>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function getActivityTab(data) {
-            return `
-                <div class="settings-panel">
-                    <div class="settings-section">
-                        <h3><i class="fas fa-chart-line"></i> Activity Summary</h3>
-                        <div class="stats-grid" style="margin-bottom: var(--md-spacing-xl);">
-                            <div class="stat-card">
-                                <div class="stat-number">${data.streak || 0}</div>
-                                <div class="stat-label">Current Streak</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">${data.totalLogins || 1}</div>
-                                <div class="stat-label">Total Logins</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">${calculateMemberDays(data.createdAt)}</div>
-                                <div class="stat-label">Member Days</div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-outlined" onclick="viewActivityLog()" style="width: 100%;">
-                            <i class="fas fa-history"></i>
-                            View Detailed Activity Log
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function getSettingsTab(data) {
-            return `
-                <div class="settings-panel">
-                    <div class="settings-section">
-                        <h3><i class="fas fa-eye"></i> Privacy Settings</h3>
-                        <div class="settings-row">
-                            <span class="settings-label">Profile Visibility</span>
-                            <span class="settings-value">
-                                <button class="btn ${data.isPublic ? 'btn-outlined' : 'btn-primary'}" onclick="togglePrivacy()" style="padding: var(--md-spacing-sm) var(--md-spacing-md);">
-                                    <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
-                                    ${data.isPublic ? 'Public' : 'Private'}
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-section">
-                        <h3><i class="fas fa-link"></i> Profile Link</h3>
-                        <div class="settings-row">
-                            <span class="settings-label">Shareable URL</span>
-                            <span class="settings-value">
-                                <button class="btn btn-outlined" onclick="shareProfile()" style="padding: var(--md-spacing-sm) var(--md-spacing-md);">
-                                    <i class="fas fa-share-alt"></i>
-                                    Share Profile
-                                </button>
-                            </span>
-                        </div>
-                        <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium); margin-top: var(--md-spacing-md); font-family: monospace; word-break: break-all;">
-                            ${window.location.href}
-                        </div>
-                    </div>
-                    
-                    <div class="settings-section">
-                        <h3><i class="fas fa-database"></i> Data Management</h3>
-                        <div class="settings-row">
-                            <span class="settings-label">Export Data</span>
-                            <span class="settings-value">
-                                <button class="btn btn-outlined" onclick="exportData()" style="padding: var(--md-spacing-sm) var(--md-spacing-md);">
-                                    <i class="fas fa-download"></i>
-                                    Export
-                                </button>
-                            </span>
-                        </div>
-                        <div class="settings-row">
-                            <span class="settings-label">Delete Account</span>
-                            <span class="settings-value">
-                                <button class="btn btn-outlined" onclick="openDeleteModal('${data.uid}', '${data.displayName || 'User'}')" style="padding: var(--md-spacing-sm) var(--md-spacing-md); color: #ea4335; border-color: #ea4335;">
-                                    <i class="fas fa-trash"></i>
-                                    Delete
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ================= HELPER FUNCTIONS =================
         function getAvatarUrl(data) {
-            if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
-                return data.photoURL + (data.photoURL.includes('?') ? '&' : '?') + 't=' + Date.now();
-            }
+            if (data.photoURL) return data.photoURL;
             return `https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=1a73e8&color=fff&bold=true&size=400`;
-        }
-
-        function handleAvatarError(img) {
-            const displayName = profileData?.displayName || 'User';
-            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            
-            img.style.display = 'none';
-            img.parentNode.innerHTML += `
-                <div class="avatar-fallback">
-                    ${initials}
-                </div>
-            `;
         }
 
         function calculateMemberDays(createdAt) {
@@ -2980,106 +2285,27 @@
             return Math.floor(diff / (1000 * 60 * 60 * 24));
         }
 
-        function formatDate(dateString) {
-            if (!dateString) return 'Unknown';
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-            } catch {
-                return 'Invalid date';
-            }
-        }
-
-        function formatDateTime(date) {
-            return date.toLocaleDateString('en-US', { 
+        function formatDate(date) {
+            if (!date) return 'Unknown';
+            return new Date(date).toLocaleDateString('en-US', { 
                 year: 'numeric', 
-                month: 'short', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                month: 'long', 
+                day: 'numeric' 
             });
         }
 
-        function formatLastActive(dateString) {
-            if (!dateString) return 'Never';
+        function formatLastActive(date) {
+            if (!date) return 'Never';
             
-            try {
-                const date = new Date(dateString);
-                const now = new Date();
-                const diffMs = now - date;
-                const diffMins = Math.floor(diffMs / 60000);
-                const diffHours = Math.floor(diffMs / 3600000);
-                const diffDays = Math.floor(diffMs / 86400000);
-                
-                if (diffMins < 1) return 'Just now';
-                if (diffMins < 60) return `${diffMins}m ago`;
-                if (diffHours < 24) return `${diffHours}h ago`;
-                if (diffDays === 1) return 'Yesterday';
-                if (diffDays < 7) return `${diffDays}d ago`;
-                return formatDate(date);
-            } catch {
-                return 'Unknown';
-            }
-        }
-
-        function ensureHttp(url) {
-            if (!url) return '#';
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                return 'https://' + url;
-            }
-            return url;
-        }
-
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                return true;
-            } catch (err) {
-                // Fallback
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                return true;
-            }
-        }
-
-        function viewUserProfile(userId) {
-            window.location.href = `?id=${userId}`;
-        }
-
-        async function updateLastActive() {
-            if (!isOwner || !profileData) return;
+            const now = new Date();
+            const last = new Date(date);
+            const diff = Math.floor((now - last) / 60000); // minutes
             
-            try {
-                await db.collection('users').doc(profileData.uid).update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (error) {
-                console.error('Error updating last active:', error);
-            }
-        }
-
-        async function exportData() {
-            if (!profileData) return;
-            
-            const dataStr = JSON.stringify(profileData, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `reverbit-profile-${profileData.uid}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            showToast('Profile data exported successfully!');
+            if (diff < 1) return 'Just now';
+            if (diff < 60) return `${diff}m ago`;
+            if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+            if (diff < 10080) return `${Math.floor(diff / 1440)}d ago`;
+            return formatDate(date);
         }
 
         async function logout() {
@@ -3092,9 +2318,11 @@
             }
         }
 
-        // ================= MAKE FUNCTIONS GLOBAL =================
+        // ==================== EXPOSE GLOBALLY ====================
         window.toggleTheme = toggleTheme;
         window.showAdminPanel = showAdminPanel;
+        window.filterUsers = filterUsers;
+        window.changePage = changePage;
         window.openVerifyModal = openVerifyModal;
         window.saveVerification = saveVerification;
         window.openDeleteModal = openDeleteModal;
@@ -3106,59 +2334,101 @@
         window.shareViaTwitter = shareViaTwitter;
         window.shareViaFacebook = shareViaFacebook;
         window.shareViaLinkedIn = shareViaLinkedIn;
-        window.viewActivityLog = viewActivityLog;
-        window.switchTab = switchTab;
-        window.filterUsers = filterUsers;
-        window.changePage = changePage;
         window.viewUserProfile = viewUserProfile;
         window.logout = logout;
-        window.copyToClipboard = copyToClipboard;
-        window.exportData = exportData;
+        window.handleAvatarUpload = handleAvatarUpload;
 
-        console.log('Profile page fully loaded and ready');
+        console.log('✅ Reverbit Profile fully loaded');
     </script>
 
-<script>
+    <style>
+        /* Responsive Utilities */
+        @media (max-width: 640px) {
+            .hide-sm { display: none; }
+            
+            .btn {
+                padding: var(--space-sm) var(--space-md);
+            }
+            
+            .profile-name {
+                font-size: 1.8rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+            
+            .stat {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: var(--space-xs) 0;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
 
-// Add this function to check admin status
-async function checkAdminStatus() {
-  try {
-    const user = firebase.auth().currentUser;
-    if (user) {
-      const isAdmin = user.email === 'adityajha1104@gmail.com';
-      console.log('Admin check:', isAdmin);
-      
-      if (isAdmin) {
-        // Force token refresh to ensure custom claims are loaded
-        await user.getIdToken(true);
-        
-        // Get token result to check claims
-        const tokenResult = await user.getIdTokenResult();
-        console.log('Admin claims:', tokenResult.claims);
-      }
-      
-      return isAdmin;
-    }
-    return false;
-  } catch (error) {
-    console.error('Admin check error:', error);
-    return false;
-  }
-}
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .profile-header {
+                grid-template-columns: 200px 1fr;
+            }
+            
+            .profile-avatar {
+                width: 180px;
+                height: 180px;
+            }
+        }
 
-// Call this when page loads
-checkAdminStatus().then(isAdmin => {
-  if (isAdmin) {
-    console.log('✅ Admin access confirmed');
-    // Show admin panel elements
-    document.querySelectorAll('.admin-only').forEach(el => {
-      el.style.display = 'block';
-    });
-  }
-});
-    
-</script>
+        /* Form Elements */
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
 
-    
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn var(--transition-base);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn var(--transition-bounce);
+        }
+
+        /* Print Styles */
+        @media print {
+            .header,
+            .search-section,
+            .profile-actions,
+            .btn {
+                display: none;
+            }
+            
+            .profile-section {
+                border: none;
+                box-shadow: none;
+            }
+        }
+    </style>
 </body>
 </html>
