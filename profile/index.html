@@ -1736,8 +1736,7 @@
             projectId: "reverbit11",
             storageBucket: "reverbit11.firebasestorage.app",
             messagingSenderId: "607495314412",
-            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-            measurementId: "G-DMWMRM1M47"
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9"
         };
 
         const ADMIN_EMAIL = 'adityajha1104@gmail.com';
@@ -1748,7 +1747,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // Enable persistence
+        // Enable persistence (optional)
         db.enablePersistence({ synchronizeTabs: true }).catch(err => {
             console.warn('Firestore persistence error:', err);
         });
@@ -1803,12 +1802,15 @@
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 Reverbit Profile with Follow System initializing...');
+            console.log('🚀 Reverbit Profile (Index-Free) initializing...');
             
             applyTheme(state.theme);
             
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('id');
+            
+            // Load all users for search (ONCE)
+            await loadAllUsers();
             
             // Setup auth listener
             auth.onAuthStateChanged(async (user) => {
@@ -1834,13 +1836,9 @@
                 } else {
                     showLanding();
                 }
-                
-                if (user) {
-                    await loadAllUsers();
-                }
             });
 
-            // Search input handler
+            // Search input handler with debounce
             elements.searchInput.addEventListener('input', (e) => {
                 clearTimeout(state.searchTimeout);
                 state.searchTimeout = setTimeout(() => {
@@ -1965,10 +1963,10 @@
                 Math.random().toString(36).substring(2, 6);
         }
 
-        // ==================== FOLLOW SYSTEM ====================
+        // ==================== INDEX-FREE FOLLOW SYSTEM ====================
         async function loadFollowData(uid) {
             try {
-                // Load followers
+                // Load followers - get all and sort in memory
                 const followersSnapshot = await db.collection('followers')
                     .where('followingId', '==', uid)
                     .get();
@@ -1978,7 +1976,14 @@
                     ...doc.data()
                 }));
                 
-                // Load following
+                // Sort in memory by createdAt (newest first)
+                state.followers.sort((a, b) => {
+                    const dateA = a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0);
+                    const dateB = b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0);
+                    return dateB - dateA;
+                });
+                
+                // Load following - get all and sort in memory
                 const followingSnapshot = await db.collection('followers')
                     .where('followerId', '==', uid)
                     .get();
@@ -1987,6 +1992,13 @@
                     id: doc.id,
                     ...doc.data()
                 }));
+                
+                // Sort in memory by createdAt (newest first)
+                state.following.sort((a, b) => {
+                    const dateA = a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0);
+                    const dateB = b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0);
+                    return dateB - dateA;
+                });
                 
                 // Update counts
                 state.followersCount = state.followers.length;
@@ -2051,7 +2063,6 @@
                         
                         // Update counts
                         state.followersCount = Math.max(0, state.followersCount - 1);
-                        state.followingCount = state.followingCount;
                         
                         await db.collection('users').doc(followingId).update({
                             followersCount: state.followersCount
@@ -2084,7 +2095,6 @@
                     
                     // Update counts
                     state.followersCount += 1;
-                    state.followingCount = state.followingCount;
                     
                     await db.collection('users').doc(followingId).update({
                         followersCount: firebase.firestore.FieldValue.increment(1)
@@ -2115,6 +2125,7 @@
             }
         }
 
+        // ==================== INDEX-FREE SHOW FOLLOWERS ====================
         async function showFollowers() {
             if (!state.profileData) return;
             
@@ -2123,9 +2134,9 @@
             elements.followersModal.classList.add('active');
             
             try {
+                // Get all followers without ordering
                 const followersSnapshot = await db.collection('followers')
                     .where('followingId', '==', state.profileOwner)
-                    .orderBy('createdAt', 'desc')
                     .get();
                 
                 if (followersSnapshot.empty) {
@@ -2138,14 +2149,36 @@
                     return;
                 }
                 
-                // Get follower details
-                const followerIds = followersSnapshot.docs.map(doc => doc.data().followerId);
-                const followerProfiles = await Promise.all(
-                    followerIds.map(async (id) => {
-                        const doc = await db.collection('users').doc(id).get();
-                        return { uid: id, ...doc.data() };
-                    })
-                );
+                // Get follower IDs
+                const followerRelations = followersSnapshot.docs.map(doc => ({
+                    followerId: doc.data().followerId,
+                    createdAt: doc.data().createdAt
+                }));
+                
+                // Sort in memory by createdAt
+                followerRelations.sort((a, b) => {
+                    const dateA = a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0);
+                    const dateB = b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0);
+                    return dateB - dateA;
+                });
+                
+                // Get follower profiles with batched reads
+                const followerIds = followerRelations.map(r => r.followerId);
+                const followerProfiles = [];
+                
+                // Use batched gets to avoid too many individual reads
+                const batchSize = 10;
+                for (let i = 0; i < followerIds.length; i += batchSize) {
+                    const batch = followerIds.slice(i, i + batchSize);
+                    const promises = batch.map(id => db.collection('users').doc(id).get());
+                    const snapshots = await Promise.all(promises);
+                    
+                    snapshots.forEach(snap => {
+                        if (snap.exists) {
+                            followerProfiles.push({ uid: snap.id, ...snap.data() });
+                        }
+                    });
+                }
                 
                 elements.followersList.innerHTML = followerProfiles.map(user => `
                     <div class="modal-user-item" onclick="viewUserProfile('${user.uid}')">
@@ -2171,6 +2204,7 @@
             }
         }
 
+        // ==================== INDEX-FREE SHOW FOLLOWING ====================
         async function showFollowing() {
             if (!state.profileData) return;
             
@@ -2179,9 +2213,9 @@
             elements.followingModal.classList.add('active');
             
             try {
+                // Get all following without ordering
                 const followingSnapshot = await db.collection('followers')
                     .where('followerId', '==', state.profileOwner)
-                    .orderBy('createdAt', 'desc')
                     .get();
                 
                 if (followingSnapshot.empty) {
@@ -2194,14 +2228,36 @@
                     return;
                 }
                 
-                // Get following details
-                const followingIds = followingSnapshot.docs.map(doc => doc.data().followingId);
-                const followingProfiles = await Promise.all(
-                    followingIds.map(async (id) => {
-                        const doc = await db.collection('users').doc(id).get();
-                        return { uid: id, ...doc.data() };
-                    })
-                );
+                // Get following IDs
+                const followingRelations = followingSnapshot.docs.map(doc => ({
+                    followingId: doc.data().followingId,
+                    createdAt: doc.data().createdAt
+                }));
+                
+                // Sort in memory by createdAt
+                followingRelations.sort((a, b) => {
+                    const dateA = a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0);
+                    const dateB = b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0);
+                    return dateB - dateA;
+                });
+                
+                // Get following profiles with batched reads
+                const followingIds = followingRelations.map(r => r.followingId);
+                const followingProfiles = [];
+                
+                // Use batched gets
+                const batchSize = 10;
+                for (let i = 0; i < followingIds.length; i += batchSize) {
+                    const batch = followingIds.slice(i, i + batchSize);
+                    const promises = batch.map(id => db.collection('users').doc(id).get());
+                    const snapshots = await Promise.all(promises);
+                    
+                    snapshots.forEach(snap => {
+                        if (snap.exists) {
+                            followingProfiles.push({ uid: snap.id, ...snap.data() });
+                        }
+                    });
+                }
                 
                 elements.followingList.innerHTML = followingProfiles.map(user => `
                     <div class="modal-user-item" onclick="viewUserProfile('${user.uid}')">
@@ -2225,6 +2281,113 @@
                     </div>
                 `;
             }
+        }
+
+        // ==================== INDEX-FREE LOAD ALL USERS ====================
+        async function loadAllUsers() {
+            try {
+                const snapshot = await db.collection('users').get();
+                state.allUsers = snapshot.docs.map(doc => ({
+                    uid: doc.id,
+                    ...doc.data()
+                }));
+                
+                // Sort in memory by followers count
+                state.allUsers.sort((a, b) => (b.followersCount || 0) - (a.followersCount || 0));
+                
+                console.log(`📊 Loaded ${state.allUsers.length} users for search`);
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+                state.allUsers = [];
+            }
+        }
+
+        // ==================== INDEX-FREE SEARCH ====================
+        function searchUsers(query) {
+            query = query.trim().toLowerCase();
+            
+            if (!query || query.length < 2) {
+                elements.searchResults.classList.remove('show');
+                return;
+            }
+            
+            // Show loading
+            elements.searchResults.innerHTML = `
+                <div class="search-loading">
+                    <div class="spinner"></div>
+                    <p>Searching for "${query}"...</p>
+                </div>
+            `;
+            elements.searchResults.classList.add('show');
+            
+            // Use setTimeout to not block UI
+            setTimeout(() => {
+                try {
+                    // Filter in memory (NO INDEX NEEDED!)
+                    const results = state.allUsers
+                        .filter(user => {
+                            // Skip private profiles that aren't the current user
+                            if (!user.isPublic && user.uid !== state.currentUser?.uid) {
+                                return false;
+                            }
+                            
+                            // Search in multiple fields
+                            const searchableText = [
+                                user.displayName,
+                                user.email,
+                                user.username,
+                                user.bio
+                            ].filter(Boolean).join(' ').toLowerCase();
+                            
+                            return searchableText.includes(query);
+                        })
+                        .slice(0, 10); // Limit to 10 results
+                    
+                    if (results.length === 0) {
+                        elements.searchResults.innerHTML = `
+                            <div class="no-results">
+                                <i class="fas fa-search"></i>
+                                <p>No users found matching "${query}"</p>
+                                <small>Try a different search term</small>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Display results
+                    elements.searchResults.innerHTML = results.map(user => `
+                        <div class="search-result-item" onclick="viewUserProfile('${user.uid}')">
+                            <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="search-result-avatar"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                            <div class="search-result-info">
+                                <div class="search-result-name">
+                                    ${user.displayName || 'Anonymous'}
+                                    ${getBadges(user)}
+                                    ${!user.isPublic ? '<span class="privacy-badge"><i class="fas fa-lock"></i> Private</span>' : ''}
+                                </div>
+                                <div class="search-result-email">${user.email || ''}</div>
+                                <div class="search-result-meta">
+                                    <span><i class="fas fa-users"></i> ${user.followersCount || 0} followers</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                } catch (error) {
+                    console.error('Search error:', error);
+                    elements.searchResults.innerHTML = `
+                        <div class="search-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Error searching users</p>
+                            <small>${error.message}</small>
+                            <button onclick="retrySearch('${query}')" class="retry-btn">
+                                <i class="fas fa-redo"></i> Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+            }, 100);
         }
 
         // ==================== LOAD PROFILE ====================
@@ -2415,71 +2578,6 @@
                 return `<div class="avatar-badge avatar-badge-verified"><i class="fas fa-check"></i></div>`;
             }
             return '';
-        }
-
-        // ==================== LOAD ALL USERS ====================
-        async function loadAllUsers() {
-            try {
-                const snapshot = await db.collection('users').get();
-                state.allUsers = snapshot.docs.map(doc => ({
-                    uid: doc.id,
-                    ...doc.data()
-                }));
-                
-                // Sort by followers count
-                state.allUsers.sort((a, b) => (b.followersCount || 0) - (a.followersCount || 0));
-                
-                console.log(`📊 Loaded ${state.allUsers.length} users`);
-                
-            } catch (error) {
-                console.error('Error loading users:', error);
-            }
-        }
-
-        // ==================== SEARCH USERS ====================
-        function searchUsers(query) {
-            query = query.trim().toLowerCase();
-            
-            if (!query) {
-                elements.searchResults.classList.remove('show');
-                return;
-            }
-            
-            const results = state.allUsers
-                .filter(user => 
-                    (user.displayName && user.displayName.toLowerCase().includes(query)) ||
-                    (user.email && user.email.toLowerCase().includes(query)) ||
-                    (user.username && user.username.toLowerCase().includes(query))
-                )
-                .slice(0, 10);
-            
-            if (results.length === 0) {
-                elements.searchResults.innerHTML = `
-                    <div class="no-results">
-                        <i class="fas fa-search" style="font-size: 2rem; margin-bottom: var(--space-md);"></i>
-                        <p>No users found matching "${query}"</p>
-                    </div>
-                `;
-            } else {
-                elements.searchResults.innerHTML = results.map(user => `
-                    <div class="search-result-item" onclick="viewUserProfile('${user.uid}')">
-                        <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="search-result-avatar"
-                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
-                        <div class="search-result-info">
-                            <div class="search-result-name">
-                                ${user.displayName || 'User'}
-                                ${getBadges(user)}
-                            </div>
-                            <div class="search-result-email">${user.email || ''}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px;">
-                                <i class="fas fa-users"></i> ${user.followersCount || 0} followers
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            elements.searchResults.classList.add('show');
         }
 
         // ==================== ADMIN PANEL ====================
@@ -2815,7 +2913,6 @@
 
         // ==================== AVATAR UPLOAD ====================
         function handleAvatarUpload() {
-            // Create file input
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
@@ -2831,7 +2928,6 @@
         async function uploadAvatar(file) {
             if (!state.currentUser) return;
             
-            // Validate file
             if (file.size > 5 * 1024 * 1024) {
                 showToast('Image must be less than 5MB', 'error');
                 return;
@@ -2845,18 +2941,15 @@
             showToast('Uploading...', 'info');
             
             try {
-                // Convert to base64 for demo (in production, use Cloudinary)
                 const reader = new FileReader();
                 reader.onloadend = async () => {
                     const base64 = reader.result;
                     
-                    // Update Firestore with base64 (demo only - use Cloudinary in production)
                     await db.collection('users').doc(state.currentUser.uid).update({
                         photoURL: base64,
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    // Update local data
                     state.currentUserProfile.photoURL = base64;
                     if (state.profileData && state.profileData.uid === state.currentUser.uid) {
                         state.profileData.photoURL = base64;
@@ -2932,6 +3025,10 @@
             elements.searchInput.value = '';
         }
 
+        function retrySearch(query) {
+            searchUsers(query);
+        }
+
         async function updateLastActive() {
             if (!state.isOwner || !state.profileData) return;
             
@@ -2969,7 +3066,7 @@
             
             const now = new Date();
             const last = new Date(date);
-            const diff = Math.floor((now - last) / 60000); // minutes
+            const diff = Math.floor((now - last) / 60000);
             
             if (diff < 1) return 'Just now';
             if (diff < 60) return `${diff}m ago`;
@@ -3008,111 +3105,11 @@
         window.shareViaFacebook = shareViaFacebook;
         window.shareViaLinkedIn = shareViaLinkedIn;
         window.viewUserProfile = viewUserProfile;
+        window.retrySearch = retrySearch;
         window.logout = logout;
         window.handleAvatarUpload = handleAvatarUpload;
 
-        console.log('✅ Reverbit Profile with Follow System fully loaded');
+        console.log('✅ Reverbit Profile with Index-Free System fully loaded');
     </script>
-
-<script>
-
-   // ==================== OPTIMIZED SEARCH FUNCTION ====================
-async function searchUsers(query) {
-    query = query.trim().toLowerCase();
-    
-    if (!query || query.length < 2) {
-        elements.searchResults.classList.remove('show');
-        return;
-    }
-    
-    // Show loading
-    elements.searchResults.innerHTML = `
-        <div class="search-loading">
-            <div class="spinner"></div>
-            <p>Searching for "${query}"...</p>
-        </div>
-    `;
-    elements.searchResults.classList.add('show');
-    
-    try {
-        // ✅ Now works with the new rules!
-        const snapshot = await db.collection('users')
-            .orderBy('followersCount', 'desc')
-            .limit(30)
-            .get();
-        
-        const results = [];
-        
-        snapshot.forEach(doc => {
-            const user = { uid: doc.id, ...doc.data() };
-            
-            // Skip private profiles that aren't the current user
-            if (!user.isPublic && user.uid !== state.currentUser?.uid) {
-                return;
-            }
-            
-            // Search in multiple fields
-            const searchableText = [
-                user.displayName,
-                user.email,
-                user.username,
-                user.bio
-            ].filter(Boolean).join(' ').toLowerCase();
-            
-            if (searchableText.includes(query)) {
-                results.push(user);
-            }
-        });
-        
-        // Limit to 10 results
-        const limitedResults = results.slice(0, 10);
-        
-        if (limitedResults.length === 0) {
-            elements.searchResults.innerHTML = `
-                <div class="no-results">
-                    <i class="fas fa-search"></i>
-                    <p>No users found</p>
-                    <small>Try a different search term</small>
-                </div>
-            `;
-            return;
-        }
-        
-        // Display results
-        elements.searchResults.innerHTML = limitedResults.map(user => `
-            <div class="search-result-item" onclick="viewUserProfile('${user.uid}')">
-                <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="search-result-avatar">
-                <div class="search-result-info">
-                    <div class="search-result-name">
-                        ${user.displayName || 'Anonymous'}
-                        ${getBadges(user)}
-                        ${!user.isPublic ? '<span class="privacy-badge"><i class="fas fa-lock"></i> Private</span>' : ''}
-                    </div>
-                    <div class="search-result-email">${user.email || ''}</div>
-                    <div class="search-result-meta">
-                        <span><i class="fas fa-users"></i> ${user.followersCount || 0}</span>
-                        <span><i class="fas fa-calendar"></i> ${formatJoinDate(user.createdAt)}</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        
-    } catch (error) {
-        console.error('Search error:', error);
-        elements.searchResults.innerHTML = `
-            <div class="search-error">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Error searching users</p>
-                <small>${error.message}</small>
-                <button onclick="retrySearch('${query}')" class="retry-btn">
-                    <i class="fas fa-redo"></i> Try Again
-                </button>
-            </div>
-        `;
-    }
-}
-</script>
-
-    
 </body>
 </html>
