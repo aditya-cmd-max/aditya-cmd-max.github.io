@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Reverbit - Profile</title>
-    <meta name="description" content="Reverbit Profile - Showcase your achievements and connect with others">
+    <meta name="description" content="Reverbit Profile - Connect, follow, and grow your network">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -334,6 +334,24 @@
             pointer-events: none;
         }
 
+        .btn-follow {
+            background: var(--primary-500);
+            color: white;
+            min-width: 100px;
+        }
+
+        .btn-following {
+            background: var(--success-500);
+            color: white;
+            min-width: 100px;
+        }
+
+        .btn-unfollow {
+            background: var(--error-500);
+            color: white;
+            min-width: 100px;
+        }
+
         /* ==================== BADGES ==================== */
         .badge {
             display: inline-flex;
@@ -494,6 +512,122 @@
             border-top: 1px solid var(--border-light);
         }
 
+        /* ==================== FOLLOW STATS ==================== */
+        .follow-stats {
+            display: flex;
+            gap: var(--space-xl);
+            margin: var(--space-lg) 0;
+            padding: var(--space-md) 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .follow-stat {
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-lg);
+        }
+
+        .follow-stat:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .follow-stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-500);
+            line-height: 1.2;
+        }
+
+        .follow-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==================== USERS GRID ==================== */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .user-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-500);
+        }
+
+        .user-card-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: var(--space-md);
+            border: 3px solid var(--primary-500);
+            object-fit: cover;
+        }
+
+        .user-card-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: var(--space-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .user-card-bio {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .user-card-stats {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .user-card-stat {
+            text-align: center;
+        }
+
+        .user-card-stat-value {
+            font-weight: 700;
+            color: var(--primary-500);
+        }
+
+        .user-card-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
         /* ==================== MODAL ==================== */
         .modal {
             display: none;
@@ -539,10 +673,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 1;
         }
 
         .modal-body {
             padding: var(--space-lg);
+            max-height: 60vh;
+            overflow-y: auto;
         }
 
         .modal-footer {
@@ -551,6 +691,59 @@
             display: flex;
             gap: var(--space-sm);
             justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-primary);
+        }
+
+        .modal-user-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+        }
+
+        .modal-user-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-light);
+        }
+
+        .modal-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .modal-user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .modal-user-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .modal-user-email {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal-user-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
         }
 
         /* ==================== TOAST ==================== */
@@ -945,6 +1138,42 @@
             letter-spacing: 0.5px;
         }
 
+        .follow-stats {
+            display: flex;
+            gap: var(--space-xl);
+            margin: var(--space-lg) 0;
+            padding: var(--space-md) 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .follow-stat {
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-lg);
+        }
+
+        .follow-stat:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .follow-stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-500);
+            line-height: 1.2;
+        }
+
+        .follow-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .profile-actions {
             display: flex;
             gap: var(--space-sm);
@@ -1029,13 +1258,13 @@
             border-color: var(--primary-500);
         }
 
-        .users-grid {
+        .users-list {
             display: flex;
             flex-direction: column;
             gap: var(--space-sm);
         }
 
-        .user-card {
+        .user-row {
             background: var(--bg-primary);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
@@ -1046,14 +1275,14 @@
         }
 
         @media (min-width: 768px) {
-            .user-card {
+            .user-row {
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
             }
         }
 
-        .user-card-info {
+        .user-row-info {
             display: flex;
             align-items: center;
             gap: var(--space-md);
@@ -1061,12 +1290,12 @@
             min-width: 0;
         }
 
-        .user-card-details {
+        .user-row-details {
             flex: 1;
             min-width: 0;
         }
 
-        .user-card-name {
+        .user-row-name {
             font-weight: 600;
             margin-bottom: 2px;
             display: flex;
@@ -1075,7 +1304,7 @@
             flex-wrap: wrap;
         }
 
-        .user-card-email {
+        .user-row-email {
             font-size: 0.85rem;
             color: var(--text-tertiary);
             white-space: nowrap;
@@ -1083,7 +1312,7 @@
             text-overflow: ellipsis;
         }
 
-        .user-card-actions {
+        .user-row-actions {
             display: flex;
             gap: var(--space-xs);
             justify-content: flex-end;
@@ -1214,6 +1443,107 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--neutral-600);
         }
+
+        /* Responsive Utilities */
+        @media (max-width: 640px) {
+            .hide-sm { display: none; }
+            
+            .btn {
+                padding: var(--space-sm) var(--space-md);
+            }
+            
+            .profile-name {
+                font-size: 1.8rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+            
+            .stat {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: var(--space-xs) 0;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .follow-stats {
+                gap: var(--space-md);
+            }
+            
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .profile-header {
+                grid-template-columns: 200px 1fr;
+            }
+            
+            .profile-avatar {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .users-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Form Elements */
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn var(--transition-base);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn var(--transition-bounce);
+        }
+
+        /* Print Styles */
+        @media print {
+            .header,
+            .search-section,
+            .profile-actions,
+            .follow-stats,
+            .btn {
+                display: none;
+            }
+            
+            .profile-section {
+                border: none;
+                box-shadow: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1259,6 +1589,52 @@
         <span id="toastMessage"></span>
     </div>
 
+    <!-- Followers Modal -->
+    <div class="modal" id="followersModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="followersModalTitle">Followers</h3>
+                <button class="btn btn-icon btn-ghost" onclick="closeModal('followersModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body" id="followersList">
+                <div class="text-center p-4">
+                    <div class="spinner spinner-sm"></div>
+                    <p class="mt-2">Loading...</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('followersModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Following Modal -->
+    <div class="modal" id="followingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="followingModalTitle">Following</h3>
+                <button class="btn btn-icon btn-ghost" onclick="closeModal('followingModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body" id="followingList">
+                <div class="text-center p-4">
+                    <div class="spinner spinner-sm"></div>
+                    <p class="mt-2">Loading...</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('followingModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Verification Modal -->
     <div class="modal" id="verifyModal">
         <div class="modal-content">
@@ -1290,8 +1666,7 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('verifyModal')">Cancel</button>
                 <button class="btn btn-primary" onclick="saveVerification()">
-                    <i class="fas fa-save"></i>
-                    Save Changes
+                    <i class="fas fa-save"></i> Save Changes
                 </button>
             </div>
         </div>
@@ -1315,8 +1690,7 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
                 <button class="btn btn-primary" style="background: var(--error-500);" onclick="confirmDelete()">
-                    <i class="fas fa-trash"></i>
-                    Delete
+                    <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
         </div>
@@ -1386,6 +1760,11 @@
             profileData: null,
             profileOwner: null,
             isOwner: false,
+            isFollowing: false,
+            followers: [],
+            following: [],
+            followersCount: 0,
+            followingCount: 0,
             allUsers: [],
             filteredUsers: [],
             currentPage: 1,
@@ -1406,6 +1785,12 @@
             searchResults: document.getElementById('searchResults'),
             toast: document.getElementById('toast'),
             toastMessage: document.getElementById('toastMessage'),
+            followersModal: document.getElementById('followersModal'),
+            followingModal: document.getElementById('followingModal'),
+            followersList: document.getElementById('followersList'),
+            followingList: document.getElementById('followingList'),
+            followersModalTitle: document.getElementById('followersModalTitle'),
+            followingModalTitle: document.getElementById('followingModalTitle'),
             verifyModal: document.getElementById('verifyModal'),
             deleteModal: document.getElementById('deleteModal'),
             shareModal: document.getElementById('shareModal'),
@@ -1418,7 +1803,7 @@
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 Reverbit Profile initializing...');
+            console.log('🚀 Reverbit Profile with Follow System initializing...');
             
             applyTheme(state.theme);
             
@@ -1433,8 +1818,11 @@
                 
                 if (user) {
                     await loadUserProfile(user.uid);
+                    await loadFollowData(user.uid);
                 } else {
                     state.currentUserProfile = null;
+                    state.followers = [];
+                    state.following = [];
                 }
                 
                 updateNavigation();
@@ -1496,35 +1884,25 @@
             
             if (state.currentUser) {
                 navHtml += `
-                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outline">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span class="hide-sm">Dashboard</span>
+                    <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outline hide-sm">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                     <a href="?id=${state.currentUser.uid}" class="btn btn-primary">
-                        <i class="fas fa-user"></i>
-                        <span class="hide-sm">Profile</span>
+                        <i class="fas fa-user"></i> Profile
                     </a>
                     ${isAdmin ? `
-                        <button class="btn btn-outline" onclick="showAdminPanel()">
-                            <i class="fas fa-shield-alt"></i>
-                            <span class="hide-sm">Admin</span>
+                        <button class="btn btn-outline hide-sm" onclick="showAdminPanel()">
+                            <i class="fas fa-shield-alt"></i> Admin
                         </button>
                     ` : ''}
                     <button class="btn btn-outline" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span class="hide-sm">Logout</span>
                     </button>
                 `;
             } else {
                 navHtml += `
-                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outline">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </a>
-                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up
-                    </a>
+                    <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outline">Sign In</a>
+                    <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-primary">Sign Up</a>
                 `;
             }
             
@@ -1539,7 +1917,6 @@
                 if (doc.exists) {
                     state.currentUserProfile = { uid: doc.id, ...doc.data() };
                 } else {
-                    // Create profile if it doesn't exist
                     state.currentUserProfile = await createUserProfile(uid);
                 }
                 
@@ -1566,6 +1943,8 @@
                 verified: false,
                 verifiedLevel: 'none',
                 premiumVerified: false,
+                followersCount: 0,
+                followingCount: 0,
                 streak: 0,
                 totalLogins: 1,
                 createdAt: new Date().toISOString(),
@@ -1584,6 +1963,268 @@
                 .replace(/[^a-z0-9]/g, '')
                 .substring(0, 15) + 
                 Math.random().toString(36).substring(2, 6);
+        }
+
+        // ==================== FOLLOW SYSTEM ====================
+        async function loadFollowData(uid) {
+            try {
+                // Load followers
+                const followersSnapshot = await db.collection('followers')
+                    .where('followingId', '==', uid)
+                    .get();
+                
+                state.followers = followersSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                // Load following
+                const followingSnapshot = await db.collection('followers')
+                    .where('followerId', '==', uid)
+                    .get();
+                
+                state.following = followingSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                // Update counts
+                state.followersCount = state.followers.length;
+                state.followingCount = state.following.length;
+                
+                // Update user document with counts
+                await db.collection('users').doc(uid).update({
+                    followersCount: state.followersCount,
+                    followingCount: state.followingCount
+                });
+                
+                console.log('📊 Follow data loaded:', {
+                    followers: state.followersCount,
+                    following: state.followingCount
+                });
+                
+            } catch (error) {
+                console.error('Error loading follow data:', error);
+            }
+        }
+
+        async function checkFollowStatus(followerId, followingId) {
+            if (!followerId || !followingId) return false;
+            
+            try {
+                const query = await db.collection('followers')
+                    .where('followerId', '==', followerId)
+                    .where('followingId', '==', followingId)
+                    .get();
+                
+                return !query.empty;
+            } catch (error) {
+                console.error('Error checking follow status:', error);
+                return false;
+            }
+        }
+
+        async function toggleFollow() {
+            if (!state.currentUser) {
+                showToast('Please sign in to follow users', 'info');
+                return;
+            }
+            
+            if (state.isOwner) {
+                showToast('You cannot follow yourself', 'warning');
+                return;
+            }
+            
+            const followerId = state.currentUser.uid;
+            const followingId = state.profileOwner;
+            
+            try {
+                if (state.isFollowing) {
+                    // Unfollow
+                    const query = await db.collection('followers')
+                        .where('followerId', '==', followerId)
+                        .where('followingId', '==', followingId)
+                        .get();
+                    
+                    if (!query.empty) {
+                        await query.docs[0].ref.delete();
+                        
+                        // Update counts
+                        state.followersCount = Math.max(0, state.followersCount - 1);
+                        state.followingCount = state.followingCount;
+                        
+                        await db.collection('users').doc(followingId).update({
+                            followersCount: state.followersCount
+                        });
+                        
+                        await db.collection('users').doc(followerId).update({
+                            followingCount: firebase.firestore.FieldValue.increment(-1)
+                        });
+                        
+                        state.isFollowing = false;
+                        
+                        // Update button
+                        const followBtn = document.getElementById('followBtn');
+                        if (followBtn) {
+                            followBtn.className = 'btn btn-primary';
+                            followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                        }
+                        
+                        showToast(`Unfollowed ${state.profileData.displayName || 'user'}`);
+                    }
+                } else {
+                    // Follow
+                    await db.collection('followers').add({
+                        followerId: followerId,
+                        followingId: followingId,
+                        followerName: state.currentUserProfile?.displayName || state.currentUser.email,
+                        followingName: state.profileData.displayName || 'User',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Update counts
+                    state.followersCount += 1;
+                    state.followingCount = state.followingCount;
+                    
+                    await db.collection('users').doc(followingId).update({
+                        followersCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                    
+                    await db.collection('users').doc(followerId).update({
+                        followingCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                    
+                    state.isFollowing = true;
+                    
+                    // Update button
+                    const followBtn = document.getElementById('followBtn');
+                    if (followBtn) {
+                        followBtn.className = 'btn btn-following';
+                        followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+                    }
+                    
+                    showToast(`You are now following ${state.profileData.displayName || 'user'}`);
+                }
+                
+                // Refresh follow data
+                await loadFollowData(followerId);
+                
+            } catch (error) {
+                console.error('Error toggling follow:', error);
+                showToast('Error updating follow status', 'error');
+            }
+        }
+
+        async function showFollowers() {
+            if (!state.profileData) return;
+            
+            elements.followersModalTitle.textContent = `People following ${state.profileData.displayName || 'this user'}`;
+            elements.followersList.innerHTML = '<div class="text-center p-4"><div class="spinner spinner-sm"></div><p class="mt-2">Loading...</p></div>';
+            elements.followersModal.classList.add('active');
+            
+            try {
+                const followersSnapshot = await db.collection('followers')
+                    .where('followingId', '==', state.profileOwner)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                if (followersSnapshot.empty) {
+                    elements.followersList.innerHTML = `
+                        <div class="text-center p-4">
+                            <i class="fas fa-users" style="font-size: 3rem; color: var(--text-tertiary); margin-bottom: var(--space-md);"></i>
+                            <p>No followers yet</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Get follower details
+                const followerIds = followersSnapshot.docs.map(doc => doc.data().followerId);
+                const followerProfiles = await Promise.all(
+                    followerIds.map(async (id) => {
+                        const doc = await db.collection('users').doc(id).get();
+                        return { uid: id, ...doc.data() };
+                    })
+                );
+                
+                elements.followersList.innerHTML = followerProfiles.map(user => `
+                    <div class="modal-user-item" onclick="viewUserProfile('${user.uid}')">
+                        <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="modal-user-avatar">
+                        <div class="modal-user-info">
+                            <div class="modal-user-name">
+                                ${user.displayName || 'User'}
+                                ${getBadges(user)}
+                            </div>
+                            <div class="modal-user-email">${user.email || ''}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading followers:', error);
+                elements.followersList.innerHTML = `
+                    <div class="text-center p-4 text-error">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: var(--space-md);"></i>
+                        <p>Error loading followers</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function showFollowing() {
+            if (!state.profileData) return;
+            
+            elements.followingModalTitle.textContent = `People ${state.profileData.displayName || 'this user'} follows`;
+            elements.followingList.innerHTML = '<div class="text-center p-4"><div class="spinner spinner-sm"></div><p class="mt-2">Loading...</p></div>';
+            elements.followingModal.classList.add('active');
+            
+            try {
+                const followingSnapshot = await db.collection('followers')
+                    .where('followerId', '==', state.profileOwner)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                if (followingSnapshot.empty) {
+                    elements.followingList.innerHTML = `
+                        <div class="text-center p-4">
+                            <i class="fas fa-user-friends" style="font-size: 3rem; color: var(--text-tertiary); margin-bottom: var(--space-md);"></i>
+                            <p>Not following anyone yet</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Get following details
+                const followingIds = followingSnapshot.docs.map(doc => doc.data().followingId);
+                const followingProfiles = await Promise.all(
+                    followingIds.map(async (id) => {
+                        const doc = await db.collection('users').doc(id).get();
+                        return { uid: id, ...doc.data() };
+                    })
+                );
+                
+                elements.followingList.innerHTML = followingProfiles.map(user => `
+                    <div class="modal-user-item" onclick="viewUserProfile('${user.uid}')">
+                        <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="modal-user-avatar">
+                        <div class="modal-user-info">
+                            <div class="modal-user-name">
+                                ${user.displayName || 'User'}
+                                ${getBadges(user)}
+                            </div>
+                            <div class="modal-user-email">${user.email || ''}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading following:', error);
+                elements.followingList.innerHTML = `
+                    <div class="text-center p-4 text-error">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: var(--space-md);"></i>
+                        <p>Error loading following</p>
+                    </div>
+                `;
+            }
         }
 
         // ==================== LOAD PROFILE ====================
@@ -1609,6 +2250,15 @@
                     return;
                 }
 
+                // Check follow status
+                if (state.currentUser && !state.isOwner) {
+                    state.isFollowing = await checkFollowStatus(state.currentUser.uid, userId);
+                }
+
+                // Load follow counts
+                state.followersCount = state.profileData.followersCount || 0;
+                state.followingCount = state.profileData.followingCount || 0;
+
                 renderProfile(state.profileData);
                 
                 // Update last active if owner
@@ -1630,6 +2280,13 @@
             const memberDays = calculateMemberDays(data.createdAt);
             const lastActive = formatLastActive(data.lastActive);
             const verificationLevel = getVerificationLevel(data);
+
+            const followButton = !state.isOwner && state.currentUser ? `
+                <button class="btn ${state.isFollowing ? 'btn-following' : 'btn-primary'}" id="followBtn" onclick="toggleFollow()">
+                    <i class="fas fa-user-${state.isFollowing ? 'check' : 'plus'}"></i>
+                    ${state.isFollowing ? 'Following' : 'Follow'}
+                </button>
+            ` : '';
 
             const content = `
                 <div class="profile-section">
@@ -1684,6 +2341,17 @@
                                 </div>
                             </div>
                             
+                            <div class="follow-stats">
+                                <div class="follow-stat" onclick="showFollowers()">
+                                    <div class="follow-stat-value">${state.followersCount}</div>
+                                    <div class="follow-stat-label">Followers</div>
+                                </div>
+                                <div class="follow-stat" onclick="showFollowing()">
+                                    <div class="follow-stat-value">${state.followingCount}</div>
+                                    <div class="follow-stat-label">Following</div>
+                                </div>
+                            </div>
+                            
                             <div class="profile-actions">
                                 ${state.isOwner ? `
                                     <a href="https://aditya-cmd-max.github.io/dashboard#profile" class="btn btn-primary">
@@ -1693,7 +2361,7 @@
                                         <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
                                         ${data.isPublic ? 'Make Private' : 'Make Public'}
                                     </button>
-                                ` : ''}
+                                ` : followButton}
                                 
                                 <button class="btn btn-outline" onclick="shareProfile()">
                                     <i class="fas fa-share-alt"></i> Share
@@ -1701,7 +2369,7 @@
                                 
                                 ${state.currentUser?.email === ADMIN_EMAIL && !state.isOwner ? `
                                     <button class="btn btn-outline" onclick="openVerifyModal('${data.uid}', '${data.displayName || 'User'}', '${verificationLevel}')">
-                                        <i class="fas fa-shield-alt"></i> Manage Verification
+                                        <i class="fas fa-shield-alt"></i> Manage
                                     </button>
                                 ` : ''}
                             </div>
@@ -1758,12 +2426,8 @@
                     ...doc.data()
                 }));
                 
-                // Sort by last active
-                state.allUsers.sort((a, b) => {
-                    const dateA = a.lastActive ? new Date(a.lastActive) : new Date(0);
-                    const dateB = b.lastActive ? new Date(b.lastActive) : new Date(0);
-                    return dateB - dateA;
-                });
+                // Sort by followers count
+                state.allUsers.sort((a, b) => (b.followersCount || 0) - (a.followersCount || 0));
                 
                 console.log(`📊 Loaded ${state.allUsers.length} users`);
                 
@@ -1807,6 +2471,9 @@
                                 ${getBadges(user)}
                             </div>
                             <div class="search-result-email">${user.email || ''}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px;">
+                                <i class="fas fa-users"></i> ${user.followersCount || 0} followers
+                            </div>
                         </div>
                     </div>
                 `).join('');
@@ -1859,7 +2526,7 @@
                         <button class="filter-btn" onclick="filterUsers('unverified')">Unverified</button>
                     </div>
                     
-                    <div class="users-grid" id="usersGrid"></div>
+                    <div class="users-list" id="usersList"></div>
                     
                     <div class="pagination" id="pagination">
                         <button class="pagination-btn" id="prevPage" onclick="changePage('prev')" disabled>
@@ -1932,7 +2599,7 @@
             document.getElementById('nextPage').disabled = state.currentPage === totalPages || totalPages === 0;
             
             if (paginatedUsers.length === 0) {
-                document.getElementById('usersGrid').innerHTML = `
+                document.getElementById('usersList').innerHTML = `
                     <div class="no-results">
                         <i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: var(--space-lg);"></i>
                         <p>No users found</p>
@@ -1941,26 +2608,29 @@
                 return;
             }
             
-            document.getElementById('usersGrid').innerHTML = paginatedUsers.map(user => {
+            document.getElementById('usersList').innerHTML = paginatedUsers.map(user => {
                 const level = getVerificationLevel(user);
                 
                 return `
-                    <div class="user-card">
-                        <div class="user-card-info">
+                    <div class="user-row">
+                        <div class="user-row-info">
                             <div class="avatar avatar-md">
                                 <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}"
                                      onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
                             </div>
-                            <div class="user-card-details">
-                                <div class="user-card-name">
+                            <div class="user-row-details">
+                                <div class="user-row-name">
                                     ${user.displayName || 'User'}
                                     ${getBadges(user)}
                                 </div>
-                                <div class="user-card-email">${user.email || ''}</div>
+                                <div class="user-row-email">${user.email || ''}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px;">
+                                    <i class="fas fa-users"></i> ${user.followersCount || 0} followers
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="user-card-actions">
+                        <div class="user-row-actions">
                             <button class="btn btn-icon btn-ghost" onclick="viewUserProfile('${user.uid}')" title="View Profile">
                                 <i class="fas fa-eye"></i>
                             </button>
@@ -2219,7 +2889,7 @@
                 <div class="card text-center p-5">
                     <i class="fas fa-users" style="font-size: 4rem; color: var(--primary-500); margin-bottom: var(--space-lg);"></i>
                     <h2 class="mb-3">Welcome to Reverbit</h2>
-                    <p class="text-secondary mb-4">Sign in to view your profile or explore other users.</p>
+                    <p class="text-secondary mb-4">Sign in to view your profile, connect with others, and grow your network.</p>
                     <div class="flex gap-3 justify-center">
                         <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">Sign In</a>
                         <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-outline">Sign Up</a>
@@ -2329,6 +2999,9 @@
         window.confirmDelete = confirmDelete;
         window.closeModal = closeModal;
         window.togglePrivacy = togglePrivacy;
+        window.toggleFollow = toggleFollow;
+        window.showFollowers = showFollowers;
+        window.showFollowing = showFollowing;
         window.shareProfile = shareProfile;
         window.copyShareLink = copyShareLink;
         window.shareViaTwitter = shareViaTwitter;
@@ -2338,97 +3011,7 @@
         window.logout = logout;
         window.handleAvatarUpload = handleAvatarUpload;
 
-        console.log('✅ Reverbit Profile fully loaded');
+        console.log('✅ Reverbit Profile with Follow System fully loaded');
     </script>
-
-    <style>
-        /* Responsive Utilities */
-        @media (max-width: 640px) {
-            .hide-sm { display: none; }
-            
-            .btn {
-                padding: var(--space-sm) var(--space-md);
-            }
-            
-            .profile-name {
-                font-size: 1.8rem;
-            }
-            
-            .profile-stats {
-                grid-template-columns: 1fr;
-                gap: var(--space-sm);
-            }
-            
-            .stat {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: var(--space-xs) 0;
-            }
-            
-            .stat-value {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (min-width: 641px) and (max-width: 1024px) {
-            .profile-header {
-                grid-template-columns: 200px 1fr;
-            }
-            
-            .profile-avatar {
-                width: 180px;
-                height: 180px;
-            }
-        }
-
-        /* Form Elements */
-        .form-label {
-            display: block;
-            margin-bottom: var(--space-xs);
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fade-in {
-            animation: fadeIn var(--transition-base);
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .slide-in {
-            animation: slideIn var(--transition-bounce);
-        }
-
-        /* Print Styles */
-        @media print {
-            .header,
-            .search-section,
-            .profile-actions,
-            .btn {
-                display: none;
-            }
-            
-            .profile-section {
-                border: none;
-                box-shadow: none;
-            }
-        }
-    </style>
 </body>
 </html>
