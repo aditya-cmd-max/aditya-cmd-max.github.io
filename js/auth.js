@@ -1,4 +1,4 @@
-// auth.js - Complete Advanced Authentication System with Enhanced UI/UX
+// auth.js - Advanced Google-style Profile System with Dark Mode & Cloudinary
 class ReverbitAuth {
     constructor() {
         this.firebaseConfig = {
@@ -28,7 +28,6 @@ class ReverbitAuth {
         this.authListeners = [];
         this.profileObservers = [];
         this.themeObserver = null;
-        this.adminEmail = 'adityajha1104@gmail.com';
         
         // Performance tracking
         this.lastUpdate = 0;
@@ -318,54 +317,6 @@ class ReverbitAuth {
         });
     }
 
-    // ================= VERIFICATION HELPERS =================
-    isAdmin() {
-        return this.user?.email === this.adminEmail;
-    }
-
-    getVerificationLevel() {
-        if (!this.userProfile) return 'none';
-        
-        // Based on your Firestore rules - verified field in users collection
-        // Admin (adityajha1104@gmail.com) can set this field
-        if (this.userProfile.verified === true) {
-            return 'verified';
-        }
-        
-        return 'none';
-    }
-
-    isVerified() {
-        return this.userProfile?.verified === true;
-    }
-
-    getVerificationBadgeHTML() {
-        if (!this.isVerified()) return '';
-        
-        return `
-            <div class="verified-badge-popup verified" title="Verified Account">
-                <i class="fas fa-check-circle"></i>
-                Verified
-            </div>
-        `;
-    }
-
-    getAvatarBadgeHTML() {
-        if (!this.isVerified()) return '';
-        
-        return `
-            <div class="avatar-verified-badge verified" title="Verified Account">
-                <i class="fas fa-check"></i>
-            </div>
-        `;
-    }
-
-    getNameBadgeHTML() {
-        if (!this.isVerified()) return '';
-        
-        return `<i class="fas fa-check-circle name-badge verified" title="Verified Account"></i>`;
-    }
-
     // ================= AUTH LISTENERS =================
     addAuthListener(callback) {
         if (typeof callback === 'function') {
@@ -458,12 +409,7 @@ class ReverbitAuth {
                     // Update last active
                     await this.updateLastActive();
                     
-                    // Update streak
-                    await this.updateStreak();
-                    
                     console.log('Auth: User fully loaded:', this.user.email);
-                    console.log('Auth: Verified status:', this.userProfile.verified);
-                    console.log('Auth: Is admin:', this.isAdmin());
                     
                     // Show welcome for new users
                     this.showWelcomeMessage();
@@ -578,7 +524,6 @@ class ReverbitAuth {
                 this.userProfile = userDoc.data();
                 this.userProfile.uid = this.user.uid;
                 console.log('Auth: Loaded existing profile for:', this.user.email);
-                console.log('Auth: Verified status:', this.userProfile.verified);
                 
                 // Ensure all required fields exist
                 this.ensureProfileFields();
@@ -641,7 +586,6 @@ class ReverbitAuth {
             cloudinaryImageId: null,
             lastLogin: timestamp,
             lastActive: timestamp,
-            verified: false, // Only admin can set this to true
             preferences: {
                 notifications: true,
                 emailUpdates: true,
@@ -672,7 +616,6 @@ class ReverbitAuth {
             gender: '',
             showApps: true,
             streak: 0,
-            verified: false,
             totalLogins: this.userProfile.totalLogins || 1,
             preferences: this.userProfile.preferences || {
                 notifications: true,
@@ -730,8 +673,7 @@ class ReverbitAuth {
             isPublic: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            theme: this.currentTheme,
-            verified: false
+            theme: this.currentTheme
         };
         
         console.log('Auth: Created fallback profile');
@@ -760,6 +702,61 @@ class ReverbitAuth {
         } catch (error) {
             console.error('Auth: Failed to update profile:', error);
         }
+    }
+
+    // ================= VERIFICATION HELPERS =================
+    getVerificationLevel() {
+        if (!this.userProfile?.verified) return 'none';
+        
+        // Check for premium verification
+        if (this.userProfile.verifiedLevel === 'premium' || this.userProfile.premiumVerified) {
+            return 'premium';
+        }
+        
+        // Check for admin verification
+        if (this.userProfile.verifiedBy === 'admin' || this.userProfile.verifiedBy === 'adityajha1104@gmail.com') {
+            return 'basic';
+        }
+        
+        return this.userProfile.verifiedLevel || 'basic';
+    }
+
+    isVerified() {
+        return this.getVerificationLevel() !== 'none';
+    }
+
+    getVerificationBadgeHTML(level = null) {
+        const verificationLevel = level || this.getVerificationLevel();
+        
+        if (verificationLevel === 'none') return '';
+        
+        const isPremium = verificationLevel === 'premium';
+        const icon = isPremium ? 'crown' : 'check-circle';
+        const text = isPremium ? 'Premium Verified' : 'Verified';
+        const colorClass = isPremium ? 'premium' : '';
+        
+        return `
+            <div class="verified-badge-popup ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
+                <i class="fas fa-${icon}"></i>
+                ${text}
+            </div>
+        `;
+    }
+
+    getAvatarBadgeHTML() {
+        const verificationLevel = this.getVerificationLevel();
+        
+        if (verificationLevel === 'none') return '';
+        
+        const isPremium = verificationLevel === 'premium';
+        const icon = isPremium ? 'crown' : 'check';
+        const colorClass = isPremium ? 'premium' : '';
+        
+        return `
+            <div class="avatar-verified-badge ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
+                <i class="fas fa-${icon}"></i>
+            </div>
+        `;
     }
 
     // ================= PROFILE AVATAR UI =================
@@ -890,7 +887,9 @@ class ReverbitAuth {
         const uploadOverlay = document.createElement('div');
         uploadOverlay.className = 'reverbit-avatar-upload-overlay';
         uploadOverlay.innerHTML = `
-            <i class="fas fa-camera"></i>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
             <span class="upload-text">Upload</span>
         `;
         
@@ -1097,7 +1096,7 @@ class ReverbitAuth {
             `;
             
             menuItem.innerHTML = `
-                <i class="fas ${item.icon}" style="width: 16px; text-align: center;"></i>
+                <i class="fas ${item.icon}" style="width: 16px; height: 16px;"></i>
                 <span>${item.text}</span>
             `;
             
@@ -1196,26 +1195,24 @@ class ReverbitAuth {
         const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
         
         // Verification status
-        const isVerified = this.isVerified();
-        const isAdmin = this.isAdmin();
+        const verificationLevel = this.getVerificationLevel();
+        const isVerified = verificationLevel !== 'none';
+        const verificationBadge = isVerified ? this.getVerificationBadgeHTML() : '';
         
         // Streak display
         const streak = this.userProfile.streak || 0;
-        const streakDisplay = streak > 0 ? `<span class="streak-badge"><i class="fas fa-fire"></i> ${streak}</span>` : '';
+        const streakDisplay = streak > 0 ? `<span class="streak-badge">${streak} day${streak !== 1 ? 's' : ''}</span>` : '';
         
-        // Name badge
-        const nameBadge = this.getNameBadgeHTML();
-        
-        // Admin badge
-        const adminBadge = isAdmin ? '<span class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>' : '';
+        // Verified status text
+        const verifiedStatus = isVerified ? 
+            (verificationLevel === 'premium' ? 
+                '<span class="verified-status premium">Premium Verified</span>' : 
+                '<span class="verified-status">Verified</span>') : 
+            '';
         
         return `
             <div class="profile-popup-container">
-                <div class="profile-header ${isVerified ? 'verified-header' : ''}">
-                    <button class="popup-close-btn" id="popup-close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    
+                <div class="profile-header">
                     <div class="profile-avatar-large" id="profile-avatar-large" role="button" tabindex="0" aria-label="Upload profile picture">
                         <div class="avatar-container">
                             <img src="${photoURL}" alt="${displayName}" 
@@ -1227,17 +1224,16 @@ class ReverbitAuth {
                             <i class="fas fa-camera"></i>
                         </button>
                     </div>
-                    
                     <div class="profile-info">
                         <div class="profile-name-container">
-                            <span class="display-name">${displayName}</span>
-                            ${nameBadge}
-                            ${adminBadge}
+                            <div class="profile-name">${displayName}</div>
+                            ${verificationBadge}
                         </div>
                         <div class="profile-email">${email}</div>
                         <div class="profile-meta">
+                            ${verifiedStatus}
                             <span class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
+                                <i class="fas fa-calendar"></i>
                                 Joined ${this.formatDate(this.userProfile.createdAt)}
                             </span>
                             <span class="meta-item">
@@ -1245,35 +1241,10 @@ class ReverbitAuth {
                                 Last active ${this.formatRelativeTime(this.userProfile.lastActive)}
                             </span>
                         </div>
-                        
-                        ${isVerified ? `
-                        <div class="verification-status">
-                            <div class="verified-badge-popup verified">
-                                <i class="fas fa-check-circle"></i>
-                                Verified Account
-                            </div>
-                        </div>
-                        ` : ''}
-                        
                         <button class="change-avatar-btn" id="change-avatar-btn">
-                            <i class="fas fa-camera"></i>
-                            Change photo
+                            <i class="fas fa-edit"></i>
+                            Change profile picture
                         </button>
-                    </div>
-                </div>
-                
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">${this.userProfile.totalLogins || 1}</div>
-                        <div class="stat-label">Logins</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">${streak}</div>
-                        <div class="stat-label">Streak</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">${this.getMemberDays()}</div>
-                        <div class="stat-label">Days</div>
                     </div>
                 </div>
                 
@@ -1285,15 +1256,15 @@ class ReverbitAuth {
                             <i class="fas fa-tachometer-alt"></i>
                         </span>
                         <span class="profile-menu-text">Dashboard</span>
-                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
+                        <span class="menu-arrow">›</span>
                     </a>
                     
                     <a href="${profileUrl}" target="_blank" class="profile-menu-item" id="profile-public">
                         <span class="profile-menu-icon">
-                            <i class="fas fa-user-circle"></i>
+                            <i class="fas fa-user"></i>
                         </span>
                         <span class="profile-menu-text">My Profile</span>
-                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
+                        <span class="menu-arrow">›</span>
                     </a>
                     
                     ${isVerified ? `
@@ -1302,7 +1273,7 @@ class ReverbitAuth {
                             <i class="fas fa-shield-alt"></i>
                         </span>
                         <span class="profile-menu-text">Verification</span>
-                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
+                        <span class="menu-arrow">›</span>
                     </a>
                     ` : ''}
                     
@@ -1311,18 +1282,8 @@ class ReverbitAuth {
                             <i class="fas fa-cog"></i>
                         </span>
                         <span class="profile-menu-text">Settings</span>
-                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
+                        <span class="menu-arrow">›</span>
                     </button>
-                    
-                    ${isAdmin ? `
-                    <button class="profile-menu-item" id="admin-panel-btn">
-                        <span class="profile-menu-icon">
-                            <i class="fas fa-crown"></i>
-                        </span>
-                        <span class="profile-menu-text">Admin Panel</span>
-                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
-                    </button>
-                    ` : ''}
                     
                     <div class="profile-divider"></div>
                     
@@ -1331,16 +1292,30 @@ class ReverbitAuth {
                             <i class="fas fa-sign-out-alt"></i>
                         </span>
                         <span class="profile-menu-text">Sign out</span>
-                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
+                        <span class="menu-arrow">›</span>
                     </button>
                 </div>
                 
                 <div class="profile-footer">
-                    <div class="footer-links">
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${this.userProfile.totalLogins || 1}</div>
+                            <div class="stat-label">Logins</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${streak}</div>
+                            <div class="stat-label">Streak</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${this.getMemberDays()}</div>
+                            <div class="stat-label">Days</div>
+                        </div>
+                    </div>
+                    <div class="privacy-link">
                         <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank">Privacy</a>
-                        <span class="dot">•</span>
+                        •
                         <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank">Terms</a>
-                        <span class="dot">•</span>
+                        •
                         <a href="https://aditya-cmd-max.github.io/reverbit/help" target="_blank">Help</a>
                     </div>
                 </div>
@@ -1350,16 +1325,6 @@ class ReverbitAuth {
 
     attachPopupEventListeners() {
         if (!this.profilePopup) return;
-        
-        // Close button
-        const closeBtn = this.profilePopup.querySelector('#popup-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.hideProfilePopup();
-            });
-        }
         
         // Sign out
         const signoutBtn = this.profilePopup.querySelector('#profile-signout');
@@ -1376,15 +1341,6 @@ class ReverbitAuth {
             settingsBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 window.open('https://aditya-cmd-max.github.io/dashboard#settings', '_blank');
-            });
-        }
-        
-        // Admin panel
-        const adminBtn = this.profilePopup.querySelector('#admin-panel-btn');
-        if (adminBtn) {
-            adminBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.open('https://aditya-cmd-max.github.io/admin', '_blank');
             });
         }
         
@@ -1466,7 +1422,20 @@ class ReverbitAuth {
         const spaceRight = viewportWidth - avatarRect.right - 16;
         const spaceLeft = avatarRect.left - 16;
         
-        // Check if popup would go off the right edge
+        console.log('Positioning debug:', {
+            avatarRect,
+            popupRect,
+            viewportWidth,
+            viewportHeight,
+            spaceBelow,
+            spaceAbove,
+            spaceRight,
+            spaceLeft
+        });
+        
+        // ===== FIXED POSITIONING LOGIC =====
+        
+        // 1. Check if popup would go off the right edge
         if (left + popupRect.width > viewportWidth) {
             // Try to position from the right edge of the avatar
             left = avatarRect.right - popupRect.width;
@@ -1477,12 +1446,12 @@ class ReverbitAuth {
             }
         }
         
-        // Check if popup would go off the left edge
+        // 2. Check if popup would go off the left edge
         if (left < 16) {
             left = 16;
         }
         
-        // Vertical positioning - check if enough space below
+        // 3. Vertical positioning - check if enough space below
         if (spaceBelow < popupRect.height) {
             // Not enough space below, try above
             if (spaceAbove >= popupRect.height) {
@@ -1493,9 +1462,11 @@ class ReverbitAuth {
             }
         }
         
-        // Ensure final position is within bounds
+        // 4. Ensure final position is within bounds
         left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
         top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
+        
+        console.log('Final position:', { top, left });
         
         // Apply position
         this.profilePopup.style.top = `${top}px`;
@@ -1515,7 +1486,7 @@ class ReverbitAuth {
         // Add backdrop
         this.addPopupBackdrop();
         
-        console.log('Auth: Profile popup shown');
+        console.log('Auth: Profile popup shown at', { top, left });
     }
 
     hideProfilePopup() {
@@ -1589,13 +1560,6 @@ class ReverbitAuth {
         
         this.removePopupBackdrop();
         document.removeEventListener('click', this.handleClickOutside);
-    }
-
-    removeProfileAvatar() {
-        if (this.profileAvatar && this.profileAvatar.parentNode) {
-            this.profileAvatar.parentNode.removeChild(this.profileAvatar);
-            this.profileAvatar = null;
-        }
     }
 
     // ================= AVATAR UPLOAD =================
@@ -1914,22 +1878,6 @@ class ReverbitAuth {
         }
     }
 
-    // ================= USAGE TRACKING =================
-    async trackUsage(appName, minutes) {
-        if (!this.user || !this.db) return;
-        
-        try {
-            const usageRef = this.db.collection('usage').doc(this.user.uid);
-            await usageRef.set({
-                [appName]: firebase.firestore.FieldValue.increment(minutes),
-                lastUsed: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }, { merge: true });
-        } catch (error) {
-            console.error('Auth: Usage tracking error:', error);
-        }
-    }
-
     // ================= UTILITIES =================
     formatDate(dateString) {
         if (!dateString) return 'Recently';
@@ -2045,6 +1993,21 @@ class ReverbitAuth {
         }, 10 * 60 * 1000);
     }
 
+    async trackUsage(appName, minutes) {
+        if (!this.user || !this.db) return;
+        
+        try {
+            const usageRef = this.db.collection('usage').doc(this.user.uid);
+            await usageRef.set({
+                [appName]: firebase.firestore.FieldValue.increment(minutes),
+                lastUsed: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            }, { merge: true });
+        } catch (error) {
+            console.error('Auth: Usage tracking error:', error);
+        }
+    }
+
     // ================= LOGOUT =================
     async logout() {
         try {
@@ -2108,6 +2071,97 @@ class ReverbitAuth {
             </div>
         `;
         
+        // Add styles if not already added
+        if (!document.getElementById('toast-styles')) {
+            const style = document.createElement('style');
+            style.id = 'toast-styles';
+            style.textContent = `
+                .reverbit-toast {
+                    position: fixed;
+                    bottom: 24px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(100px);
+                    background: #202124;
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 10003;
+                    opacity: 0;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    max-width: 90%;
+                    width: max-content;
+                    min-width: 300px;
+                    pointer-events: none;
+                }
+                
+                .reverbit-toast.show {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                    pointer-events: all;
+                }
+                
+                .toast-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                
+                .toast-icon {
+                    font-size: 18px;
+                }
+                
+                .toast-message {
+                    flex: 1;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                
+                .toast-close {
+                    background: none;
+                    border: none;
+                    color: rgba(255,255,255,0.7);
+                    cursor: pointer;
+                    padding: 4px;
+                    border-radius: 4px;
+                    transition: color 0.2s ease;
+                }
+                
+                .toast-close:hover {
+                    color: white;
+                }
+                
+                .reverbit-toast-success {
+                    background: #34a853;
+                }
+                
+                .reverbit-toast-error {
+                    background: #ea4335;
+                }
+                
+                .reverbit-toast-warning {
+                    background: #fbbc05;
+                    color: #202124;
+                }
+                
+                .reverbit-toast-info {
+                    background: #1a73e8;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Add close button event
+        const closeBtn = toast.querySelector('.toast-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            });
+        }
+        
         document.body.appendChild(toast);
         
         // Show
@@ -2122,17 +2176,6 @@ class ReverbitAuth {
                 if (toast.parentNode) toast.parentNode.removeChild(toast);
             }, 300);
         }, type === 'error' ? 5000 : 3000);
-        
-        // Close button
-        const closeBtn = toast.querySelector('.toast-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    if (toast.parentNode) toast.parentNode.removeChild(toast);
-                }, 300);
-            });
-        }
     }
 
     // ================= STYLES INJECTION =================
@@ -2143,15 +2186,15 @@ class ReverbitAuth {
         }
         
         const styles = `
-            /* Reverbit Advanced Auth System Styles - Enhanced UI/UX */
+            /* Reverbit Advanced Auth System Styles */
             
             /* Profile Avatar */
             .reverbit-profile-avatar {
-                width: 42px;
-                height: 42px;
+                width: 40px;
+                height: 40px;
                 border-radius: 50%;
                 border: 2px solid transparent;
-                padding: 0;
+                padding: 2px;
                 background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335) border-box;
                 cursor: pointer;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2161,12 +2204,12 @@ class ReverbitAuth {
                 position: relative;
                 display: block;
                 outline: none;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             
             .reverbit-profile-avatar:hover {
-                transform: scale(1.08);
-                box-shadow: 0 4px 16px rgba(66, 133, 244, 0.3);
+                transform: scale(1.1);
+                box-shadow: 0 4px 20px rgba(66, 133, 244, 0.3);
+                border-color: rgba(66, 133, 244, 0.5);
             }
             
             .reverbit-profile-avatar:focus-visible {
@@ -2174,25 +2217,42 @@ class ReverbitAuth {
                 outline-offset: 2px;
             }
             
+            .reverbit-profile-avatar.loading .reverbit-avatar-img {
+                opacity: 0.5;
+            }
+            
+            .reverbit-profile-avatar.uploading {
+                position: relative;
+            }
+            
+            .reverbit-profile-avatar.uploading::after {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border: 2px solid transparent;
+                border-top-color: #4285f4;
+                border-radius: 50%;
+                animation: avatar-spin 1s linear infinite;
+                pointer-events: none;
+            }
+            
             .reverbit-avatar-container {
                 position: relative;
                 width: 100%;
                 height: 100%;
-                border-radius: 50%;
-                overflow: hidden;
             }
             
             .reverbit-avatar-img {
                 width: 100%;
                 height: 100%;
+                border-radius: 50%;
                 object-fit: cover;
                 display: block;
                 background: linear-gradient(135deg, #f5f5f5, #e8eaed);
-                transition: transform 0.3s ease;
-            }
-            
-            .reverbit-profile-avatar:hover .reverbit-avatar-img {
-                transform: scale(1.1);
+                transition: opacity 0.3s ease;
             }
             
             /* Avatar Verification Badge */
@@ -2200,47 +2260,39 @@ class ReverbitAuth {
                 position: absolute;
                 bottom: -2px;
                 right: -2px;
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
                 border-radius: 50%;
-                background: #1a73e8;
+                background: linear-gradient(135deg, #1a73e8, #0d8a72);
                 color: white;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 border: 2px solid white;
                 z-index: 2;
-                font-size: 10px;
+                font-size: 8px;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                animation: verified-pulse 2s infinite;
             }
             
-            .avatar-verified-badge i {
-                font-size: 10px;
+            .dark-theme .avatar-verified-badge {
+                border-color: #202124;
             }
             
-            /* Name Badge */
-            .name-badge.verified {
-                color: #1a73e8;
-                font-size: 18px;
-                margin-left: 4px;
+            .avatar-verified-badge.premium {
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #000;
             }
             
-            /* Admin Badge */
-            .admin-badge {
-                background: #fbbc05;
-                color: #202124;
-                font-size: 11px;
-                font-weight: 600;
-                padding: 2px 8px;
-                border-radius: 12px;
-                margin-left: 6px;
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-            }
-            
-            .admin-badge i {
-                font-size: 10px;
+            @keyframes verified-pulse {
+                0%, 100% { 
+                    opacity: 0.9;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                }
+                50% { 
+                    opacity: 1;
+                    box-shadow: 0 0 12px rgba(26, 115, 232, 0.4);
+                }
             }
             
             .reverbit-avatar-upload-overlay {
@@ -2249,7 +2301,7 @@ class ReverbitAuth {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.6);
+                background: rgba(0, 0, 0, 0.7);
                 border-radius: 50%;
                 display: flex;
                 flex-direction: column;
@@ -2259,18 +2311,21 @@ class ReverbitAuth {
                 transition: opacity 0.3s ease;
                 pointer-events: none;
                 color: white;
-                font-size: 12px;
-                gap: 2px;
-                backdrop-filter: blur(2px);
+                font-size: 10px;
+                text-align: center;
+                padding: 4px;
             }
             
-            .reverbit-avatar-upload-overlay i {
-                font-size: 16px;
+            .reverbit-avatar-upload-overlay svg {
+                width: 12px;
+                height: 12px;
+                margin-bottom: 2px;
             }
             
             .reverbit-avatar-upload-overlay .upload-text {
-                font-size: 9px;
+                font-size: 8px;
                 font-weight: 600;
+                line-height: 1;
             }
             
             .reverbit-avatar-loading {
@@ -2279,21 +2334,20 @@ class ReverbitAuth {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,0.6);
+                background: rgba(0,0,0,0.5);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                z-index: 3;
             }
             
             .reverbit-avatar-loading .spinner {
-                width: 24px;
-                height: 24px;
+                width: 20px;
+                height: 20px;
                 border: 2px solid rgba(255,255,255,0.3);
                 border-top-color: white;
                 border-radius: 50%;
-                animation: avatar-spin 0.8s linear infinite;
+                animation: avatar-spin 1s linear infinite;
             }
             
             @keyframes avatar-spin {
@@ -2304,65 +2358,41 @@ class ReverbitAuth {
             /* Profile Popup */
             .reverbit-profile-popup {
                 position: fixed;
+                top: 0;
+                left: 0;
                 background: #ffffff;
-                border-radius: 20px;
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
-                min-width: 360px;
-                max-width: 400px;
+                border-radius: 16px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 16px 48px rgba(0, 0, 0, 0.08);
+                min-width: 340px;
+                max-width: 380px;
                 z-index: 9999;
                 overflow: hidden;
                 opacity: 0;
                 transform: scale(0.95);
-                transition: opacity 0.2s ease, transform 0.2s ease;
-                border: 1px solid #e8eaed;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                            transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid #dadce0;
+                font-family: 'Google Sans', 'Roboto', 'Segoe UI', Arial, sans-serif;
                 max-height: 90vh;
                 overflow-y: auto;
             }
             
             .profile-popup-container {
-                padding: 0;
-            }
-            
-            .popup-close-btn {
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                background: rgba(0,0,0,0.05);
-                border: none;
-                color: #5f6368;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                z-index: 10;
-                font-size: 14px;
-            }
-            
-            .popup-close-btn:hover {
-                background: rgba(0,0,0,0.1);
-                transform: scale(1.1);
+                padding: 24px;
             }
             
             .profile-header {
-                padding: 32px 24px 20px;
-                background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
-                position: relative;
-            }
-            
-            .profile-header.verified-header {
-                background: linear-gradient(135deg, #e8f0fe, #f0f4fe);
+                display: flex;
+                align-items: flex-start;
+                gap: 20px;
+                padding-bottom: 20px;
             }
             
             .profile-avatar-large {
                 position: relative;
-                width: 96px;
-                height: 96px;
-                margin: 0 auto 16px;
+                width: 80px;
+                height: 80px;
+                flex-shrink: 0;
             }
             
             .profile-avatar-large .avatar-container {
@@ -2370,45 +2400,11 @@ class ReverbitAuth {
                 height: 100%;
                 border-radius: 50%;
                 overflow: hidden;
-                border: 4px solid #ffffff;
-                background: #ffffff;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                border: 4px solid #f5f5f5;
+                background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
+                padding: 4px;
                 position: relative;
                 cursor: pointer;
-            }
-            
-            .profile-avatar-large .avatar-container img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 0.3s ease;
-            }
-            
-            .profile-avatar-large:hover .avatar-container img {
-                transform: scale(1.1);
-            }
-            
-            .avatar-upload-btn {
-                position: absolute;
-                bottom: 4px;
-                right: 4px;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                background: #1a73e8;
-                border: 2px solid #ffffff;
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                padding: 0;
-                font-size: 14px;
-                z-index: 3;
-                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-                opacity: 0;
-                transform: scale(0.8);
             }
             
             .profile-avatar-large:hover .avatar-upload-btn {
@@ -2416,98 +2412,153 @@ class ReverbitAuth {
                 transform: scale(1);
             }
             
-            .avatar-upload-btn:hover {
-                background: #1557b0;
-                transform: scale(1.1);
+            .profile-avatar-large img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                background: #ffffff;
+                transition: transform 0.3s ease;
+            }
+            
+            .profile-avatar-large:hover img {
+                transform: scale(1.05);
+            }
+            
+            .avatar-upload-btn {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: #1a73e8;
+                border: 2px solid white;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                opacity: 0;
+                transition: all 0.3s ease;
+                padding: 0;
+                font-size: 12px;
+                z-index: 3;
             }
             
             .streak-badge {
                 position: absolute;
-                top: -4px;
-                right: -4px;
+                top: -8px;
+                right: -8px;
                 background: #fbbc05;
                 color: #202124;
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 700;
-                padding: 4px 8px;
-                border-radius: 20px;
+                padding: 3px 6px;
+                border-radius: 10px;
                 border: 2px solid white;
                 z-index: 2;
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                box-shadow: 0 2px 6px rgba(251, 188, 5, 0.3);
-            }
-            
-            .streak-badge i {
-                font-size: 10px;
             }
             
             .profile-info {
-                text-align: center;
+                flex: 1;
+                min-width: 0;
             }
             
             .profile-name-container {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                gap: 6px;
-                margin-bottom: 4px;
+                gap: 8px;
                 flex-wrap: wrap;
+                margin-bottom: 4px;
             }
             
-            .display-name {
-                font-size: 20px;
+            .profile-name {
+                font-size: 18px;
                 font-weight: 600;
                 color: #202124;
+                line-height: 1.4;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            /* Popup Verification Badge */
+            .verified-badge-popup {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: linear-gradient(135deg, #1a73e8, #0d8a72);
+                color: white;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: 600;
+                box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
+                animation: verified-pulse 2s infinite;
+                white-space: nowrap;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .verified-badge-popup i {
+                font-size: 9px;
+            }
+            
+            .verified-badge-popup.premium {
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #000;
+                box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
             }
             
             .profile-email {
                 font-size: 14px;
                 color: #5f6368;
-                margin-bottom: 12px;
-                word-break: break-word;
+                line-height: 1.4;
+                margin-bottom: 8px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
             .profile-meta {
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 12px;
+                flex-direction: column;
+                gap: 4px;
                 margin-bottom: 12px;
                 font-size: 12px;
                 color: #5f6368;
             }
             
+            .verified-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                color: #0d8a72;
+                font-weight: 600;
+                font-size: 11px;
+                background: rgba(13, 138, 114, 0.1);
+                padding: 2px 6px;
+                border-radius: 8px;
+                margin-bottom: 4px;
+            }
+            
+            .verified-status.premium {
+                color: #FFA500;
+                background: rgba(255, 215, 0, 0.1);
+            }
+            
             .meta-item {
                 display: flex;
                 align-items: center;
-                gap: 4px;
+                gap: 6px;
             }
             
             .meta-item i {
-                font-size: 12px;
-            }
-            
-            .verification-status {
-                margin: 12px 0;
-            }
-            
-            .verified-badge-popup.verified {
-                display: inline-flex;
+                width: 12px;
+                height: 12px;
+                display: flex;
                 align-items: center;
-                gap: 6px;
-                background: #1a73e8;
-                color: white;
-                padding: 4px 12px;
-                border-radius: 30px;
-                font-size: 12px;
-                font-weight: 500;
-                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-            }
-            
-            .verified-badge-popup i {
-                font-size: 12px;
+                justify-content: center;
             }
             
             .change-avatar-btn {
@@ -2515,56 +2566,28 @@ class ReverbitAuth {
                 color: #1a73e8;
                 background: #e8f0fe;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 30px;
+                padding: 6px 12px;
+                border-radius: 6px;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 font-weight: 500;
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
-                margin-top: 8px;
             }
             
             .change-avatar-btn:hover {
                 background: #d2e3fc;
-            }
-            
-            .profile-stats {
-                display: flex;
-                justify-content: space-around;
-                padding: 16px 24px;
-                background: #f8f9fa;
-                border-top: 1px solid #e8eaed;
-                border-bottom: 1px solid #e8eaed;
-            }
-            
-            .stat-item {
-                text-align: center;
-            }
-            
-            .stat-number {
-                font-size: 20px;
-                font-weight: 700;
-                color: #1a73e8;
-                line-height: 1.2;
-            }
-            
-            .stat-label {
-                font-size: 11px;
-                color: #5f6368;
-                text-transform: uppercase;
-                letter-spacing: 0.3px;
+                transform: translateY(-1px);
             }
             
             .profile-divider {
                 height: 1px;
                 background: #e8eaed;
-                margin: 0 24px;
+                margin: 20px -24px;
             }
             
             .profile-menu {
-                padding: 16px 24px;
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
@@ -2586,18 +2609,26 @@ class ReverbitAuth {
                 background: none;
                 width: 100%;
                 text-align: left;
+                position: relative;
             }
             
             .profile-menu-item:hover {
+                background: #f8f9fa;
+                transform: translateX(4px);
+            }
+            
+            .profile-menu-item:active {
                 background: #f1f3f4;
             }
             
             .profile-menu-icon {
                 width: 20px;
-                color: #5f6368;
+                height: 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                color: #5f6368;
+                flex-shrink: 0;
             }
             
             .profile-menu-text {
@@ -2606,37 +2637,70 @@ class ReverbitAuth {
             
             .menu-arrow {
                 color: #9aa0a6;
-                font-size: 12px;
+                font-size: 16px;
+                opacity: 0.7;
             }
             
             .profile-footer {
-                padding: 16px 24px 24px;
-                text-align: center;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #e8eaed;
             }
             
-            .footer-links {
-                font-size: 12px;
-                color: #9aa0a6;
+            .profile-stats {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 16px;
             }
             
-            .footer-links a {
+            .stat-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            
+            .stat-number {
+                font-size: 20px;
+                font-weight: 700;
+                color: #1a73e8;
+                line-height: 1;
+            }
+            
+            .stat-label {
+                font-size: 11px;
                 color: #5f6368;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .privacy-link {
+                font-size: 12px;
+                color: #5f6368;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            
+            .privacy-link a {
+                color: #1a73e8;
                 text-decoration: none;
                 transition: color 0.2s ease;
-                margin: 0 4px;
             }
             
-            .footer-links a:hover {
-                color: #1a73e8;
-            }
-            
-            .footer-links .dot {
-                color: #dadce0;
+            .privacy-link a:hover {
+                text-decoration: underline;
             }
             
             .profile-loading {
-                padding: 48px;
-                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 40px;
+                gap: 16px;
             }
             
             .loading-spinner {
@@ -2645,26 +2709,17 @@ class ReverbitAuth {
                 border: 3px solid #e8eaed;
                 border-top-color: #1a73e8;
                 border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin: 0 auto 16px;
-            }
-            
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
+                animation: avatar-spin 1s linear infinite;
             }
             
             /* Dark Theme */
             .dark-theme .reverbit-profile-popup {
                 background: #202124;
                 border-color: #3c4043;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             }
             
-            .dark-theme .profile-header {
-                background: linear-gradient(to bottom, #2d2e31 0%, #202124 100%);
-            }
-            
-            .dark-theme .display-name {
+            .dark-theme .profile-name {
                 color: #e8eaed;
             }
             
@@ -2685,19 +2740,6 @@ class ReverbitAuth {
                 background: #3c4043;
             }
             
-            .dark-theme .profile-stats {
-                background: #2d2e31;
-                border-color: #3c4043;
-            }
-            
-            .dark-theme .stat-number {
-                color: #8ab4f8;
-            }
-            
-            .dark-theme .stat-label {
-                color: #9aa0a6;
-            }
-            
             .dark-theme .profile-divider {
                 background: #3c4043;
             }
@@ -2710,6 +2752,10 @@ class ReverbitAuth {
                 background: #2d2e31;
             }
             
+            .dark-theme .profile-menu-item:active {
+                background: #3c4043;
+            }
+            
             .dark-theme .profile-menu-icon {
                 color: #9aa0a6;
             }
@@ -2718,113 +2764,94 @@ class ReverbitAuth {
                 color: #9aa0a6;
             }
             
-            .dark-theme .footer-links a {
-                color: #9aa0a6;
+            .dark-theme .profile-footer {
+                border-top-color: #3c4043;
             }
             
-            .dark-theme .footer-links a:hover {
+            .dark-theme .stat-number {
                 color: #8ab4f8;
             }
             
-            .dark-theme .popup-close-btn {
+            .dark-theme .stat-label {
                 color: #9aa0a6;
-                background: rgba(255,255,255,0.1);
             }
             
-            .dark-theme .popup-close-btn:hover {
-                background: rgba(255,255,255,0.15);
+            .dark-theme .privacy-link {
+                color: #9aa0a6;
             }
             
-            /* Toast Notifications */
-            .reverbit-toast {
+            .dark-theme .privacy-link a {
+                color: #8ab4f8;
+            }
+            
+            .dark-theme .profile-avatar-large .avatar-container {
+                border-color: #303134;
+            }
+            
+            .dark-theme .avatar-upload-btn {
+                background: #8ab4f8;
+                border-color: #202124;
+            }
+            
+            .dark-theme .streak-badge {
+                border-color: #202124;
+            }
+            
+            /* Responsive */
+            @media (max-width: 640px) {
+                .reverbit-profile-popup {
+                    position: fixed;
+                    top: 50% !important;
+                    left: 50% !important;
+                    right: auto !important;
+                    transform: translate(-50%, -50%) scale(0.95) !important;
+                    width: calc(100vw - 40px);
+                    max-width: 400px;
+                    max-height: 80vh;
+                }
+                
+                .reverbit-profile-popup.active {
+                    transform: translate(-50%, -50%) scale(1) !important;
+                }
+                
+                .profile-header {
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                }
+                
+                .profile-info {
+                    text-align: center;
+                }
+                
+                .reverbit-floating-header {
+                    top: 8px;
+                    right: 8px;
+                    padding: 6px 10px;
+                }
+            }
+            
+            /* Floating Header */
+            .reverbit-floating-header {
                 position: fixed;
-                bottom: 24px;
-                left: 50%;
-                transform: translateX(-50%) translateY(100px);
-                background: #202124;
-                color: white;
-                padding: 12px 20px;
-                border-radius: 30px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                z-index: 10003;
-                opacity: 0;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                max-width: 90%;
-                min-width: 300px;
-                pointer-events: none;
-            }
-            
-            .reverbit-toast.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-                pointer-events: all;
-            }
-            
-            .toast-content {
+                top: 16px;
+                right: 16px;
+                z-index: 9998;
                 display: flex;
                 align-items: center;
                 gap: 12px;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+                border: 1px solid #dadce0;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
             }
             
-            .toast-icon {
-                font-size: 18px;
-            }
-            
-            .toast-message {
-                flex: 1;
-                font-size: 14px;
-                font-weight: 500;
-            }
-            
-            .toast-close {
-                background: none;
-                border: none;
-                color: rgba(255,255,255,0.7);
-                cursor: pointer;
-                padding: 4px;
-                border-radius: 50%;
-                transition: all 0.2s ease;
-                width: 24px;
-                height: 24px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .toast-close:hover {
-                background: rgba(255,255,255,0.2);
-                color: white;
-            }
-            
-            .reverbit-toast-success {
-                background: #34a853;
-            }
-            
-            .reverbit-toast-error {
-                background: #ea4335;
-            }
-            
-            .reverbit-toast-warning {
-                background: #fbbc05;
-                color: #202124;
-            }
-            
-            .reverbit-toast-info {
-                background: #1a73e8;
-            }
-            
-            /* Popup Backdrop */
-            .popup-backdrop {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.4);
-                backdrop-filter: blur(4px);
-                z-index: 9997;
-                opacity: 0;
-                transition: opacity 0.2s ease;
+            .dark-theme .reverbit-floating-header {
+                background: rgba(32, 33, 36, 0.9);
+                border-color: #3c4043;
             }
             
             /* Context Menu */
@@ -2832,15 +2859,15 @@ class ReverbitAuth {
                 position: fixed;
                 background: #ffffff;
                 border: 1px solid #dadce0;
-                border-radius: 12px;
-                box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
                 z-index: 10001;
-                min-width: 200px;
+                min-width: 180px;
                 overflow: hidden;
-                animation: menu-appear 0.2s ease;
+                animation: menu-fade-in 0.2s ease;
             }
             
-            @keyframes menu-appear {
+            @keyframes menu-fade-in {
                 from {
                     opacity: 0;
                     transform: scale(0.95);
@@ -2859,12 +2886,13 @@ class ReverbitAuth {
             .context-menu-item {
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 10px;
                 width: 100%;
-                padding: 12px 16px;
+                padding: 10px 16px;
                 border: none;
                 background: none;
                 color: #202124;
+                font-family: inherit;
                 font-size: 14px;
                 text-align: left;
                 cursor: pointer;
@@ -2876,21 +2904,25 @@ class ReverbitAuth {
             }
             
             .context-menu-item:hover {
-                background: #f1f3f4;
+                background: #f8f9fa;
             }
             
             .dark-theme .context-menu-item:hover {
                 background: #2d2e31;
             }
             
-            .context-menu-item i {
-                width: 16px;
-                text-align: center;
-                color: #5f6368;
-            }
-            
-            .dark-theme .context-menu-item i {
-                color: #9aa0a6;
+            /* Popup Backdrop */
+            .popup-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.4);
+                backdrop-filter: blur(2px);
+                z-index: 9997;
+                opacity: 0;
+                transition: opacity 0.2s ease;
             }
             
             /* Camera Modal */
@@ -2908,43 +2940,12 @@ class ReverbitAuth {
                 justify-content: center;
             }
             
-            /* Floating Header */
-            .reverbit-floating-header {
-                position: fixed;
-                top: 16px;
-                right: 16px;
-                z-index: 9998;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                padding: 6px 8px;
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(12px);
-                border-radius: 40px;
-                border: 1px solid rgba(218, 220, 224, 0.5);
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-                transition: all 0.3s ease;
-            }
-            
-            .dark-theme .reverbit-floating-header {
-                background: rgba(32, 33, 36, 0.9);
-                border-color: rgba(60, 64, 67, 0.5);
-            }
-            
-            /* Responsive */
-            @media (max-width: 640px) {
-                .reverbit-profile-popup {
-                    position: fixed;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) scale(0.95) !important;
-                    width: calc(100vw - 40px);
-                    max-width: 360px;
-                }
-                
-                .reverbit-profile-popup[style*="display: block"] {
-                    transform: translate(-50%, -50%) scale(1) !important;
-                }
+            /* Accessibility */
+            .reverbit-profile-avatar:focus-visible,
+            .profile-menu-item:focus-visible,
+            .change-avatar-btn:focus-visible {
+                outline: 2px solid #1a73e8;
+                outline-offset: 2px;
             }
         `;
         
@@ -2953,7 +2954,7 @@ class ReverbitAuth {
         styleEl.textContent = styles;
         document.head.appendChild(styleEl);
         
-        console.log('Auth: Enhanced styles injected');
+        console.log('Auth: Advanced styles injected');
     }
 
     // ================= PUBLIC API =================
@@ -2991,17 +2992,6 @@ class ReverbitAuth {
             Object.assign(this.userProfile, updates, { updatedAt: new Date().toISOString() });
             localStorage.setItem('reverbit_user_profile', JSON.stringify(this.userProfile));
             
-            // Update UI if displayName changed
-            if (updates.displayName && this.profileAvatar) {
-                this.updateProfileAvatar();
-            }
-            
-            // Refresh popup if open
-            if (this.profilePopup && this.profilePopup.style.display === 'block') {
-                this.profilePopup.innerHTML = this.getPopupHTML();
-                this.attachPopupEventListeners();
-            }
-            
             return true;
         } catch (error) {
             console.error('Auth: Profile update error:', error);
@@ -3025,13 +3015,11 @@ class ReverbitAuth {
 // ================= GLOBAL INSTANCE & FUNCTIONS =================
 window.ReverbitAuth = new ReverbitAuth();
 
-// Debug function
+// Debug functions
 window.debugAuth = async function() {
     console.log('=== AUTH DEBUG ===');
     console.log('User:', window.ReverbitAuth.getUser());
     console.log('Profile:', window.ReverbitAuth.getUserProfile());
-    console.log('Verified:', window.ReverbitAuth.isVerified());
-    console.log('Is Admin:', window.ReverbitAuth.isAdmin());
     console.log('Theme:', window.ReverbitAuth.getCurrentTheme());
     console.log('Dark Mode:', window.ReverbitAuth.isDarkModeActive());
     console.log('Local Storage:', {
@@ -3131,4 +3119,4 @@ window.addEventListener('storage', (e) => {
 // Make auth globally accessible
 window.auth = window.ReverbitAuth;
 
-console.log('Reverbit Advanced Auth System with Enhanced UI/UX loaded successfully');
+console.log('Reverbit Advanced Auth System loaded successfully');
