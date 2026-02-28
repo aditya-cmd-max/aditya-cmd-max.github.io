@@ -3013,5 +3013,130 @@
 
         console.log('✅ Reverbit Profile with Follow System fully loaded');
     </script>
+
+<script>
+
+    // ==================== IMPROVED SEARCH FUNCTION ====================
+async function searchUsers(query) {
+    query = query.trim().toLowerCase();
+    
+    if (!query || query.length < 2) {
+        elements.searchResults.classList.remove('show');
+        return;
+    }
+    
+    // Show loading state
+    elements.searchResults.innerHTML = `
+        <div class="text-center p-4">
+            <div class="spinner spinner-sm"></div>
+            <p class="mt-2">Searching...</p>
+        </div>
+    `;
+    elements.searchResults.classList.add('show');
+    
+    try {
+        // Get ALL users first (limited to 50 for performance)
+        // In production, you'd want pagination or a search service
+        const snapshot = await db.collection('users')
+            .limit(50)
+            .get();
+        
+        const allUsers = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        }));
+        
+        // Filter in memory (client-side)
+        const results = allUsers
+            .filter(user => {
+                // Only show public profiles or the current user's own profile
+                if (!user.isPublic && user.uid !== state.currentUser?.uid) {
+                    return false;
+                }
+                
+                // Search in name, email, username
+                const searchableFields = [
+                    user.displayName,
+                    user.email,
+                    user.username,
+                    user.bio
+                ].filter(Boolean).map(field => field.toLowerCase());
+                
+                return searchableFields.some(field => field.includes(query));
+            })
+            .slice(0, 10); // Limit to 10 results
+        
+        if (results.length === 0) {
+            elements.searchResults.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--text-tertiary);"></i>
+                    <p>No users found matching "${query}"</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Display results
+        elements.searchResults.innerHTML = results.map(user => `
+            <div class="search-result-item" onclick="viewUserProfile('${user.uid}')">
+                <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="search-result-avatar"
+                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                <div class="search-result-info">
+                    <div class="search-result-name">
+                        ${user.displayName || 'User'}
+                        ${getBadges(user)}
+                        ${!user.isPublic ? '<span class="badge" style="background: var(--text-tertiary);"><i class="fas fa-lock"></i> Private</span>' : ''}
+                    </div>
+                    <div class="search-result-email">${user.email || ''}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px;">
+                        <i class="fas fa-users"></i> ${user.followersCount || 0} followers
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Search error:', error);
+        elements.searchResults.innerHTML = `
+            <div class="no-results" style="color: var(--error-500);">
+                <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: var(--space-md);"></i>
+                <p>Error searching users</p>
+                <p style="font-size: 0.85rem;">${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// ==================== IMPROVED LOAD ALL USERS ====================
+async function loadAllUsers() {
+    try {
+        // Only load public profiles for non-authenticated users
+        let query = db.collection('users');
+        
+        if (!state.currentUser) {
+            // If not logged in, only get public profiles
+            query = query.where('isPublic', '==', true);
+        }
+        
+        const snapshot = await query.limit(100).get(); // Limit for performance
+        
+        state.allUsers = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        }));
+        
+        // Sort by followers count
+        state.allUsers.sort((a, b) => (b.followersCount || 0) - (a.followersCount || 0));
+        
+        console.log(`📊 Loaded ${state.allUsers.length} users for search`);
+        
+    } catch (error) {
+        console.error('Error loading users:', error);
+        state.allUsers = [];
+    }
+}
+</script>
+
+    
 </body>
 </html>
