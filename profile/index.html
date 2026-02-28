@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -827,6 +825,10 @@
             animation: fadeIn 0.3s ease-out;
         }
 
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
             background: var(--md-surface);
             border-radius: var(--md-radius-extra-large);
@@ -851,7 +853,150 @@
             }
         }
 
-        /* Responsive Design */
+        /* Admin Panel Styles */
+        .admin-panel {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .admin-header i {
+            font-size: 2rem;
+            color: var(--md-primary);
+        }
+
+        .admin-header h2 {
+            font-family: var(--md-font-heading);
+            color: var(--md-on-surface);
+        }
+
+        .admin-search {
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .admin-search-input {
+            width: 100%;
+            padding: var(--md-spacing-md);
+            border: 2px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            font-size: 1rem;
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+        }
+
+        .admin-search-input:focus {
+            border-color: var(--md-primary);
+            outline: none;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-list-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md);
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            transition: var(--md-transition);
+        }
+
+        .user-list-item:hover {
+            transform: translateX(4px);
+            background: var(--md-primary-container);
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info-small {
+            flex: 1;
+        }
+
+        .user-name-small {
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        .user-email-small {
+            font-size: 0.875rem;
+            color: var(--md-on-surface-variant);
+        }
+
+        .user-status-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: var(--md-radius-pill);
+        }
+
+        .badge-verified {
+            background: #34a853;
+            color: white;
+        }
+
+        .badge-unverified {
+            background: var(--md-on-surface-variant);
+            color: white;
+        }
+
+        .badge-admin {
+            background: var(--md-primary);
+            color: white;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: var(--md-spacing-sm);
+        }
+
+        .admin-btn {
+            padding: 6px 12px;
+            border-radius: var(--md-radius-pill);
+            font-size: 0.875rem;
+            border: 1px solid var(--md-outline);
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .admin-btn:hover {
+            background: var(--md-primary);
+            color: white;
+            border-color: var(--md-primary);
+        }
+
+        .admin-btn.verify-btn {
+            background: #34a853;
+            color: white;
+            border-color: #34a853;
+        }
+
+        .admin-btn.unverify-btn {
+            background: #ea4335;
+            color: white;
+            border-color: #ea4335;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .profile-container {
                 padding: var(--md-spacing-md);
@@ -1013,355 +1158,6 @@
             background: rgba(234, 67, 53, 0.1);
             color: #ea4335;
         }
-
-
-/* Search System Styles */
-.search-empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background: var(--md-surface-variant);
-    border-radius: var(--md-radius-large);
-    margin: var(--md-spacing-xl) 0;
-}
-
-.empty-state-icon {
-    font-size: 48px;
-    color: var(--md-outline);
-    margin-bottom: 20px;
-}
-
-.search-suggestions {
-    max-width: 400px;
-    margin: 24px auto 0;
-}
-
-.suggestion-tags {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 16px;
-}
-
-.suggestion-tag {
-    padding: 8px 16px;
-    border-radius: var(--md-radius-pill);
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--md-transition);
-}
-
-.suggestion-tag:hover {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    transform: translateY(-2px);
-}
-
-.search-no-results {
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.no-results-icon {
-    font-size: 48px;
-    color: var(--md-outline);
-    margin-bottom: 20px;
-}
-
-.no-results-suggestions {
-    max-width: 400px;
-    margin: 24px auto 0;
-    text-align: left;
-    background: var(--md-surface);
-    padding: 20px;
-    border-radius: var(--md-radius-medium);
-    border: 1px solid var(--md-outline);
-}
-
-.no-results-suggestions p {
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: var(--md-on-surface);
-}
-
-.no-results-suggestions ul {
-    margin: 0;
-    padding-left: 20px;
-    color: var(--md-on-surface-variant);
-}
-
-.no-results-suggestions li {
-    margin-bottom: 6px;
-}
-
-/* User Cards in Search */
-.user-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: var(--md-surface);
-    border: 1px solid var(--md-outline);
-    border-radius: var(--md-radius-large);
-    margin-bottom: 16px;
-    transition: var(--md-transition);
-    cursor: pointer;
-}
-
-.user-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--md-primary);
-    box-shadow: var(--md-elevation-3);
-}
-
-.user-card-avatar {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-}
-
-.user-card-avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--md-surface);
-    box-shadow: var(--md-elevation-1);
-}
-
-.user-avatar-badge {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--verified-badge-bg);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--md-surface);
-    font-size: 10px;
-}
-
-.user-avatar-badge.premium {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #000;
-}
-
-.user-card-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.user-card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-}
-
-.user-name {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--md-on-surface);
-    margin: 0;
-}
-
-.user-verified-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--verified-badge-bg);
-    color: white;
-    padding: 4px 10px;
-    border-radius: var(--md-radius-pill);
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: var(--verified-badge-glow);
-}
-
-.user-verified-badge.premium {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #000;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-}
-
-.user-email {
-    font-size: 14px;
-    color: var(--md-on-surface-variant);
-    margin: 0 0 12px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.user-stats {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-}
-
-.user-stat {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--md-on-surface-variant);
-}
-
-.user-stat i {
-    font-size: 12px;
-}
-
-.user-bio {
-    font-size: 14px;
-    color: var(--md-on-surface-variant);
-    margin: 0 0 8px 0;
-    line-height: 1.4;
-}
-
-.user-location {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--md-on-surface-variant);
-}
-
-.user-card-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-.user-card-action {
-    padding: 8px 16px;
-    border-radius: var(--md-radius-pill);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--md-transition);
-    border: 1px solid var(--md-outline);
-    background: var(--md-surface);
-    color: var(--md-primary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-}
-
-.user-card-action:hover {
-    background: var(--md-primary-container);
-    border-color: var(--md-primary);
-}
-
-.copy-link-btn {
-    padding: 8px;
-    min-width: 36px;
-    justify-content: center;
-}
-
-/* Search Loading */
-.search-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    gap: 16px;
-}
-
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--md-outline);
-    border-top-color: var(--md-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-/* Search Error */
-.search-error {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    gap: 16px;
-}
-
-.search-error i {
-    font-size: 48px;
-    color: #ea4335;
-}
-
-.retry-btn {
-    padding: 10px 20px;
-    border-radius: var(--md-radius-pill);
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--md-transition);
-}
-
-.retry-btn:hover {
-    background: var(--md-primary-dark);
-    transform: translateY(-2px);
-}
-
-/* Dark theme adjustments */
-.dark-theme .suggestion-tag {
-    background: var(--md-surface);
-    color: var(--md-on-surface);
-}
-
-.dark-theme .suggestion-tag:hover {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-}
-
-.dark-theme .user-avatar-badge {
-    border-color: var(--md-surface);
-}
-
-.dark-theme .no-results-suggestions {
-    background: var(--md-surface-variant);
-    border-color: var(--md-outline-variant);
-}
-
-@media (max-width: 768px) {
-    .user-card {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
-    }
-    
-    .user-card-avatar {
-        align-self: center;
-    }
-    
-    .user-stats {
-        justify-content: center;
-    }
-    
-    .user-card-actions {
-        justify-content: center;
-    }
-}
-
-        
     </style>
 </head>
 <body class="light-theme">
@@ -1377,7 +1173,6 @@
         <header class="profile-header">
             <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo">
                 <div class="logo-icon">
-                    <!-- Updated Logo SVG -->
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="white"/>
                         <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6Z" fill="#1a73e8"/>
@@ -1401,8 +1196,8 @@
 
         <!-- Not Found Message -->
         <div class="not-found" id="notFound" style="display: none;">
-            <h1>Profile Not Found</h1>
-            <p style="margin-bottom: var(--md-spacing-lg); color: var(--md-on-surface-variant);">
+            <h1 id="notFoundTitle">Profile Not Found</h1>
+            <p id="notFoundDescription" style="margin-bottom: var(--md-spacing-lg); color: var(--md-on-surface-variant);">
                 The profile you're looking for doesn't exist or is set to private.
             </p>
             <div class="profile-controls" style="justify-content: center;">
@@ -1448,18 +1243,43 @@
         </div>
     </div>
 
-    <!-- Verification Modal -->
-    <div id="verificationModal" class="modal">
+    <!-- Admin Verification Modal -->
+    <div id="adminVerifyModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg); display: flex; align-items: center; gap: var(--md-spacing-sm);">
+                <i class="fas fa-user-shield" style="color: var(--md-primary);"></i>
+                Admin Verification Panel
+            </h2>
+            
+            <div class="admin-search">
+                <input type="text" id="adminSearchInput" class="admin-search-input" placeholder="Search users by name or email...">
+            </div>
+            
+            <div id="userList" class="user-list">
+                <!-- User list will be populated here -->
+            </div>
+            
+            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end; margin-top: var(--md-spacing-xl);">
+                <button class="btn btn-outlined" onclick="closeModal('adminVerifyModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Single User Verification Modal -->
+    <div id="verifyUserModal" class="modal">
         <div class="modal-content">
             <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg); display: flex; align-items: center; gap: var(--md-spacing-sm);">
                 <i class="fas fa-shield-alt" style="color: var(--md-primary);"></i>
-                Account Verification
+                Manage Verification
             </h2>
-            <div id="verificationContent">
-                <!-- Content will be populated dynamically -->
+            
+            <div id="verifyUserContent">
+                <!-- Content will be populated -->
             </div>
+            
             <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end; margin-top: var(--md-spacing-xl);">
-                <button class="btn btn-outlined" onclick="closeModal('verificationModal')">Close</button>
+                <button class="btn btn-outlined" onclick="closeModal('verifyUserModal')">Cancel</button>
+                <button class="btn btn-filled" id="saveVerificationBtn" onclick="saveVerification()">Save Changes</button>
             </div>
         </div>
     </div>
@@ -1476,6 +1296,9 @@ const firebaseConfig = {
     measurementId: "G-DMWMRM1M47"
 };
 
+// Admin email constant
+const ADMIN_EMAIL = 'adityajha1104@gmail.com';
+
 // DOM Elements
 const loadingScreen = document.getElementById('loading');
 const mainContent = document.getElementById('mainContent');
@@ -1484,6 +1307,8 @@ const notFound = document.getElementById('notFound');
 const notFoundTitle = document.getElementById('notFoundTitle');
 const notFoundDescription = document.getElementById('notFoundDescription');
 const headerActions = document.getElementById('headerActions');
+const toast = document.getElementById('toast');
+const toastMessage = document.getElementById('toastMessage');
 
 // Global variables
 let currentUser = null;
@@ -1492,9 +1317,8 @@ let profileData = null;
 let isOwner = false;
 let auth, db;
 let currentTab = 'overview';
-const FIREBASE_TIMEOUT = 10000; // 10 seconds
-let searchModal = null;
-let isSearching = false;
+let searchTimeout = null;
+let allUsers = [];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1587,6 +1411,56 @@ function toggleTheme() {
     }
 }
 
+// ================= HEADER ACTIONS =================
+
+function updateHeaderActions(user) {
+    headerActions.innerHTML = '';
+    
+    const themeButton = `
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
+        </button>
+    `;
+    
+    if (user) {
+        const isAdmin = user.email === ADMIN_EMAIL;
+        
+        headerActions.innerHTML = `
+            <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
+                <i class="fas fa-user"></i>
+                My Profile
+            </a>
+            ${isAdmin ? `
+                <button class="btn btn-outlined" onclick="openAdminPanel()" title="Admin: Verify Users">
+                    <i class="fas fa-user-shield"></i>
+                    Admin
+                </button>
+            ` : ''}
+            ${themeButton}
+            <button class="btn btn-outlined" onclick="signOut()">
+                <i class="fas fa-sign-out-alt"></i>
+                Sign Out
+            </button>
+        `;
+    } else {
+        headerActions.innerHTML = `
+            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </a>
+            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
+                <i class="fas fa-user-plus"></i>
+                Sign Up
+            </a>
+            ${themeButton}
+        `;
+    }
+}
+
 // ================= VISITOR LANDING =================
 
 function showVisitorLanding() {
@@ -1611,21 +1485,6 @@ function showVisitorLanding() {
                 </p>
             </div>
             
-            <div class="profile-stats" style="justify-content: center; margin-bottom: var(--md-spacing-xl);">
-                <div class="stat-item">
-                    <span class="stat-number" id="totalUsers">Loading...</span>
-                    <span class="stat-label">Total Users</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="verifiedUsers">Loading...</span>
-                    <span class="stat-label">Verified</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="activeUsers">Loading...</span>
-                    <span class="stat-label">Active Today</span>
-                </div>
-            </div>
-            
             <div class="profile-controls" style="justify-content: center; gap: var(--md-spacing-lg);">
                 <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-filled">
                     <i class="fas fa-sign-in-alt"></i>
@@ -1635,83 +1494,9 @@ function showVisitorLanding() {
                     <i class="fas fa-user-plus"></i>
                     Sign Up
                 </a>
-                <button class="btn btn-outlined" onclick="openSearchModal()">
-                    <i class="fas fa-search"></i>
-                    Browse Profiles
-                </button>
-            </div>
-            
-            <div style="margin-top: var(--md-spacing-xl); padding-top: var(--md-spacing-xl); border-top: 1px solid var(--md-outline);">
-                <h3 style="margin-bottom: var(--md-spacing-md); text-align: center;">Featured Profiles</h3>
-                <div id="featuredProfiles" style="display: flex; gap: var(--md-spacing-lg); justify-content: center; flex-wrap: wrap;">
-                    <div class="loading-spinner-small"></div>
-                </div>
             </div>
         </div>
     `;
-    
-    // Load statistics
-    loadPlatformStats();
-    loadFeaturedProfiles();
-}
-
-// ================= HEADER ACTIONS =================
-
-function updateHeaderActions(user) {
-    headerActions.innerHTML = '';
-    
-    const themeButton = `
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-            <span class="material-icons-round">${document.body.classList.contains('dark-theme') ? 'light_mode' : 'dark_mode'}</span>
-        </button>
-    `;
-    
-    const searchButton = `
-        <button class="btn btn-outlined" onclick="openSearchModal()" id="searchButton" title="Search profiles (Ctrl+K)">
-            <i class="fas fa-search"></i>
-            Search
-        </button>
-    `;
-    
-    if (user) {
-        const isAdmin = user.email === 'adityajha1104@gmail.com';
-        
-        headerActions.innerHTML = `
-            ${searchButton}
-            <a href="https://aditya-cmd-max.github.io/dashboard" class="btn btn-outlined">
-                <i class="fas fa-tachometer-alt"></i>
-                Dashboard
-            </a>
-            <a href="https://aditya-cmd-max.github.io/profile/?id=${user.uid}" class="btn btn-filled">
-                <i class="fas fa-user"></i>
-                My Profile
-            </a>
-            ${isAdmin ? `
-                <button class="btn btn-outlined" onclick="showAdminVerificationPanel()" title="Admin: Verify Users">
-                    <i class="fas fa-user-shield"></i>
-                    Admin
-                </button>
-            ` : ''}
-            ${themeButton}
-            <button class="btn btn-outlined" onclick="signOut()">
-                <i class="fas fa-sign-out-alt"></i>
-                Sign Out
-            </button>
-        `;
-    } else {
-        headerActions.innerHTML = `
-            ${searchButton}
-            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-outlined">
-                <i class="fas fa-sign-in-alt"></i>
-                Sign In
-            </a>
-            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-filled">
-                <i class="fas fa-user-plus"></i>
-                Sign Up
-            </a>
-            ${themeButton}
-        `;
-    }
 }
 
 // ================= PROFILE LOADING =================
@@ -1733,7 +1518,7 @@ async function loadOwnProfile(user) {
             console.log('Found existing profile:', profileData);
             
             // Update URL with user ID for sharing
-            const newUrl = `${window.location.origin}/profile/?id=${user.uid}`;
+            const newUrl = `${window.location.origin}${window.location.pathname}?id=${user.uid}`;
             window.history.replaceState({}, '', newUrl);
             
             await displayProfile(profileData, true);
@@ -1802,32 +1587,7 @@ async function loadProfileByUserId(userId) {
             
         } else {
             console.log('No profile found for ID:', userId);
-            
-            // If this is the current user's profile and it doesn't exist, create it
-            if (currentUser && currentUser.uid === userId) {
-                console.log('Creating new profile for current user...');
-                
-                try {
-                    // Create the profile
-                    profileData = await createNewProfile(currentUser, currentUser.displayName || 'User');
-                    profileOwner = userId;
-                    isOwner = true;
-                    
-                    await displayProfile(profileData, true);
-                    
-                    loadingScreen.classList.add('hidden');
-                    mainContent.style.display = 'block';
-                    
-                    showToast('🎉 Welcome! Your profile has been created.');
-                    
-                } catch (createError) {
-                    console.error('Failed to create profile:', createError);
-                    showNotFound('Failed to create profile. Please try again.');
-                }
-            } else {
-                // Profile doesn't exist and user is not the owner
-                showNotFound('Profile not found');
-            }
+            showNotFound('Profile not found');
         }
         
     } catch (error) {
@@ -1844,8 +1604,6 @@ async function createNewProfile(user, displayName = null) {
             displayName: displayName || user.displayName || 'User',
             isPublic: true,
             verified: false,
-            verifiedLevel: null,
-            premiumVerified: false,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             emailVerified: user.emailVerified || false,
@@ -1856,34 +1614,13 @@ async function createNewProfile(user, displayName = null) {
             photoURL: user.photoURL || null,
             bio: 'Welcome to my Reverbit profile!',
             country: '',
-            theme: 'light',
-            username: null,
-            gender: null,
-            showApps: true,
-            cloudinaryImageId: null,
-            website: null,
-            badges: ['new-user'],
-            appsUsed: 0,
-            socialLinks: {},
-            achievements: []
+            theme: 'light'
         };
         
         console.log('Creating new profile with data:', userData);
         
         await db.collection('users').doc(user.uid).set(userData);
         console.log('Profile created successfully for:', user.uid);
-        
-        // Also create initial usage document
-        try {
-            await db.collection('usage').doc(user.uid).set({
-                cloverAI: 0,
-                mindscribe: 0,
-                peo: 0,
-                lastUpdated: new Date().toISOString()
-            });
-        } catch (usageError) {
-            console.log('Usage document creation skipped:', usageError);
-        }
         
         return userData;
         
@@ -1901,12 +1638,8 @@ async function displayProfile(data, isOwnerView) {
     // Calculate member days
     const memberDays = calculateMemberDays(data.createdAt);
     
-    // Check if user is verified and get verification level
-    const verificationLevel = getVerificationLevel(data);
-    const isVerified = verificationLevel !== 'none';
-    
-    // Get status indicator
-    const statusIndicator = getStatusIndicator(data);
+    // Check if user is verified
+    const isVerified = data.verified === true;
     
     // Create profile HTML
     const profileHTML = `
@@ -1916,49 +1649,31 @@ async function displayProfile(data, isOwnerView) {
                     <div class="profile-avatar-large">
                         <img id="profileAvatar" src="${getAvatarUrl(data)}" alt="${data.displayName || 'User'}" class="profile-avatar-large-img" onerror="handleAvatarError(this)">
                         ${isVerified ? `
-                            <div class="avatar-verified-badge ${verificationLevel === 'premium' ? 'premium' : ''}" 
-                                 title="${getVerificationTooltip(verificationLevel)}"
-                                 onclick="showVerificationInfo('${verificationLevel}')">
-                                <i class="fas fa-${verificationLevel === 'premium' ? 'crown' : 'check'}"></i>
-                            </div>
-                        ` : ''}
-                        ${isOwnerView ? `
-                            <div class="avatar-upload-overlay" onclick="editProfile()">
-                                <i class="fas fa-camera" style="font-size: 2rem;"></i>
-                                <span style="margin-top: 8px; font-size: 0.9rem;">Edit Photo</span>
+                            <div class="avatar-verified-badge" title="Verified Account">
+                                <i class="fas fa-check"></i>
                             </div>
                         ` : ''}
                     </div>
                     
                     ${isOwnerView ? `
                         <div style="text-align: center; margin-top: var(--md-spacing-md);">
-                            <button class="btn btn-outlined" onclick="editProfile()" style="width: 100%; max-width: 280px;">
+                            <a href="https://aditya-cmd-max.github.io/dashboard#profile" class="btn btn-outlined" style="width: 100%; max-width: 280px;">
                                 <i class="fas fa-edit"></i>
                                 Edit Profile
-                            </button>
+                            </a>
                         </div>
                     ` : ''}
                 </div>
                 
                 <div class="profile-details">
                     <div class="profile-username-section">
-                        <h1 class="profile-username">${data.displayName || 'User'}
-                            ${statusIndicator}
-                            ${isVerified ? `
-                                <span class="verified-badge ${verificationLevel === 'premium' ? 'premium' : ''}" 
-                                      onclick="showVerificationInfo('${verificationLevel}')"
-                                      style="cursor: pointer;">
-                                    <i class="fas fa-${verificationLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
-                                    ${verificationLevel === 'premium' ? 'Premium Verified' : 'Verified'}
-                                </span>
-                            ` : ''}
-                        </h1>
+                        <h1 class="profile-username">${data.displayName || 'User'}</h1>
                         
-                        ${data.username ? `
-                            <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); margin-top: var(--md-spacing-xs);">
-                                <i class="fas fa-at" style="color: var(--md-on-surface-variant);"></i>
-                                <span style="color: var(--md-on-surface-variant);">@${data.username}</span>
-                            </div>
+                        ${isVerified ? `
+                            <span class="verified-badge">
+                                <i class="fas fa-check-circle"></i>
+                                Verified
+                            </span>
                         ` : ''}
                     </div>
                     
@@ -1967,22 +1682,14 @@ async function displayProfile(data, isOwnerView) {
                             <span class="stat-number" id="streakStat">${data.streak || 0}</span>
                             <span class="stat-label">Day Streak</span>
                         </div>
-                        ${isOwnerView ? `
-                            <div class="stat-item">
-                                <span class="stat-number" id="appsStat">${data.appsUsed || 0}</span>
-                                <span class="stat-label">Apps Used</span>
-                            </div>
-                        ` : ''}
                         <div class="stat-item">
                             <span class="stat-number" id="memberStat">${memberDays}</span>
                             <span class="stat-label">Days as Member</span>
                         </div>
-                        ${isOwnerView ? `
-                            <div class="stat-item">
-                                <span class="stat-number" id="lastActiveStat">${formatLastActive(data.lastLogin || data.updatedAt || data.createdAt)}</span>
-                                <span class="stat-label">Last Active</span>
-                            </div>
-                        ` : ''}
+                        <div class="stat-item">
+                            <span class="stat-number" id="lastActiveStat">${formatLastActive(data.lastActive || data.lastLogin || data.updatedAt || data.createdAt)}</span>
+                            <span class="stat-label">Last Active</span>
+                        </div>
                     </div>
                     
                     <div class="profile-email">
@@ -1998,48 +1705,23 @@ async function displayProfile(data, isOwnerView) {
                     
                     <p class="profile-bio" id="profileBio">${data.bio || 'This user hasn\'t added a bio yet.'}</p>
                     
-                    ${data.badges && data.badges.length > 0 ? `
-                        <div style="margin: var(--md-spacing-lg) 0;">
-                            <h3 style="font-size: 1rem; color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-sm);">Badges</h3>
-                            <div style="display: flex; gap: var(--md-spacing-sm); flex-wrap: wrap;">
-                                ${data.badges.map(badge => `
-                                    <span class="badge" style="background: ${getBadgeColor(badge)}; color: white;">
-                                        <i class="${getBadgeIcon(badge)}"></i> ${formatBadgeName(badge)}
-                                    </span>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
                     <div class="profile-controls" style="margin-top: var(--md-spacing-lg);">
                         ${isOwnerView ? `
                             <button class="btn btn-filled" onclick="shareProfile()">
                                 <i class="fas fa-share"></i>
                                 Share Profile
                             </button>
-                            ${!isVerified ? `
-                                <button class="btn btn-outlined" onclick="requestVerification()" style="border-color: var(--md-secondary); color: var(--md-secondary);">
-                                    <i class="fas fa-shield-alt"></i>
-                                    Get Verified
-                                </button>
-                            ` : ''}
                             <button class="btn btn-outlined" onclick="toggleProfileVisibility()">
                                 <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
-                                ${data.isPublic ? 'Public' : 'Private'}
+                                ${data.isPublic ? 'Make Private' : 'Make Public'}
                             </button>
                         ` : ''}
                         
                         ${!isOwnerView && currentUser ? `
                             <button class="btn btn-filled" onclick="window.location.href='https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}'">
                                 <i class="fas fa-user"></i>
-                                View Your Profile
+                                Your Profile
                             </button>
-                            ${currentUser.email === 'adityajha1104@gmail.com' ? `
-                                <button class="btn btn-outlined" onclick="adminVerifyUserPrompt('${data.uid}', '${data.displayName || 'User'}')">
-                                    <i class="fas fa-user-shield"></i>
-                                    Verify User
-                                </button>
-                            ` : ''}
                             <button class="btn btn-outlined" onclick="shareProfile()">
                                 <i class="fas fa-share"></i>
                                 Share
@@ -2047,10 +1729,10 @@ async function displayProfile(data, isOwnerView) {
                         ` : ''}
                         
                         ${!isOwnerView && !currentUser ? `
-                            <button class="btn btn-filled" onclick="openSearchModal()">
-                                <i class="fas fa-search"></i>
-                                Find More Profiles
-                            </button>
+                            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-filled">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Sign In to View Your Profile
+                            </a>
                         ` : ''}
                     </div>
                 </div>
@@ -2074,10 +1756,6 @@ async function displayProfile(data, isOwnerView) {
                         Verification
                     </button>
                 ` : ''}
-                <button class="profile-tab ${currentTab === 'activity' ? 'active' : ''}" onclick="switchTab('activity')">
-                    <i class="fas fa-chart-line"></i>
-                    Activity
-                </button>
             </div>
 
             <!-- Tab Content -->
@@ -2094,29 +1772,17 @@ async function displayProfile(data, isOwnerView) {
                         <p>${data.isPublic ? 'Public Profile' : 'Private Profile'}</p>
                     </div>
                     <div class="legal-item">
-                        <h3>Verification Level</h3>
-                        <p>${verificationLevel === 'none' ? 'Not Verified' : verificationLevel === 'basic' ? 'Basic Verified' : 'Premium Verified'}</p>
+                        <h3>Verification</h3>
+                        <p>${isVerified ? '✓ Verified' : 'Not Verified'}</p>
                     </div>
                     <div class="legal-item">
                         <h3>Member Since</h3>
                         <p>${formatDate(data.createdAt)}</p>
                     </div>
                     <div class="legal-item">
-                        <h3>Profile ID</h3>
-                        <p style="font-family: monospace; font-size: 0.85rem; cursor: pointer;" onclick="copyToClipboard('${data.uid}')" title="Click to copy">
-                            ${data.uid.substring(0, 8)}... <i class="fas fa-copy" style="font-size: 0.8rem; margin-left: 4px;"></i>
-                        </p>
-                    </div>
-                    <div class="legal-item">
                         <h3>Last Updated</h3>
                         <p>${formatDate(data.updatedAt || data.createdAt)}</p>
                     </div>
-                    ${isVerified ? `
-                    <div class="legal-item">
-                        <h3>Verified Since</h3>
-                        <p>${formatDate(data.verifiedAt || data.updatedAt || data.createdAt)}</p>
-                    </div>
-                    ` : ''}
                 </div>
             </div>
         </div>
@@ -2124,59 +1790,11 @@ async function displayProfile(data, isOwnerView) {
     
     profileContent.innerHTML = profileHTML;
     
-    // Initialize interactive elements
-    if (isOwnerView) {
-        loadUsageData();
-        setupProfileInteractions();
-    }
-    
     // Update page title
     document.title = `${data.displayName || 'User'} - Reverbit Profile`;
 }
 
 // ================= HELPER FUNCTIONS =================
-
-function getVerificationLevel(data) {
-    if (!data.verified) return 'none';
-    
-    if (data.verifiedLevel === 'premium' || data.premiumVerified) {
-        return 'premium';
-    }
-    
-    if (data.verifiedBy === 'admin' || data.verifiedBy === 'adityajha1104@gmail.com') {
-        return 'basic';
-    }
-    
-    return data.verifiedLevel || 'basic';
-}
-
-function getVerificationTooltip(level) {
-    const tooltips = {
-        'basic': '✓ Verified Account\nIdentity confirmed by Reverbit',
-        'premium': '👑 Premium Verified Account\nEnhanced trust level with additional verification',
-        'admin': '⚡ Admin Verified Account\nVerified by Reverbit administrators'
-    };
-    return tooltips[level] || 'Verified Account';
-}
-
-function getStatusIndicator(data) {
-    if (!data.lastLogin && !data.lastActive) return '';
-    
-    const lastActive = new Date(data.lastActive || data.lastLogin);
-    const now = new Date();
-    const diffHours = Math.floor((now - lastActive) / (1000 * 60 * 60));
-    
-    if (diffHours < 1) {
-        return '<span class="status-indicator status-online"><i class="fas fa-circle"></i> Online</span>';
-    } else if (diffHours < 24) {
-        return `<span class="status-indicator status-online"><i class="fas fa-circle"></i> Active ${diffHours}h ago</span>`;
-    } else if (diffHours < 168) { // 7 days
-        const diffDays = Math.floor(diffHours / 24);
-        return `<span class="status-indicator status-offline"><i class="fas fa-circle"></i> Active ${diffDays}d ago</span>`;
-    } else {
-        return '<span class="status-indicator status-offline"><i class="fas fa-circle"></i> Offline</span>';
-    }
-}
 
 function getAvatarUrl(data) {
     if (data.photoURL && !data.photoURL.includes('ui-avatars.com')) {
@@ -2223,40 +1841,9 @@ function formatLastActive(dateString) {
     } else if (diffMs < 604800000) { // Less than 1 week
         const days = Math.floor(diffMs / 86400000);
         return `${days}d ago`;
-    } else if (diffMs < 2592000000) { // Less than 30 days
-        const weeks = Math.floor(diffMs / 604800000);
-        return `${weeks}w ago`;
     } else {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
-}
-
-function getBadgeColor(badge) {
-    const colors = {
-        'new-user': 'var(--md-primary)',
-        'verified': '#34a853',
-        'premium': '#FFD700',
-        'early-adopter': '#9c27b0',
-        'contributor': '#ff9800',
-        'active': '#00bcd4'
-    };
-    return colors[badge] || 'var(--md-primary)';
-}
-
-function getBadgeIcon(badge) {
-    const icons = {
-        'new-user': 'fas fa-user-plus',
-        'verified': 'fas fa-check-circle',
-        'premium': 'fas fa-crown',
-        'early-adopter': 'fas fa-rocket',
-        'contributor': 'fas fa-code',
-        'active': 'fas fa-fire'
-    };
-    return icons[badge] || 'fas fa-award';
-}
-
-function formatBadgeName(badge) {
-    return badge.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 // ================= TAB SYSTEM =================
@@ -2269,8 +1856,6 @@ function getTabContent(tab, data, isOwnerView) {
             return isOwnerView ? createSettingsPanel(data) : '';
         case 'verification':
             return createVerificationPanel(data);
-        case 'activity':
-            return createActivityPanel(data, isOwnerView);
         default:
             return createOverviewContent(data, isOwnerView);
     }
@@ -2282,21 +1867,19 @@ function switchTab(tab) {
     // Update tab buttons
     document.querySelectorAll('.profile-tab').forEach(button => {
         button.classList.remove('active');
-        if (button.textContent.includes(tab.charAt(0).toUpperCase() + tab.slice(1))) {
+        if (button.textContent.toLowerCase().includes(tab)) {
             button.classList.add('active');
         }
     });
     
     // Update content
     const tabContent = document.getElementById('tabContent');
-    if (tabContent) {
+    if (tabContent && profileData) {
         tabContent.innerHTML = getTabContent(tab, profileData, isOwner);
     }
 }
 
 function createOverviewContent(data, isOwnerView) {
-    const socialLinks = data.socialLinks || {};
-    
     return `
         <div class="settings-panel">
             <div class="settings-section">
@@ -2314,93 +1897,12 @@ function createOverviewContent(data, isOwnerView) {
                 </p>
             </div>
             ` : ''}
-            
-            ${data.website ? `
-            <div class="settings-section">
-                <h3>Website</h3>
-                <p style="color: var(--md-on-surface-variant);">
-                    <i class="fas fa-link"></i> 
-                    <a href="${ensureHttp(data.website)}" target="_blank" style="color: var(--md-primary);">${data.website}</a>
-                </p>
-            </div>
-            ` : ''}
-            
-            ${Object.keys(socialLinks).length > 0 ? `
-            <div class="settings-section">
-                <h3>Social Links</h3>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    ${Object.entries(socialLinks).map(([platform, url]) => `
-                        <a href="${ensureHttp(url)}" target="_blank" class="btn btn-outlined" style="font-size: 0.9rem;">
-                            <i class="fab fa-${platform.toLowerCase()}"></i> ${platform}
-                        </a>
-                    `).join('')}
-                </div>
-            </div>
-            ` : ''}
-            
-            ${data.achievements && data.achievements.length > 0 ? `
-            <div class="settings-section">
-                <h3>Achievements</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-                    ${data.achievements.map(achievement => `
-                        <div style="background: var(--md-surface-variant); padding: 12px; border-radius: var(--md-radius-medium);">
-                            <div style="font-size: 1.5rem; color: var(--md-primary); margin-bottom: 8px;">
-                                <i class="fas fa-${achievement.icon || 'trophy'}"></i>
-                            </div>
-                            <div style="font-weight: 600; font-size: 0.95rem;">${achievement.title}</div>
-                            <div style="font-size: 0.85rem; color: var(--md-on-surface-variant);">${achievement.description}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-function createActivityPanel(data, isOwnerView) {
-    return `
-        <div class="settings-panel">
-            <div class="settings-section">
-                <h3>Activity Summary</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                    <div style="background: var(--md-surface-variant); padding: 16px; border-radius: var(--md-radius-medium); text-align: center;">
-                        <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: 8px;">${data.streak || 0}</div>
-                        <div style="font-size: 0.9rem; color: var(--md-on-surface-variant);">Current Streak</div>
-                    </div>
-                    <div style="background: var(--md-surface-variant); padding: 16px; border-radius: var(--md-radius-medium); text-align: center;">
-                        <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: 8px;">${data.totalLogins || 1}</div>
-                        <div style="font-size: 0.9rem; color: var(--md-on-surface-variant);">Total Logins</div>
-                    </div>
-                    <div style="background: var(--md-surface-variant); padding: 16px; border-radius: var(--md-radius-medium); text-align: center;">
-                        <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: 8px;">${data.appsUsed || 0}</div>
-                        <div style="font-size: 0.9rem; color: var(--md-on-surface-variant);">Apps Used</div>
-                    </div>
-                    <div style="background: var(--md-surface-variant); padding: 16px; border-radius: var(--md-radius-medium); text-align: center;">
-                        <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: 8px;">${calculateMemberDays(data.createdAt)}</div>
-                        <div style="font-size: 0.9rem; color: var(--md-on-surface-variant);">Member Days</div>
-                    </div>
-                </div>
-                
-                ${isOwnerView ? `
-                <div style="background: var(--md-surface); border: 1px solid var(--md-outline); border-radius: var(--md-radius-medium); padding: 20px; margin-top: 24px;">
-                    <h4 style="margin-bottom: 12px; color: var(--md-primary);">Activity Tips</h4>
-                    <ul style="color: var(--md-on-surface-variant); padding-left: 20px;">
-                        <li style="margin-bottom: 8px;">Login daily to maintain your streak</li>
-                        <li style="margin-bottom: 8px;">Use Reverbit apps to increase your apps count</li>
-                        <li style="margin-bottom: 8px;">Complete your profile for better visibility</li>
-                        <li>Get verified to build trust with other users</li>
-                    </ul>
-                </div>
-                ` : ''}
-            </div>
         </div>
     `;
 }
 
 function createVerificationPanel(data) {
-    const verificationLevel = getVerificationLevel(data);
-    const isVerified = verificationLevel !== 'none';
+    const isVerified = data.verified === true;
     
     if (!isVerified) {
         return `
@@ -2409,34 +1911,10 @@ function createVerificationPanel(data) {
                     <div style="font-size: 4rem; color: var(--md-outline); margin-bottom: var(--md-spacing-lg);">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 style="margin-bottom: var(--md-spacing-md);">Get Verified</h3>
+                    <h3 style="margin-bottom: var(--md-spacing-md);">Not Verified</h3>
                     <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-xl); max-width: 500px; margin-left: auto; margin-right: auto;">
-                        Get a verified badge on your profile to build trust with other users and unlock premium features.
+                        This account is not verified. Verification is managed by Reverbit administrators.
                     </p>
-                    <button class="btn btn-filled" onclick="requestVerification()">
-                        <i class="fas fa-shield-alt"></i>
-                        Request Verification
-                    </button>
-                    <div style="margin-top: var(--md-spacing-xl);">
-                        <h4 style="margin-bottom: var(--md-spacing-md);">Benefits of Verification</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--md-spacing-md);">
-                            <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium);">
-                                <i class="fas fa-check-circle" style="color: var(--md-primary); font-size: 1.5rem; margin-bottom: 8px;"></i>
-                                <div style="font-weight: 600; margin-bottom: 4px;">Increased Trust</div>
-                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Build credibility with other users</div>
-                            </div>
-                            <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium);">
-                                <i class="fas fa-eye" style="color: var(--md-primary); font-size: 1.5rem; margin-bottom: 8px;"></i>
-                                <div style="font-weight: 600; margin-bottom: 4px;">Better Visibility</div>
-                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Stand out in search results</div>
-                            </div>
-                            <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium);">
-                                <i class="fas fa-star" style="color: var(--md-primary); font-size: 1.5rem; margin-bottom: 8px;"></i>
-                                <div style="font-weight: 600; margin-bottom: 4px;">Premium Features</div>
-                                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant);">Access exclusive features</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         `;
@@ -2447,142 +1925,37 @@ function createVerificationPanel(data) {
             <div class="settings-section">
                 <div style="background: var(--md-surface-variant); padding: var(--md-spacing-xl); border-radius: var(--md-radius-large); border-left: 4px solid var(--md-primary);">
                     <div style="display: flex; align-items: center; gap: var(--md-spacing-lg); margin-bottom: var(--md-spacing-lg);">
-                        <div class="verified-badge ${verificationLevel === 'premium' ? 'premium' : ''}" style="font-size: 1rem; padding: var(--md-spacing-md) var(--md-spacing-lg);">
-                            <i class="fas fa-${verificationLevel === 'premium' ? 'crown' : 'check-circle'}"></i>
-                            ${verificationLevel === 'premium' ? 'Premium Verified' : 'Verified Account'}
+                        <div class="verified-badge" style="font-size: 1rem; padding: var(--md-spacing-md) var(--md-spacing-lg);">
+                            <i class="fas fa-check-circle"></i>
+                            Verified Account
                         </div>
                         <div>
-                            <h3 style="margin-bottom: var(--md-spacing-xs);">${verificationLevel === 'premium' ? 'Premium Verification' : 'Account Verified'}</h3>
+                            <h3 style="margin-bottom: var(--md-spacing-xs);">Account Verified</h3>
                             <p style="color: var(--md-on-surface-variant); font-size: 0.95rem;">
-                                ${verificationLevel === 'premium' ? 'Highest trust level with enhanced features' : 'Identity confirmed by Reverbit'}
+                                Identity confirmed by Reverbit
                             </p>
                         </div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--md-spacing-lg); margin-bottom: var(--md-spacing-xl);">
-                        <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium);">
-                            <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <h4 style="margin-bottom: var(--md-spacing-xs);">Identity Verified</h4>
-                            <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
-                                Your identity has been confirmed
-                            </p>
-                        </div>
-                        
-                        <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium);">
-                            <div style="font-size: 2rem; color: var(--md-primary); margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h4 style="margin-bottom: var(--md-spacing-xs);">Trust Indicator</h4>
-                            <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
-                                Builds trust with other users
-                            </p>
-                        </div>
-                        
-                        ${verificationLevel === 'premium' ? `
-                        <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium);">
-                            <div style="font-size: 2rem; color: #FFD700; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <h4 style="margin-bottom: var(--md-spacing-xs);">Premium Features</h4>
-                            <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">
-                                Access to exclusive features
-                            </p>
-                        </div>
-                        ` : ''}
                     </div>
                     
                     <div style="background: var(--md-surface); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
                         <h4 style="margin-bottom: var(--md-spacing-sm);">Verification Details</h4>
                         <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--md-spacing-sm); font-size: 0.95rem;">
-                            <span style="color: var(--md-on-surface-variant);">Level:</span>
-                            <span style="font-weight: 500;">${verificationLevel === 'premium' ? 'Premium' : 'Standard'}</span>
+                            <span style="color: var(--md-on-surface-variant);">Status:</span>
+                            <span style="font-weight: 500; color: #34a853;">Verified ✓</span>
                             
                             <span style="color: var(--md-on-surface-variant);">Verified Since:</span>
                             <span>${formatDate(data.verifiedAt || data.updatedAt || data.createdAt)}</span>
-                            
-                            ${data.verifiedBy ? `
-                                <span style="color: var(--md-on-surface-variant);">Verified By:</span>
-                                <span>${data.verifiedBy === 'admin' ? 'Reverbit Admin' : 'System'}</span>
-                            ` : ''}
-                            
-                            ${data.verificationExpiry ? `
-                                <span style="color: var(--md-on-surface-variant);">Expires:</span>
-                                <span>${formatDate(data.verificationExpiry)}</span>
-                            ` : ''}
                         </div>
                     </div>
                 </div>
             </div>
-            
-            ${verificationLevel === 'basic' && isOwner ? `
-            <div class="settings-section">
-                <h3>Upgrade to Premium</h3>
-                <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
-                    Get the premium verification badge with exclusive features and enhanced visibility.
-                </p>
-                <div style="display: grid; gap: var(--md-spacing-md);">
-                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-md); background: var(--md-surface); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
-                        <i class="fas fa-crown" style="color: #FFD700;"></i>
-                        <span>Premium Verified Badge</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-md); background: var(--md-surface); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
-                        <i class="fas fa-chart-line" style="color: var(--md-primary);"></i>
-                        <span>Enhanced Profile Analytics</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-md); background: var(--md-surface); border-radius: var(--md-radius-medium); border: 1px solid var(--md-outline);">
-                        <i class="fas fa-star" style="color: var(--md-primary);"></i>
-                        <span>Priority Support</span>
-                    </div>
-                </div>
-                <button class="btn btn-filled" onclick="upgradeToPremium()" style="margin-top: var(--md-spacing-md); background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #000;">
-                    <i class="fas fa-crown"></i>
-                    Upgrade to Premium ($9.99/month)
-                </button>
-            </div>
-            ` : ''}
         </div>
     `;
 }
 
 function createSettingsPanel(data) {
-    const isAdmin = currentUser && currentUser.email === 'adityajha1104@gmail.com';
-    const verificationLevel = getVerificationLevel(data);
-    const isVerified = verificationLevel !== 'none';
-    
     return `
         <div class="settings-panel">
-            ${isAdmin ? `
-            <div class="settings-section">
-                <h3><i class="fas fa-user-shield" style="color: var(--md-primary); margin-right: 8px;"></i>Admin Controls</h3>
-                <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg); border-left: 4px solid var(--md-primary);">
-                    <h4 style="margin-bottom: var(--md-spacing-sm); color: var(--md-primary);">Verification Management</h4>
-                    <p style="margin-bottom: var(--md-spacing-md); color: var(--md-on-surface-variant);">
-                        <strong>Current status:</strong> 
-                        ${isVerified ? 
-                            `<span style="color: #34a853;">✓ ${verificationLevel === 'premium' ? 'Premium Verified' : 'Verified'}</span>` : 
-                            '<span style="color: var(--md-on-surface-variant);">Not Verified</span>'
-                        }
-                    </p>
-                    <div style="display: flex; gap: var(--md-spacing-sm); flex-wrap: wrap;">
-                        <button class="btn ${isVerified ? 'btn-outlined' : 'btn-filled'}" onclick="adminToggleVerification('${data.uid}', ${!isVerified}, 'basic')">
-                            <i class="fas fa-${isVerified ? 'times' : 'check'}"></i>
-                            ${isVerified ? 'Remove Verification' : 'Verify Account'}
-                        </button>
-                        <button class="btn ${verificationLevel === 'premium' ? 'btn-filled' : 'btn-outlined'}" onclick="adminToggleVerification('${data.uid}', ${verificationLevel !== 'premium'}, 'premium')">
-                            <i class="fas fa-crown"></i>
-                            ${verificationLevel === 'premium' ? 'Remove Premium' : 'Make Premium'}
-                        </button>
-                        <button class="btn btn-outlined" onclick="showAdminVerificationPanel()">
-                            <i class="fas fa-user-plus"></i>
-                            Verify Other User
-                        </button>
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-            
             <div class="settings-section">
                 <h3>Profile Visibility</h3>
                 <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-md);">
@@ -2611,10 +1984,6 @@ function createSettingsPanel(data) {
                         <i class="fas fa-copy"></i>
                         Copy Link
                     </button>
-                    <button class="btn btn-outlined" onclick="generateProfileQR()">
-                        <i class="fas fa-qrcode"></i>
-                        QR Code
-                    </button>
                 </div>
                 <div style="background: var(--md-surface-variant); padding: var(--md-spacing-md); border-radius: var(--md-radius-medium); font-family: monospace; word-break: break-all; font-size: 0.875rem; margin-top: var(--md-spacing-md);">
                     https://aditya-cmd-max.github.io/profile/?id=${data.uid}
@@ -2627,32 +1996,10 @@ function createSettingsPanel(data) {
                     Manage your account settings
                 </p>
                 <div style="display: flex; gap: var(--md-spacing-md); flex-wrap: wrap;">
-                    <button class="btn btn-outlined" onclick="editProfile()">
+                    <a href="https://aditya-cmd-max.github.io/dashboard#profile" class="btn btn-outlined">
                         <i class="fas fa-edit"></i>
                         Edit Profile
-                    </button>
-                    <button class="btn btn-outlined" onclick="exportProfileData()">
-                        <i class="fas fa-download"></i>
-                        Export Data
-                    </button>
-                    <button class="btn btn-outlined" onclick="deleteProfile()" style="color: #ea4335; border-color: #ea4335;">
-                        <i class="fas fa-trash"></i>
-                        Delete Profile
-                    </button>
-                </div>
-            </div>
-            
-            <div class="settings-section">
-                <h3>Notifications</h3>
-                <div style="display: grid; gap: var(--md-spacing-sm);">
-                    <label style="display: flex; align-items: center; gap: var(--md-spacing-sm); cursor: pointer;">
-                        <input type="checkbox" ${data.notifications !== false ? 'checked' : ''} onchange="toggleNotifications(this.checked)">
-                        <span>Email notifications</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: var(--md-spacing-sm); cursor: pointer;">
-                        <input type="checkbox" ${data.newsletter !== false ? 'checked' : ''} onchange="toggleNewsletter(this.checked)">
-                        <span>Newsletter updates</span>
-                    </label>
+                    </a>
                 </div>
             </div>
         </div>
@@ -2660,10 +2007,6 @@ function createSettingsPanel(data) {
 }
 
 // ================= PROFILE ACTIONS =================
-
-async function editProfile() {
-    window.location.href = 'https://aditya-cmd-max.github.io/dashboard#profile';
-}
 
 function shareProfile() {
     if (!profileData || !profileData.uid) {
@@ -2690,6 +2033,13 @@ function shareProfile() {
 function fallbackShare(profileUrl) {
     document.getElementById('shareUrl').textContent = profileUrl;
     document.getElementById('shareModal').style.display = 'flex';
+}
+
+function copyShareLink() {
+    const shareUrl = document.getElementById('shareUrl').textContent;
+    copyToClipboard(shareUrl);
+    showToast('Link copied to clipboard!');
+    closeModal('shareModal');
 }
 
 async function copyProfileLink() {
@@ -2734,12 +2084,6 @@ async function toggleProfileVisibility() {
             switchTab('settings');
         }
         
-        // Update button in main view
-        const visibilityBtn = document.querySelector('.profile-controls button:nth-child(3)');
-        if (visibilityBtn) {
-            visibilityBtn.innerHTML = `<i class="fas fa-${newVisibility ? 'eye' : 'eye-slash'}"></i> ${newVisibility ? 'Public' : 'Private'}`;
-        }
-        
         showToast(`Profile is now ${newVisibility ? 'public' : 'private'}`);
         
     } catch (error) {
@@ -2748,154 +2092,180 @@ async function toggleProfileVisibility() {
     }
 }
 
-// ================= VERIFICATION SYSTEM =================
+// ================= ADMIN VERIFICATION FUNCTIONS =================
 
-async function requestVerification() {
-    const modal = document.getElementById('verificationModal');
-    const content = document.getElementById('verificationContent');
-    
-    const requirements = [
-        { met: currentUser?.emailVerified, text: 'Verified email address' },
-        { met: profileData?.displayName && profileData.displayName !== 'User', text: 'Complete profile name' },
-        { met: calculateMemberDays(profileData?.createdAt) >= 7, text: 'Account age (7+ days)' },
-        { met: profileData?.bio && profileData.bio.length > 20, text: 'Profile bio (20+ characters)' }
-    ];
-    
-    const metRequirements = requirements.filter(req => req.met).length;
-    const totalRequirements = requirements.length;
-    
-    content.innerHTML = `
-        <div style="text-align: center; margin-bottom: var(--md-spacing-xl);">
-            <div style="font-size: 4rem; color: var(--md-primary); margin-bottom: var(--md-spacing-lg);">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3 style="margin-bottom: var(--md-spacing-sm);">Request Verification</h3>
-            <p style="color: var(--md-on-surface-variant); margin-bottom: var(--md-spacing-lg);">
-                Get a verified badge to build trust with other users
-            </p>
-        </div>
-        
-        <div style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-large); margin-bottom: var(--md-spacing-xl);">
-            <h4 style="margin-bottom: var(--md-spacing-md);">Requirements (${metRequirements}/${totalRequirements})</h4>
-            <div style="display: grid; gap: var(--md-spacing-sm);">
-                ${requirements.map(req => `
-                    <div style="display: flex; align-items: center; gap: var(--md-spacing-sm); padding: var(--md-spacing-sm); background: var(--md-surface); border-radius: var(--md-radius-medium);">
-                        <i class="fas fa-${req.met ? 'check-circle' : 'times-circle'}" style="color: ${req.met ? '#34a853' : '#ea4335'};"></i>
-                        <span>${req.text}</span>
-                        ${!req.met ? `<span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);">Required</span>` : ''}
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-        
-        ${metRequirements === totalRequirements ? `
-            <div style="text-align: center;">
-                <button class="btn btn-filled" onclick="submitVerificationRequest()" style="width: 100%; margin-bottom: var(--md-spacing-md);">
-                    <i class="fas fa-paper-plane"></i>
-                    Submit Verification Request
-                </button>
-                <p style="font-size: 0.75rem; color: var(--md-on-surface-variant);">
-                    Verification requests are reviewed manually within 3-5 business days.
-                </p>
-            </div>
-        ` : `
-            <div style="text-align: center;">
-                <button class="btn btn-outlined" onclick="closeModal('verificationModal')" style="width: 100%; margin-bottom: var(--md-spacing-md);">
-                    Complete Requirements First
-                </button>
-                <p style="font-size: 0.875rem; color: var(--md-on-surface-variant);">
-                    Please complete all requirements before requesting verification.
-                </p>
-            </div>
-        `}
-    `;
-    
-    modal.style.display = 'flex';
-}
-
-async function submitVerificationRequest() {
-    try {
-        const requestData = {
-            userId: currentUser.uid,
-            email: currentUser.email,
-            displayName: profileData?.displayName,
-            requestedAt: new Date().toISOString(),
-            status: 'pending',
-            requirements: {
-                emailVerified: currentUser.emailVerified,
-                profileComplete: !!(profileData?.displayName && profileData.displayName !== 'User'),
-                accountAge: calculateMemberDays(profileData?.createdAt),
-                hasBio: !!(profileData?.bio && profileData.bio.length > 20)
-            }
-        };
-        
-        await db.collection('verificationRequests').doc(currentUser.uid).set(requestData);
-        
-        showToast('✅ Verification request submitted!');
-        closeModal('verificationModal');
-        
-    } catch (error) {
-        console.error('Error submitting verification request:', error);
-        showToast('Error submitting request');
-    }
-}
-
-async function adminToggleVerification(userId, verify, level) {
-    if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
+async function openAdminPanel() {
+    if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
         showToast('Admin access required');
         return;
     }
     
+    const modal = document.getElementById('adminVerifyModal');
+    const userList = document.getElementById('userList');
+    
+    userList.innerHTML = '<div class="loading-spinner-small" style="margin: 20px auto;"></div>';
+    modal.classList.add('active');
+    
     try {
-        const updates = {
-            verified: verify,
-            verifiedLevel: verify ? level : null,
-            verifiedAt: verify ? new Date().toISOString() : null,
-            verifiedBy: verify ? 'admin' : null,
-            updatedAt: new Date().toISOString()
-        };
+        // Load all users
+        const snapshot = await db.collection('users').get();
+        allUsers = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        }));
         
-        if (level === 'premium') {
-            updates.premiumVerified = verify;
+        displayUserList(allUsers);
+        
+        // Setup search
+        const searchInput = document.getElementById('adminSearchInput');
+        searchInput.value = '';
+        searchInput.addEventListener('input', (e) => {
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                filterUserList(e.target.value);
+            }, 300);
+        });
+        
+    } catch (error) {
+        console.error('Error loading users:', error);
+        userList.innerHTML = '<p style="color: #ea4335; text-align: center;">Error loading users</p>';
+    }
+}
+
+function displayUserList(users) {
+    const userList = document.getElementById('userList');
+    
+    if (users.length === 0) {
+        userList.innerHTML = '<p style="text-align: center; color: var(--md-on-surface-variant); padding: 20px;">No users found</p>';
+        return;
+    }
+    
+    userList.innerHTML = users.map(user => {
+        const isAdmin = user.email === ADMIN_EMAIL;
+        const isVerified = user.verified === true;
+        const initials = (user.displayName || 'U').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        
+        return `
+            <div class="user-list-item">
+                <img src="${getAvatarUrl(user)}" alt="${user.displayName || 'User'}" class="user-avatar-small" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                <div class="user-info-small">
+                    <div class="user-name-small">${user.displayName || 'User'}</div>
+                    <div class="user-email-small">${user.email || 'No email'}</div>
+                </div>
+                <div>
+                    <span class="user-status-badge ${isVerified ? 'badge-verified' : 'badge-unverified'}">
+                        ${isVerified ? '✓ Verified' : 'Not Verified'}
+                    </span>
+                    ${isAdmin ? '<span class="user-status-badge badge-admin" style="margin-left: 4px;">Admin</span>' : ''}
+                </div>
+                <div class="admin-actions">
+                    <button class="admin-btn" onclick="openVerifyUserModal('${user.uid}', '${user.displayName || 'User'}', '${user.email || ''}', ${isVerified})">
+                        <i class="fas fa-shield-alt"></i>
+                        Manage
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterUserList(searchTerm) {
+    if (!searchTerm.trim()) {
+        displayUserList(allUsers);
+        return;
+    }
+    
+    const filtered = allUsers.filter(user => 
+        (user.displayName && user.displayName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    
+    displayUserList(filtered);
+}
+
+function openVerifyUserModal(userId, displayName, email, currentVerified) {
+    const modal = document.getElementById('verifyUserModal');
+    const content = document.getElementById('verifyUserContent');
+    
+    content.innerHTML = `
+        <div class="user-info" style="background: var(--md-surface-variant); padding: var(--md-spacing-lg); border-radius: var(--md-radius-medium); margin-bottom: var(--md-spacing-lg);">
+            <div style="display: flex; align-items: center; gap: var(--md-spacing-md);">
+                <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--md-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem;">
+                    ${(displayName || 'U').charAt(0).toUpperCase()}
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 4px;">${displayName}</h3>
+                    <p style="color: var(--md-on-surface-variant);">${email}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: var(--md-spacing-lg);">
+            <label style="display: block; margin-bottom: var(--md-spacing-sm); font-weight: 500;">Verification Status</label>
+            <select id="verifyStatus" class="admin-search-input">
+                <option value="false" ${!currentVerified ? 'selected' : ''}>Not Verified</option>
+                <option value="true" ${currentVerified ? 'selected' : ''}>Verified</option>
+            </select>
+        </div>
+        
+        <input type="hidden" id="verifyUserId" value="${userId}">
+        <input type="hidden" id="verifyUserEmail" value="${email}">
+    `;
+    
+    modal.classList.add('active');
+}
+
+async function saveVerification() {
+    const userId = document.getElementById('verifyUserId').value;
+    const status = document.getElementById('verifyStatus').value === 'true';
+    const userEmail = document.getElementById('verifyUserEmail').value;
+    
+    if (userEmail === ADMIN_EMAIL && !status) {
+        if (!confirm('Are you sure you want to remove admin verification? This could affect admin privileges.')) {
+            return;
         }
+    }
+    
+    const saveBtn = document.getElementById('saveVerificationBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    
+    try {
+        await db.collection('users').doc(userId).update({
+            verified: status,
+            verifiedAt: status ? new Date().toISOString() : null,
+            verifiedBy: status ? ADMIN_EMAIL : null,
+            updatedAt: new Date().toISOString()
+        });
         
-        await db.collection('users').doc(userId).update(updates);
+        showToast(`User ${status ? 'verified ✓' : 'unverified'} successfully!`);
+        closeModal('verifyUserModal');
         
+        // Refresh user list
+        const snapshot = await db.collection('users').get();
+        allUsers = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        }));
+        displayUserList(allUsers);
+        
+        // If this is the current profile being viewed, refresh it
         if (profileData && profileData.uid === userId) {
-            Object.assign(profileData, updates);
+            profileData.verified = status;
+            if (status) {
+                profileData.verifiedAt = new Date().toISOString();
+                profileData.verifiedBy = ADMIN_EMAIL;
+            }
             await displayProfile(profileData, isOwner);
         }
         
-        showToast(`User ${verify ? level === 'premium' ? 'premium verified! 👑' : 'verified! ✓' : 'unverified'}`);
-        
     } catch (error) {
-        console.error('Error toggling verification:', error);
-        showToast('Error updating verification status');
+        console.error('Error updating verification:', error);
+        showToast('Error updating verification: ' + error.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = 'Save Changes';
     }
-}
-
-function showAdminVerificationPanel() {
-    if (!currentUser || currentUser.email !== 'adityajha1104@gmail.com') {
-        showToast('Admin access required');
-        return;
-    }
-    
-    const userId = prompt('Enter the User ID to manage verification:');
-    if (!userId) return;
-    
-    db.collection('users').doc(userId).get()
-        .then(doc => {
-            if (doc.exists) {
-                const userData = doc.data();
-                adminVerifyUserPrompt(userId, userData.displayName || 'User');
-            } else {
-                showToast('User not found');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching user:', error);
-            showToast('Error loading user');
-        });
 }
 
 // ================= UTILITY FUNCTIONS =================
@@ -2909,7 +2279,7 @@ function showNotFound(message = 'Profile Not Found') {
     if (notFoundTitle && notFoundDescription) {
         notFoundTitle.textContent = message;
         notFoundDescription.textContent = 
-            message === 'Profile not found' ? 
+            message === 'Profile Not Found' ? 
             'This profile does not exist or has been deleted.' :
             message === 'This profile is set to private' ?
             'This profile is private and can only be viewed by the owner.' :
@@ -2917,24 +2287,33 @@ function showNotFound(message = 'Profile Not Found') {
     }
 }
 
-function showToast(message, duration = 3000) {
-    const toast = document.getElementById('toast');
-    const toastMessage = document.getElementById('toastMessage');
-    
+function showToast(message, type = 'success') {
     if (!toast || !toastMessage) return;
     
     toastMessage.textContent = message;
     toast.classList.add('show');
     
+    // Change icon based on type
+    const icon = toast.querySelector('i');
+    if (icon) {
+        if (type === 'error') {
+            icon.className = 'fas fa-exclamation-circle';
+            icon.style.color = '#ea4335';
+        } else {
+            icon.className = 'fas fa-check-circle';
+            icon.style.color = 'var(--md-primary)';
+        }
+    }
+    
     setTimeout(() => {
         toast.classList.remove('show');
-    }, duration);
+    }, 3000);
 }
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('active');
     }
 }
 
@@ -2948,470 +2327,6 @@ function handleAvatarError(img) {
             ${initials}
         </div>
     `;
-}
-
-function ensureHttp(url) {
-    if (!url) return '#';
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        return 'https://' + url;
-    }
-    return url;
-}
-
-// ================= DATA LOADING =================
-
-async function loadUsageData() {
-    try {
-        if (!profileOwner) return;
-        
-        const usageDoc = await db.collection('usage').doc(profileOwner).get();
-        
-        if (usageDoc.exists) {
-            const usageData = usageDoc.data();
-            
-            if (document.getElementById('appsStat')) {
-                const apps = ['cloverAI', 'mindscribe', 'peo'];
-                const appsUsed = apps.filter(app => usageData[app] > 0).length;
-                document.getElementById('appsStat').textContent = appsUsed;
-                
-                if (profileData) {
-                    profileData.appsUsed = appsUsed;
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error loading usage data:', error);
-    }
-}
-
-async function loadPlatformStats() {
-    try {
-        const usersSnapshot = await db.collection('users').where('isPublic', '==', true).get();
-        const verifiedUsersSnapshot = await db.collection('users').where('verified', '==', true).get();
-        
-        const totalUsers = usersSnapshot.size;
-        const verifiedUsers = verifiedUsersSnapshot.size;
-        
-        // Estimate active users (last 24 hours)
-        const now = new Date();
-        const activeUsers = Array.from(usersSnapshot.docs).filter(doc => {
-            const userData = doc.data();
-            if (userData.lastActive) {
-                const lastActive = new Date(userData.lastActive);
-                return (now - lastActive) < 24 * 60 * 60 * 1000;
-            }
-            return false;
-        }).length;
-        
-        document.getElementById('totalUsers').textContent = totalUsers;
-        document.getElementById('verifiedUsers').textContent = verifiedUsers;
-        document.getElementById('activeUsers').textContent = activeUsers;
-        
-    } catch (error) {
-        console.error('Error loading platform stats:', error);
-        document.getElementById('totalUsers').textContent = '100+';
-        document.getElementById('verifiedUsers').textContent = '50+';
-        document.getElementById('activeUsers').textContent = '25+';
-    }
-}
-
-async function loadFeaturedProfiles() {
-    try {
-        const usersSnapshot = await db.collection('users')
-            .where('isPublic', '==', true)
-            .where('verified', '==', true)
-            .limit(6)
-            .get();
-        
-        if (usersSnapshot.empty) {
-            document.getElementById('featuredProfiles').innerHTML = `
-                <p style="color: var(--md-on-surface-variant); text-align: center;">No featured profiles available</p>
-            `;
-            return;
-        }
-        
-        const profiles = usersSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        
-        const profilesHTML = profiles.map(user => `
-            <div style="text-align: center; max-width: 150px;">
-                <div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px; border: 3px solid var(--md-primary);">
-                    <img src="${getAvatarUrl(user)}" alt="${user.displayName}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
-                </div>
-                <div style="font-weight: 600; margin-bottom: 4px;">${user.displayName || 'User'}</div>
-                <div style="font-size: 0.875rem; color: var(--md-on-surface-variant); margin-bottom: 8px;">${user.bio ? truncateText(user.bio, 60) : ''}</div>
-                <button class="btn btn-outlined" onclick="window.location.href='/profile/?id=${user.id}'" style="font-size: 0.8rem; padding: 6px 12px;">
-                    View Profile
-                </button>
-            </div>
-        `).join('');
-        
-        document.getElementById('featuredProfiles').innerHTML = profilesHTML;
-        
-    } catch (error) {
-        console.error('Error loading featured profiles:', error);
-        document.getElementById('featuredProfiles').innerHTML = `
-            <p style="color: var(--md-on-surface-variant); text-align: center;">Unable to load featured profiles</p>
-        `;
-    }
-}
-
-// ================= SEARCH MODAL =================
-
-function openSearchModal() {
-    if (searchModal && document.body.contains(searchModal)) {
-        searchModal.style.display = 'flex';
-        searchModal.querySelector('input')?.focus();
-        return;
-    }
-    
-    searchModal = document.createElement('div');
-    searchModal.className = 'modal';
-    searchModal.id = 'searchModal';
-    searchModal.style.display = 'flex';
-    
-    searchModal.innerHTML = `
-        <div class="modal-content" style="max-width: 800px; max-height: 80vh; width: 90%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h2 style="font-family: var(--md-font-heading); margin: 0; color: var(--md-on-surface);">
-                    <i class="fas fa-search" style="margin-right: 10px; color: var(--md-primary);"></i>
-                    Search Profiles
-                </h2>
-                <button class="btn btn-outlined" onclick="closeSearchModal()" style="min-width: 44px; min-height: 44px; padding: 0; width: 44px; height: 44px;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div style="position: relative; margin-bottom: 20px;">
-                <div style="position: relative;">
-                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--md-on-surface-variant); z-index: 1;"></i>
-                    <input type="text" 
-                           id="searchInput" 
-                           placeholder="Search by name, email, or username..." 
-                           style="width: 100%; padding: 16px 20px 16px 48px; border: 2px solid var(--md-outline); border-radius: var(--md-radius-pill); background: var(--md-surface); color: var(--md-on-surface); font-size: 16px; transition: var(--md-transition); box-sizing: border-box;"
-                           oninput="handleSearchInput(event)">
-                    <div id="searchLoading" style="display: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
-                        <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="searchFilters" style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--md-on-surface);">
-                    <input type="checkbox" id="showVerifiedOnly" onchange="performSearch()" style="accent-color: var(--md-primary);">
-                    <span>Verified only</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--md-on-surface);">
-                    <input type="checkbox" id="showPublicOnly" checked onchange="performSearch()" style="accent-color: var(--md-primary);">
-                    <span>Public profiles</span>
-                </label>
-            </div>
-            
-            <div id="searchResults" style="max-height: 50vh; overflow-y: auto; padding-right: 10px;">
-                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
-                    <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
-                    <p>Enter a name, email, or username to find users</p>
-                </div>
-            </div>
-            
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--md-outline); color: var(--md-on-surface-variant); font-size: 12px; text-align: center;">
-                <i class="fas fa-info-circle" style="margin-right: 6px;"></i>
-                Search only works for public profiles with complete information
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(searchModal);
-    
-    setTimeout(() => {
-        const input = searchModal.querySelector('#searchInput');
-        if (input) input.focus();
-    }, 100);
-    
-    searchModal.addEventListener('click', (e) => {
-        if (e.target === searchModal) {
-            closeSearchModal();
-        }
-    });
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && searchModal && searchModal.style.display === 'flex') {
-            closeSearchModal();
-        }
-    });
-}
-
-function closeSearchModal() {
-    if (searchModal) {
-        searchModal.style.display = 'none';
-    }
-}
-
-let searchTimeout = null;
-function handleSearchInput(event) {
-    const query = event.target.value.trim();
-    
-    if (searchTimeout) {
-        clearTimeout(searchTimeout);
-    }
-    
-    const searchLoading = document.getElementById('searchLoading');
-    if (searchLoading) {
-        searchLoading.style.display = query ? 'block' : 'none';
-    }
-    
-    searchTimeout = setTimeout(() => {
-        performSearch(query);
-    }, 500);
-}
-
-async function performSearch(query = null) {
-    if (isSearching) return;
-    
-    const searchInput = document.getElementById('searchInput');
-    const actualQuery = query || (searchInput ? searchInput.value.trim() : '');
-    const showVerifiedOnly = document.getElementById('showVerifiedOnly')?.checked || false;
-    const showPublicOnly = document.getElementById('showPublicOnly')?.checked || true;
-    const searchResults = document.getElementById('searchResults');
-    const searchLoading = document.getElementById('searchLoading');
-    
-    if (!searchResults) return;
-    
-    if (searchLoading && actualQuery) {
-        searchLoading.style.display = 'block';
-    }
-    
-    isSearching = true;
-    
-    try {
-        if (!actualQuery) {
-            searchResults.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
-                    <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search for profiles</h3>
-                    <p>Enter a name, email, or username to find users</p>
-                </div>
-            `;
-            return;
-        }
-        
-        let queryRef = db.collection('users');
-        
-        if (showPublicOnly) {
-            queryRef = queryRef.where('isPublic', '==', true);
-        }
-        
-        const snapshot = await queryRef.get();
-        
-        if (snapshot.empty) {
-            searchResults.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
-                    <i class="fas fa-users-slash" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No users found</h3>
-                    <p>No public profiles available to search</p>
-                </div>
-            `;
-            return;
-        }
-        
-        const searchTerm = actualQuery.toLowerCase();
-        const results = [];
-        
-        snapshot.forEach(doc => {
-            const user = doc.data();
-            user.id = doc.id;
-            
-            if (showVerifiedOnly && !user.verified) {
-                return;
-            }
-            
-            const displayName = user.displayName?.toLowerCase() || '';
-            const email = user.email?.toLowerCase() || '';
-            const username = user.username?.toLowerCase() || '';
-            const bio = user.bio?.toLowerCase() || '';
-            
-            let match = false;
-            let matchScore = 0;
-            
-            if (displayName === searchTerm) {
-                match = true;
-                matchScore += 10;
-            } else if (email === searchTerm) {
-                match = true;
-                matchScore += 9;
-            } else if (username === searchTerm) {
-                match = true;
-                matchScore += 8;
-            }
-            
-            if (displayName.includes(searchTerm)) {
-                match = true;
-                matchScore += 5;
-            }
-            if (email.includes(searchTerm)) {
-                match = true;
-                matchScore += 4;
-            }
-            if (username.includes(searchTerm)) {
-                match = true;
-                matchScore += 3;
-            }
-            if (bio.includes(searchTerm)) {
-                match = true;
-                matchScore += 2;
-            }
-            
-            if (match) {
-                user.matchScore = matchScore;
-                results.push(user);
-            }
-        });
-        
-        results.sort((a, b) => b.matchScore - a.matchScore);
-        
-        if (results.length === 0) {
-            searchResults.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
-                    <i class="fas fa-search-minus" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">No results found</h3>
-                    <p>No profiles match your search for "${actualQuery}"</p>
-                    <p style="font-size: 14px; margin-top: 10px;">Try different keywords or check spelling</p>
-                </div>
-            `;
-        } else {
-            let resultsHTML = `
-                <div style="margin-bottom: 16px; color: var(--md-on-surface-variant); font-size: 14px;">
-                    Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${actualQuery}"
-                </div>
-            `;
-            
-            results.forEach(user => {
-                const verificationLevel = getVerificationLevel(user);
-                const isVerified = verificationLevel !== 'none';
-                const isPremium = verificationLevel === 'premium';
-                const memberDays = calculateMemberDays(user.createdAt);
-                
-                resultsHTML += `
-                    <div class="user-card" onclick="viewUserProfile('${user.id}')" style="cursor: pointer; margin-bottom: 16px;">
-                        <div class="user-card-avatar">
-                            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`}" 
-                                 alt="${user.displayName || 'User'}"
-                                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid var(--md-surface);">
-                            ${isVerified ? `
-                                <div class="user-avatar-badge ${isPremium ? 'premium' : ''}" 
-                                     style="position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-radius: 50%; background: ${isPremium ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)' : 'var(--verified-badge-bg)'}; color: ${isPremium ? '#000' : 'white'}; display: flex; align-items: center; justify-content: center; border: 2px solid var(--md-surface); font-size: 10px;">
-                                    <i class="fas fa-${isPremium ? 'crown' : 'check'}"></i>
-                                </div>
-                            ` : ''}
-                        </div>
-                        
-                        <div class="user-card-info">
-                            <div class="user-card-header">
-                                <h4 class="user-name" style="margin: 0; font-size: 16px; color: var(--md-on-surface);">${user.displayName || 'User'}</h4>
-                                ${isVerified ? `
-                                    <div class="user-verified-badge ${isPremium ? 'premium' : ''}" 
-                                         style="display: inline-flex; align-items: center; gap: 4px; background: ${isPremium ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)' : 'var(--verified-badge-bg)'}; color: ${isPremium ? '#000' : 'white'}; padding: 4px 10px; border-radius: var(--md-radius-pill); font-size: 11px; font-weight: 600;">
-                                        <i class="fas fa-${isPremium ? 'crown' : 'check-circle'}"></i>
-                                        ${isPremium ? 'Premium' : 'Verified'}
-                                    </div>
-                                ` : ''}
-                            </div>
-                            
-                            <p class="user-email" style="margin: 4px 0; font-size: 14px; color: var(--md-on-surface-variant);">${user.email || ''}</p>
-                            
-                            <div class="user-stats" style="display: flex; gap: 12px; margin: 8px 0; flex-wrap: wrap;">
-                                ${user.streak ? `
-                                    <div class="user-stat" style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--md-on-surface-variant);">
-                                        <i class="fas fa-fire" style="font-size: 11px;"></i>
-                                        <span>${user.streak} day streak</span>
-                                    </div>
-                                ` : ''}
-                                <div class="user-stat" style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--md-on-surface-variant);">
-                                    <i class="fas fa-calendar" style="font-size: 11px;"></i>
-                                    <span>${memberDays} days</span>
-                                </div>
-                            </div>
-                            
-                            ${user.bio ? `
-                                <p class="user-bio" style="margin: 8px 0; font-size: 13px; color: var(--md-on-surface-variant); line-height: 1.4;">
-                                    ${truncateText(user.bio, 100)}
-                                </p>
-                            ` : ''}
-                        </div>
-                        
-                        <div class="user-card-actions">
-                            <button class="user-card-action" onclick="event.stopPropagation(); viewUserProfile('${user.id}')" style="padding: 8px 16px; border-radius: var(--md-radius-pill); font-size: 13px; font-weight: 500; cursor: pointer; transition: var(--md-transition); border: 1px solid var(--md-outline); background: var(--md-surface); color: var(--md-primary); display: flex; align-items: center; gap: 6px;">
-                                <i class="fas fa-eye"></i>
-                                View
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            searchResults.innerHTML = resultsHTML;
-        }
-        
-    } catch (error) {
-        console.error('Search error:', error);
-        searchResults.innerHTML = `
-            <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
-                <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 16px; color: #ea4335;"></i>
-                <h3 style="margin-bottom: 8px; color: var(--md-on-surface);">Search Error</h3>
-                <p>Failed to load search results. Please try again.</p>
-                <button onclick="performSearch()" style="margin-top: 16px; padding: 10px 20px; border-radius: var(--md-radius-pill); background: var(--md-primary); color: var(--md-on-primary); border: none; font-size: 14px; cursor: pointer;">
-                    Retry Search
-                </button>
-            </div>
-        `;
-    } finally {
-        isSearching = false;
-        if (searchLoading) {
-            searchLoading.style.display = 'none';
-        }
-    }
-}
-
-function viewUserProfile(userId) {
-    closeSearchModal();
-    window.location.href = `https://aditya-cmd-max.github.io/profile/?id=${userId}`;
-}
-
-function truncateText(text, maxLength) {
-    if (!text || text.length <= maxLength) return text || '';
-    return text.substring(0, maxLength) + '...';
-}
-
-// ================= KEYBOARD SHORTCUTS =================
-
-function setupKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
-        // Ctrl+K or Cmd+K for search
-        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-            e.preventDefault();
-            openSearchModal();
-        }
-        
-        // Escape to close modals
-        if (e.key === 'Escape') {
-            closeAllModals();
-        }
-        
-        // Ctrl+T or Cmd+T for theme toggle
-        if ((e.ctrlKey || e.metaKey) && e.key === 't') {
-            e.preventDefault();
-            toggleTheme();
-        }
-    });
-}
-
-function closeAllModals() {
-    closeModal('shareModal');
-    closeModal('verificationModal');
-    closeSearchModal();
 }
 
 // ================= MISC FUNCTIONS =================
@@ -3429,11 +2344,32 @@ function checkUrlForMessages() {
     }
     
     if (error) {
-        showToast('Error: ' + decodeURIComponent(error), 5000);
+        showToast('Error: ' + decodeURIComponent(error), 'error');
         // Clean URL
         const cleanUrl = window.location.pathname + window.location.search.replace(/[?&](message|error)=[^&]+/g, '').replace(/^&/, '?');
         window.history.replaceState({}, '', cleanUrl);
     }
+}
+
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Escape to close modals
+        if (e.key === 'Escape') {
+            closeAllModals();
+        }
+        
+        // Ctrl+T or Cmd+T for theme toggle
+        if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+}
+
+function closeAllModals() {
+    closeModal('shareModal');
+    closeModal('adminVerifyModal');
+    closeModal('verifyUserModal');
 }
 
 async function signOut() {
@@ -3442,7 +2378,7 @@ async function signOut() {
         window.location.href = 'https://aditya-cmd-max.github.io/signin';
     } catch (error) {
         console.error('Error signing out:', error);
-        showToast('Error signing out');
+        showToast('Error signing out', 'error');
     }
 }
 
@@ -3458,51 +2394,6 @@ async function updateLastActive() {
         console.error('Error updating last active:', error);
     }
 }
-
-function setupProfileInteractions() {
-    // Auto-update last active every minute if user is active
-    setInterval(updateLastActive, 60000);
-    
-    // Setup click listeners for badges
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('.badge')) {
-            const badgeName = e.target.closest('.badge').textContent.trim();
-            showToast(`Badge: ${badgeName}`);
-        }
-    });
-}
-
-// ================= PLACEHOLDER FUNCTIONS =================
-
-function upgradeToPremium() {
-    alert('Premium upgrade feature coming soon!');
-}
-
-function generateProfileQR() {
-    alert('QR Code generation feature coming soon!');
-}
-
-function exportProfileData() {
-    alert('Data export feature coming soon!');
-}
-
-function deleteProfile() {
-    if (confirm('Are you sure you want to delete your profile? This action cannot be undone and will remove all your data.')) {
-        showToast('Profile deletion would be processed here in production');
-    }
-}
-
-function toggleNotifications(enabled) {
-    showToast(`Email notifications ${enabled ? 'enabled' : 'disabled'}`);
-}
-
-function toggleNewsletter(enabled) {
-    showToast(`Newsletter ${enabled ? 'subscribed' : 'unsubscribed'}`);
-}
-
-// ================= INITIALIZATION =================
-
-console.log('Profile page JavaScript loaded successfully');
 
 // Add CSS for loading spinner
 const style = document.createElement('style');
@@ -3523,9 +2414,8 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+console.log('Profile page JavaScript loaded successfully');
     </script>
-
-
-    
 </body>
 </html>
