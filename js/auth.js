@@ -1,4 +1,4 @@
-// auth.js - Enhanced Google-style Profile System with Better UI/UX
+// auth.js - Complete Advanced Authentication System with Enhanced UI/UX
 class ReverbitAuth {
     constructor() {
         this.firebaseConfig = {
@@ -28,6 +28,7 @@ class ReverbitAuth {
         this.authListeners = [];
         this.profileObservers = [];
         this.themeObserver = null;
+        this.adminEmail = 'adityajha1104@gmail.com';
         
         // Performance tracking
         this.lastUpdate = 0;
@@ -317,6 +318,54 @@ class ReverbitAuth {
         });
     }
 
+    // ================= VERIFICATION HELPERS =================
+    isAdmin() {
+        return this.user?.email === this.adminEmail;
+    }
+
+    getVerificationLevel() {
+        if (!this.userProfile) return 'none';
+        
+        // Based on your Firestore rules - verified field in users collection
+        // Admin (adityajha1104@gmail.com) can set this field
+        if (this.userProfile.verified === true) {
+            return 'verified';
+        }
+        
+        return 'none';
+    }
+
+    isVerified() {
+        return this.userProfile?.verified === true;
+    }
+
+    getVerificationBadgeHTML() {
+        if (!this.isVerified()) return '';
+        
+        return `
+            <div class="verified-badge-popup verified" title="Verified Account">
+                <i class="fas fa-check-circle"></i>
+                Verified
+            </div>
+        `;
+    }
+
+    getAvatarBadgeHTML() {
+        if (!this.isVerified()) return '';
+        
+        return `
+            <div class="avatar-verified-badge verified" title="Verified Account">
+                <i class="fas fa-check"></i>
+            </div>
+        `;
+    }
+
+    getNameBadgeHTML() {
+        if (!this.isVerified()) return '';
+        
+        return `<i class="fas fa-check-circle name-badge verified" title="Verified Account"></i>`;
+    }
+
     // ================= AUTH LISTENERS =================
     addAuthListener(callback) {
         if (typeof callback === 'function') {
@@ -409,7 +458,12 @@ class ReverbitAuth {
                     // Update last active
                     await this.updateLastActive();
                     
+                    // Update streak
+                    await this.updateStreak();
+                    
                     console.log('Auth: User fully loaded:', this.user.email);
+                    console.log('Auth: Verified status:', this.userProfile.verified);
+                    console.log('Auth: Is admin:', this.isAdmin());
                     
                     // Show welcome for new users
                     this.showWelcomeMessage();
@@ -524,6 +578,7 @@ class ReverbitAuth {
                 this.userProfile = userDoc.data();
                 this.userProfile.uid = this.user.uid;
                 console.log('Auth: Loaded existing profile for:', this.user.email);
+                console.log('Auth: Verified status:', this.userProfile.verified);
                 
                 // Ensure all required fields exist
                 this.ensureProfileFields();
@@ -586,8 +641,7 @@ class ReverbitAuth {
             cloudinaryImageId: null,
             lastLogin: timestamp,
             lastActive: timestamp,
-            verified: false,
-            verifiedLevel: 'none',
+            verified: false, // Only admin can set this to true
             preferences: {
                 notifications: true,
                 emailUpdates: true,
@@ -619,7 +673,6 @@ class ReverbitAuth {
             showApps: true,
             streak: 0,
             verified: false,
-            verifiedLevel: 'none',
             totalLogins: this.userProfile.totalLogins || 1,
             preferences: this.userProfile.preferences || {
                 notifications: true,
@@ -678,8 +731,7 @@ class ReverbitAuth {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             theme: this.currentTheme,
-            verified: false,
-            verifiedLevel: 'none'
+            verified: false
         };
         
         console.log('Auth: Created fallback profile');
@@ -708,84 +760,6 @@ class ReverbitAuth {
         } catch (error) {
             console.error('Auth: Failed to update profile:', error);
         }
-    }
-
-    // ================= VERIFICATION HELPERS =================
-    getVerificationLevel() {
-        if (!this.userProfile?.verified) return 'none';
-        
-        // Check for premium verification
-        if (this.userProfile.verifiedLevel === 'premium' || this.userProfile.premiumVerified) {
-            return 'premium';
-        }
-        
-        // Check for admin verification
-        if (this.userProfile.verifiedBy === 'admin' || this.userProfile.verifiedBy === 'adityajha1104@gmail.com') {
-            return 'basic';
-        }
-        
-        return this.userProfile.verifiedLevel || 'basic';
-    }
-
-    isVerified() {
-        return this.getVerificationLevel() !== 'none';
-    }
-
-    getVerificationBadgeHTML(level = null) {
-        const verificationLevel = level || this.getVerificationLevel();
-        
-        if (verificationLevel === 'none') return '';
-        
-        const isPremium = verificationLevel === 'premium';
-        const icon = isPremium ? 'fa-crown' : 'fa-check-circle';
-        const text = isPremium ? 'Premium Verified' : 'Verified';
-        const colorClass = isPremium ? 'premium' : '';
-        
-        return `
-            <div class="verified-badge-popup ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
-                <i class="fas ${icon}"></i>
-                ${text}
-            </div>
-        `;
-    }
-
-    getAvatarBadgeHTML() {
-        const verificationLevel = this.getVerificationLevel();
-        
-        if (verificationLevel === 'none') return '';
-        
-        const isPremium = verificationLevel === 'premium';
-        const icon = isPremium ? 'fa-crown' : 'fa-check';
-        const colorClass = isPremium ? 'premium' : '';
-        
-        return `
-            <div class="avatar-verified-badge ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
-                <i class="fas ${icon}"></i>
-            </div>
-        `;
-    }
-
-    getNameWithBadges() {
-        const verificationLevel = this.getVerificationLevel();
-        
-        if (verificationLevel === 'none') return this.userProfile?.displayName || 'User';
-        
-        const isPremium = verificationLevel === 'premium';
-        let badges = '';
-        
-        if (isPremium) {
-            badges += `<i class="fas fa-crown name-crown-badge" title="Premium Verified"></i>`;
-        }
-        if (this.isVerified()) {
-            badges += `<i class="fas fa-check-circle name-verified-badge" title="Verified Account"></i>`;
-        }
-        
-        return `
-            <span class="name-with-badges">
-                <span class="display-name">${this.userProfile?.displayName || 'User'}</span>
-                ${badges}
-            </span>
-        `;
     }
 
     // ================= PROFILE AVATAR UI =================
@@ -1222,19 +1196,22 @@ class ReverbitAuth {
         const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
         
         // Verification status
-        const verificationLevel = this.getVerificationLevel();
-        const isVerified = verificationLevel !== 'none';
-        
-        // Get name with badges
-        const nameWithBadges = this.getNameWithBadges();
+        const isVerified = this.isVerified();
+        const isAdmin = this.isAdmin();
         
         // Streak display
         const streak = this.userProfile.streak || 0;
         const streakDisplay = streak > 0 ? `<span class="streak-badge"><i class="fas fa-fire"></i> ${streak}</span>` : '';
         
+        // Name badge
+        const nameBadge = this.getNameBadgeHTML();
+        
+        // Admin badge
+        const adminBadge = isAdmin ? '<span class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>' : '';
+        
         return `
             <div class="profile-popup-container">
-                <div class="profile-header">
+                <div class="profile-header ${isVerified ? 'verified-header' : ''}">
                     <button class="popup-close-btn" id="popup-close">
                         <i class="fas fa-times"></i>
                     </button>
@@ -1253,7 +1230,9 @@ class ReverbitAuth {
                     
                     <div class="profile-info">
                         <div class="profile-name-container">
-                            ${nameWithBadges}
+                            <span class="display-name">${displayName}</span>
+                            ${nameBadge}
+                            ${adminBadge}
                         </div>
                         <div class="profile-email">${email}</div>
                         <div class="profile-meta">
@@ -1269,13 +1248,16 @@ class ReverbitAuth {
                         
                         ${isVerified ? `
                         <div class="verification-status">
-                            ${this.getVerificationBadgeHTML()}
+                            <div class="verified-badge-popup verified">
+                                <i class="fas fa-check-circle"></i>
+                                Verified Account
+                            </div>
                         </div>
                         ` : ''}
                         
                         <button class="change-avatar-btn" id="change-avatar-btn">
-                            <i class="fas fa-edit"></i>
-                            Change profile picture
+                            <i class="fas fa-camera"></i>
+                            Change photo
                         </button>
                     </div>
                 </div>
@@ -1287,11 +1269,11 @@ class ReverbitAuth {
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">${streak}</div>
-                        <div class="stat-label">Day Streak</div>
+                        <div class="stat-label">Streak</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">${this.getMemberDays()}</div>
-                        <div class="stat-label">Days Active</div>
+                        <div class="stat-label">Days</div>
                     </div>
                 </div>
                 
@@ -1331,6 +1313,16 @@ class ReverbitAuth {
                         <span class="profile-menu-text">Settings</span>
                         <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
                     </button>
+                    
+                    ${isAdmin ? `
+                    <button class="profile-menu-item" id="admin-panel-btn">
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-crown"></i>
+                        </span>
+                        <span class="profile-menu-text">Admin Panel</span>
+                        <span class="menu-arrow"><i class="fas fa-chevron-right"></i></span>
+                    </button>
+                    ` : ''}
                     
                     <div class="profile-divider"></div>
                     
@@ -1384,6 +1376,15 @@ class ReverbitAuth {
             settingsBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 window.open('https://aditya-cmd-max.github.io/dashboard#settings', '_blank');
+            });
+        }
+        
+        // Admin panel
+        const adminBtn = this.profilePopup.querySelector('#admin-panel-btn');
+        if (adminBtn) {
+            adminBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open('https://aditya-cmd-max.github.io/admin', '_blank');
             });
         }
         
@@ -1465,20 +1466,7 @@ class ReverbitAuth {
         const spaceRight = viewportWidth - avatarRect.right - 16;
         const spaceLeft = avatarRect.left - 16;
         
-        console.log('Positioning debug:', {
-            avatarRect,
-            popupRect,
-            viewportWidth,
-            viewportHeight,
-            spaceBelow,
-            spaceAbove,
-            spaceRight,
-            spaceLeft
-        });
-        
-        // ===== FIXED POSITIONING LOGIC =====
-        
-        // 1. Check if popup would go off the right edge
+        // Check if popup would go off the right edge
         if (left + popupRect.width > viewportWidth) {
             // Try to position from the right edge of the avatar
             left = avatarRect.right - popupRect.width;
@@ -1489,12 +1477,12 @@ class ReverbitAuth {
             }
         }
         
-        // 2. Check if popup would go off the left edge
+        // Check if popup would go off the left edge
         if (left < 16) {
             left = 16;
         }
         
-        // 3. Vertical positioning - check if enough space below
+        // Vertical positioning - check if enough space below
         if (spaceBelow < popupRect.height) {
             // Not enough space below, try above
             if (spaceAbove >= popupRect.height) {
@@ -1505,11 +1493,9 @@ class ReverbitAuth {
             }
         }
         
-        // 4. Ensure final position is within bounds
+        // Ensure final position is within bounds
         left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
         top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
-        
-        console.log('Final position:', { top, left });
         
         // Apply position
         this.profilePopup.style.top = `${top}px`;
@@ -1529,7 +1515,7 @@ class ReverbitAuth {
         // Add backdrop
         this.addPopupBackdrop();
         
-        console.log('Auth: Profile popup shown at', { top, left });
+        console.log('Auth: Profile popup shown');
     }
 
     hideProfilePopup() {
@@ -1928,6 +1914,22 @@ class ReverbitAuth {
         }
     }
 
+    // ================= USAGE TRACKING =================
+    async trackUsage(appName, minutes) {
+        if (!this.user || !this.db) return;
+        
+        try {
+            const usageRef = this.db.collection('usage').doc(this.user.uid);
+            await usageRef.set({
+                [appName]: firebase.firestore.FieldValue.increment(minutes),
+                lastUsed: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            }, { merge: true });
+        } catch (error) {
+            console.error('Auth: Usage tracking error:', error);
+        }
+    }
+
     // ================= UTILITIES =================
     formatDate(dateString) {
         if (!dateString) return 'Recently';
@@ -2041,21 +2043,6 @@ class ReverbitAuth {
                 }
             }
         }, 10 * 60 * 1000);
-    }
-
-    async trackUsage(appName, minutes) {
-        if (!this.user || !this.db) return;
-        
-        try {
-            const usageRef = this.db.collection('usage').doc(this.user.uid);
-            await usageRef.set({
-                [appName]: firebase.firestore.FieldValue.increment(minutes),
-                lastUsed: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }, { merge: true });
-        } catch (error) {
-            console.error('Auth: Usage tracking error:', error);
-        }
     }
 
     // ================= LOGOUT =================
@@ -2227,12 +2214,32 @@ class ReverbitAuth {
                 box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             }
             
-            .avatar-verified-badge.premium {
-                background: #FFD700;
-                color: #000;
+            .avatar-verified-badge i {
+                font-size: 10px;
             }
             
-            .avatar-verified-badge i {
+            /* Name Badge */
+            .name-badge.verified {
+                color: #1a73e8;
+                font-size: 18px;
+                margin-left: 4px;
+            }
+            
+            /* Admin Badge */
+            .admin-badge {
+                background: #fbbc05;
+                color: #202124;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 8px;
+                border-radius: 12px;
+                margin-left: 6px;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+            
+            .admin-badge i {
                 font-size: 10px;
             }
             
@@ -2317,7 +2324,6 @@ class ReverbitAuth {
                 padding: 0;
             }
             
-            /* Popup Close Button */
             .popup-close-btn {
                 position: absolute;
                 top: 12px;
@@ -2343,9 +2349,13 @@ class ReverbitAuth {
             }
             
             .profile-header {
-                padding: 32px 24px 24px;
+                padding: 32px 24px 20px;
                 background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
                 position: relative;
+            }
+            
+            .profile-header.verified-header {
+                background: linear-gradient(135deg, #e8f0fe, #f0f4fe);
             }
             
             .profile-avatar-large {
@@ -2397,6 +2407,13 @@ class ReverbitAuth {
                 font-size: 14px;
                 z-index: 3;
                 box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            
+            .profile-avatar-large:hover .avatar-upload-btn {
+                opacity: 1;
+                transform: scale(1);
             }
             
             .avatar-upload-btn:hover {
@@ -2445,16 +2462,6 @@ class ReverbitAuth {
                 color: #202124;
             }
             
-            .name-verified-badge {
-                color: #1a73e8;
-                font-size: 18px;
-            }
-            
-            .name-crown-badge {
-                color: #FFD700;
-                font-size: 18px;
-            }
-            
             .profile-email {
                 font-size: 14px;
                 color: #5f6368;
@@ -2467,7 +2474,7 @@ class ReverbitAuth {
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 12px;
-                margin-bottom: 16px;
+                margin-bottom: 12px;
                 font-size: 12px;
                 color: #5f6368;
             }
@@ -2483,10 +2490,10 @@ class ReverbitAuth {
             }
             
             .verification-status {
-                margin-bottom: 16px;
+                margin: 12px 0;
             }
             
-            .verified-badge-popup {
+            .verified-badge-popup.verified {
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
@@ -2497,11 +2504,6 @@ class ReverbitAuth {
                 font-size: 12px;
                 font-weight: 500;
                 box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-            }
-            
-            .verified-badge-popup.premium {
-                background: #FFD700;
-                color: #000;
             }
             
             .verified-badge-popup i {
@@ -2531,8 +2533,9 @@ class ReverbitAuth {
             .profile-stats {
                 display: flex;
                 justify-content: space-around;
-                padding: 20px 24px;
+                padding: 16px 24px;
                 background: #f8f9fa;
+                border-top: 1px solid #e8eaed;
                 border-bottom: 1px solid #e8eaed;
             }
             
@@ -2541,7 +2544,7 @@ class ReverbitAuth {
             }
             
             .stat-number {
-                font-size: 22px;
+                font-size: 20px;
                 font-weight: 700;
                 color: #1a73e8;
                 line-height: 1.2;
@@ -2620,6 +2623,7 @@ class ReverbitAuth {
                 color: #5f6368;
                 text-decoration: none;
                 transition: color 0.2s ease;
+                margin: 0 4px;
             }
             
             .footer-links a:hover {
@@ -2627,7 +2631,7 @@ class ReverbitAuth {
             }
             
             .footer-links .dot {
-                margin: 0 4px;
+                color: #dadce0;
             }
             
             .profile-loading {
@@ -2683,7 +2687,7 @@ class ReverbitAuth {
             
             .dark-theme .profile-stats {
                 background: #2d2e31;
-                border-bottom-color: #3c4043;
+                border-color: #3c4043;
             }
             
             .dark-theme .stat-number {
@@ -2987,6 +2991,17 @@ class ReverbitAuth {
             Object.assign(this.userProfile, updates, { updatedAt: new Date().toISOString() });
             localStorage.setItem('reverbit_user_profile', JSON.stringify(this.userProfile));
             
+            // Update UI if displayName changed
+            if (updates.displayName && this.profileAvatar) {
+                this.updateProfileAvatar();
+            }
+            
+            // Refresh popup if open
+            if (this.profilePopup && this.profilePopup.style.display === 'block') {
+                this.profilePopup.innerHTML = this.getPopupHTML();
+                this.attachPopupEventListeners();
+            }
+            
             return true;
         } catch (error) {
             console.error('Auth: Profile update error:', error);
@@ -3016,9 +3031,14 @@ window.debugAuth = async function() {
     console.log('User:', window.ReverbitAuth.getUser());
     console.log('Profile:', window.ReverbitAuth.getUserProfile());
     console.log('Verified:', window.ReverbitAuth.isVerified());
-    console.log('Verification Level:', window.ReverbitAuth.getVerificationLevel());
+    console.log('Is Admin:', window.ReverbitAuth.isAdmin());
     console.log('Theme:', window.ReverbitAuth.getCurrentTheme());
     console.log('Dark Mode:', window.ReverbitAuth.isDarkModeActive());
+    console.log('Local Storage:', {
+        uid: localStorage.getItem('reverbit_user_uid'),
+        theme: localStorage.getItem('reverbit_theme'),
+        darkMode: localStorage.getItem('reverbit_dark_mode')
+    });
     console.log('=== END DEBUG ===');
 };
 
