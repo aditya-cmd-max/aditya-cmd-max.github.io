@@ -26,7 +26,7 @@
         }
 
         :root {
-            /* Color System */
+            /* Primary Colors */
             --primary-50: #e8f0fe;
             --primary-100: #d2e3fc;
             --primary-200: #a6c8f9;
@@ -38,6 +38,7 @@
             --primary-800: #0a2e70;
             --primary-900: #051748;
             
+            /* Secondary Colors */
             --secondary-50: #e6f4ea;
             --secondary-100: #cee8d6;
             --secondary-200: #9dd1b0;
@@ -49,6 +50,7 @@
             --secondary-800: #04372d;
             --secondary-900: #021c16;
             
+            /* Premium Colors */
             --premium-50: #fff7e0;
             --premium-100: #ffefc2;
             --premium-200: #ffe085;
@@ -60,6 +62,7 @@
             --premium-800: #b39700;
             --premium-900: #997a00;
             
+            /* Neutral Colors */
             --neutral-50: #f8f9fa;
             --neutral-100: #f1f3f4;
             --neutral-200: #e8eaed;
@@ -71,6 +74,7 @@
             --neutral-800: #3c4043;
             --neutral-900: #202124;
             
+            /* Status Colors */
             --success-50: #e6f4ea;
             --success-500: #34a853;
             --success-600: #2d8e46;
@@ -90,15 +94,18 @@
             --bg-primary: #ffffff;
             --bg-secondary: #f8f9fa;
             --bg-tertiary: #f1f3f4;
+            --bg-inverse: #202124;
             
             --text-primary: #202124;
             --text-secondary: #5f6368;
             --text-tertiary: #80868b;
+            --text-inverse: #ffffff;
             
             --border-light: #dadce0;
             --border-medium: #bdc1c6;
             --border-heavy: #9aa0a6;
             
+            /* Shadows */
             --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
@@ -185,6 +192,7 @@
             min-height: 100vh;
         }
 
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -270,7 +278,6 @@
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            pointer-events: none;
         }
 
         .btn-primary {
@@ -323,7 +330,6 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-tertiary);
-            pointer-events: none;
         }
 
         .search-input {
@@ -1233,26 +1239,25 @@
     </div>
 
     <script>
-        // ==================== CONFIGURATION ====================
-        const CONFIG = {
-            firebase: {
-                apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-                authDomain: "reverbit11.firebaseapp.com",
-                projectId: "reverbit11",
-                storageBucket: "reverbit11.firebasestorage.app",
-                messagingSenderId: "607495314412",
-                appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9"
-            },
-            adminEmail: 'adityajha1104@gmail.com',
-            usersPerPage: 20,
-            searchDebounceMs: 300,
-            maxSearchResults: 10,
-            batchSize: 10,
-            maxAvatarSize: 5 * 1024 * 1024
+        // ==================== FIREBASE CONFIG ====================
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9"
         };
 
+        const ADMIN_EMAIL = 'adityajha1104@gmail.com';
+        const USERS_PER_PAGE = 20;
+        const SEARCH_DEBOUNCE_MS = 300;
+        const MAX_SEARCH_RESULTS = 10;
+        const BATCH_SIZE = 10;
+        const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
+
         // ==================== INITIALIZE FIREBASE ====================
-        firebase.initializeApp(CONFIG.firebase);
+        firebase.initializeApp(FIREBASE_CONFIG);
         const auth = firebase.auth();
         const db = firebase.firestore();
         
@@ -1282,7 +1287,9 @@
             toastTimeout: null,
             isVerifying: false,
             isDeleting: false,
-            isInitialized: false
+            isUploading: false,
+            retryCount: 0,
+            maxRetries: 3
         };
 
         // ==================== DOM ELEMENTS ====================
@@ -1324,13 +1331,13 @@
                 document.body.className = theme === 'dark' ? 'dark-theme' : '';
                 localStorage.setItem('theme', theme);
                 State.theme = theme;
+                this.updateNavIcon();
             },
             
             toggle() {
                 const newTheme = State.theme === 'light' ? 'dark' : 'light';
                 this.apply(newTheme);
                 UIManager.showToast(`Theme: ${newTheme} mode`, 'info');
-                this.updateNavIcon();
             },
             
             updateNavIcon() {
@@ -1405,8 +1412,6 @@
                         UIManager.showLanding();
                     }
                 }
-                
-                State.isInitialized = true;
             },
             
             async loadUserProfile(uid) {
@@ -1527,7 +1532,7 @@
                     State.isOwner = State.currentUser && State.currentUser.uid === userId;
 
                     // Check privacy
-                    if (!State.profileData.isPublic && !State.isOwner && State.currentUser?.email !== CONFIG.adminEmail) {
+                    if (!State.profileData.isPublic && !State.isOwner && State.currentUser?.email !== ADMIN_EMAIL) {
                         UIManager.showNotFound('This profile is private');
                         UIManager.showLoading(false);
                         return;
@@ -1598,7 +1603,7 @@
                                         <h1 class="profile-name">${this.escapeHtml(data.displayName) || 'User'}</h1>
                                         <div class="profile-badges">
                                             ${this.getBadges(data)}
-                                            ${data.email === CONFIG.adminEmail ? `
+                                            ${data.email === ADMIN_EMAIL ? `
                                                 <span class="badge badge-admin">
                                                     <i class="fas fa-shield-alt"></i> Admin
                                                 </span>
@@ -1654,7 +1659,7 @@
                                         <i class="fas fa-share-alt"></i> Share
                                     </button>
                                     
-                                    ${State.currentUser?.email === CONFIG.adminEmail && !State.isOwner ? `
+                                    ${State.currentUser?.email === ADMIN_EMAIL && !State.isOwner ? `
                                         <button class="btn btn-secondary" onclick="AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
                                             <i class="fas fa-shield-alt"></i> Manage
                                         </button>
@@ -1986,8 +1991,8 @@
             
             async getUserProfiles(userIds) {
                 const profiles = [];
-                for (let i = 0; i < userIds.length; i += CONFIG.batchSize) {
-                    const batch = userIds.slice(i, i + CONFIG.batchSize);
+                for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
+                    const batch = userIds.slice(i, i + BATCH_SIZE);
                     const promises = batch.map(id => db.collection('users').doc(id).get());
                     const snapshots = await Promise.all(promises);
                     snapshots.forEach(snap => {
@@ -2060,7 +2065,7 @@
                         
                         return searchable.includes(query);
                     })
-                    .slice(0, CONFIG.maxSearchResults);
+                    .slice(0, MAX_SEARCH_RESULTS);
             },
             
             displayResults(results, query) {
@@ -2084,7 +2089,7 @@
         // ==================== ADMIN MANAGER ====================
         const AdminManager = {
             async showPanel() {
-                if (State.currentUser?.email !== CONFIG.adminEmail) {
+                if (State.currentUser?.email !== ADMIN_EMAIL) {
                     UIManager.showToast('Admin access required', 'error');
                     return;
                 }
@@ -2183,10 +2188,10 @@
             },
             
             renderUsers() {
-                const start = (State.currentPage - 1) * CONFIG.usersPerPage;
-                const end = start + CONFIG.usersPerPage;
+                const start = (State.currentPage - 1) * USERS_PER_PAGE;
+                const end = start + USERS_PER_PAGE;
                 const paginatedUsers = State.filteredUsers.slice(start, end);
-                const totalPages = Math.ceil(State.filteredUsers.length / CONFIG.usersPerPage);
+                const totalPages = Math.ceil(State.filteredUsers.length / USERS_PER_PAGE);
                 
                 const prevBtn = document.getElementById('prevPage');
                 const nextBtn = document.getElementById('nextPage');
@@ -2227,7 +2232,7 @@
                                 <button class="btn btn-icon btn-secondary" onclick="AdminManager.openVerifyModal('${user.uid}', '${user.displayName || 'User'}', '${level}')" title="Verify">
                                     <i class="fas fa-${level === 'premium' ? 'crown' : 'shield-alt'}"></i>
                                 </button>
-                                ${user.email !== CONFIG.adminEmail ? `
+                                ${user.email !== ADMIN_EMAIL ? `
                                     <button class="btn btn-icon btn-error" onclick="AdminManager.openDeleteModal('${user.uid}', '${user.displayName || 'User'}')" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -2239,7 +2244,7 @@
             },
             
             changePage(direction) {
-                const totalPages = Math.ceil(State.filteredUsers.length / CONFIG.usersPerPage);
+                const totalPages = Math.ceil(State.filteredUsers.length / USERS_PER_PAGE);
                 
                 if (direction === 'prev' && State.currentPage > 1) {
                     State.currentPage--;
@@ -2262,6 +2267,7 @@
                         <div>
                             <h4>${userName}</h4>
                             <p class="text-tertiary">ID: ${userId}</p>
+                            <p class="text-tertiary">Current: ${currentLevel === 'premium' ? 'Premium' : currentLevel === 'basic' ? 'Basic' : 'None'}</p>
                         </div>
                     </div>
                 `;
@@ -2291,7 +2297,7 @@
                         verifiedLevel: level === 'none' ? null : level,
                         verified: level !== 'none',
                         verifiedAt: level !== 'none' ? firebase.firestore.FieldValue.serverTimestamp() : null,
-                        verifiedBy: level !== 'none' ? CONFIG.adminEmail : null,
+                        verifiedBy: level !== 'none' ? ADMIN_EMAIL : null,
                         verificationNotes: notes || null,
                         premiumVerified: level === 'premium',
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2384,7 +2390,9 @@
             async upload(file) {
                 if (!file || !State.currentUser) return;
                 
-                if (file.size > CONFIG.maxAvatarSize) {
+                if (State.isUploading) return;
+                
+                if (file.size > MAX_AVATAR_SIZE) {
                     UIManager.showToast('Image too large (max 5MB)', 'error');
                     return;
                 }
@@ -2394,6 +2402,7 @@
                     return;
                 }
                 
+                State.isUploading = true;
                 UIManager.showToast('Uploading...', 'info');
                 
                 try {
@@ -2423,6 +2432,8 @@
                 } catch (error) {
                     console.error('Upload error:', error);
                     UIManager.showToast('Upload failed', 'error');
+                } finally {
+                    State.isUploading = false;
                 }
             }
         };
@@ -2551,7 +2562,7 @@
             },
             
             updateNav() {
-                const isAdmin = State.currentUser?.email === CONFIG.adminEmail;
+                const isAdmin = State.currentUser?.email === ADMIN_EMAIL;
                 
                 Elements.nav.innerHTML = `
                     <button class="btn btn-icon btn-secondary" id="themeToggle" onclick="ThemeManager.toggle()" title="Theme">
@@ -2589,7 +2600,7 @@
                 clearTimeout(State.searchTimeout);
                 State.searchTimeout = setTimeout(() => {
                     SearchManager.search(e.target.value);
-                }, CONFIG.searchDebounceMs);
+                }, SEARCH_DEBOUNCE_MS);
             });
 
             // Close search on outside click
