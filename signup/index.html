@@ -32,14 +32,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
         /* Material Design 3 Color System - Matching Ecosystem */
         :root {
-            /* Primary Colors - Blue Theme */
             --md-primary: #1a73e8;
             --md-primary-light: #4285f4;
             --md-primary-dark: #0d47a1;
@@ -47,7 +46,6 @@
             --md-primary-container: #d2e3fc;
             --md-on-primary-container: #001d3d;
             
-            /* Secondary Colors - Green Theme */
             --md-secondary: #0d8a72;
             --md-secondary-light: #34a853;
             --md-secondary-dark: #0a5c42;
@@ -55,38 +53,30 @@
             --md-secondary-container: #b8f2e6;
             --md-on-secondary-container: #00201a;
             
-            /* Surface Colors */
             --md-surface: #FFFFFF;
             --md-on-surface: #202124;
             --md-surface-variant: #F8F9FA;
             --md-on-surface-variant: #5f6368;
             
-            /* Background Colors */
             --md-background: #FFFFFF;
             --md-on-background: #202124;
             
-            /* Outline Colors */
             --md-outline: #DADCE0;
             --md-outline-variant: #E8EAED;
             
-            /* Shadow Elevations */
             --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
             --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
             --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
             --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
             
-            /* Animation */
             --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
             
-            /* Border Radius */
             --md-radius-small: 8px;
             --md-radius-medium: 12px;
             --md-radius-large: 16px;
             --md-radius-extra-large: 28px;
             --md-radius-pill: 9999px;
             
-            /* Spacing */
             --md-spacing-xs: 4px;
             --md-spacing-sm: 8px;
             --md-spacing-md: 16px;
@@ -94,7 +84,6 @@
             --md-spacing-xl: 32px;
             --md-spacing-xxl: 48px;
             
-            /* Typography */
             --md-font-logo: 'Playfair Display', serif;
             --md-font-heading: 'Inter', sans-serif;
             --md-font-body: 'Lora', serif;
@@ -118,9 +107,6 @@
             --md-on-secondary-container: #E8EAED;
             --md-outline: #3C4043;
             --md-outline-variant: #5F6368;
-            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
-            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
-            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
         }
 
         /* Base Styles */
@@ -128,10 +114,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
         }
 
         body {
@@ -146,7 +128,7 @@
             flex-direction: column;
         }
 
-        /* Enhanced Animated Background */
+        /* Animated Background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -184,24 +166,16 @@
         }
 
         @keyframes gradientMove {
-            0% {
-                transform: translate(0%, 0%) scale(1);
-            }
-            100% {
-                transform: translate(-2%, -2%) scale(1.1);
-            }
+            0% { transform: translate(0%, 0%) scale(1); }
+            100% { transform: translate(-2%, -2%) scale(1.1); }
         }
 
         @keyframes meshFloat {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(50px, 50px);
-            }
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
 
-        /* Modern Floating Pill Navbar */
+        /* Floating Navbar */
         .floating-navbar {
             position: fixed;
             top: var(--md-spacing-lg);
@@ -209,7 +183,6 @@
             transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--md-radius-pill);
             padding: var(--md-spacing-sm) var(--md-spacing-lg);
@@ -219,7 +192,6 @@
             gap: var(--md-spacing-md);
             z-index: 1000;
             box-shadow: var(--md-elevation-4);
-            transition: var(--md-transition);
             max-width: 1200px;
             width: 90%;
         }
@@ -234,7 +206,6 @@
             align-items: center;
             gap: var(--md-spacing-sm);
             text-decoration: none;
-            flex-shrink: 0;
         }
 
         .nav-logo {
@@ -248,7 +219,6 @@
             color: var(--md-on-primary);
             font-weight: 700;
             transition: var(--md-transition);
-            flex-shrink: 0;
         }
 
         .nav-logo:hover {
@@ -265,18 +235,15 @@
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--md-on-surface);
-            letter-spacing: -0.5px;
             white-space: nowrap;
         }
 
-        /* Desktop Navigation */
         .desktop-nav {
             display: flex;
             align-items: center;
             gap: var(--md-spacing-md);
-            flex-wrap: wrap;
-            justify-content: flex-end;
             flex-grow: 1;
+            justify-content: flex-end;
         }
 
         .nav-link {
@@ -288,7 +255,6 @@
             padding: var(--md-spacing-sm) var(--md-spacing-md);
             border-radius: var(--md-radius-pill);
             transition: var(--md-transition);
-            position: relative;
             white-space: nowrap;
         }
 
@@ -296,28 +262,13 @@
             background: var(--md-surface-variant);
             color: var(--md-primary);
             transform: translateY(-2px);
-            box-shadow: var(--md-elevation-2);
         }
 
         .nav-link.active {
             color: var(--md-primary);
-            font-weight: 700;
             background: var(--md-primary-container);
         }
 
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 24px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            border-radius: var(--md-radius-pill);
-        }
-
-        /* Theme Toggle Button */
         .theme-toggle {
             background: transparent;
             border: none;
@@ -330,11 +281,9 @@
             align-items: center;
             justify-content: center;
             transition: var(--md-transition);
-            flex-shrink: 0;
             background: var(--md-surface-variant);
         }
 
-        /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
             background: transparent;
@@ -346,16 +295,8 @@
             border-radius: 50%;
             align-items: center;
             justify-content: center;
-            transition: var(--md-transition);
-            flex-shrink: 0;
         }
 
-        .mobile-menu-btn:hover {
-            background: var(--md-surface-variant);
-            transform: rotate(90deg);
-        }
-
-        /* Mobile Navigation */
         .mobile-nav {
             position: fixed;
             top: 0;
@@ -397,12 +338,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--md-transition);
-        }
-
-        .mobile-nav-close:hover {
-            background: var(--md-surface-variant);
-            transform: rotate(90deg);
         }
 
         .mobile-nav-link {
@@ -426,12 +361,6 @@
             transform: translateX(8px);
         }
 
-        .mobile-nav-link i {
-            width: 24px;
-            text-align: center;
-        }
-
-        /* Mobile Theme Toggle */
         .mobile-theme-toggle {
             display: flex;
             align-items: center;
@@ -440,11 +369,6 @@
             background: var(--md-surface-variant);
             border-radius: var(--md-radius-medium);
             margin-top: var(--md-spacing-xl);
-        }
-
-        .mobile-theme-toggle span {
-            font-size: 1.125rem;
-            font-weight: 500;
         }
 
         .mobile-theme-btn {
@@ -479,7 +403,6 @@
             align-items: center;
         }
 
-        /* Signup Left Side */
         .signup-left {
             padding: var(--md-spacing-xl);
         }
@@ -515,7 +438,6 @@
             font-weight: 800;
             color: var(--md-on-surface);
             margin-bottom: var(--md-spacing-sm);
-            line-height: 1.2;
         }
 
         .signup-subtitle {
@@ -523,14 +445,12 @@
             font-size: 1.125rem;
             color: var(--md-on-surface-variant);
             margin-bottom: var(--md-spacing-xl);
-            line-height: 1.6;
         }
 
         .signup-features {
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-lg);
-            margin-top: var(--md-spacing-xl);
         }
 
         .feature-item {
@@ -562,10 +482,8 @@
         .feature-content p {
             font-size: 0.95rem;
             color: var(--md-on-surface-variant);
-            line-height: 1.5;
         }
 
-        /* Signup Right Side */
         .signup-right {
             background: var(--md-surface);
             border-radius: var(--md-radius-extra-large);
@@ -604,7 +522,6 @@
             font-size: 0.95rem;
         }
 
-        /* Form Styles */
         .signup-form {
             display: flex;
             flex-direction: column;
@@ -660,20 +577,35 @@
             align-items: center;
             justify-content: center;
             border-radius: var(--md-radius-small);
-            transition: var(--md-transition);
         }
 
-        .password-toggle:hover {
-            color: var(--md-primary);
-            background: var(--md-surface-variant);
+        .password-strength {
+            margin-top: var(--md-spacing-xs);
         }
 
-        /* Terms Checkbox */
+        .strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--md-outline);
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-text {
+            font-size: 0.875rem;
+            color: var(--md-on-surface-variant);
+        }
+
         .terms-group {
             display: flex;
             align-items: flex-start;
             gap: var(--md-spacing-sm);
-            margin-bottom: var(--md-spacing-sm);
         }
 
         .terms-group input[type="checkbox"] {
@@ -682,28 +614,20 @@
             accent-color: var(--md-primary);
             cursor: pointer;
             margin-top: 4px;
-            flex-shrink: 0;
         }
 
         .terms-group label {
             font-size: 0.95rem;
             color: var(--md-on-surface-variant);
             cursor: pointer;
-            line-height: 1.4;
         }
 
         .terms-link {
             color: var(--md-primary);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--md-transition);
         }
 
-        .terms-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -728,7 +652,7 @@
         }
 
         .btn-filled:hover {
-            transform: translateY(-2px) scale(1.02);
+            transform: translateY(-2px);
             box-shadow: var(--md-elevation-3);
         }
 
@@ -744,7 +668,6 @@
             transform: translateY(-2px);
         }
 
-        /* Divider */
         .divider {
             display: flex;
             align-items: center;
@@ -765,7 +688,6 @@
             padding: 0 var(--md-spacing-sm);
         }
 
-        /* Social Signup */
         .social-signup {
             display: flex;
             flex-direction: column;
@@ -799,7 +721,6 @@
             height: 20px;
         }
 
-        /* Signin Link */
         .signin-link {
             text-align: center;
             margin-top: var(--md-spacing-xl);
@@ -814,11 +735,6 @@
             margin-left: var(--md-spacing-xs);
         }
 
-        .signin-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Loading State */
         .loading {
             display: none;
             width: 20px;
@@ -832,72 +748,6 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        /* Password Strength */
-        .password-strength {
-            margin-top: var(--md-spacing-xs);
-        }
-
-        .strength-bar {
-            height: 4px;
-            border-radius: 2px;
-            background: var(--md-outline);
-            overflow: hidden;
-            margin-bottom: var(--md-spacing-xs);
-        }
-
-        .strength-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 2px;
-        }
-
-        .strength-text {
-            font-size: 0.875rem;
-            color: var(--md-on-surface-variant);
-        }
-
-        /* Footer */
-        .footer {
-            padding: var(--md-spacing-xl);
-            background: var(--md-surface);
-            border-top: 1px solid var(--md-outline);
-            margin-top: auto;
-            position: relative;
-        }
-
-        .footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .footer-logo {
-            font-family: var(--md-font-logo);
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--md-spacing-sm);
-        }
-
-        .footer-copyright {
-            color: var(--md-on-surface-variant);
-            font-size: 0.875rem;
         }
 
         /* Success Modal */
@@ -927,16 +777,6 @@
             border: 1px solid var(--md-outline);
             animation: slideInUp 0.3s ease-out;
             text-align: center;
-        }
-
-        .success-modal-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
 
         .success-icon {
@@ -983,51 +823,44 @@
             }
         }
 
-        /* Progress Indicator */
-        .form-progress {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--md-spacing-md);
-            margin-bottom: var(--md-spacing-lg);
-        }
-
-        .progress-step {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--md-surface-variant);
-            color: var(--md-on-surface-variant);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            transition: var(--md-transition);
+        .footer {
+            padding: var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-top: 1px solid var(--md-outline);
+            margin-top: auto;
             position: relative;
         }
 
-        .progress-step.active {
+        .footer-logo {
+            font-family: var(--md-font-logo);
+            font-size: 2rem;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            color: var(--md-on-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: var(--md-spacing-sm);
         }
 
-        .progress-step.completed {
-            background: var(--md-secondary);
-            color: white;
+        .footer-copyright {
+            color: var(--md-on-surface-variant);
+            font-size: 0.875rem;
+            text-align: center;
         }
 
-        .progress-step.completed::after {
-            content: '✓';
+        /* Error message */
+        .error-message {
+            color: #ea4335;
+            font-size: 0.875rem;
+            margin-top: 4px;
+            display: none;
         }
 
-        .progress-line {
-            flex: 1;
-            height: 2px;
-            background: var(--md-outline);
-            max-width: 40px;
+        .error-message.show {
+            display: block;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 1024px) {
             .signup-wrapper {
                 grid-template-columns: 1fr;
@@ -1064,82 +897,24 @@
                 width: 95%;
                 padding: var(--md-spacing-xs) var(--md-spacing-md);
                 top: var(--md-spacing-md);
-                justify-content: space-between;
-            }
-            
-            .nav-name {
-                font-size: 1.125rem;
-            }
-            
-            .signup-container {
-                padding: var(--md-spacing-xl) var(--md-spacing-md);
-                margin-top: 70px;
             }
             
             .signup-title {
                 font-size: 2rem;
             }
             
-            .signup-subtitle {
-                font-size: 1rem;
-            }
-            
             .form-title {
                 font-size: 1.5rem;
             }
             
-            .mobile-nav {
-                padding: var(--md-spacing-xl) var(--md-spacing-lg);
-            }
-            
-            .mobile-nav-link {
-                font-size: 1.125rem;
-                padding: var(--md-spacing-md);
-            }
-            
-            .success-modal-content {
-                padding: var(--md-spacing-lg);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .signup-title {
-                font-size: 1.75rem;
-            }
-            
-            .signup-subtitle {
-                font-size: 0.95rem;
-            }
-            
-            .nav-name {
-                display: none;
-            }
-            
-            .nav-brand {
-                gap: 0;
-            }
-            
-            .form-input {
-                padding: var(--md-spacing-md);
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .form-progress {
-                gap: var(--md-spacing-sm);
-            }
-            
-            .progress-line {
-                max-width: 20px;
+            .signup-container {
+                padding: var(--md-spacing-xl) var(--md-spacing-md);
+                margin-top: 70px;
             }
         }
     </style>
 </head>
 <body class="light-theme">
-    <!-- Enhanced Animated Background -->
     <div class="animated-bg">
         <div class="gradient-bg"></div>
         <div class="mesh-overlay"></div>
@@ -1153,19 +928,16 @@
             </div>
             <h3 class="success-title">Welcome to Reverbit!</h3>
             <p class="success-message" id="successMessage">
-                Your account has been created successfully. We've sent a verification email to your address.
-                Please verify your email to unlock all features.
+                Your account has been created successfully! You'll be redirected to your dashboard shortly.
             </p>
             <div class="success-actions">
-                <button class="btn btn-outlined" onclick="closeSuccessModal()">Close</button>
                 <button class="btn btn-filled" onclick="goToDashboard()">Go to Dashboard</button>
             </div>
         </div>
     </div>
 
-    <!-- Modern Floating Pill Navbar -->
+    <!-- Navbar -->
     <nav class="floating-navbar">
-        <!-- Left side: Logo and Brand -->
         <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
             <div class="nav-logo">
                 <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='R';">
@@ -1173,87 +945,47 @@
             <span class="nav-name">Reverbit</span>
         </a>
 
-        <!-- Desktop Navigation Links (Right side) -->
         <div class="desktop-nav">
-            <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-link">
-                <i class="fas fa-home" style="font-size: 0.9rem; margin-right: 4px;"></i>
-                Home
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="nav-link">
-                <i class="fas fa-blog" style="font-size: 0.9rem; margin-right: 4px;"></i>
-                Blogs
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/about/" class="nav-link">
-                <i class="fas fa-bullseye" style="font-size: 0.9rem; margin-right: 4px;"></i>
-                The Creator
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-link">
-                <i class="fas fa-network-wired" style="font-size: 0.9rem; margin-right: 4px;"></i>
-                Ecosystem
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html" class="nav-link">
-                <i class="fas fa-sign-in-alt" style="font-size: 0.9rem; margin-right: 4px;"></i>
-                Sign In
-            </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signup.html" class="nav-link active">
-                <i class="fas fa-user-plus" style="font-size: 0.9rem; margin-right: 4px;"></i>
-                Sign Up
-            </a>
-            <!-- Theme Toggle Button -->
-            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+            <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-link">Home</a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="nav-link">Blogs</a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/about" class="nav-link">The Creator</a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-link">Ecosystem</a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html" class="nav-link">Sign In</a>
+            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signup.html" class="nav-link active">Sign Up</a>
+            <button class="theme-toggle" id="theme-toggle">
                 <span class="material-icons-round">dark_mode</span>
             </button>
         </div>
 
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
             <span class="material-icons-round">menu</span>
         </button>
     </nav>
 
-    <!-- Mobile Navigation Menu -->
+    <!-- Mobile Navigation -->
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
             <div class="nav-brand">
                 <div class="nav-logo">
-                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='R';">
+                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
                 </div>
                 <span class="nav-name">Reverbit</span>
             </div>
-            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+            <button class="mobile-nav-close" id="mobileNavClose">
                 <span class="material-icons-round">close</span>
             </button>
         </div>
         
-        <a href="https://aditya-cmd-max.github.io/reverbit/" class="mobile-nav-link">
-            <i class="fas fa-home"></i>
-            Home
-        </a>
-        <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="mobile-nav-link">
-            <i class="fas fa-blog"></i>
-            Blogs
-        </a>
-        <a href="https://aditya-cmd-max.github.io/reverbit/about" class="mobile-nav-link">
-            <i class="fas fa-bullseye"></i>
-            The Creator
-        </a>
-        <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="mobile-nav-link">
-            <i class="fas fa-network-wired"></i>
-            Ecosystem
-        </a>
-        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html" class="mobile-nav-link">
-            <i class="fas fa-sign-in-alt"></i>
-            Sign In
-        </a>
-        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signup.html" class="mobile-nav-link active">
-            <i class="fas fa-user-plus"></i>
-            Sign Up
-        </a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/" class="mobile-nav-link">Home</a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="mobile-nav-link">Blogs</a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/about" class="mobile-nav-link">The Creator</a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="mobile-nav-link">Ecosystem</a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html" class="mobile-nav-link">Sign In</a>
+        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signup.html" class="mobile-nav-link active">Sign Up</a>
         
-        <!-- Mobile Theme Toggle -->
         <div class="mobile-theme-toggle">
             <span>Theme</span>
-            <button class="mobile-theme-btn" id="mobileThemeToggle" aria-label="Toggle theme">
+            <button class="mobile-theme-btn" id="mobileThemeToggle">
                 <span class="material-icons-round">dark_mode</span>
             </button>
         </div>
@@ -1262,7 +994,7 @@
     <!-- Signup Container -->
     <div class="signup-container">
         <div class="signup-wrapper">
-            <!-- Left Side: Brand & Features -->
+            <!-- Left Side: Features -->
             <div class="signup-left">
                 <div class="signup-brand">
                     <div class="signup-logo">
@@ -1281,7 +1013,7 @@
                         </div>
                         <div class="feature-content">
                             <h4>Access All Products</h4>
-                            <p>Get instant access to Clover AI, SkyCast Pro, MindScribe, and 10+ other AI tools</p>
+                            <p>Get instant access to Clover AI, MindScribe, Peo, and 10+ other AI tools</p>
                         </div>
                     </div>
                     
@@ -1291,17 +1023,7 @@
                         </div>
                         <div class="feature-content">
                             <h4>Seamless Sync</h4>
-                            <p>Your data and preferences sync automatically across all Reverbit products</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="feature-content">
-                            <h4>Personalized Experience</h4>
-                            <p>AI-powered recommendations tailored to your learning and productivity needs</p>
+                            <p>Your data syncs automatically across all Reverbit products</p>
                         </div>
                     </div>
                     
@@ -1324,30 +1046,21 @@
                     <p class="form-subtitle">Fill in your details to get started</p>
                 </div>
 
-                <!-- Progress Indicator -->
-                <div class="form-progress">
-                    <div class="progress-step active">1</div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">2</div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">3</div>
-                </div>
-
                 <form class="signup-form" id="signup-form">
                     <div class="form-group">
-                        <label for="name" class="form-label">Full Name</label>
-                        <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
-                        <div class="strength-text" id="nameError" style="color: #ff4444; display: none;"></div>
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
+                        <div class="error-message" id="nameError"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
+                        <label class="form-label">Email Address</label>
                         <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
-                        <div class="strength-text" id="emailError" style="color: #ff4444; display: none;"></div>
+                        <div class="error-message" id="emailError"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
+                        <label class="form-label">Password</label>
                         <div class="input-with-icon">
                             <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
                             <button type="button" class="password-toggle" id="togglePassword">
@@ -1360,17 +1073,18 @@
                             </div>
                             <div class="strength-text" id="strengthText">Password strength: Weak</div>
                         </div>
+                        <div class="error-message" id="passwordError"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="confirm-password" class="form-label">Confirm Password</label>
+                        <label class="form-label">Confirm Password</label>
                         <div class="input-with-icon">
-                            <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password" required>
+                            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
                             <button type="button" class="password-toggle" id="toggleConfirmPassword">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <div class="strength-text" id="passwordMatch"></div>
+                        <div class="error-message" id="confirmError"></div>
                     </div>
 
                     <div class="terms-group">
@@ -1393,7 +1107,7 @@
                     </div>
 
                     <div class="social-signup">
-                        <button type="button" class="social-btn" onclick="googleSignIn()">
+                        <button type="button" class="social-btn" id="googleSignUp">
                             <img src="https://brandlogo.org/wp-content/uploads/2025/05/Google-G-Icon-2025.png.webp" alt="Google">
                             <span>Continue with Google</span>
                         </button>
@@ -1401,7 +1115,7 @@
 
                     <p class="signin-link">
                         Already have an account?
-                        <a href="https://aditya-cmd-max.github.io/signin">Sign in</a>
+                        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html">Sign in</a>
                     </p>
                 </form>
             </div>
@@ -1410,54 +1124,30 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-logo">Reverbit</div>
-            <p class="footer-copyright">
-                Made with <i class="fas fa-heart" style="color: #ff4444;"></i> and <i class="fas fa-code"></i> by Aditya Jha.
-                <br>
-                &copy; 2025 Reverbit Innovations. All Rights Reserved
-            </p>
-        </div>
+        <div class="footer-logo">Reverbit</div>
+        <p class="footer-copyright">
+            Made with <i class="fas fa-heart" style="color: #ff4444;"></i> by Aditya Jha.
+            &copy; 2025 Reverbit Innovations. All Rights Reserved
+        </p>
     </footer>
 
     <script>
-        // Check if user is already logged in and redirect
-        async function checkAndRedirect() {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-                    authDomain: "reverbit11.firebaseapp.com",
-                    projectId: "reverbit11",
-                    storageBucket: "reverbit11.firebasestorage.app",
-                    messagingSenderId: "607495314412",
-                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-                    measurementId: "G-DMWMRM1M47"
-                };
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
+        };
 
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                
-                const auth = firebase.auth();
-                
-                // Check if user is already logged in
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        console.log('User is already signed in. Redirecting to dashboard...');
-                        // Small delay to ensure page is loaded
-                        setTimeout(() => {
-                            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-                        }, 500);
-                    }
-                });
-            } catch (error) {
-                console.error('Error checking auth status:', error);
-            }
-        }
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // Call this at the very beginning
-        checkAndRedirect();
-        
         // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
         const mobileThemeToggle = document.getElementById('mobileThemeToggle');
@@ -1466,16 +1156,30 @@
         const mobileNavClose = document.getElementById('mobileNavClose');
         const mobileNav = document.getElementById('mobileNav');
         const signupForm = document.getElementById('signup-form');
-        const togglePassword = document.getElementById('togglePassword');
-        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-        const passwordField = document.getElementById('password');
-        const confirmPasswordField = document.getElementById('confirm-password');
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
         const submitLoading = document.getElementById('submitLoading');
-        const strengthFill = document.getElementById('strengthFill');
-        const strengthText = document.getElementById('strengthText');
-        const passwordMatch = document.getElementById('passwordMatch');
         const successModal = document.getElementById('successModal');
         const successMessage = document.getElementById('successMessage');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+        const googleSignUp = document.getElementById('googleSignUp');
+
+        // Error elements
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmError = document.getElementById('confirmError');
+
+        // Check if user is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User already logged in, redirecting to dashboard');
+                window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+            }
+        });
 
         // Theme Toggle
         function toggleTheme() {
@@ -1494,18 +1198,12 @@
         themeToggle.addEventListener('click', toggleTheme);
         mobileThemeToggle.addEventListener('click', toggleTheme);
 
-        // Load saved theme preference
-        function loadThemePreference() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.body.classList.remove('light-theme');
-                themeIcons.forEach(icon => icon.textContent = 'light_mode');
-            } else {
-                document.body.classList.add('light-theme');
-                document.body.classList.remove('dark-theme');
-                themeIcons.forEach(icon => icon.textContent = 'dark_mode');
-            }
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+            themeIcons.forEach(icon => icon.textContent = 'light_mode');
         }
 
         // Mobile Navigation
@@ -1519,486 +1217,381 @@
             document.body.style.overflow = 'auto';
         });
 
-        // Close mobile nav when clicking on links
-        mobileNav.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileNav.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
-        });
-
-        // Toggle password visibility
-        function setupPasswordToggle(buttonId, fieldId) {
-            const toggleButton = document.getElementById(buttonId);
-            const field = document.getElementById(fieldId);
+        // Password toggle
+        function setupPasswordToggle(buttonId, inputId) {
+            const button = document.getElementById(buttonId);
+            const input = document.getElementById(inputId);
             
-            toggleButton.addEventListener('click', () => {
-                const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
-                field.setAttribute('type', type);
-                toggleButton.innerHTML = type === 'password' ? 
+            button.addEventListener('click', () => {
+                const type = input.type === 'password' ? 'text' : 'password';
+                input.type = type;
+                button.innerHTML = type === 'password' ? 
                     '<i class="fas fa-eye"></i>' : 
                     '<i class="fas fa-eye-slash"></i>';
             });
         }
 
         setupPasswordToggle('togglePassword', 'password');
-        setupPasswordToggle('toggleConfirmPassword', 'confirm-password');
+        setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
 
         // Password strength checker
-        function checkPasswordStrength(password) {
+        function checkPasswordStrength(pwd) {
             let score = 0;
-            if (password.length >= 8) score++;
-            if (/[A-Z]/.test(password)) score++;
-            if (/[a-z]/.test(password)) score++;
-            if (/[0-9]/.test(password)) score++;
-            if (/[^A-Za-z0-9]/.test(password)) score++;
+            if (pwd.length >= 8) score++;
+            if (/[A-Z]/.test(pwd)) score++;
+            if (/[a-z]/.test(pwd)) score++;
+            if (/[0-9]/.test(pwd)) score++;
+            if (/[^A-Za-z0-9]/.test(pwd)) score++;
             
-            let strength = '';
-            let color = '';
-            let width = 0;
+            const strengths = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+            const colors = ['#ff4444', '#ff8800', '#ffbb33', '#00C851', '#007E33'];
+            const widths = [20, 40, 60, 80, 100];
             
-            switch(score) {
-                case 0:
-                case 1:
-                    strength = 'Very Weak';
-                    color = '#ff4444';
-                    width = 20;
-                    break;
-                case 2:
-                    strength = 'Weak';
-                    color = '#ff8800';
-                    width = 40;
-                    break;
-                case 3:
-                    strength = 'Good';
-                    color = '#ffbb33';
-                    width = 60;
-                    break;
-                case 4:
-                    strength = 'Strong';
-                    color = '#00C851';
-                    width = 80;
-                    break;
-                case 5:
-                    strength = 'Very Strong';
-                    color = '#007E33';
-                    width = 100;
-                    break;
+            if (pwd.length === 0) {
+                return { text: 'Password strength: Weak', color: '#ff8800', width: 40 };
             }
             
-            return { strength, color, width };
+            const index = Math.min(score, 4);
+            return {
+                text: `Password strength: ${strengths[index]}`,
+                color: colors[index],
+                width: widths[index]
+            };
         }
 
-        // Check password match
-        function checkPasswordMatch() {
-            const password = passwordField.value;
-            const confirm = confirmPasswordField.value;
-            
-            if (!confirm) {
-                passwordMatch.textContent = '';
-                return;
-            }
-            
-            if (password === confirm) {
-                passwordMatch.textContent = '✓ Passwords match';
-                passwordMatch.style.color = 'var(--md-secondary)';
-            } else {
-                passwordMatch.textContent = '✗ Passwords do not match';
-                passwordMatch.style.color = '#ff4444';
-            }
-        }
-
-        // Update password strength and match in real-time
-        passwordField.addEventListener('input', () => {
-            const password = passwordField.value;
-            const strength = checkPasswordStrength(password);
-            
+        password.addEventListener('input', () => {
+            const strength = checkPasswordStrength(password.value);
             strengthFill.style.width = strength.width + '%';
-            strengthFill.style.background = strength.color;
-            strengthText.textContent = 'Password strength: ' + strength.strength;
-            
-            checkPasswordMatch();
+            strengthFill.style.backgroundColor = strength.color;
+            strengthText.textContent = strength.text;
         });
-        
-        confirmPasswordField.addEventListener('input', checkPasswordMatch);
+
+        confirmPassword.addEventListener('input', () => {
+            if (confirmPassword.value) {
+                if (password.value === confirmPassword.value) {
+                    confirmError.textContent = '';
+                    confirmError.classList.remove('show');
+                } else {
+                    confirmError.textContent = 'Passwords do not match';
+                    confirmError.classList.add('show');
+                }
+            } else {
+                confirmError.classList.remove('show');
+            }
+        });
 
         // Validate form
-        function validateForm(name, email, password, confirmPassword) {
-            const nameError = document.getElementById('nameError');
-            const emailError = document.getElementById('emailError');
-            
-            // Reset errors
-            nameError.style.display = 'none';
-            emailError.style.display = 'none';
-            
+        function validateForm() {
             let isValid = true;
             
+            // Reset errors
+            [nameError, emailError, passwordError, confirmError].forEach(el => {
+                el.textContent = '';
+                el.classList.remove('show');
+            });
+            
             // Validate name
-            if (name.length < 2) {
+            if (!fullName.value.trim()) {
+                nameError.textContent = 'Full name is required';
+                nameError.classList.add('show');
+                isValid = false;
+            } else if (fullName.value.trim().length < 2) {
                 nameError.textContent = 'Name must be at least 2 characters';
-                nameError.style.display = 'block';
+                nameError.classList.add('show');
                 isValid = false;
             }
             
             // Validate email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
+            if (!email.value.trim()) {
+                emailError.textContent = 'Email is required';
+                emailError.classList.add('show');
+                isValid = false;
+            } else if (!emailRegex.test(email.value)) {
                 emailError.textContent = 'Please enter a valid email address';
-                emailError.style.display = 'block';
+                emailError.classList.add('show');
                 isValid = false;
             }
             
-            // Validate password match
-            if (password !== confirmPassword) {
-                passwordMatch.textContent = '✗ Passwords do not match';
-                passwordMatch.style.color = '#ff4444';
+            // Validate password
+            if (!password.value) {
+                passwordError.textContent = 'Password is required';
+                passwordError.classList.add('show');
+                isValid = false;
+            } else if (password.value.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters';
+                passwordError.classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate confirm password
+            if (!confirmPassword.value) {
+                confirmError.textContent = 'Please confirm your password';
+                confirmError.classList.add('show');
+                isValid = false;
+            } else if (password.value !== confirmPassword.value) {
+                confirmError.textContent = 'Passwords do not match';
+                confirmError.classList.add('show');
                 isValid = false;
             }
             
             return isValid;
         }
 
-        // Show success modal
-        function showSuccessModal(message) {
-            successMessage.textContent = message;
-            successModal.style.display = 'flex';
+        // Create user profile in Firestore
+        async function createUserProfile(user) {
+            const displayName = fullName.value.trim();
+            const now = firebase.firestore.Timestamp.now();
+            
+            const userData = {
+                uid: user.uid,
+                email: user.email,
+                displayName: displayName,
+                username: displayName.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substring(2, 6),
+                photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=400`,
+                isPublic: true,
+                createdAt: now,
+                updatedAt: now,
+                theme: savedTheme || 'light',
+                bio: '',
+                country: '',
+                gender: '',
+                dob: '',
+                streak: 0,
+                totalLogins: 1,
+                followersCount: 0,
+                followingCount: 0,
+                verified: false,
+                verifiedLevel: 'none',
+                premiumVerified: false,
+                emailVerified: user.emailVerified,
+                lastLogin: now,
+                lastActive: now,
+                preferences: {
+                    notifications: true,
+                    emailUpdates: true,
+                    autoSave: true,
+                    darkMode: savedTheme === 'dark',
+                    language: 'en'
+                }
+            };
+            
+            await db.collection('users').doc(user.uid).set(userData);
+            
+            // Create usage record
+            await db.collection('usage').doc(user.uid).set({
+                cloverAI: 0,
+                mindscribe: 0,
+                peo: 0,
+                streak: 0,
+                lastUsed: now,
+                updatedAt: now
+            });
+            
+            return userData;
         }
 
-        // Close success modal
-        function closeSuccessModal() {
-            successModal.style.display = 'none';
-        }
-
-        // Go to dashboard
-        function goToDashboard() {
-            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
-        }
-
-        // Close modal when clicking outside
-        successModal.addEventListener('click', (e) => {
-            if (e.target === successModal) {
-                closeSuccessModal();
-            }
-        });
-
-        // Form submission - ENHANCED WITH BETTER VALIDATION AND SUCCESS MODAL
+        // Handle signup
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            if (!validateForm()) return;
             
-            // Validate form
-            if (!validateForm(name, email, password, confirmPassword)) {
-                return;
-            }
-            
-            // Show loading state
+            // Show loading
             submitLoading.style.display = 'block';
+            const submitBtn = signupForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.querySelector('span').textContent = 'Creating account...';
             
             try {
-                // Initialize Firebase
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-                    authDomain: "reverbit11.firebaseapp.com",
-                    projectId: "reverbit11",
-                    storageBucket: "reverbit11.firebasestorage.app",
-                    messagingSenderId: "607495314412",
-                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-                    measurementId: "G-DMWMRM1M47"
-                };
-
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
+                // Create user
+                const userCredential = await auth.createUserWithEmailAndPassword(
+                    email.value.trim(),
+                    password.value
+                );
                 
-                const auth = firebase.auth();
-                const db = firebase.firestore();
-                
-                // Create user with email and password
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
-                // Update user profile with name
+                // Update profile with display name
                 await user.updateProfile({
-                    displayName: name
+                    displayName: fullName.value.trim()
                 });
                 
-                // Send email verification
+                // Create Firestore profile
+                await createUserProfile(user);
+                
+                // Send verification email
                 await user.sendEmailVerification({
                     url: 'https://aditya-cmd-max.github.io/dashboard',
                     handleCodeInApp: true
                 });
                 
-                // Store user data in localStorage for SSO
-                localStorage.setItem('reverbit_user', JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: name,
-                    photoURL: user.photoURL
-                }));
-                
-                // Set session cookie for all subdomains
+                // Store session data
                 const sessionToken = btoa(JSON.stringify({
                     uid: user.uid,
                     email: user.email,
                     timestamp: Date.now()
                 }));
                 
-                document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
                 localStorage.setItem('reverbit_auth', sessionToken);
-                
-                // Create user profile in Firestore
-                const userRef = db.collection('users').doc(user.uid);
-                await userRef.set({
+                localStorage.setItem('reverbit_user', JSON.stringify({
                     uid: user.uid,
                     email: user.email,
-                    displayName: name,
-                    photoURL: user.photoURL || '',
-                    bio: '',
-                    country: '',
-                    streak: 0,
-                    emailVerified: user.emailVerified,
-                    joinedAt: user.metadata.creationTime,
-                    lastActive: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                });
+                    displayName: fullName.value.trim()
+                }));
                 
-                // Create usage record
-                const usageRef = db.collection('usage').doc(user.uid);
-                await usageRef.set({
-                    lastUsed: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-                
-                // Reset button state
-                submitBtn.querySelector('span').textContent = 'Create Account';
-                submitLoading.style.display = 'none';
-                submitBtn.disabled = false;
+                document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
                 
                 // Show success modal
-                showSuccessModal(`Your account has been created successfully! We've sent a verification email to ${email}. Please verify your email to unlock all features.`);
-                
-                // Reset form
-                signupForm.reset();
-                strengthFill.style.width = '0%';
-                strengthText.textContent = 'Password strength: Weak';
-                passwordMatch.textContent = '';
-                
-                // Update progress steps
-                document.querySelectorAll('.progress-step').forEach((step, index) => {
-                    if (index < 3) {
-                        step.classList.add('completed');
-                        step.classList.remove('active');
-                    }
-                });
+                successMessage.textContent = `Welcome to Reverbit, ${fullName.value.trim()}! Your account has been created successfully. We've sent a verification email to ${email.value}.`;
+                successModal.style.display = 'flex';
                 
             } catch (error) {
-                // Error state
-                submitBtn.querySelector('span').textContent = 'Create Account';
-                submitLoading.style.display = 'none';
-                submitBtn.disabled = false;
+                console.error('Signup error:', error);
                 
-                // Show error message
                 let errorMessage = 'Signup failed. Please try again.';
                 switch (error.code) {
                     case 'auth/email-already-in-use':
                         errorMessage = 'This email is already registered. Please sign in instead.';
                         break;
                     case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address. Please check and try again.';
-                        break;
-                    case 'auth/operation-not-allowed':
-                        errorMessage = 'Email/password accounts are not enabled. Please contact support.';
+                        errorMessage = 'Invalid email address.';
                         break;
                     case 'auth/weak-password':
-                        errorMessage = 'Password is too weak. Please choose a stronger password (at least 8 characters with letters and numbers).';
+                        errorMessage = 'Password is too weak. Please choose a stronger password.';
                         break;
                     case 'auth/network-request-failed':
-                        errorMessage = 'Network error. Please check your internet connection and try again.';
+                        errorMessage = 'Network error. Please check your internet connection.';
                         break;
                     case 'auth/too-many-requests':
-                        errorMessage = 'Too many attempts. Please try again in a few minutes.';
+                        errorMessage = 'Too many attempts. Please try again later.';
                         break;
                 }
                 
                 alert(errorMessage);
+            } finally {
+                submitLoading.style.display = 'none';
+                submitBtn.disabled = false;
             }
         });
 
-        // Google Sign In - ENHANCED WITH PROGRESS STEPS
-        window.googleSignIn = function() {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-                    authDomain: "reverbit11.firebaseapp.com",
-                    projectId: "reverbit11",
-                    storageBucket: "reverbit11.firebasestorage.app",
-                    messagingSenderId: "607495314412",
-                    appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-                    measurementId: "G-DMWMRM1M47"
-                };
-
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-              
-                const auth = firebase.auth();
-                const db = firebase.firestore();
-                const provider = new firebase.auth.GoogleAuthProvider();
-                
-                // Add additional scopes if needed
-                provider.addScope('profile');
-                provider.addScope('email');
-                
-                auth.signInWithPopup(provider)
-                    .then(async (result) => {
-                        const user = result.user;
-                        
-                        // Store user data in localStorage for SSO
-                        localStorage.setItem('reverbit_user', JSON.stringify({
-                            uid: user.uid,
-                            email: user.email,
-                            displayName: user.displayName,
-                            photoURL: user.photoURL
-                        }));
-                        
-                        // Set session cookie for all subdomains
-                        const sessionToken = btoa(JSON.stringify({
-                            uid: user.uid,
-                            email: user.email,
-                            timestamp: Date.now()
-                        }));
-                        
-                        document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
-                        localStorage.setItem('reverbit_auth', sessionToken);
-                        
-                        // Create user profile if needed
-                        const userRef = db.collection('users').doc(user.uid);
-                        const userDoc = await userRef.get();
-                        
-                        if (!userDoc.exists) {
-                            await userRef.set({
-                                uid: user.uid,
-                                email: user.email,
-                                displayName: user.displayName || '',
-                                photoURL: user.photoURL || '',
-                                bio: '',
-                                country: '',
-                                streak: 0,
-                                emailVerified: user.emailVerified,
-                                joinedAt: user.metadata.creationTime,
-                                lastActive: new Date().toISOString(),
-                                updatedAt: new Date().toISOString()
-                            });
-                        } else {
-                            // Update last active time
-                            await userRef.set({
-                                lastActive: new Date().toISOString(),
-                                updatedAt: new Date().toISOString()
-                            }, { merge: true });
-                        }
-                        
-                        // Create or update usage record
-                        const usageRef = db.collection('usage').doc(user.uid);
-                        await usageRef.set({
-                            lastUsed: new Date().toISOString(),
-                            updatedAt: new Date().toISOString()
-                        }, { merge: true });
-                        
-                        // Show success message
-                        console.log('Google sign up successful! Redirecting to dashboard...');
-                        
-                        // Update progress steps
-                        document.querySelectorAll('.progress-step').forEach((step, index) => {
-                            if (index < 3) {
-                                step.classList.add('completed');
-                                step.classList.remove('active');
-                            }
-                        });
-                        
-                        // Show success modal
-                        showSuccessModal(`Welcome to Reverbit, ${user.displayName || 'User'}! Your account has been created successfully with Google. You're now ready to explore our AI ecosystem.`);
-                        
-                    })
-                    .catch(error => {
-                        console.error('Google sign up error:', error);
-                        
-                        let errorMessage = 'Google sign up failed. Please try again.';
-                        if (error.code === 'auth/popup-closed-by-user') {
-                            errorMessage = 'Sign up was cancelled. Please try again.';
-                        } else if (error.code === 'auth/cancelled-popup-request') {
-                            errorMessage = 'Sign up was cancelled. Please try again.';
-                        } else if (error.code === 'auth/account-exists-with-different-credential') {
-                            errorMessage = 'An account already exists with this email. Please try signing in instead.';
-                        }
-                        
-                        alert(errorMessage);
-                    });
-            } catch (error) {
-                console.error('Error initializing Google sign up:', error);
-                alert('Error initializing Google sign up. Please try again.');
-            }
-        }
-
-        // Initialize everything when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            loadThemePreference();
+        // Google Sign Up
+        googleSignUp.addEventListener('click', async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
             
-            // Add subtle animation to form
-            const formElements = document.querySelectorAll('.signup-right *');
-            formElements.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
+            try {
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
                 
-                setTimeout(() => {
-                    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100 + index * 50);
-            });
+                // Check if user exists in Firestore
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    // Create profile for new user
+                    const now = firebase.firestore.Timestamp.now();
+                    
+                    await db.collection('users').doc(user.uid).set({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        username: (user.displayName || user.email.split('@')[0]).toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substring(2, 6),
+                        photoURL: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`,
+                        isPublic: true,
+                        createdAt: now,
+                        updatedAt: now,
+                        theme: savedTheme || 'light',
+                        bio: '',
+                        country: '',
+                        gender: '',
+                        dob: '',
+                        streak: 0,
+                        totalLogins: 1,
+                        followersCount: 0,
+                        followingCount: 0,
+                        verified: false,
+                        verifiedLevel: 'none',
+                        premiumVerified: false,
+                        emailVerified: user.emailVerified,
+                        lastLogin: now,
+                        lastActive: now,
+                        preferences: {
+                            notifications: true,
+                            emailUpdates: true,
+                            autoSave: true,
+                            darkMode: savedTheme === 'dark',
+                            language: 'en'
+                        }
+                    });
+                    
+                    await db.collection('usage').doc(user.uid).set({
+                        cloverAI: 0,
+                        mindscribe: 0,
+                        peo: 0,
+                        streak: 0,
+                        lastUsed: now,
+                        updatedAt: now
+                    });
+                } else {
+                    // Update last login for existing user
+                    await db.collection('users').doc(user.uid).update({
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        totalLogins: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+                
+                // Store session
+                const sessionToken = btoa(JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    timestamp: Date.now()
+                }));
+                
+                localStorage.setItem('reverbit_auth', sessionToken);
+                localStorage.setItem('reverbit_user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName
+                }));
+                
+                document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
+                
+                // Redirect to dashboard
+                window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+                
+            } catch (error) {
+                console.error('Google signup error:', error);
+                alert('Google signup failed: ' + error.message);
+            }
         });
-        
-        // Handle window resize
+
+        // Modal functions
+        window.goToDashboard = function() {
+            window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+        };
+
+        // Close mobile nav on window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth > 1024 && mobileNav.classList.contains('active')) {
                 mobileNav.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
-            
-            if (window.innerWidth <= 768) {
-                document.querySelector('.floating-navbar').style.padding = 'var(--md-spacing-xs) var(--md-spacing-md)';
-            } else {
-                document.querySelector('.floating-navbar').style.padding = 'var(--md-spacing-sm) var(--md-spacing-lg)';
-            }
         });
 
-        // Keyboard navigation
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
-                mobileNav.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-            
-            if (e.key === 'Escape' && successModal.style.display === 'flex') {
-                closeSuccessModal();
+            if (e.key === 'Escape') {
+                if (mobileNav.classList.contains('active')) {
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+                if (successModal.style.display === 'flex') {
+                    successModal.style.display = 'none';
+                }
             }
             
             if (e.shiftKey && e.key === 'T') {
                 toggleTheme();
-            }
-            
-            // Submit form with Ctrl/Cmd + Enter
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                const submitBtn = document.querySelector('#signup-form button[type="submit"]');
-                if (submitBtn && !submitBtn.disabled) {
-                    submitBtn.click();
-                }
             }
         });
     </script>
