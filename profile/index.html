@@ -14,7 +14,7 @@
         gtag('config', 'G-GS6V9ZCN0K');
     </script>
     
-    <!-- Local Font - Begum (as used on about page) -->
+    <!-- Local Font - Begum -->
     <style>
         @font-face {
             font-family: 'Begum';
@@ -53,7 +53,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
     <script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
     
-    <!-- GSAP for smooth animations -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
@@ -71,7 +71,7 @@
     
     <style>
         /* ============================================
-           REVERBIT PREMIUM DESIGN SYSTEM — FULL PRESERVATION
+           REVERBIT PREMIUM DESIGN SYSTEM
            ============================================ */
         
         * {
@@ -81,7 +81,6 @@
         }
 
         :root {
-            /* Reverbit signature colors */
             --md-primary: #B5651D;
             --md-primary-light: #CD8B45;
             --md-primary-dark: #8B4513;
@@ -110,7 +109,6 @@
             --md-outline: rgba(181, 101, 29, 0.3);
             --md-outline-variant: rgba(181, 101, 29, 0.15);
             
-            /* Elevations */
             --md-elevation-1: 0 2px 4px rgba(26, 18, 8, 0.08), 0 1px 2px rgba(26, 18, 8, 0.06);
             --md-elevation-2: 0 4px 8px rgba(26, 18, 8, 0.08), 0 2px 4px rgba(26, 18, 8, 0.06);
             --md-elevation-3: 0 8px 16px rgba(26, 18, 8, 0.08), 0 4px 8px rgba(26, 18, 8, 0.06);
@@ -118,11 +116,9 @@
             --md-elevation-5: 0 24px 32px rgba(26, 18, 8, 0.12), 0 8px 16px rgba(26, 18, 8, 0.08);
             --md-elevation-6: 0 32px 48px rgba(26, 18, 8, 0.15), 0 12px 24px rgba(26, 18, 8, 0.1);
             
-            /* Typography */
             --md-font-display: 'Begum', 'Playfair Display', serif;
             --md-font-body: 'Outfit', sans-serif;
             
-            /* Spacing */
             --space-xs: clamp(4px, 1vw, 8px);
             --space-sm: clamp(8px, 2vw, 16px);
             --space-md: clamp(16px, 3vw, 24px);
@@ -131,7 +127,6 @@
             --space-xxl: clamp(48px, 6vw, 64px);
             --space-xxxl: clamp(64px, 8vw, 96px);
             
-            /* Border radius */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -140,15 +135,11 @@
             --radius-xxxl: 48px;
             --radius-pill: 9999px;
             
-            /* Transitions */
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            
-            /* Shadows */
             --shadow-glow: 0 0 30px rgba(var(--md-primary-rgb), 0.3);
         }
 
-        /* Dark Theme */
         .dark-theme {
             --md-surface: #1A1208;
             --md-surface-variant: #2D2010;
@@ -190,11 +181,8 @@
             border-radius: 10px;
             border: 2px solid var(--md-surface-variant);
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--md-primary-dark), var(--md-secondary-dark));
-        }
 
-        /* ========== ANIMATED BACKGROUND ========== */
+        /* Animated Background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -234,7 +222,7 @@
             100% { transform: translate(80px,80px); }
         }
 
-        /* ========== SCROLL PROGRESS ========== */
+        /* Scroll Progress */
         .scroll-progress {
             position: fixed;
             top: 0;
@@ -247,7 +235,7 @@
             box-shadow: var(--shadow-glow);
         }
 
-        /* ========== PREMIUM NAVBAR ========== */
+        /* Premium Navbar */
         .navbar {
             position: fixed;
             top: var(--space-md);
@@ -256,7 +244,6 @@
             width: min(calc(100% - var(--space-xl)), 1400px);
             background: rgba(245, 237, 214, 0.85);
             backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
             border: 1px solid rgba(var(--md-primary-rgb), 0.2);
             border-radius: var(--radius-xxxl);
             padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-lg);
@@ -308,9 +295,6 @@
         .nav-logo {
             width: clamp(44px, 5vw, 52px);
             height: clamp(44px, 5vw, 52px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: var(--transition-bounce);
             filter: drop-shadow(0 4px 8px rgba(var(--md-primary-rgb), 0.3));
         }
@@ -323,10 +307,6 @@
             transform: rotate(10deg) scale(1.15);
             filter: drop-shadow(0 8px 16px rgba(var(--md-primary-rgb), 0.5));
         }
-        .nav-brand-text {
-            display: flex;
-            flex-direction: column;
-        }
         .nav-brand-name {
             font-family: var(--md-font-display);
             font-size: clamp(1.4rem, 3vw, 1.8rem);
@@ -335,7 +315,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
         }
 
         .nav-links {
@@ -349,7 +328,6 @@
             text-decoration: none;
             font-family: var(--md-font-display);
             font-weight: 600;
-            font-size: clamp(0.9rem, 1.2vw, 1rem);
             border-radius: var(--radius-pill);
             transition: var(--transition-bounce);
             display: flex;
@@ -357,7 +335,6 @@
             gap: 8px;
             position: relative;
             overflow: hidden;
-            z-index: 1;
         }
         .nav-link::before {
             content: '';
@@ -392,8 +369,8 @@
 
         /* Profile Avatar in Navbar */
         .profile-avatar-btn {
-            width: clamp(44px, 5vw, 48px);
-            height: clamp(44px, 5vw, 48px);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 2px solid var(--md-primary);
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
@@ -407,6 +384,7 @@
             font-weight: 600;
             font-size: 1.2rem;
             box-shadow: var(--md-elevation-3);
+            text-decoration: none;
         }
         .profile-avatar-btn:hover {
             transform: scale(1.15) rotate(5deg);
@@ -421,8 +399,8 @@
 
         /* Desktop Theme Toggle */
         .desktop-theme-toggle {
-            width: clamp(44px, 5vw, 48px);
-            height: clamp(44px, 5vw, 48px);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: none;
             background: linear-gradient(135deg, var(--md-surface-variant), var(--md-surface));
@@ -462,6 +440,29 @@
             box-shadow: var(--md-elevation-5);
         }
 
+        /* Logout Button */
+        .logout-btn {
+            padding: var(--space-sm) var(--space-xl);
+            background: transparent;
+            color: var(--md-tertiary);
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-family: var(--md-font-display);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-bounce);
+            border: 2px solid var(--md-tertiary);
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: var(--md-tertiary);
+            color: var(--md-on-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-4);
+        }
+
         /* Hide sign in button when logged in */
         body.user-signed-in .sign-in-btn {
             display: none !important;
@@ -470,8 +471,8 @@
         /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
-            width: clamp(48px, 6vw, 52px);
-            height: clamp(48px, 6vw, 52px);
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             border: none;
             background: linear-gradient(135deg, var(--md-surface-variant), var(--md-surface));
@@ -487,9 +488,6 @@
             color: var(--md-on-primary);
             transform: rotate(90deg) scale(1.1);
         }
-        .mobile-menu-btn .material-icons-round {
-            font-size: 1.8rem;
-        }
 
         @media (max-width: 1024px) {
             .nav-links { display: none; }
@@ -497,7 +495,7 @@
             .mobile-menu-btn { display: flex; }
         }
 
-        /* ========== MOBILE NAVIGATION ========== */
+        /* Mobile Navigation */
         .mobile-nav-overlay {
             position: fixed;
             top: 0;
@@ -506,7 +504,6 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             z-index: 998;
             opacity: 0;
             visibility: hidden;
@@ -525,11 +522,11 @@
             height: 100vh;
             background: var(--md-surface);
             z-index: 999;
-            padding: var(--space-xl) var(--space-lg) var(--space-lg);
+            padding: var(--space-xl) var(--space-lg);
             transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--md-elevation-6);
-            overflow-y: auto;
             border-left: 2px solid var(--md-outline);
+            overflow-y: auto;
         }
         .mobile-nav.open {
             right: 0;
@@ -574,7 +571,6 @@
             text-decoration: none;
             font-family: var(--md-font-display);
             font-size: 1.3rem;
-            font-weight: 600;
             border-radius: var(--radius-xxl);
             transition: var(--transition-bounce);
         }
@@ -682,7 +678,7 @@
             transform: rotate(30deg);
         }
 
-        /* ========== MAIN CONTAINER ========== */
+        /* Main Container */
         .main-wrapper {
             padding-top: 120px;
             padding-bottom: var(--space-xxl);
@@ -696,7 +692,7 @@
             padding: 0 var(--space-lg);
         }
 
-        /* ========== SEARCH ========== */
+        /* Search Section */
         .search-section {
             margin-bottom: var(--space-lg);
         }
@@ -740,7 +736,6 @@
             overflow-y: auto;
             display: none;
             z-index: 50;
-            backdrop-filter: blur(10px);
         }
         .search-results.show { display: block; animation: slideDown 0.2s; }
         @keyframes slideDown {
@@ -757,45 +752,63 @@
             border-bottom: 1px solid var(--md-outline);
         }
         .search-result-item:hover { background: var(--md-surface-variant); }
-        .search-result-item:last-child { border-bottom: none; }
         .search-result-avatar {
             width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
         }
-        .search-result-info .search-result-name { font-weight: 600; }
+        .search-result-name { font-weight: 600; }
         .search-result-email { font-size: 0.85rem; color: var(--md-on-surface-variant); }
 
-        /* ========== PROFILE CARD ========== */
+        /* Profile Card */
         .profile-section {
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
             border-radius: var(--radius-xxxl);
             padding: var(--space-xl);
             box-shadow: var(--md-elevation-3);
-            backdrop-filter: blur(10px);
             transition: var(--transition-bounce);
         }
         .profile-section:hover {
             box-shadow: var(--md-elevation-5);
             border-color: rgba(var(--md-primary-rgb), 0.4);
         }
+
+        /* Profile Header Layout */
         .profile-header {
-            display: grid;
-            grid-template-columns: 280px 1fr;
+            display: flex;
+            flex-direction: column;
             gap: var(--space-xl);
         }
-        @media (max-width: 768px) {
-            .profile-header { grid-template-columns: 1fr; }
+        @media (min-width: 768px) {
+            .profile-header {
+                flex-direction: row;
+                gap: var(--space-xxl);
+            }
         }
 
+        /* Avatar Section */
+        .profile-avatar-section {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+        }
         .profile-avatar {
             position: relative;
-            width: 240px;
-            height: 240px;
-            margin: 0 auto;
+            width: 200px;
+            height: 200px;
+        }
+        @media (min-width: 768px) {
+            .profile-avatar {
+                width: 240px;
+                height: 240px;
+            }
         }
         .profile-avatar-img {
-            width: 100%; height: 100%; border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--md-primary);
             box-shadow: var(--md-elevation-5);
@@ -804,21 +817,25 @@
         .profile-avatar:hover .profile-avatar-img {
             transform: scale(1.02);
         }
+
+        /* Verification Badges on Avatar */
         .profile-avatar-badge {
             position: absolute;
-            bottom: 15px; right: 15px;
-            width: 50px; height: 50px;
+            bottom: 15px;
+            right: 15px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 3px solid var(--md-surface);
-            font-size: 1.8rem;
+            font-size: 28px;
             background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: black;
+            color: #000;
             box-shadow: var(--md-elevation-4);
         }
-        .profile-avatar-badge-verified {
+        .profile-avatar-badge.verified {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: white;
         }
@@ -839,24 +856,37 @@
         }
         .profile-avatar:hover .avatar-overlay { opacity: 1; }
 
+        /* Profile Info Section */
         .profile-info {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: var(--space-md);
+            gap: var(--space-lg);
         }
-        .profile-name-section {
+
+        /* Name and Badges Row */
+        .profile-name-row {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
             flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xs);
         }
         .profile-name {
             font-family: var(--md-font-display);
-            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
             font-weight: 700;
             line-height: 1.2;
+            color: var(--md-on-surface);
         }
-        .profile-badges { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+
+        /* Badges Container */
+        .profile-badges {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
         .badge {
             display: inline-flex;
             align-items: center;
@@ -865,18 +895,35 @@
             border-radius: var(--radius-pill);
             font-size: 0.9rem;
             font-weight: 600;
+            white-space: nowrap;
         }
         .badge-verified {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: white;
         }
+        .badge-verified .material-icons-round {
+            font-size: 1.2rem;
+            color: #FFD700;
+        }
         .badge-premium {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: black;
         }
+        .badge-premium .material-icons-round {
+            font-size: 1.2rem;
+            color: #000;
+        }
         .badge-admin {
             background: var(--md-tertiary);
             color: white;
+        }
+
+        /* Email Row */
+        .profile-email-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-sm);
         }
         .profile-email {
             display: inline-flex;
@@ -887,13 +934,41 @@
             border-radius: var(--radius-pill);
             width: fit-content;
             border: 1px solid var(--md-outline);
+            font-size: 1rem;
         }
-        .profile-bio {
-            color: var(--md-on-surface-variant);
+        .profile-email .material-icons-round {
             font-size: 1.2rem;
-            line-height: 1.7;
-            max-width: 600px;
+            color: var(--md-primary);
         }
+
+        /* Bio Box */
+        .profile-bio-box {
+            background: var(--md-surface-variant);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            margin: var(--space-sm) 0;
+            border: 1px solid var(--md-outline);
+        }
+        .profile-bio-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-family: var(--md-font-display);
+            font-weight: 600;
+            color: var(--md-primary);
+            margin-bottom: var(--space-sm);
+            font-size: 1.1rem;
+        }
+        .profile-bio-label .material-icons-round {
+            font-size: 1.2rem;
+        }
+        .profile-bio-text {
+            color: var(--md-on-surface-variant);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Stats Grid */
         .profile-stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -903,13 +978,20 @@
             padding: var(--space-lg);
             margin: var(--space-md) 0;
         }
+        .profile-stat {
+            text-align: center;
+        }
         .profile-stat-value {
             font-size: 2rem;
             font-weight: 700;
             color: var(--md-primary);
         }
-        .profile-stat-label { color: var(--md-on-surface-variant); }
+        .profile-stat-label {
+            color: var(--md-on-surface-variant);
+            font-size: 0.9rem;
+        }
 
+        /* Follow Stats */
         .follow-stats {
             display: flex;
             gap: var(--space-xl);
@@ -928,11 +1010,46 @@
         .follow-stat-value {
             font-size: 1.8rem; font-weight: 700; color: var(--md-primary);
         }
+        .follow-stat-label {
+            font-size: 0.9rem;
+            color: var(--md-on-surface-variant);
+        }
 
+        /* Additional Info Grid */
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-md) 0;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--md-surface-variant);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--md-outline);
+        }
+        .info-item .material-icons-round {
+            color: var(--md-primary);
+            font-size: 1.2rem;
+        }
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--md-on-surface-variant);
+        }
+        .info-value {
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* Profile Actions */
         .profile-actions {
             display: flex;
             gap: var(--space-sm);
             flex-wrap: wrap;
+            margin: var(--space-md) 0;
         }
 
         /* Buttons */
@@ -967,6 +1084,7 @@
         .btn-error { background: var(--md-tertiary); color: white; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* Profile Meta */
         .profile-meta {
             display: flex;
             gap: var(--space-xl);
@@ -976,7 +1094,7 @@
             border-top: 1px dashed var(--md-outline);
         }
 
-        /* ========== ADMIN PANEL ========== */
+        /* Admin Panel */
         .admin-section {
             margin-top: var(--space-xl);
         }
@@ -1056,7 +1174,6 @@
             object-fit: cover;
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
         }
-        .user-row-details { flex: 1; }
         .user-row-name {
             font-weight: 600;
             display: flex;
@@ -1091,7 +1208,7 @@
         }
         .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ========== MODALS ========== */
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -1151,7 +1268,7 @@
             box-shadow: 0 0 0 4px rgba(var(--md-primary-rgb), 0.2);
         }
 
-        /* ========== TOAST ========== */
+        /* Toast */
         .toast {
             position: fixed;
             bottom: var(--space-xl);
@@ -1170,17 +1287,26 @@
             border: 1px solid var(--md-outline);
             min-width: 300px;
             max-width: 90%;
+            visibility: hidden;
+            opacity: 0;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast-success { background: var(--md-secondary); color: white; }
-        .toast-error { background: var(--md-tertiary); color: white; }
-        .toast-info { background: var(--md-primary); color: white; }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            visibility: visible;
+            opacity: 1;
+        }
+        .toast-success { background: var(--md-secondary); color: white; border: none; }
+        .toast-error { background: var(--md-tertiary); color: white; border: none; }
+        .toast-info { background: var(--md-primary); color: white; border: none; }
         .toast-close {
             background: none; border: none; color: inherit; cursor: pointer;
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* ========== LOADING ========== */
+        /* Loading */
         .loading {
             position: fixed;
             inset: 0;
@@ -1209,7 +1335,7 @@
             color: var(--md-primary);
         }
 
-        /* ========== NOT FOUND ========== */
+        /* Not Found */
         .not-found {
             text-align: center;
             padding: var(--space-xxl) var(--space-md);
@@ -1220,7 +1346,7 @@
             opacity: 0.5;
         }
 
-        /* ========== FOOTER ========== */
+        /* Footer */
         .footer {
             background: var(--md-surface-dim);
             padding: var(--space-xxxl) var(--space-lg) var(--space-lg);
@@ -1335,27 +1461,21 @@
             <div class="nav-logo">
                 <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
             </div>
-            <div class="nav-brand-text">
-                <span class="nav-brand-name">Reverbit</span>
-            </div>
+            <span class="nav-brand-name">Reverbit</span>
         </a>
         
         <div class="nav-links">
             <a href="https://aditya-cmd-max.github.io/" class="nav-link">
-                <span class="material-icons-round">home</span>
-                Home
+                <span class="material-icons-round">home</span> Home
             </a>
             <a href="https://aditya-cmd-max.github.io/circuit" class="nav-link">
-                <span class="material-icons-round">menu_book</span>
-                Blogs
+                <span class="material-icons-round">menu_book</span> Blogs
             </a>
             <a href="https://aditya-cmd-max.github.io/about" class="nav-link">
-                <span class="material-icons-round">person</span>
-                The Creator
+                <span class="material-icons-round">person</span> The Creator
             </a>
             <a href="https://aditya-cmd-max.github.io/ecosystem" class="nav-link">
-                <span class="material-icons-round">build</span>
-                Tools
+                <span class="material-icons-round">build</span> Tools
             </a>
         </div>
         
@@ -1364,8 +1484,7 @@
             <div id="desktopAvatar"></div>
             
             <a href="https://aditya-cmd-max.github.io/signin" class="sign-in-btn" id="signInButton">
-                <span class="material-icons-round">login</span>
-                Sign In
+                <span class="material-icons-round">login</span> Sign In
             </a>
             
             <button class="desktop-theme-toggle" id="themeToggle">
@@ -1384,7 +1503,7 @@
         <div class="mobile-nav-header">
             <div class="nav-brand">
                 <div class="nav-logo">
-                    <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
+                    <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit" width="40" height="40">
                 </div>
                 <span class="nav-brand-name">Reverbit</span>
             </div>
@@ -1398,29 +1517,29 @@
         
         <div class="mobile-nav-links">
             <a href="https://aditya-cmd-max.github.io/" class="mobile-nav-link">
-                <span class="material-icons-round">home</span>
-                Home
+                <span class="material-icons-round">home</span> Home
             </a>
             <a href="https://aditya-cmd-max.github.io/circuit" class="mobile-nav-link">
-                <span class="material-icons-round">menu_book</span>
-                Blogs
+                <span class="material-icons-round">menu_book</span> Blogs
             </a>
             <a href="https://aditya-cmd-max.github.io/about" class="mobile-nav-link">
-                <span class="material-icons-round">person</span>
-                The Creator
+                <span class="material-icons-round">person</span> The Creator
             </a>
             <a href="https://aditya-cmd-max.github.io/ecosystem" class="mobile-nav-link">
-                <span class="material-icons-round">build</span>
-                Tools
+                <span class="material-icons-round">build</span> Tools
             </a>
+            <a href="#" class="mobile-nav-link" id="mobileProfileLink">
+                <span class="material-icons-round">account_circle</span> Profile
+            </a>
+            <button class="mobile-logout-btn" id="mobileLogoutBtn">
+                <span class="material-icons-round">logout</span> Logout
+            </button>
         </div>
         
         <a href="https://aditya-cmd-max.github.io/signin" class="mobile-nav-link" id="mobileSignInLink">
-            <span class="material-icons-round">login</span>
-            Sign In
+            <span class="material-icons-round">login</span> Sign In
         </a>
         
-        <!-- Theme Toggle inside mobile menu -->
         <div class="mobile-theme-toggle">
             <span>Dark Mode</span>
             <button class="mobile-theme-btn" id="mobileThemeToggle">
@@ -1454,7 +1573,7 @@
                     <div class="footer-logo-img">
                         <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit" width="80" height="80">
                     </div>
-                    <div class="footer-brand-text">
+                    <div>
                         <div class="footer-brand-name">Reverbit</div>
                         <div class="footer-brand-tagline">From India, For the Future</div>
                     </div>
@@ -1528,7 +1647,7 @@
         </button>
     </div>
 
-    <!-- Modals (preserved exactly) -->
+    <!-- Modals -->
     <div class="modal" id="followersModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1643,7 +1762,7 @@
         <div class="loading-text">Reverbit</div>
     </div>
 
-    <!-- Your complete Firebase modular script - PRESERVED EXACTLY -->
+    <!-- Firebase Modular Script -->
     <script type="importmap">
         {
             "imports": {
@@ -1655,7 +1774,7 @@
     </script>
 
     <script type="module">
-        // ==================== YOUR COMPLETE FIREBASE MODULAR CODE - FULLY PRESERVED ====================
+        // ==================== FIREBASE MODULAR IMPORTS ====================
         import { initializeApp } from 'firebase/app';
         import { 
             getAuth, 
@@ -1680,7 +1799,7 @@
             enableIndexedDbPersistence
         } from 'firebase/firestore';
 
-        // Firebase Config
+        // ==================== FIREBASE CONFIG ====================
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
             authDomain: "reverbit11.firebaseapp.com",
@@ -1698,7 +1817,7 @@
 
         console.log('🔥 Firebase modular script starting...');
 
-        // Initialize Firebase
+        // ==================== INITIALIZE FIREBASE ====================
         try {
             console.log('Initializing Firebase with config:', FIREBASE_CONFIG);
             
@@ -1710,7 +1829,6 @@
             
             console.log('✅ Firebase services initialized');
 
-            // Enable persistence
             enableIndexedDbPersistence(db, {
                 synchronizeTabs: true
             }).then(() => {
@@ -1749,13 +1867,12 @@
             // ==================== DOM ELEMENTS ====================
             const Elements = {
                 loading: document.getElementById('loading'),
-                mainContent: document.getElementById('mainContent'),
                 contentArea: document.getElementById('contentArea'),
-                nav: document.getElementById('nav'),
                 searchInput: document.getElementById('searchInput'),
                 searchResults: document.getElementById('searchResults'),
                 toast: document.getElementById('toast'),
                 toastMessage: document.getElementById('toastMessage'),
+                toastIcon: document.getElementById('toastIcon'),
                 followersModal: document.getElementById('followersModal'),
                 followingModal: document.getElementById('followingModal'),
                 followersList: document.getElementById('followersList'),
@@ -1771,14 +1888,15 @@
                 deleteUserInfo: document.getElementById('deleteUserInfo'),
                 shareUrl: document.getElementById('shareUrl'),
                 saveVerificationBtn: document.getElementById('saveVerificationBtn'),
-                homeLink: document.getElementById('homeLink')
+                mobileProfileLink: document.getElementById('mobileProfileLink'),
+                mobileLogoutBtn: document.getElementById('mobileLogoutBtn'),
+                mobileSignInLink: document.getElementById('mobileSignInLink')
             };
 
             // ==================== THEME MANAGER ====================
             const ThemeManager = {
                 init() {
                     this.apply(State.theme);
-                    this.setupHomeLink();
                     this.setupThemeToggle();
                 },
                 
@@ -1806,19 +1924,6 @@
                     }
                 },
                 
-                setupHomeLink() {
-                    if (Elements.homeLink) {
-                        Elements.homeLink.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            if (State.currentUser) {
-                                window.location.href = `?id=${State.currentUser.uid}`;
-                            } else {
-                                UIManager.showLanding();
-                            }
-                        });
-                    }
-                },
-                
                 setupThemeToggle() {
                     document.getElementById('themeToggle')?.addEventListener('click', () => this.toggle());
                     document.getElementById('mobileThemeToggle')?.addEventListener('click', () => this.toggle());
@@ -1830,6 +1935,9 @@
                 init() {
                     console.log('AuthManager initializing...');
                     onAuthStateChanged(auth, user => this.handleAuthChange(user));
+                    
+                    // Setup logout handlers
+                    Elements.mobileLogoutBtn?.addEventListener('click', () => this.logout());
                 },
                 
                 async handleAuthChange(user) {
@@ -1837,11 +1945,11 @@
                     
                     State.currentUser = user;
                     
-                    // Hide loading
                     UIManager.showLoading(false);
                     
                     if (user) {
-                        // Ensure profile exists
+                        document.body.classList.add('user-signed-in');
+                        
                         const profileCreated = await this.ensureUserProfile(user.uid);
                         
                         if (profileCreated) {
@@ -1850,10 +1958,8 @@
                             await this.loadUserProfile(user.uid);
                         }
                         
-                        // Update navigation
                         UIManager.updateNav();
                         
-                        // Handle URL parameters
                         const urlParams = new URLSearchParams(window.location.search);
                         const userId = urlParams.get('id');
                         
@@ -1863,9 +1969,14 @@
                             window.location.href = `?id=${user.uid}`;
                         }
                         
-                        // Load users for search
                         await UserManager.loadAllUsers();
+                        
+                        // Setup mobile profile link
+                        if (Elements.mobileProfileLink) {
+                            Elements.mobileProfileLink.href = `?id=${user.uid}`;
+                        }
                     } else {
+                        document.body.classList.remove('user-signed-in');
                         State.currentUserProfile = null;
                         UIManager.updateNav();
                         
@@ -1903,7 +2014,6 @@
                             await this.createUserProfile(uid);
                             return true;
                         } else {
-                            // Update last login
                             await updateDoc(docRef, {
                                 lastLogin: serverTimestamp(),
                                 totalLogins: increment(1)
@@ -1928,7 +2038,11 @@
                         username,
                         photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=B5651D&color=fff&bold=true&size=400`,
                         bio: '',
+                        country: '',
+                        gender: '',
+                        dob: '',
                         isPublic: true,
+                        showApps: false,
                         verified: false,
                         verifiedLevel: 'none',
                         premiumVerified: false,
@@ -1940,10 +2054,6 @@
                         updatedAt: serverTimestamp(),
                         lastActive: serverTimestamp(),
                         lastLogin: serverTimestamp(),
-                        country: '',
-                        gender: '',
-                        dob: '',
-                        showApps: false,
                         cloudinaryImageId: '',
                         theme: 'light',
                         preferences: {
@@ -2014,17 +2124,14 @@
                         State.profileOwner = userId;
                         State.isOwner = State.currentUser && State.currentUser.uid === userId;
 
-                        // Check privacy
                         if (!State.profileData.isPublic && !State.isOwner && State.currentUser?.email !== ADMIN_EMAIL) {
                             UIManager.showNotFound('This profile is private');
                             UIManager.showLoading(false);
                             return;
                         }
 
-                        // Load followers count
                         await FollowManager.loadProfileFollowData(userId);
                         
-                        // Check follow status
                         if (State.currentUser && !State.isOwner) {
                             State.isFollowing = await FollowManager.checkFollowStatus(
                                 State.currentUser.uid, 
@@ -2034,7 +2141,6 @@
 
                         this.renderProfile();
                         
-                        // Update last active if owner
                         if (State.isOwner) {
                             await this.updateLastActive();
                         }
@@ -2066,41 +2172,68 @@
                         </button>
                     ` : '';
 
+                    const adminButton = State.currentUser?.email === ADMIN_EMAIL && !State.isOwner ? `
+                        <button class="btn btn-secondary" onclick="window.AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
+                            <span class="material-icons-round">verified</span> Manage
+                        </button>
+                    ` : '';
+
+                    const adminPanelButton = State.currentUser?.email === ADMIN_EMAIL ? `
+                        <button class="btn btn-secondary" onclick="window.AdminManager.showPanel()">
+                            <span class="material-icons-round">admin_panel_settings</span> Admin Panel
+                        </button>
+                    ` : '';
+
                     Elements.contentArea.innerHTML = `
                         <div class="profile-section">
                             <div class="profile-header">
-                                <div class="profile-avatar">
-                                    <img src="${this.getAvatarUrl(data)}" alt="${data.displayName}" class="profile-avatar-img" 
-                                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=B5651D&color=fff&bold=true'">
-                                    ${this.getAvatarBadge(data)}
-                                    ${State.isOwner ? `
-                                        <div class="avatar-overlay" onclick="window.AvatarManager.handleUpload()">
-                                            <span class="material-icons-round">photo_camera</span>
-                                        </div>
-                                    ` : ''}
+                                <!-- Avatar Section -->
+                                <div class="profile-avatar-section">
+                                    <div class="profile-avatar">
+                                        <img src="${this.getAvatarUrl(data)}" alt="${data.displayName}" class="profile-avatar-img" 
+                                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=B5651D&color=fff&bold=true'">
+                                        ${this.getAvatarBadge(data)}
+                                        ${State.isOwner ? `
+                                            <div class="avatar-overlay" onclick="window.AvatarManager.handleUpload()">
+                                                <span class="material-icons-round">photo_camera</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
                                 </div>
                                 
+                                <!-- Info Section -->
                                 <div class="profile-info">
-                                    <div>
-                                        <div class="profile-name-section">
-                                            <h1 class="profile-name">${this.escapeHtml(data.displayName) || 'User'}</h1>
-                                            <div class="profile-badges">
-                                                ${this.getBadges(data)}
-                                                ${data.email === ADMIN_EMAIL ? `
-                                                    <span class="badge badge-admin">
-                                                        <span class="material-icons-round" style="font-size: 1rem;">admin_panel_settings</span> Admin
-                                                    </span>
-                                                ` : ''}
-                                            </div>
+                                    <!-- Name and Badges -->
+                                    <div class="profile-name-row">
+                                        <h1 class="profile-name">${this.escapeHtml(data.displayName) || 'User'}</h1>
+                                        <div class="profile-badges">
+                                            ${this.getBadges(data)}
+                                            ${data.email === ADMIN_EMAIL ? `
+                                                <span class="badge badge-admin">
+                                                    <span class="material-icons-round">admin_panel_settings</span> Admin
+                                                </span>
+                                            ` : ''}
                                         </div>
-                                        
+                                    </div>
+                                    
+                                    <!-- Email -->
+                                    <div class="profile-email-row">
                                         <div class="profile-email">
                                             <span class="material-icons-round">email</span> ${this.escapeHtml(data.email) || 'No email'}
                                         </div>
                                     </div>
                                     
-                                    <p class="profile-bio">${this.escapeHtml(data.bio) || 'No bio added yet.'}</p>
+                                    <!-- Bio Box -->
+                                    <div class="profile-bio-box">
+                                        <div class="profile-bio-label">
+                                            <span class="material-icons-round">format_quote</span> Bio
+                                        </div>
+                                        <div class="profile-bio-text">
+                                            ${this.escapeHtml(data.bio) || 'No bio added yet.'}
+                                        </div>
+                                    </div>
                                     
+                                    <!-- Stats Grid -->
                                     <div class="profile-stats-grid">
                                         <div class="profile-stat">
                                             <div class="profile-stat-value">${data.streak || 0}</div>
@@ -2116,6 +2249,7 @@
                                         </div>
                                     </div>
                                     
+                                    <!-- Follow Stats -->
                                     <div class="follow-stats">
                                         <div class="follow-stat" onclick="window.FollowManager.showFollowers()">
                                             <div class="follow-stat-value">${State.followersCount}</div>
@@ -2127,10 +2261,35 @@
                                         </div>
                                     </div>
                                     
+                                    <!-- Additional Info Grid -->
+                                    <div class="profile-info-grid">
+                                        <div class="info-item">
+                                            <span class="material-icons-round">public</span>
+                                            <span class="info-label">Country</span>
+                                            <span class="info-value">${data.country || 'Not set'}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="material-icons-round">cake</span>
+                                            <span class="info-label">DOB</span>
+                                            <span class="info-value">${data.dob || 'Not set'}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="material-icons-round">wc</span>
+                                            <span class="info-label">Gender</span>
+                                            <span class="info-value">${data.gender || 'Not set'}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="material-icons-round">visibility</span>
+                                            <span class="info-label">Profile</span>
+                                            <span class="info-value">${data.isPublic ? 'Public' : 'Private'}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Actions -->
                                     <div class="profile-actions">
                                         ${State.isOwner ? `
                                             <button class="btn btn-primary" onclick="window.UIManager.showToast('Edit coming soon', 'info')">
-                                                <span class="material-icons-round">edit</span> Edit
+                                                <span class="material-icons-round">edit</span> Edit Profile
                                             </button>
                                             <button class="btn btn-secondary" onclick="window.PrivacyManager.togglePrivacy()">
                                                 <span class="material-icons-round">${data.isPublic ? 'visibility' : 'visibility_off'}</span>
@@ -2142,15 +2301,19 @@
                                             <span class="material-icons-round">share</span> Share
                                         </button>
                                         
-                                        ${State.currentUser?.email === ADMIN_EMAIL && !State.isOwner ? `
-                                            <button class="btn btn-secondary" onclick="window.AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
-                                                <span class="material-icons-round">verified</span> Manage
+                                        ${adminButton}
+                                        ${adminPanelButton}
+                                        
+                                        ${State.currentUser ? `
+                                            <button class="btn btn-error logout-btn" onclick="window.AuthManager.logout()">
+                                                <span class="material-icons-round">logout</span> Logout
                                             </button>
                                         ` : ''}
                                     </div>
                                     
+                                    <!-- Meta Info -->
                                     <div class="profile-meta">
-                                        <span><span class="material-icons-round" style="font-size: 1rem;">schedule</span> Last: ${lastActive}</span>
+                                        <span><span class="material-icons-round" style="font-size: 1rem;">schedule</span> Last active: ${lastActive}</span>
                                         <span><span class="material-icons-round" style="font-size: 1rem;">calendar_today</span> Joined: ${this.formatDate(data.createdAt)}</span>
                                     </div>
                                 </div>
@@ -2168,10 +2331,10 @@
                 getBadges(data) {
                     const level = this.getVerificationLevel(data);
                     if (level === 'premium') {
-                        return '<span class="badge badge-premium"><span class="material-icons-round" style="font-size: 1rem;">crown</span> Premium</span>';
+                        return '<span class="badge badge-premium"><span class="material-icons-round">crown</span> Premium</span>';
                     }
                     if (level === 'basic') {
-                        return '<span class="badge badge-verified"><span class="material-icons-round" style="font-size: 1rem;">verified</span> Verified</span>';
+                        return '<span class="badge badge-verified"><span class="material-icons-round">verified</span> Verified</span>';
                     }
                     return '';
                 },
@@ -2182,7 +2345,7 @@
                         return '<div class="profile-avatar-badge"><span class="material-icons-round">crown</span></div>';
                     }
                     if (level === 'basic') {
-                        return '<div class="profile-avatar-badge profile-avatar-badge-verified"><span class="material-icons-round">check</span></div>';
+                        return '<div class="profile-avatar-badge verified"><span class="material-icons-round">verified</span></div>';
                     }
                     return '';
                 },
@@ -2338,7 +2501,6 @@
                         
                         await this.loadProfileFollowData(State.profileOwner);
                         
-                        // Update the UI
                         ProfileManager.renderProfile();
                         
                     } catch (error) {
@@ -2580,7 +2742,7 @@
                 viewProfile(userId) {
                     window.location.href = `?id=${userId}`;
                     Elements.searchResults.classList.remove('show');
-                    Elements.searchInput.value = '';
+                    if (Elements.searchInput) Elements.searchInput.value = '';
                 }
             };
 
@@ -2962,7 +3124,7 @@
                         return;
                     }
                     
-                    const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
+                    const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
                     
                     if (file.size > MAX_AVATAR_SIZE) {
                         UIManager.showToast('Image too large (max 5MB)', 'error');
@@ -3122,6 +3284,11 @@
                     
                     Elements.toast.className = `toast toast-${type}`;
                     Elements.toastMessage.textContent = message;
+                    
+                    if (type === 'success') Elements.toastIcon.textContent = 'check_circle';
+                    else if (type === 'error') Elements.toastIcon.textContent = 'error';
+                    else Elements.toastIcon.textContent = 'info';
+                    
                     Elements.toast.classList.add('show');
                     
                     State.toastTimeout = setTimeout(() => {
@@ -3159,7 +3326,6 @@
                 ThemeManager.init();
                 AuthManager.init();
 
-                // Search input
                 if (Elements.searchInput) {
                     Elements.searchInput.addEventListener('input', (e) => {
                         clearTimeout(State.searchTimeout);
@@ -3169,7 +3335,6 @@
                     });
                 }
 
-                // Close search on outside click
                 document.addEventListener('click', (e) => {
                     if (Elements.searchResults && Elements.searchInput && 
                         !Elements.searchResults.contains(e.target) && 
@@ -3178,7 +3343,6 @@
                     }
                 });
 
-                // Scroll progress
                 window.addEventListener('scroll', () => {
                     const winScroll = document.documentElement.scrollTop;
                     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -3192,7 +3356,6 @@
                     }
                 });
 
-                // Mobile menu
                 const mobileBtn = document.getElementById('mobileMenuBtn');
                 const mobileNav = document.getElementById('mobileNav');
                 const overlay = document.getElementById('mobileNavOverlay');
@@ -3211,7 +3374,6 @@
                     overlay.classList.remove('active');
                 });
 
-                // Auth.js integration
                 if (typeof window.ReverbitAuth !== 'undefined') {
                     window.ReverbitAuth.addAuthListener((user, profile) => {
                         if (user) {
@@ -3237,7 +3399,6 @@
             window.ShareManager = ShareManager;
             window.UIManager = UIManager;
 
-            // Modal functions
             window.closeModal = (modalId) => UIManager.closeModal(modalId);
             window.closeToast = () => UIManager.closeToast();
             window.saveVerification = () => AdminManager.saveVerification();
@@ -3263,7 +3424,6 @@
 
     <!-- Auth.js integration -->
     <script>
-        // Debug auth initialization
         console.log('🔍 Checking auth status...');
         
         function checkAuth() {
@@ -3286,8 +3446,6 @@
                             if (!document.querySelector('.reverbit-profile-avatar')) {
                                 console.log('⚠️ Avatar not found, forcing...');
                                 window.ReverbitAuth.addProfileAvatar();
-                            } else {
-                                console.log('✅ Avatar found in DOM');
                             }
                         }, 1000);
                     } else {
