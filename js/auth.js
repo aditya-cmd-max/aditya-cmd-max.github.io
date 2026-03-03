@@ -8,12 +8,13 @@ class ReverbitAuth {
     constructor() {
         this.firebaseConfig = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-            authDomain: "reverbit11.firebaseapp.com",
-            projectId: "reverbit11",
-            storageBucket: "reverbit11.firebasestorage.app",
-            messagingSenderId: "607495314412",
-            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-            measurementId: "G-DMWMRM1M47"
+  authDomain: "reverbit11.firebaseapp.com",
+  databaseURL: "https://reverbit11-default-rtdb.firebaseio.com",
+  projectId: "reverbit11",
+  storageBucket: "reverbit11.firebasestorage.app",
+  messagingSenderId: "607495314412",
+  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+  measurementId: "G-DMWMRM1M47"
         };
         
         this.cloudinaryConfig = {
