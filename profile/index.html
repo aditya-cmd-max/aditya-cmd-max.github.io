@@ -896,8 +896,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     white-space: nowrap;
-
-    flex: 0 0 auto;   /* 👈 ADD THIS */
+     flex: 0 0 auto; 
 }
         .badge-verified {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
@@ -910,7 +909,10 @@
         .badge-premium {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: black;
+            padding: 6px 14px;
+            min-width: fit-content;
         }
+        
         .badge-premium .material-icons-round {
             font-size: 1.2rem;
             color: #000;
