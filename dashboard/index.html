@@ -1,900 +1,578 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Reverbit - Dashboard</title>
-    <meta name="description" content="Your Reverbit Dashboard - Manage all your AI tools in one place">
+    <title>Reverbit · Dashboard</title>
     
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Material Icons -->
+    <!-- Material Icons Round -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-
-    <!-- Cloudinary Upload Widget -->
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    
+    <!-- Cropper.js for image cropping -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <style>
-        /* Material Design 3 Color System with Enhanced Blue/Green - MATCHING REVERBIT */
-        :root {
-            /* Primary Colors - Blue Theme */
-            --md-primary: #1a73e8;
-            --md-primary-light: #4285f4;
-            --md-primary-dark: #0d47a1;
-            --md-on-primary: #FFFFFF;
-            --md-primary-container: #d2e3fc;
-            --md-on-primary-container: #001d3d;
-            
-            /* Secondary Colors - Green Theme */
-            --md-secondary: #0d8a72;
-            --md-secondary-light: #34a853;
-            --md-secondary-dark: #0a5c42;
-            --md-on-secondary: #FFFFFF;
-            --md-secondary-container: #b8f2e6;
-            --md-on-secondary-container: #00201a;
-            
-            /* Surface Colors */
-            --md-surface: #FFFFFF;
-            --md-on-surface: #202124;
-            --md-surface-variant: #F8F9FA;
-            --md-on-surface-variant: #5f6368;
-            
-            /* Background Colors */
-            --md-background: #FFFFFF;
-            --md-on-background: #202124;
-            
-            /* Outline Colors */
-            --md-outline: #DADCE0;
-            --md-outline-variant: #E8EAED;
-            
-            /* Shadow Elevations */
-            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
-            --md-elevation-3: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px rgba(60,64,67,0.3);
-            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --md-elevation-5: 0 8px 24px rgba(0, 0, 0, 0.15);
-            
-            /* Animation */
-            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
-            --md-transition-slow: all 0.5s cubic-bezier(0.2, 0, 0, 1);
-            
-            /* Border Radius */
-            --md-radius-small: 8px;
-            --md-radius-medium: 12px;
-            --md-radius-large: 16px;
-            --md-radius-extra-large: 28px;
-            --md-radius-pill: 9999px;
-            
-            /* Spacing */
-            --md-spacing-xs: 4px;
-            --md-spacing-sm: 8px;
-            --md-spacing-md: 16px;
-            --md-spacing-lg: 24px;
-            --md-spacing-xl: 32px;
-            --md-spacing-xxl: 48px;
-            
-            /* Typography */
-            --md-font-logo: 'Playfair Display', serif;
-            --md-font-heading: 'Inter', sans-serif;
-            --md-font-body: 'Lora', serif;
-            
-            /* Gradient Colors */
-            --md-gradient-1: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            --md-gradient-2: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            --md-gradient-3: linear-gradient(135deg, #1a73e8, #34a853);
-        }
-
-        /* Dark Theme */
-        .dark-theme {
-            --md-surface: #202124;
-            --md-on-surface: #FFFFFF;
-            --md-surface-variant: #303134;
-            --md-on-surface-variant: #E8EAED;
-            --md-background: #202124;
-            --md-on-background: #FFFFFF;
-            --md-primary: #8ab4f8;
-            --md-primary-light: #aecbfa;
-            --md-primary-container: #174ea6;
-            --md-on-primary-container: #E8EAED;
-            --md-secondary: #81c995;
-            --md-secondary-light: #a8dab5;
-            --md-secondary-container: #0d8a72;
-            --md-on-secondary-container: #E8EAED;
-            --md-outline: #3C4043;
-            --md-outline-variant: #5F6368;
-            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
-            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
-            --md-elevation-3: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
-            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Base Styles */
+        /* ============================================
+           REVERBIT PREMIUM DESIGN SYSTEM
+           ============================================ */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
+        :root {
+            --md-primary: #B5651D;
+            --md-primary-light: #CD8B45;
+            --md-primary-dark: #8B4513;
+            --md-primary-rgb: 181, 101, 29;
+            --md-on-primary: #F5EDD6;
+            
+            --md-secondary: #2A9D8F;
+            --md-secondary-light: #4FB3A5;
+            --md-secondary-dark: #1A6B6B;
+            --md-secondary-rgb: 42, 157, 143;
+            --md-on-secondary: #FFFFFF;
+            
+            --md-tertiary: #C0392B;
+            --md-tertiary-rgb: 192, 57, 43;
+            
+            --md-surface: #F5EDD6;
+            --md-surface-variant: #EDE0C0;
+            --md-surface-dim: #D4C49A;
+            --md-surface-bright: #FAF3E0;
+            --md-on-surface: #1A1208;
+            --md-on-surface-variant: #2D2010;
+            
+            --md-background: #F5EDD6;
+            --md-on-background: #1A1208;
+            
+            --md-outline: rgba(181, 101, 29, 0.3);
+            --md-outline-variant: rgba(181, 101, 29, 0.15);
+            
+            --md-elevation-1: 0 2px 4px rgba(26, 18, 8, 0.08);
+            --md-elevation-2: 0 4px 8px rgba(26, 18, 8, 0.08);
+            --md-elevation-3: 0 8px 16px rgba(26, 18, 8, 0.08);
+            --md-elevation-4: 0 16px 24px rgba(26, 18, 8, 0.08);
+            --md-elevation-5: 0 24px 32px rgba(26, 18, 8, 0.12);
+            --md-elevation-6: 0 32px 48px rgba(26, 18, 8, 0.15);
+            
+            --md-font-display: 'Playfair Display', serif;
+            --md-font-body: 'Outfit', sans-serif;
+            
+            --space-xs: clamp(4px, 1vw, 8px);
+            --space-sm: clamp(8px, 2vw, 16px);
+            --space-md: clamp(16px, 3vw, 24px);
+            --space-lg: clamp(24px, 4vw, 32px);
+            --space-xl: clamp(32px, 5vw, 48px);
+            --space-xxl: clamp(48px, 6vw, 64px);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-xxl: 32px;
+            --radius-xxxl: 48px;
+            --radius-pill: 9999px;
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .dark-theme {
+            --md-surface: #1A1208;
+            --md-surface-variant: #2D2010;
+            --md-surface-dim: #0E0A04;
+            --md-surface-bright: #2A1E12;
+            --md-on-surface: #F5EDD6;
+            --md-on-surface-variant: #D4C49A;
+            --md-background: #0E0A04;
+            --md-on-background: #F5EDD6;
+            --md-outline: rgba(205, 139, 69, 0.3);
         }
 
         body {
             font-family: var(--md-font-body);
             background-color: var(--md-background);
-            color: var(--md-on-surface);
+            color: var(--md-on-background);
             line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
             overflow-x: hidden;
-            transition: var(--md-transition);
-            position: relative;
-            min-height: 100vh;
         }
 
-        /* Improved Touch Targets */
-        button, 
-        a, 
-        .nav-item, 
-        .btn,
-        .profile-avatar-button {
-            touch-action: manipulation;
-            -ms-touch-action: manipulation;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--md-surface-variant);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--md-primary);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--md-primary-dark);
         }
 
-        /* Dashboard Layout */
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 280px;
-            background: var(--md-surface);
-            border-right: 1px solid var(--md-outline);
-            display: flex;
-            flex-direction: column;
+        /* ========== ANIMATED BACKGROUND ========== */
+        .animated-bg {
             position: fixed;
-            left: 0;
             top: 0;
-            bottom: 0;
-            z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--md-elevation-2);
-            transform: translateX(0);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        .gradient-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(var(--md-primary-rgb), 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(var(--md-secondary-rgb), 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(var(--md-tertiary-rgb), 0.1) 0%, transparent 40%);
+            animation: gradientFloat 25s ease infinite alternate;
+        }
+        @keyframes gradientFloat {
+            0% { transform: translate(0,0) scale(1); opacity:1; }
+            100% { transform: translate(1%,1%) scale(0.95); opacity:0.9; }
         }
 
-        .sidebar-header {
-            padding: var(--md-spacing-xl) var(--md-spacing-lg);
-            border-bottom: 1px solid var(--md-outline);
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(calc(100% - var(--space-xl)), 1400px);
+            background: rgba(245, 237, 214, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-xxxl);
+            padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            z-index: 100;
+            box-shadow: var(--md-elevation-4);
+        }
+        .dark-theme .navbar {
+            background: rgba(26, 18, 8, 0.85);
+        }
+        .navbar.scrolled {
+            top: var(--space-sm);
+            background: rgba(245, 237, 214, 0.95);
+        }
+        .dark-theme .navbar.scrolled {
+            background: rgba(26, 18, 8, 0.95);
         }
 
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: var(--md-spacing-sm);
+            gap: var(--space-sm);
             text-decoration: none;
-            flex: 1;
         }
-
         .nav-logo {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--md-transition);
-            border-radius: var(--md-radius-medium);
-            overflow: hidden;
+            width: 44px;
+            height: 44px;
+            transition: var(--transition-bounce);
         }
-
         .nav-logo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
-
         .nav-logo:hover {
-            transform: rotate(5deg) scale(1.1);
+            transform: rotate(10deg) scale(1.15);
         }
-
-        .nav-name {
-            font-family: var(--md-font-logo);
-            font-size: 1.5rem;
+        .nav-brand-name {
+            font-family: var(--md-font-display);
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--md-on-surface);
-            letter-spacing: -0.5px;
-        }
-
-        /* Sidebar Close Button */
-        .sidebar-close {
-            display: none;
-            background: transparent;
-            border: none;
-            color: var(--md-on-surface-variant);
-            cursor: pointer;
-            width: 44px;
-            height: 44px;
-            border-radius: var(--md-radius-small);
-            align-items: center;
-            justify-content: center;
-            transition: var(--md-transition);
-            position: relative;
-            z-index: 1001;
-        }
-
-        .sidebar-close:hover {
-            background: var(--md-surface-variant);
-            color: var(--md-primary);
-        }
-
-        .sidebar-nav {
-            padding: var(--md-spacing-lg);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-xs);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            padding: var(--md-spacing-md) var(--md-spacing-lg);
-            color: var(--md-on-surface-variant);
-            text-decoration: none;
-            border-radius: var(--md-radius-large);
-            transition: var(--md-transition);
-            font-family: var(--md-font-heading);
-            font-weight: 500;
-            position: relative;
-            cursor: pointer;
-            min-height: 52px;
-        }
-
-        .nav-item:hover {
-            background: var(--md-surface-variant);
-            color: var(--md-primary);
-            transform: translateX(4px);
-        }
-
-        .nav-item.active {
-            background: var(--md-gradient-1);
-            color: var(--md-on-primary);
-            box-shadow: var(--md-elevation-1);
-        }
-
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 60%;
-            background: var(--md-primary);
-            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-        }
-
-        .nav-item i {
-            font-size: 1.25rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        .sidebar-footer {
-            padding: var(--md-spacing-lg);
-            border-top: 1px solid var(--md-outline);
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            width: 100%;
-        }
-
-        .user-menu-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-menu-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--md-on-surface);
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-menu-email {
-            font-size: 0.8rem;
-            color: var(--md-on-surface-variant);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: var(--md-spacing-lg);
-            min-height: 100vh;
-            transition: var(--md-transition);
-        }
-
-        /* Mobile Header */
-        .mobile-header {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 var(--md-spacing-md);
-            background: var(--md-surface);
-            border-bottom: 1px solid var(--md-outline);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 990;
-            box-shadow: var(--md-elevation-1);
-            height: 64px;
-        }
-
-        .mobile-header .nav-brand {
-            padding: 0;
-            border-bottom: none;
-            flex: 1;
-            justify-content: center;
-            margin-right: 48px;
-        }
-
-        /* Hamburger Menu */
-        .hamburger-menu {
-            display: none;
-            background: var(--md-primary);
-            border: none;
-            color: var(--md-on-primary);
-            cursor: pointer;
-            width: 44px;
-            height: 44px;
-            border-radius: var(--md-radius-medium);
-            align-items: center;
-            justify-content: center;
-            transition: var(--md-transition);
-            position: relative;
-            z-index: 1001;
-            box-shadow: var(--md-elevation-2);
-            flex-shrink: 0;
-        }
-
-        .hamburger-menu:hover {
-            background: var(--md-primary-dark);
-            transform: scale(1.05);
-        }
-
-        .hamburger-menu:active {
-            transform: scale(0.95);
-        }
-
-        .hamburger-icon {
-            font-size: 1.25rem;
-            transition: var(--md-transition);
-        }
-
-        .hamburger-menu.active .hamburger-icon {
-            transform: rotate(180deg);
-        }
-
-        /* Top Header */
-        .top-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--md-spacing-lg) var(--md-spacing-xl);
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            margin-bottom: var(--md-spacing-lg);
-            box-shadow: var(--md-elevation-1);
-            animation: slideInDown 0.5s ease-out;
-            gap: var(--md-spacing-lg);
-            flex-wrap: wrap;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .welcome-section {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        /* Animated Gradient Username */
-        .animated-username {
-            display: inline-block;
-            font-family: var(--md-font-heading);
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, 
-                #1a73e8, 
-                #4285f4, 
-                #34a853, 
-                #0d8a72,
-                #1a73e8);
-            background-size: 400% 400%;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientMove 4s ease infinite;
-            padding: 0 2px;
-            margin: 0 4px;
         }
 
-        @keyframes gradientMove {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .welcome-section h1 {
-            font-family: var(--md-font-heading);
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: var(--md-spacing-xs);
-            color: var(--md-on-surface);
-        }
-
-        .welcome-section p {
-            color: var(--md-on-surface-variant);
-            font-size: 1rem;
-        }
-
-        .header-actions {
+        .nav-links {
             display: flex;
             align-items: center;
-            gap: var(--md-spacing-md);
-            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+        .nav-link {
+            padding: var(--space-sm) var(--space-lg);
+            color: var(--md-on-surface);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-link:hover {
+            color: var(--md-primary);
+            background: rgba(var(--md-primary-rgb), 0.1);
         }
 
-        /* Profile Avatar */
-        .profile-avatar-button {
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        .profile-avatar-btn {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            border: 2px solid transparent;
-            padding: 2px;
-            background: var(--md-gradient-1);
+            border: 2px solid var(--md-primary);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-            flex-shrink: 0;
-            position: relative;
+            transition: var(--transition-bounce);
         }
-        
-        .profile-avatar-button:hover {
-            transform: scale(1.05);
-            box-shadow: var(--md-elevation-2);
-            border-color: rgba(66, 133, 244, 0.3);
+        .profile-avatar-btn:hover {
+            transform: scale(1.15) rotate(5deg);
         }
-        
-        .profile-avatar-button:active {
-            transform: scale(0.95);
-        }
-
-        .profile-avatar-button.uploading::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border: 2px solid transparent;
-            border-top-color: var(--md-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        .profile-avatar-img {
+        .profile-avatar-btn img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             object-fit: cover;
-            display: block;
-            background: var(--md-surface-variant);
         }
 
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--md-spacing-sm);
-            padding: var(--md-spacing-md) var(--md-spacing-xl);
-            border-radius: var(--md-radius-pill);
-            border: none;
-            font-family: var(--md-font-heading);
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--md-transition);
-            text-decoration: none;
-            min-height: 48px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-filled {
-            background: var(--md-gradient-1);
-            color: var(--md-on-primary);
-            box-shadow: var(--md-elevation-2);
-        }
-
-        .btn-filled:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--md-elevation-3);
-        }
-
-        .btn-outlined {
-            background: transparent;
-            color: var(--md-primary);
-            border: 1px solid var(--md-outline);
-        }
-
-        .btn-outlined:hover {
-            background: var(--md-primary-container);
-            border-color: var(--md-primary);
-            transform: translateY(-2px);
-        }
-
-        /* Theme Toggle */
         .theme-toggle {
-            background: transparent;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             border: none;
+            background: var(--md-surface-variant);
             color: var(--md-on-surface);
             cursor: pointer;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--md-transition);
-            background: var(--md-surface-variant);
+            transition: var(--transition-bounce);
         }
-
         .theme-toggle:hover {
-            background: var(--md-primary-container);
-            transform: rotate(15deg);
+            transform: rotate(30deg);
+            background: var(--md-primary);
+            color: var(--md-on-primary);
         }
 
-        /* Dashboard Content Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-xl);
-        }
-
-        .dashboard-card {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-xl);
-            border: 1px solid var(--md-outline);
-            transition: var(--md-transition);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.5s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
-        .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
-        .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
-        .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dashboard-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--md-gradient-2);
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--md-elevation-4);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            margin-bottom: var(--md-spacing-lg);
-        }
-
-        .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: var(--md-radius-medium);
-            background: var(--md-gradient-1);
-            display: flex;
+        .mobile-menu-btn {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--md-primary);
+            color: white;
+            cursor: pointer;
             align-items: center;
             justify-content: center;
-            color: var(--md-on-primary);
-            font-size: 1.5rem;
-            transition: var(--md-transition);
         }
 
-        .dashboard-card:hover .card-icon {
-            transform: rotate(15deg) scale(1.1);
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: flex; }
         }
 
-        .card-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--md-on-surface);
+        /* ========== MAIN LAYOUT ========== */
+        .main-wrapper {
+            padding-top: 100px;
+            padding-bottom: var(--space-xxl);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
         }
 
-        .card-subtitle {
-            color: var(--md-on-surface-variant);
-            font-size: 0.95rem;
+        /* ========== HEADER CARD ========== */
+        .welcome-card {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-xxxl);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--md-elevation-3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-lg);
         }
-
-        /* Stats */
-        .stat-number {
-            font-family: var(--md-font-logo);
+        .welcome-text h1 {
+            font-family: var(--md-font-display);
             font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--md-gradient-1);
+            margin-bottom: var(--space-xs);
+        }
+        .animated-name {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--md-spacing-sm);
+            animation: gradientShift 3s ease infinite;
         }
-
+        @keyframes gradientShift {
+            0%,100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .welcome-stats {
+            display: flex;
+            gap: var(--space-xl);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--md-primary);
+        }
         .stat-label {
             color: var(--md-on-surface-variant);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
-        /* Profile Section */
-        .profile-section {
+        /* ========== SECTION NAVIGATION ========== */
+        .section-nav {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        .section-tab {
+            padding: var(--space-sm) var(--space-xl);
+            border-radius: var(--radius-pill);
             background: var(--md-surface);
-            border-radius: var(--md-radius-large);
             border: 1px solid var(--md-outline);
-            overflow: hidden;
-            margin-bottom: var(--md-spacing-xl);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .profile-header {
-            padding: var(--md-spacing-xl);
-            background: var(--md-surface-variant);
-            text-align: center;
-            position: relative;
-        }
-
-        .profile-avatar-large {
-            position: relative;
-            width: 160px;
-            height: 160px;
-            margin: 0 auto var(--md-spacing-lg);
+            color: var(--md-on-surface);
             cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
         }
-
-        .profile-avatar-large-img {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--md-surface);
-            box-shadow: var(--md-elevation-3);
-            transition: var(--md-transition);
-        }
-
-        .profile-avatar-large:hover .profile-avatar-large-img {
-            transform: scale(1.05);
+        .section-tab:hover {
             border-color: var(--md-primary);
+            transform: translateY(-2px);
+        }
+        .section-tab.active {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: white;
+            border-color: transparent;
         }
 
-        .profile-avatar-large:hover::after {
+        /* ========== DASHBOARD SECTIONS ========== */
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .dashboard-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: var(--md-font-display);
+            font-size: 2rem;
+            margin-bottom: var(--space-lg);
+            position: relative;
+            padding-bottom: var(--space-sm);
+        }
+        .section-title::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
 
-        .avatar-upload {
+        /* ========== STATS GRID ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        .stat-card {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-xxl);
+            padding: var(--space-lg);
+            transition: var(--transition-bounce);
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--md-elevation-4);
+            border-color: var(--md-primary);
+        }
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: var(--space-md);
+        }
+        .stat-card .stat-value {
+            font-size: 2.2rem;
+            margin-bottom: var(--space-xs);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--md-surface-variant);
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+            margin: var(--space-md) 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--radius-pill);
+            transition: width 0.5s ease;
+        }
+
+        /* ========== PROFILE CARD ========== */
+        .profile-card {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-xxxl);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+        .profile-header {
+            display: flex;
+            gap: var(--space-xl);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .avatar-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+        }
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--md-primary);
+        }
+        .avatar-edit {
             position: absolute;
             bottom: 10px;
             right: 10px;
             width: 44px;
             height: 44px;
-            background: var(--md-gradient-1);
             border-radius: 50%;
+            background: var(--md-primary);
+            border: 2px solid white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--md-on-primary);
+            color: white;
             cursor: pointer;
-            box-shadow: var(--md-elevation-2);
-            transition: var(--md-transition);
-            z-index: 2;
-            opacity: 0;
-            transform: scale(0.8);
+            transition: var(--transition-bounce);
         }
-
-        .profile-avatar-large:hover .avatar-upload {
-            opacity: 1;
-            transform: scale(1);
+        .avatar-edit:hover {
+            transform: scale(1.15);
+            background: var(--md-secondary);
         }
-
-        .avatar-upload:hover {
-            transform: scale(1.1) rotate(15deg);
-        }
-
         .profile-info h2 {
-            font-family: var(--md-font-heading);
             font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: var(--md-spacing-xs);
+            margin-bottom: var(--space-xs);
+        }
+        .member-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-md);
+            background: var(--md-surface-variant);
+            border-radius: var(--radius-pill);
+            font-size: 0.9rem;
         }
 
-        .profile-info .email {
-            color: var(--md-on-surface-variant);
-            font-size: 1.125rem;
-            margin-bottom: var(--md-spacing-sm);
-        }
-
-        /* Form */
+        /* ========== FORM GRID ========== */
         .form-grid {
-            padding: var(--md-spacing-xl);
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--md-spacing-lg);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
         }
-
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: var(--md-spacing-sm);
+            gap: var(--space-xs);
         }
-
         .form-label {
-            font-family: var(--md-font-heading);
-            font-size: 1rem;
             font-weight: 600;
             color: var(--md-on-surface);
         }
-
-        .form-input {
-            width: 100%;
-            padding: var(--md-spacing-md) var(--md-spacing-lg);
-            background: var(--md-background);
+        .form-input, .form-select, .form-textarea {
+            padding: var(--space-md) var(--space-lg);
             border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-medium);
-            font-family: var(--md-font-body);
-            font-size: 1rem;
+            border-radius: var(--radius-lg);
+            background: var(--md-surface);
             color: var(--md-on-surface);
-            transition: var(--md-transition);
+            font-family: var(--md-font-body);
+            transition: var(--transition);
         }
-
-        .form-input:focus {
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--md-primary);
-            box-shadow: 0 0 0 3px var(--md-primary-container);
+            box-shadow: 0 0 0 3px rgba(var(--md-primary-rgb), 0.2);
+        }
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
         }
 
-        /* Apps Grid */
+        /* ========== APPS GRID ========== */
         .apps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-xl);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
         }
-
         .app-card {
             background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            overflow: hidden;
             border: 1px solid var(--md-outline);
-            transition: var(--md-transition);
+            border-radius: var(--radius-xxl);
+            padding: var(--space-xl);
             text-decoration: none;
             color: inherit;
+            transition: var(--transition-bounce);
             position: relative;
-            animation: fadeInUp 0.5s ease-out;
-            animation-fill-mode: both;
+            overflow: hidden;
         }
-
-        .app-card:nth-child(1) { animation-delay: 0.1s; }
-        .app-card:nth-child(2) { animation-delay: 0.2s; }
-        .app-card:nth-child(3) { animation-delay: 0.3s; }
-        .app-card:nth-child(4) { animation-delay: 0.4s; }
-
         .app-card::before {
             content: '';
             position: absolute;
@@ -902,1222 +580,423 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: var(--md-gradient-2);
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
-
         .app-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--md-elevation-4);
         }
-
         .app-icon {
             width: 64px;
             height: 64px;
-            margin: var(--md-spacing-xl) auto var(--md-spacing-lg);
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-large);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--md-on-primary);
-            font-size: 1.75rem;
-            box-shadow: var(--md-elevation-2);
-            transition: var(--md-transition);
+            color: white;
+            font-size: 2rem;
+            margin-bottom: var(--space-lg);
         }
-
-        .app-card:hover .app-icon {
-            transform: rotate(15deg) scale(1.1);
-        }
-
-        .app-content {
-            padding: 0 var(--md-spacing-xl) var(--md-spacing-xl);
-            text-align: center;
-        }
-
         .app-title {
-            font-family: var(--md-font-heading);
-            font-size: 1.375rem;
-            font-weight: 700;
-            margin-bottom: var(--md-spacing-sm);
-            color: var(--md-on-surface);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
         }
-
         .app-stats {
             color: var(--md-on-surface-variant);
-            font-size: 1.125rem;
+            margin-bottom: var(--space-md);
+        }
+        .app-usage {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.9rem;
         }
 
-        /* Loading Animation */
+        /* ========== ACTIVITY TIMELINE ========== */
+        .timeline {
+            margin-top: var(--space-lg);
+        }
+        .timeline-item {
+            display: flex;
+            gap: var(--space-lg);
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--md-outline);
+        }
+        .timeline-time {
+            min-width: 80px;
+            color: var(--md-on-surface-variant);
+            font-size: 0.9rem;
+        }
+        .timeline-content {
+            flex: 1;
+        }
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+        .timeline-desc {
+            color: var(--md-on-surface-variant);
+            font-size: 0.9rem;
+        }
+
+        /* ========== CROPPER MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--space-md);
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: var(--md-surface);
+            border-radius: var(--radius-xxxl);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: var(--space-xl);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .modal-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            background: var(--md-tertiary);
+            color: white;
+        }
+        .cropper-container {
+            max-height: 400px;
+            margin: var(--space-lg) 0;
+        }
+        .cropper-container img {
+            max-width: 100%;
+        }
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: flex-end;
+            margin-top: var(--space-lg);
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-pill);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--md-elevation-4);
+        }
+        .btn-secondary {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+            border: 1px solid var(--md-outline);
+        }
+        .btn-secondary:hover {
+            background: var(--md-surface-dim);
+            transform: translateY(-2px);
+        }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-pill);
+            padding: var(--space-md) var(--space-xl);
+            box-shadow: var(--md-elevation-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            z-index: 1100;
+            transition: transform 0.3s;
+            min-width: 300px;
+            max-width: 90%;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast-success { background: var(--md-secondary); color: white; }
+        .toast-error { background: var(--md-tertiary); color: white; }
+        .toast-info { background: var(--md-primary); color: white; }
+
+        /* ========== LOADING ========== */
         .loading {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: var(--md-background);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 2000;
+            transition: opacity 0.5s;
         }
-
         .loading.hidden {
             opacity: 0;
-            visibility: hidden;
+            pointer-events: none;
         }
-
-        .loader {
+        .spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid var(--md-surface-variant);
-            border-top: 4px solid var(--md-primary);
+            border: 4px solid var(--md-outline);
+            border-top-color: var(--md-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: var(--md-spacing-lg);
+            margin-bottom: var(--space-md);
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal-content {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-extra-large);
-            padding: var(--md-spacing-xl);
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid var(--md-outline);
-            position: relative;
-            animation: slideInUp 0.3s ease-out;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--md-gradient-2);
-        }
-
-        /* Overlay for mobile menu */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 998;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .sidebar-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        /* Google-style Profile Popup Styles */
-        .reverbit-profile-popup {
-            position: fixed;
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            box-shadow: var(--md-elevation-5);
-            min-width: 280px;
-            max-width: 320px;
-            z-index: 1000;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            border: 1px solid var(--md-outline);
-            font-family: var(--md-font-heading);
-            display: none;
-        }
-        
-        .reverbit-profile-popup.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .profile-popup-container {
-            padding: var(--md-spacing-lg);
-        }
-        
-        .profile-popup-header {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            padding-bottom: var(--md-spacing-md);
-            border-bottom: 1px solid var(--md-outline);
-        }
-        
-        .profile-popup-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 3px solid var(--md-surface-variant);
-            background: var(--md-gradient-1);
-            padding: 3px;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .profile-popup-avatar:hover::after {
-            content: 'Change';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .profile-popup-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            background: var(--md-surface);
-        }
-        
-        .profile-popup-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .profile-popup-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--md-on-surface);
-            line-height: 1.5;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .profile-popup-email {
-            font-size: 14px;
-            color: var(--md-on-surface-variant);
-            line-height: 1.4;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .profile-popup-divider {
-            height: 1px;
-            background: var(--md-outline);
-            margin: var(--md-spacing-md) calc(-1 * var(--md-spacing-lg));
-        }
-        
-        .profile-popup-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding-top: var(--md-spacing-md);
-        }
-        
-        .profile-popup-menu-item {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            padding: var(--md-spacing-md);
-            border-radius: var(--md-radius-medium);
-            text-decoration: none;
-            color: var(--md-on-surface);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            min-height: 44px;
-        }
-        
-        .profile-popup-menu-item:hover {
-            background-color: var(--md-surface-variant);
-        }
-        
-        .profile-popup-menu-item:active {
-            background-color: var(--md-outline-variant);
-        }
-        
-        .profile-popup-menu-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-surface-variant);
-            flex-shrink: 0;
-        }
-        
-        .profile-popup-menu-text {
-            flex: 1;
-        }
-        
-        .profile-popup-footer {
-            margin-top: var(--md-spacing-md);
-            padding-top: var(--md-spacing-md);
-            border-top: 1px solid var(--md-outline);
-        }
-        
-        .profile-popup-privacy-link {
-            font-size: 12px;
-            color: var(--md-on-surface-variant);
-            text-align: center;
-        }
-        
-        .profile-popup-privacy-link a {
-            color: var(--md-primary);
-            text-decoration: none;
-            padding: 0 4px;
-        }
-        
-        .profile-popup-privacy-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Avatar Error Handling */
-        .avatar-fallback {
-            width: 100%;
-            height: 100%;
-            background: var(--md-gradient-1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-weight: 600;
-            font-size: 1rem;
-            text-transform: uppercase;
-        }
-
-        /* Cloudinary Upload Widget Styling */
-        .cloudinary-upload-widget {
-            cursor: pointer;
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: var(--md-spacing-lg);
-            right: var(--md-spacing-lg);
-            background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-md) var(--md-spacing-lg);
-            box-shadow: var(--md-elevation-3);
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast i {
-            color: var(--md-primary);
-            font-size: 1.25rem;
-        }
-
-        /* Loading overlay for upload */
-        .upload-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            color: white;
-        }
-
-        .upload-loading .loader {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid white;
-        }
-
-        /* Quick Stats */
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--md-spacing-lg);
-            margin-bottom: var(--md-spacing-xl);
-        }
-
-        .quick-stat-card {
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-lg);
-            border: 1px solid var(--md-outline);
-            transition: var(--md-transition);
-            text-align: center;
-            animation: fadeInUp 0.5s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .quick-stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--md-elevation-2);
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--md-outline);
-            border-radius: var(--md-radius-pill);
-            overflow: hidden;
-            margin-top: var(--md-spacing-sm);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--md-gradient-2);
-            border-radius: var(--md-radius-pill);
-            transition: width 0.5s ease;
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--md-spacing-xs) var(--md-spacing-sm);
-            background: var(--md-primary-container);
-            color: var(--md-on-primary-container);
-            border-radius: var(--md-radius-pill);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-left: var(--md-spacing-sm);
-        }
-
-        /* Status Indicator */
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--md-spacing-xs);
-            font-size: 0.875rem;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--md-secondary);
-        }
-
-        .status-dot.online {
-            background: var(--md-secondary);
-        }
-
-        .status-dot.offline {
-            background: var(--md-on-surface-variant);
-        }
-
-        /* Recent Activity */
-        .recent-activity {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            padding: var(--md-spacing-sm);
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-medium);
-            transition: var(--md-transition);
-        }
-
-        .activity-item:hover {
-            background: var(--md-primary-container);
-            transform: translateX(4px);
-        }
-
-        .activity-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-small);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            margin-right: var(--md-spacing-sm);
-        }
-
-        /* Upload Instructions */
-        .upload-instructions {
-            background: var(--md-surface-variant);
-            border-radius: var(--md-radius-medium);
-            padding: var(--md-spacing-md);
-            margin-top: var(--md-spacing-md);
-        }
-
-        /* Enhanced Dashboard Features */
-        .usage-chart {
-            width: 100%;
-            height: 200px;
-            margin: var(--md-spacing-lg) 0;
-        }
-
-        /* Achievement Badges */
-        .achievement-badge {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            padding: var(--md-spacing-md);
-            background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-large);
-            transition: var(--md-transition);
-            text-align: center;
-        }
-
-        .achievement-badge:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: var(--md-elevation-2);
-        }
-
-        .badge-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--md-gradient-1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-size: 1.5rem;
-            margin-bottom: var(--md-spacing-sm);
-        }
-
-        /* Avatar Upload Button */
-        .avatar-upload-button {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-sm);
-            padding: var(--md-spacing-sm) var(--md-spacing-md);
-            background: var(--md-primary-container);
-            color: var(--md-primary);
-            border: 1px solid var(--md-primary);
-            border-radius: var(--md-radius-medium);
-            cursor: pointer;
-            transition: var(--md-transition);
-            font-weight: 500;
-            margin-top: var(--md-spacing-md);
-            justify-content: center;
-        }
-
-        .avatar-upload-button:hover {
-            background: var(--md-primary);
-            color: var(--md-on-primary);
-            transform: translateY(-2px);
-        }
-
-        /* Upload Progress */
-        .upload-progress {
-            width: 100%;
-            height: 4px;
-            background: var(--md-outline);
-            border-radius: var(--md-radius-pill);
-            overflow: hidden;
-            margin-top: var(--md-spacing-sm);
-        }
-
-        .upload-progress-fill {
-            height: 100%;
-            background: var(--md-gradient-1);
-            border-radius: var(--md-radius-pill);
-            transition: width 0.3s ease;
-        }
-
-        /* Section Titles */
-        .section-title {
-            font-family: var(--md-font-logo);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--md-on-surface);
-            margin-bottom: var(--md-spacing-lg);
-            position: relative;
-            padding-bottom: var(--md-spacing-sm);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--md-gradient-2);
-            border-radius: 2px;
-        }
-
-        /* ========== RESPONSIVE DESIGN - ADVANCED MOBILE FIXES ========== */
-
-        /* Tablet styles */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .sidebar {
-                width: 260px;
-            }
-            
-            .main-content {
-                margin-left: 260px;
-                padding: var(--md-spacing-md);
-            }
-            
-            .mobile-menu-toggle {
-                display: none;
-            }
-        }
-
-        /* Mobile styles - COMPLETELY REVISED */
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            /* Prevent body scroll when menu is open */
-            body.menu-open {
-                overflow: hidden;
-                position: fixed;
-                width: 100%;
-                height: 100%;
-                touch-action: none;
-            }
-            
-            /* Sidebar for mobile - fixed position */
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 85%;
-                max-width: 320px;
-                height: 100vh;
-                transform: translateX(-100%);
-                box-shadow: var(--md-elevation-4);
-                z-index: 999;
-                pointer-events: none;
-                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            
-            .sidebar.mobile-open {
-                transform: translateX(0);
-                pointer-events: all;
-            }
-            
-            .sidebar-header {
-                padding: var(--md-spacing-lg);
-                height: 64px;
-                min-height: 64px;
-            }
-            
-            .sidebar-close {
-                display: flex;
-                position: absolute;
-                right: var(--md-spacing-md);
-                top: 50%;
-                transform: translateY(-50%);
-            }
-            
-            .sidebar-nav {
-                padding: var(--md-spacing-md);
-                -webkit-overflow-scrolling: touch;
-                overscroll-behavior: contain;
-            }
-            
-            .nav-item {
-                padding: var(--md-spacing-lg) var(--md-spacing-xl);
-                min-height: 56px;
-                font-size: 1.1rem;
-            }
-            
-            /* Mobile header */
-            .mobile-header {
-                display: flex;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 990;
-                height: 64px;
-                background: var(--md-surface);
-                border-bottom: 1px solid var(--md-outline);
-                padding: 0 var(--md-spacing-md);
-                box-shadow: var(--md-elevation-1);
-            }
-            
-            .mobile-header .nav-brand {
-                flex: 1;
-                display: flex;
-                justify-content: center;
-                margin-right: 44px;
-            }
-            
-            /* Hamburger menu for mobile */
-            .hamburger-menu {
-                display: flex;
-                background: var(--md-gradient-1);
-                border: none;
-                color: var(--md-on-primary);
-                cursor: pointer;
-                width: 44px;
-                height: 44px;
-                border-radius: var(--md-radius-medium);
-                align-items: center;
-                justify-content: center;
-                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                z-index: 1001;
-                box-shadow: var(--md-elevation-2);
-                flex-shrink: 0;
-            }
-            
-            .hamburger-menu:hover {
-                transform: scale(1.05);
-                box-shadow: var(--md-elevation-3);
-            }
-            
-            .hamburger-menu:active {
-                transform: scale(0.95);
-            }
-            
-            .hamburger-menu.active {
-                background: var(--md-primary-dark);
-            }
-            
-            /* Main content for mobile */
-            .main-content {
-                margin-left: 0;
-                padding: var(--md-spacing-md);
-                padding-top: 80px;
-                min-height: 100vh;
-                width: 100%;
-                pointer-events: all;
-            }
-            
-            /* Top header adjustments */
-            .top-header {
+            .welcome-card {
                 flex-direction: column;
-                gap: var(--md-spacing-lg);
                 text-align: center;
-                padding: var(--md-spacing-lg);
-                margin-top: var(--md-spacing-sm);
-                margin-bottom: var(--md-spacing-lg);
             }
-            
-            .header-actions {
-                flex-direction: row;
-                width: 100%;
-                justify-content: center;
-                gap: var(--md-spacing-sm);
-            }
-            
-            .btn {
-                min-height: 44px;
-                padding: var(--md-spacing-sm) var(--md-spacing-lg);
-                font-size: 0.95rem;
-            }
-            
-            /* Grid adjustments */
-            .dashboard-grid,
-            .apps-grid {
-                grid-template-columns: 1fr;
-                gap: var(--md-spacing-md);
-            }
-            
-            .quick-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--md-spacing-md);
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-                padding: var(--md-spacing-lg);
-                gap: var(--md-spacing-md);
-            }
-            
-            /* Overlay for mobile menu */
-            .sidebar-overlay {
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                backdrop-filter: blur(5px);
-                z-index: 998;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                pointer-events: none;
-                -webkit-backdrop-filter: blur(5px);
-            }
-            
-            .sidebar-overlay.active {
-                opacity: 1;
-                pointer-events: all;
-            }
-            
-            /* Typography adjustments for mobile */
-            .welcome-section h1 {
-                font-size: 1.5rem;
-            }
-            
-            .animated-username {
-                font-size: 1.5rem;
-            }
-            
-            .section-title {
-                font-size: 1.75rem;
-            }
-            
-            .dashboard-card {
-                padding: var(--md-spacing-lg);
-            }
-            
-            .card-title {
-                font-size: 1.25rem;
-            }
-            
-            .stat-number {
+            .welcome-text h1 {
                 font-size: 2rem;
             }
-            
-            /* Profile adjustments */
-            .profile-avatar-large {
-                width: 120px;
-                height: 120px;
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
             }
-            
-            .profile-avatar-large-img {
-                width: 120px;
-                height: 120px;
+            .avatar-container {
+                margin: 0 auto;
             }
-            
-            .profile-info h2 {
-                font-size: 1.5rem;
+            .form-actions {
+                flex-direction: column;
             }
-            
-            /* Toast adjustments */
-            .toast {
-                left: var(--md-spacing-md);
-                right: var(--md-spacing-md);
-                bottom: var(--md-spacing-md);
-            }
-            
-            /* Profile popup adjustments */
-            .reverbit-profile-popup {
-                min-width: 280px;
-                max-width: calc(100% - 32px);
-                left: 50% !important;
-                top: 50% !important;
-                transform: translate(-50%, -60%) !important;
-            }
-            
-            .reverbit-profile-popup.active {
-                transform: translate(-50%, -50%) !important;
-            }
-        }
-
-        /* Extra small mobile devices */
-        @media (max-width: 480px) {
-            .sidebar {
-                width: 90%;
-            }
-            
-            .quick-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .header-actions {
-                flex-wrap: wrap;
-            }
-            
             .btn {
                 width: 100%;
             }
-            
-            .theme-toggle,
-            .profile-avatar-button {
-                width: 44px;
-                height: 44px;
-                min-width: 44px;
-                min-height: 44px;
+            .section-tab {
+                flex: 1;
+                justify-content: center;
             }
-            
-            .mobile-header {
-                padding: 0 12px;
-            }
-            
-            .nav-name {
-                font-size: 1.25rem;
-            }
-            
-            .nav-logo {
-                width: 32px;
-                height: 32px;
-            }
-            
-            .profile-popup-container {
-                padding: var(--md-spacing-md);
-            }
-        }
-
-        /* Very small devices */
-        @media (max-width: 360px) {
-            .sidebar {
-                width: 100%;
-            }
-            
-            .nav-item {
-                padding: var(--md-spacing-md) var(--md-spacing-lg);
-            }
-            
-            .main-content {
-                padding: 12px;
-                padding-top: 72px;
-            }
-            
-            .top-header {
-                padding: var(--md-spacing-md);
-            }
-        }
-
-        /* Prevent iOS bounce effect */
-        @supports (-webkit-touch-callout: none) {
-            .sidebar-nav {
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            body {
-                height: -webkit-fill-available;
-            }
-            
-            .dashboard-container {
-                min-height: -webkit-fill-available;
-            }
-        }
-
-        /* Logo Styles */
-        .logo-svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-
-        .dark-theme .logo-svg {
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) brightness(1.2);
-        }
-
-        /* Swipe indicator for mobile */
-        .swipe-indicator {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 20px;
-            background: linear-gradient(90deg, rgba(26, 115, 232, 0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .swipe-indicator.visible {
-            opacity: 1;
         }
     </style>
 </head>
 <body class="light-theme">
-    <!-- Loading Screen -->
-    <div class="loading" id="loading">
-        <div class="loader"></div>
-        <p style="color: var(--md-on-surface-variant);">Loading your dashboard...</p>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-bg"></div>
     </div>
 
-    <!-- Upload Loading Overlay -->
-    <div class="upload-loading" id="uploadLoading" style="display: none;">
-        <div class="loader"></div>
-        <p style="margin-top: var(--md-spacing-md);">Uploading your profile picture...</p>
-    </div>
-
-    <!-- Mobile Header -->
-    <header class="mobile-header">
-        <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
-            <i class="fas fa-bars hamburger-icon"></i>
-        </button>
-        
-        <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="https://aditya-cmd-max.github.io/" class="nav-brand">
             <div class="nav-logo">
-                <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" class="logo-svg" onerror="handleLogoError(this)">
+                <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
             </div>
-            <span class="nav-name">Reverbit</span>
+            <span class="nav-brand-name">Reverbit</span>
         </a>
         
-        <!-- Mobile Profile Avatar -->
-        <button class="profile-avatar-button" id="mobileProfileAvatar" aria-label="Open profile menu">
-            <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
-        </button>
-    </header>
+        <div class="nav-links">
+            <a href="https://aditya-cmd-max.github.io/" class="nav-link">Home</a>
+            <a href="https://aditya-cmd-max.github.io/circuit" class="nav-link">Blogs</a>
+            <a href="https://aditya-cmd-max.github.io/about" class="nav-link">Creator</a>
+            <a href="https://aditya-cmd-max.github.io/ecosystem" class="nav-link">Tools</a>
+        </div>
+        
+        <div class="nav-right">
+            <button class="profile-avatar-btn" id="profileAvatar">
+                <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile" id="avatarImg">
+            </button>
+            <button class="theme-toggle" id="themeToggle">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span class="material-icons-round">menu</span>
+            </button>
+        </div>
+    </nav>
 
-    <!-- Overlay for mobile menu -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Profile Popup -->
-    <div class="reverbit-profile-popup" id="profilePopup"></div>
-
-    <!-- Dashboard Container -->
-    <div class="dashboard-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
-                    <div class="nav-logo">
-                        <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" class="logo-svg" onerror="handleLogoError(this)">
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <div class="container">
+            <!-- Welcome Card -->
+            <div class="welcome-card">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span class="animated-name" id="userName">User</span>!</h1>
+                    <p id="userEmail" style="color: var(--md-on-surface-variant);">Loading...</p>
+                </div>
+                <div class="welcome-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="streakCount">0</div>
+                        <div class="stat-label">Day Streak</div>
                     </div>
-                    <span class="nav-name">Reverbit</span>
-                </a>
-                <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
-                    <i class="fas fa-times"></i>
+                    <div class="stat-item">
+                        <div class="stat-value" id="appsUsed">0</div>
+                        <div class="stat-label">Apps Used</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalTime">0h</div>
+                        <div class="stat-label">Total Time</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Navigation -->
+            <div class="section-nav">
+                <button class="section-tab active" data-section="overview">
+                    <span class="material-icons-round">dashboard</span>
+                    Overview
+                </button>
+                <button class="section-tab" data-section="profile">
+                    <span class="material-icons-round">person</span>
+                    Profile
+                </button>
+                <button class="section-tab" data-section="apps">
+                    <span class="material-icons-round">apps</span>
+                    My Apps
+                </button>
+                <button class="section-tab" data-section="analytics">
+                    <span class="material-icons-round">analytics</span>
+                    Analytics
+                </button>
+                <button class="section-tab" data-section="activity">
+                    <span class="material-icons-round">history</span>
+                    Activity
                 </button>
             </div>
 
-            <nav class="sidebar-nav">
-                <a href="#overview" class="nav-item active">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
+            <!-- Overview Section -->
+            <section class="dashboard-section active" id="overview">
+                <h2 class="section-title">Dashboard Overview</h2>
                 
-                <!-- NEW: My Profile link to profile page -->
-                <a href="https://aditya-cmd-max.github.io/profile/" class="nav-item" id="myProfileLink">
-                    <i class="fas fa-user-circle"></i>
-                    <span>My Profile</span>
-                </a>
-                
-                <!-- CHANGED: From "My Profile" to "Edit Profile" -->
-                <a href="#profile" class="nav-item">
-                    <i class="fas fa-user-edit"></i>
-                    <span>Edit Profile</span>
-                    <span class="badge">Edit</span>
-                </a>
-                
-                <a href="#apps" class="nav-item">
-                    <i class="fas fa-th-large"></i>
-                    <span>My Apps</span>
-                </a>
-                <a href="#analytics" class="nav-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Analytics</span>
-                </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-item">
-                    <i class="fas fa-network-wired"></i>
-                    <span>All Tools</span>
-                    <span class="badge">New</span>
-                </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-item">
-                    <i class="fas fa-external-link-alt"></i>
-                    <span>Home</span>
-                </a>
-                
-                <div style="margin-top: auto; padding-top: var(--md-spacing-lg); border-top: 1px solid var(--md-outline);">
-                    <div class="status-indicator">
-                        <span class="status-dot online"></span>
-                        <span>Online</span>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">person</span>
+                        </div>
+                        <div class="stat-value" id="profileCompletion">0%</div>
+                        <div class="stat-label">Profile Complete</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="profileProgress" style="width: 0%"></div>
+                        </div>
+                        <p style="margin-top: var(--space-md);">Complete your profile for better experience</p>
                     </div>
-                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
-                        Last sync: <span id="lastSync">Just now</span>
-                    </p>
-                </div>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="user-menu">
-                    <div class="profile-avatar-button" id="sidebarProfileAvatar">
-                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
-                    </div>
-                    <div class="user-menu-info">
-                        <h3 id="sidebarUserName" class="user-menu-name">User</h3>
-                        <p class="user-menu-email">View Profile</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Top Header -->
-            <header class="top-header">
-                <div class="welcome-section">
-                    <h1 id="greeting">Hi, <span id="userName" class="animated-username">User</span>! 👋</h1>
-                    <p>Welcome back to your Reverbit Dashboard</p>
-                    <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
-                        <div class="progress-fill" style="width: 60%;"></div>
-                    </div>
-                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
-                        Profile completion: <span id="profileCompletion">60%</span>
-                    </p>
-                </div>
-
-                <div class="header-actions">
-                    <!-- Desktop Profile Avatar -->
-                    <button class="profile-avatar-button" id="desktopProfileAvatar" aria-label="Open profile menu">
-                        <img class="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=1a73e8&color=fff" alt="User" onerror="handleAvatarError(this)">
-                    </button>
                     
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-                        <span class="material-icons-round">dark_mode</span>
-                    </button>
-                    <button class="btn btn-filled" id="signoutButton">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sign Out
-                    </button>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">timeline</span>
+                        </div>
+                        <div class="stat-value" id="weeklyActivity">0</div>
+                        <div class="stat-label">Minutes This Week</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="weeklyProgress" style="width: 0%"></div>
+                        </div>
+                        <p style="margin-top: var(--space-md);" id="mostUsedApp">Most used: Loading...</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">stars</span>
+                        </div>
+                        <div class="stat-value" id="achievementCount">0</div>
+                        <div class="stat-label">Achievements</div>
+                        <p style="margin-top: var(--space-md);">Keep using apps to unlock more</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">notifications</span>
+                        </div>
+                        <div class="stat-value" id="notificationCount">3</div>
+                        <div class="stat-label">Notifications</div>
+                        <p style="margin-top: var(--space-md);">Latest: Profile incomplete</p>
+                    </div>
                 </div>
-            </header>
+            </section>
 
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <div class="quick-stat-card">
-                    <div class="stat-number" id="totalTime">0h</div>
-                    <div class="stat-label">Total Usage</div>
-                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">Across all apps</p>
-                </div>
-                <div class="quick-stat-card">
-                    <div class="stat-number" id="streak">0 days</div>
-                    <div class="stat-label">Active Streak</div>
-                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">Keep it up!</p>
-                </div>
-                <div class="quick-stat-card">
-                    <div class="stat-number" id="appsUsed">3</div>
-                    <div class="stat-label">Apps Used</div>
-                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">This week</p>
-                </div>
-                <div class="quick-stat-card">
-                    <div class="stat-number" id="mostUsedTime">0m</div>
-                    <div class="stat-label">Most Used</div>
-                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);" id="mostUsedAppName">Clover AI</p>
-                </div>
-            </div>
-
-            <!-- Edit Profile Section -->
-            <section id="profile" style="display: none;">
+            <!-- Profile Section -->
+            <section class="dashboard-section" id="profile">
                 <h2 class="section-title">Edit Profile</h2>
                 
-                <div class="profile-section">
+                <div class="profile-card">
                     <div class="profile-header">
-                        <div class="profile-avatar-large" onclick="openCloudinaryUploadWidget()" role="button" aria-label="Change profile picture">
-                            <img id="profileAvatarImg" src="" alt="Profile" class="profile-avatar-large-img" onerror="handleLargeAvatarError(this)">
-                            <div class="avatar-upload" onclick="event.stopPropagation(); openCloudinaryUploadWidget();" aria-label="Upload new profile picture">
-                                <i class="fas fa-camera"></i>
+                        <div class="avatar-container">
+                            <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile" class="avatar-image" id="profileAvatarLarge">
+                            <div class="avatar-edit" onclick="openCropModal()">
+                                <span class="material-icons-round">edit</span>
                             </div>
                         </div>
                         <div class="profile-info">
-                            <h2 id="profileUserName">Loading...</h2>
-                            <p class="email" id="userEmail">Loading...</p>
-                            <p class="member-since" id="memberSince">Member since: Loading...</p>
-                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm);">
-                                <span class="status-dot online"></span>
-                                <span>Active now</span>
+                            <h2 id="profileDisplayName">User</h2>
+                            <div class="member-badge">
+                                <span class="material-icons-round">calendar_today</span>
+                                <span id="memberSince">Member since: Loading...</span>
                             </div>
-                            
-                            <button class="avatar-upload-button" onclick="openCloudinaryUploadWidget()" aria-label="Upload new profile picture">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                Upload New Profile Picture
-                            </button>
+                            <div class="member-badge" style="margin-top: var(--space-xs);">
+                                <span class="material-icons-round">check_circle</span>
+                                <span>Account verified</span>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="upload-instructions">
-                        <p style="font-weight: 600; color: var(--md-on-surface);">Profile Picture Guidelines:</p>
-                        <ul>
-                            <li>Supported formats: JPG, PNG, WebP</li>
-                            <li>Maximum file size: 10MB</li>
-                            <li>Recommended dimensions: 400x400 pixels</li>
-                            <li>Your image will be automatically optimized</li>
-                        </ul>
                     </div>
 
                     <form id="profileForm" class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Full Name</label>
-                            <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
+                            <input type="text" class="form-input" id="fullName" placeholder="Your name">
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">Email</label>
-                            <input type="email" id="email" class="form-input" placeholder="Enter your email" disabled>
+                            <input type="email" class="form-input" id="email" disabled>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">Bio</label>
-                            <textarea id="bio" class="form-input" rows="3" placeholder="Tell us about yourself"></textarea>
+                            <textarea class="form-textarea" id="bio" rows="3" placeholder="Tell us about yourself"></textarea>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">Country</label>
-                            <select id="country" class="form-input">
-                                <option value="">Select Country</option>
+                            <select class="form-select" id="country">
+                                <option value="">Select country</option>
                                 <option value="IN">India</option>
                                 <option value="US">United States</option>
                                 <option value="GB">United Kingdom</option>
@@ -2128,13 +1007,13 @@
                         
                         <div class="form-group">
                             <label class="form-label">Date of Birth</label>
-                            <input type="date" id="dob" class="form-input">
+                            <input type="date" class="form-input" id="dob">
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">Gender</label>
-                            <select id="gender" class="form-input">
-                                <option value="">Select Gender</option>
+                            <select class="form-select" id="gender">
+                                <option value="">Select gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="other">Other</option>
@@ -2142,970 +1021,274 @@
                             </select>
                         </div>
                         
-                        <div class="form-group" style="grid-column: 1 / -1; display: flex; gap: var(--md-spacing-md); margin-top: var(--md-spacing-md);">
-                            <button type="submit" class="btn btn-filled">
-                                <i class="fas fa-save"></i>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-icons-round">save</span>
                                 Save Changes
                             </button>
-                            <button type="button" class="btn btn-outlined" onclick="showToast('Changes discarded')">
-                                <i class="fas fa-times"></i>
-                                Cancel
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                <span class="material-icons-round">undo</span>
+                                Reset
                             </button>
-                            <button type="button" class="btn btn-outlined" onclick="window.location.href='https://aditya-cmd-max.github.io/profile/'">
-                                <i class="fas fa-external-link-alt"></i>
-                                View My Profile
-                            </button>
+                            <a href="https://aditya-cmd-max.github.io/profile/" class="btn btn-secondary">
+                                <span class="material-icons-round">visibility</span>
+                                View Public Profile
+                            </a>
                         </div>
                     </form>
                 </div>
             </section>
 
             <!-- Apps Section -->
-            <section id="apps" style="display: none;">
-                <h2 class="section-title">My Reverbit Apps</h2>
+            <section class="dashboard-section" id="apps">
+                <h2 class="section-title">My Apps</h2>
                 
                 <div class="apps-grid">
                     <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
                         <div class="app-icon">
-                            <i class="fas fa-leaf"></i>
+                            <span class="material-icons-round">psychology</span>
                         </div>
-                        <div class="app-content">
-                            <h3 class="app-title">Clover AI</h3>
-                            <p class="app-stats" id="cloverTime">0 mins this week</p>
-                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Intelligent tutoring system with personalized learning</p>
-                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
-                                <span class="status-dot online"></span>
-                                <span>Active</span>
-                            </div>
+                        <h3 class="app-title">Clover AI</h3>
+                        <p class="app-stats" id="cloverTime">0 mins this week</p>
+                        <div class="app-usage">
+                            <span class="material-icons-round" style="color: var(--md-primary);">schedule</span>
+                            <span>Last used: Today</span>
                         </div>
                     </a>
                     
                     <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
                         <div class="app-icon">
-                            <i class="fas fa-brain"></i>
+                            <span class="material-icons-round">edit_note</span>
                         </div>
-                        <div class="app-content">
-                            <h3 class="app-title">MindScribe</h3>
-                            <p class="app-stats" id="mindscribeTime">0 mins this week</p>
-                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">AI-powered note-taking and organization</p>
-                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
-                                <span class="status-dot online"></span>
-                                <span>Active</span>
-                            </div>
+                        <h3 class="app-title">MindScribe</h3>
+                        <p class="app-stats" id="mindscribeTime">0 mins this week</p>
+                        <div class="app-usage">
+                            <span class="material-icons-round" style="color: var(--md-primary);">schedule</span>
+                            <span>Last used: Yesterday</span>
                         </div>
                     </a>
                     
                     <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
                         <div class="app-icon">
-                            <i class="fas fa-users"></i>
+                            <span class="material-icons-round">record_voice_over</span>
                         </div>
-                        <div class="app-content">
-                            <h3 class="app-title">Peo</h3>
-                            <p class="app-stats" id="peoTime">0 mins this week</p>
-                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Natural text-to-speech with emotion</p>
-                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
-                                <span class="status-dot online"></span>
-                                <span>Active</span>
-                            </div>
+                        <h3 class="app-title">Peo-TTS</h3>
+                        <p class="app-stats" id="peoTime">0 mins this week</p>
+                        <div class="app-usage">
+                            <span class="material-icons-round" style="color: var(--md-primary);">schedule</span>
+                            <span>Last used: 2 days ago</span>
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="app-card">
-                        <div class="app-icon" style="background: linear-gradient(135deg, #ea4335, #d93025);">
-                            <i class="fas fa-network-wired"></i>
+                    <a href="https://aditya-cmd-max.github.io/popout/" class="app-card">
+                        <div class="app-icon">
+                            <span class="material-icons-round">visibility</span>
                         </div>
-                        <div class="app-content">
-                            <h3 class="app-title">All Tools</h3>
-                            <p class="app-stats">Explore more</p>
-                            <p style="color: var(--md-on-surface-variant); margin-top: var(--md-spacing-sm); font-size: 0.95rem;">Complete Reverbit ecosystem</p>
-                            <div class="status-indicator" style="margin-top: var(--md-spacing-sm); justify-content: center;">
-                                <span class="status-dot online"></span>
-                                <span>10+ tools</span>
-                            </div>
+                        <h3 class="app-title">PopOut Pro</h3>
+                        <p class="app-stats">Visual learning</p>
+                        <div class="app-usage">
+                            <span class="material-icons-round" style="color: var(--md-primary);">star</span>
+                            <span>Coming soon</span>
                         </div>
                     </a>
                 </div>
             </section>
 
             <!-- Analytics Section -->
-            <section id="analytics" style="display: none;">
+            <section class="dashboard-section" id="analytics">
                 <h2 class="section-title">Usage Analytics</h2>
                 
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Usage Overview</h3>
-                                <p class="card-subtitle">Time spent across all apps</p>
-                            </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">hourglass_top</span>
                         </div>
-                        <div class="stat-number" id="detailedTotalTime">0 hours</div>
-                        <div class="stat-label">Total Time Spent</div>
-                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
-                            <div class="progress-fill" style="width: 45%;"></div>
-                        </div>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
-                            +12% from last week
-                        </p>
+                        <div class="stat-value" id="totalHours">0</div>
+                        <div class="stat-label">Total Hours</div>
+                        <p>Across all apps</p>
                     </div>
                     
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-fire"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Activity Streak</h3>
-                                <p class="card-subtitle">Consecutive days using Reverbit</p>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">local_fire_department</span>
                         </div>
-                        <div class="stat-number" id="detailedStreak">0 days</div>
-                        <div class="stat-label">Current Streak</div>
-                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
-                            <div class="progress-fill" style="width: 75%;"></div>
-                        </div>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
-                            5 days to beat your record!
-                        </p>
+                        <div class="stat-value" id="bestStreak">0</div>
+                        <div class="stat-label">Best Streak</div>
+                        <p>Your record</p>
                     </div>
                     
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Most Used App</h3>
-                                <p class="card-subtitle">Your favorite Reverbit tool</p>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">star</span>
                         </div>
-                        <div class="stat-number" id="mostUsedApp">Loading...</div>
-                        <div class="stat-label" id="mostUsedTimeLabel">0 minutes</div>
-                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
-                            <div class="progress-fill" style="width: 85%;"></div>
-                        </div>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
-                            Your top choice this month
-                        </p>
+                        <div class="stat-value" id="favoriteApp">-</div>
+                        <div class="stat-label">Favorite App</div>
+                        <p id="favoriteTime">0 mins</p>
                     </div>
                     
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Weekly Activity</h3>
-                                <p class="card-subtitle">This week's usage pattern</p>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-icons-round">insights</span>
                         </div>
-                        <div class="stat-number" id="weeklyTotal">0 mins</div>
-                        <div class="stat-label">Total this week</div>
-                        <div class="progress-bar" style="margin-top: var(--md-spacing-md);">
-                            <div class="progress-fill" style="width: 60%;"></div>
-                        </div>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin-top: var(--md-spacing-xs);">
-                            Daily average: 45 mins
-                        </p>
+                        <div class="stat-value" id="dailyAverage">0</div>
+                        <div class="stat-label">Daily Average</div>
+                        <p>Minutes per day</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Overview Section (Default) -->
-            <section id="overview">
-                <h2 class="section-title">Dashboard Overview</h2>
+            <!-- Activity Section -->
+            <section class="dashboard-section" id="activity">
+                <h2 class="section-title">Recent Activity</h2>
                 
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Profile Status</h3>
-                                <p class="card-subtitle">Manage your personal information</p>
+                <div class="profile-card">
+                    <div class="timeline" id="activityTimeline">
+                        <div class="timeline-item">
+                            <div class="timeline-time">Just now</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Profile Viewed</div>
+                                <div class="timeline-desc">You checked your dashboard</div>
                             </div>
                         </div>
-                        <p style="color: var(--md-on-surface); margin-bottom: var(--md-spacing-lg);">Complete your profile to get personalized recommendations and better experience.</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="profileProgressBar" style="width: 60%;"></div>
-                        </div>
-                        <p style="color: var(--md-on-surface-variant); font-size: 0.875rem; margin: var(--md-spacing-sm) 0 var(--md-spacing-lg);">
-                            Profile completion: <span id="profileCompletionOverview">60%</span>
-                        </p>
-                        <div style="display: flex; gap: var(--md-spacing-sm);">
-                            <a href="#profile" class="btn btn-filled" style="flex: 1;" onclick="showSection('profile')">
-                                <i class="fas fa-user-edit"></i>
-                                Edit Profile
-                            </a>
-                            <a href="https://aditya-cmd-max.github.io/profile/" class="btn btn-outlined" style="flex: 1;">
-                                <i class="fas fa-external-link-alt"></i>
-                                View Profile
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Quick Launch</h3>
-                                <p class="card-subtitle">Access your favorite tools</p>
+                        <div class="timeline-item">
+                            <div class="timeline-time">2h ago</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Clover AI Session</div>
+                                <div class="timeline-desc">Completed 3 lessons</div>
                             </div>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: var(--md-spacing-sm); margin-bottom: var(--md-spacing-lg);">
-                            <a href="https://aditya-cmd-max.github.io/cloverai/" class="btn btn-outlined" style="justify-content: start;">
-                                <i class="fas fa-leaf"></i>
-                                Clover AI
-                                <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="cloverQuickTime">0m</span>
-                            </a>
-                            <a href="https://aditya-cmd-max.github.io/mindscribe/" class="btn btn-outlined" style="justify-content: start;">
-                                <i class="fas fa-brain"></i>
-                                MindScribe
-                                <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="mindscribeQuickTime">0m</span>
-                            </a>
-                            <a href="https://aditya-cmd-max.github.io/Peo/" class="btn btn-outlined" style="justify-content: start;">
-                                <i class="fas fa-users"></i>
-                                Peo
-                                <span style="margin-left: auto; font-size: 0.875rem; color: var(--md-on-surface-variant);" id="peoQuickTime">0m</span>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-chart-pie"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Recent Activity</h3>
-                                <p class="card-subtitle">Your recent interactions</p>
+                        <div class="timeline-item">
+                            <div class="timeline-time">Yesterday</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Profile Updated</div>
+                                <div class="timeline-desc">Changed profile picture</div>
                             </div>
                         </div>
-                        <div class="recent-activity">
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-user-edit"></i>
-                                </div>
-                                <div>
-                                    <p style="font-weight: 600; color: var(--md-on-surface);">Profile Updated</p>
-                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">Just now</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div>
-                                    <p style="font-weight: 600; color: var(--md-on-surface);">Time Logged</p>
-                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">Today, 12:30 PM</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                                <div>
-                                    <p style="font-weight: 600; color: var(--md-on-surface);">Usage Analytics</p>
-                                    <p style="color: var(--md-on-surface-variant); font-size: 0.875rem;">Updated 2 hours ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            <div>
-                                <h3 class="card-title">Notifications</h3>
-                                <p class="card-subtitle">Latest updates</p>
-                            </div>
-                        </div>
-                        <div style="color: var(--md-on-surface-variant);">
-                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-circle" style="color: var(--md-primary); font-size: 0.5rem; margin-right: 8px;"></i>
-                                Complete your profile
-                            </p>
-                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-circle" style="color: var(--md-secondary); font-size: 0.5rem; margin-right: 8px;"></i>
-                                New features in Clover AI
-                            </p>
-                            <p style="display: flex; align-items: center; margin-bottom: var(--md-spacing-sm);">
-                                <i class="fas fa-circle" style="color: #ea4335; font-size: 0.5rem; margin-right: 8px;"></i>
-                                Mobile app coming soon
-                            </p>
-                            <p style="display: flex; align-items: center;">
-                                <i class="fas fa-circle" style="color: #fbbc05; font-size: 0.5rem; margin-right: 8px;"></i>
-                                Tip: Use keyboard shortcuts
-                            </p>
-                        </div>
-                        <button class="btn btn-outlined" style="width: 100%; margin-top: var(--md-spacing-lg);" onclick="showToast('All notifications marked as read')">
-                            <i class="fas fa-check"></i>
-                            Mark all as read
-                        </button>
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Changes saved successfully!</span>
-    </div>
-
-    <!-- Logout Modal -->
-    <div id="logoutModal" class="modal">
+    <!-- Image Cropper Modal -->
+    <div class="modal" id="cropModal">
         <div class="modal-content">
-            <h2 style="font-family: var(--md-font-heading); margin-bottom: var(--md-spacing-lg);">Sign Out</h2>
-            <p style="margin-bottom: var(--md-spacing-xl); color: var(--md-on-surface);">Are you sure you want to sign out?</p>
-            <div style="display: flex; gap: var(--md-spacing-md); justify-content: flex-end;">
-                <button class="btn btn-outlined" onclick="closeModal('logoutModal')">Cancel</button>
-                <button class="btn btn-filled" onclick="confirmLogout()">Sign Out</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Crop Profile Picture</h3>
+                <button class="modal-close" onclick="closeCropModal()">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="cropper-container">
+                <img id="cropImage" src="" alt="Crop" style="max-width: 100%;">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeCropModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="cropAndUpload()">
+                    <span class="material-icons-round">crop</span>
+                    Crop & Upload
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="material-icons-round" id="toastIcon">info</span>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Loading Reverbit Dashboard...</p>
+    </div>
+
     <script>
-        // Your logo URL
-        const LOGO_URL = "https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg";
-
-        // Cloudinary Configuration
-        const cloudinaryConfig = {
-            cloudName: 'dgy9v2ctk',
-            uploadPreset: 'reverbit_unsigned11',
-            folder: 'reverbit/user',
-        };
-
-        // Firebase Configuration
+        // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
             authDomain: "reverbit11.firebaseapp.com",
             projectId: "reverbit11",
             storageBucket: "reverbit11.firebasestorage.app",
             messagingSenderId: "607495314412",
-            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-            measurementId: "G-DMWMRM1M47"
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9"
         };
 
-        // DOM Elements
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = themeToggle.querySelector('.material-icons-round');
-        const loadingScreen = document.getElementById('loading');
-        const hamburgerMenu = document.getElementById('hamburgerMenu');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarClose = document.getElementById('sidebarClose');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const navItems = document.querySelectorAll('.nav-item');
-        const profilePopup = document.getElementById('profilePopup');
-        const uploadLoading = document.getElementById('uploadLoading');
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // Profile avatar elements
-        const desktopProfileAvatar = document.getElementById('desktopProfileAvatar');
-        const mobileProfileAvatar = document.getElementById('mobileProfileAvatar');
-        const sidebarProfileAvatar = document.getElementById('sidebarProfileAvatar');
-
-        // Global variables
+        // ==================== GLOBAL VARIABLES ====================
         let currentUser = null;
-        let currentUserProfile = null;
-        let auth, db;
-        let isMobileMenuOpen = false;
-        let touchStartX = 0;
-        let touchEndX = 0;
-        let isMobileDevice = false;
+        let currentProfile = null;
+        let cropper = null;
+        let selectedFile = null;
+        let currentSection = 'overview';
 
-        // Mobile detection
-        function detectMobileDevice() {
-            isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            return isMobileDevice;
-        }
+        // DOM Elements
+        const loadingScreen = document.getElementById('loading');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastIcon = document.getElementById('toastIcon');
+        const themeToggle = document.getElementById('themeToggle');
+        const sectionTabs = document.querySelectorAll('.section-tab');
+        const sections = document.querySelectorAll('.dashboard-section');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const avatarImg = document.getElementById('avatarImg');
+        const profileAvatarLarge = document.getElementById('profileAvatarLarge');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const profileDisplayName = document.getElementById('profileDisplayName');
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const bio = document.getElementById('bio');
+        const country = document.getElementById('country');
+        const dob = document.getElementById('dob');
+        const gender = document.getElementById('gender');
+        const memberSince = document.getElementById('memberSince');
 
-        // Handle logo error
-        function handleLogoError(img) {
-            console.log('Logo failed to load, using fallback');
-            img.style.display = 'none';
-            const fallbackDiv = document.createElement('div');
-            fallbackDiv.className = 'nav-logo';
-            fallbackDiv.innerHTML = '<i class="fas fa-infinity"></i>';
-            img.parentNode.appendChild(fallbackDiv);
-        }
-
-        // Cloudinary Upload Widget
-        function openCloudinaryUploadWidget() {
-            // Show loading overlay
-            uploadLoading.style.display = 'flex';
-            
-            // Initialize Cloudinary widget
-            const myWidget = cloudinary.createUploadWidget(
-                {
-                    cloudName: cloudinaryConfig.cloudName,
-                    uploadPreset: cloudinaryConfig.uploadPreset,
-                    folder: cloudinaryConfig.folder,
-                    sources: ['local', 'url', 'camera'],
-                    cropping: true,
-                    croppingAspectRatio: 1,
-                    croppingDefaultSelectionRatio: 1,
-                    croppingShowDimensions: true,
-                    multiple: false,
-                    maxFileSize: 10485760, // 10MB
-                    clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-                    showAdvancedOptions: false,
-                    styles: {
-                        palette: {
-                            window: "#FFFFFF",
-                            windowBorder: "#90A0B3",
-                            tabIcon: "#1a73e8",
-                            menuIcons: "#5A616A",
-                            textDark: "#000000",
-                            textLight: "#FFFFFF",
-                            link: "#1a73e8",
-                            action: "#FF620C",
-                            inactiveTabIcon: "#0E2F5A",
-                            error: "#F44235",
-                            inProgress: "#1a73e8",
-                            complete: "#0d8a72",
-                            sourceBg: "#F8F9FA"
-                        }
-                    }
-                },
-                (error, result) => {
-                    if (!error && result && result.event === "success") {
-                        console.log('Cloudinary upload result:', result.info);
-                        uploadImageToDatabase(result.info);
-                    } else if (error) {
-                        console.error('Cloudinary upload error:', error);
-                        showToast('Upload failed. Please try again.');
-                        uploadLoading.style.display = 'none';
-                    }
-                    
-                    // Hide loading when done
-                    if (result && result.event === "close") {
-                        uploadLoading.style.display = 'none';
-                    }
-                }
-            );
-
-            // Open the widget
-            myWidget.open();
-        }
-
-        // Upload image to Firebase
-        async function uploadImageToDatabase(imageInfo) {
-            try {
-                showToast('Processing your image...');
-                
-                const imageUrl = imageInfo.secure_url;
-                const publicId = imageInfo.public_id;
-                
-                // Update Firebase user profile
-                const userRef = db.collection('users').doc(currentUser.uid);
-                await userRef.set({
-                    photoURL: imageUrl,
-                    cloudinaryImageId: publicId,
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-                
-                // Update Firebase Auth
-                await currentUser.updateProfile({
-                    photoURL: imageUrl
-                });
-                
-                // Update local user profile
-                currentUserProfile.photoURL = imageUrl;
-                currentUserProfile.cloudinaryImageId = publicId;
-                
-                // Update UI
-                updateProfileAvatars(imageUrl, true);
-                
-                // Hide loading
-                uploadLoading.style.display = 'none';
-                
-                showToast('Profile picture updated successfully!');
-                
-                // Refresh profile popup if open
-                if (profilePopup.style.display === 'block') {
-                    profilePopup.innerHTML = createProfilePopup(currentUserProfile);
-                    attachPopupEventListeners();
-                }
-                
-            } catch (error) {
-                console.error('Error uploading image to database:', error);
-                uploadLoading.style.display = 'none';
-                showToast('Error saving profile picture');
-            }
-        }
-
-        // Avatar error handler
-        function handleAvatarError(img) {
-            console.log('Avatar image failed to load:', img.src);
-            showFallbackAvatar(img);
-        }
-
-        function showFallbackAvatar(img) {
-            const displayName = currentUser?.displayName || 'User';
-            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            
-            // Create fallback div
-            const fallbackDiv = document.createElement('div');
-            fallbackDiv.className = 'avatar-fallback';
-            fallbackDiv.textContent = initials;
-            
-            // Replace image with fallback
-            img.style.display = 'none';
-            img.parentNode.appendChild(fallbackDiv);
-        }
-
-        function handleLargeAvatarError(img) {
-            console.log('Large avatar image failed to load:', img.src);
-            showLargeFallbackAvatar(img);
-        }
-
-        function showLargeFallbackAvatar(img) {
-            const displayName = currentUser?.displayName || 'User';
-            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            
-            // Create fallback for large avatar
-            img.style.display = 'none';
-            img.parentNode.innerHTML = `
-                <div style="width: 160px; height: 160px; border-radius: 50%; background: var(--md-gradient-1); display: flex; align-items: center; justify-content: center; color: var(--md-on-primary); font-size: 3rem; font-weight: 700;">
-                    ${initials}
-                </div>
-            `;
-        }
-
-        // Theme Toggle
+        // ==================== THEME MANAGEMENT ====================
         function toggleTheme() {
-            document.body.classList.toggle('light-theme');
             document.body.classList.toggle('dark-theme');
-            
-            if (document.body.classList.contains('dark-theme')) {
-                themeIcon.textContent = 'light_mode';
-                localStorage.setItem('theme', 'dark');
-                showToast('Dark mode enabled');
-            } else {
-                themeIcon.textContent = 'dark_mode';
-                localStorage.setItem('theme', 'light');
-                showToast('Light mode enabled');
-            }
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.querySelector('.material-icons-round').textContent = isDark ? 'light_mode' : 'dark_mode';
         }
 
-        themeToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleTheme();
-        });
-
-        // Load saved theme preference
-        function loadThemePreference() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.body.classList.remove('light-theme');
-                themeIcon.textContent = 'light_mode';
-            } else {
-                document.body.classList.add('light-theme');
-                document.body.classList.remove('dark-theme');
-                themeIcon.textContent = 'dark_mode';
-            }
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggle.querySelector('.material-icons-round').textContent = 'light_mode';
         }
 
-        // ========== ADVANCED MOBILE MENU HANDLING ==========
+        themeToggle.addEventListener('click', toggleTheme);
 
-        // Improved mobile menu toggle function
-        function toggleMobileMenu(forceClose = false) {
-            if (window.innerWidth > 768) return;
-            
-            if (forceClose) {
-                isMobileMenuOpen = false;
-            } else {
-                isMobileMenuOpen = !isMobileMenuOpen;
-            }
-            
-            if (isMobileMenuOpen) {
-                sidebar.classList.add('mobile-open');
-                hamburgerMenu.classList.add('active');
-                sidebarOverlay.classList.add('active');
-                document.body.classList.add('menu-open');
-                hamburgerMenu.innerHTML = '<i class="fas fa-times hamburger-icon"></i>';
-                hamburgerMenu.setAttribute('aria-label', 'Close menu');
+        // ==================== SECTION NAVIGATION ====================
+        sectionTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const sectionId = tab.dataset.section;
                 
-                // Prevent scrolling when menu is open
-                document.addEventListener('touchmove', preventScroll, { passive: false });
-                document.addEventListener('wheel', preventScroll, { passive: false });
-            } else {
-                sidebar.classList.remove('mobile-open');
-                hamburgerMenu.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-                hamburgerMenu.innerHTML = '<i class="fas fa-bars hamburger-icon"></i>';
-                hamburgerMenu.setAttribute('aria-label', 'Open menu');
+                // Update tabs
+                sectionTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
                 
-                // Re-enable scrolling
-                document.removeEventListener('touchmove', preventScroll);
-                document.removeEventListener('wheel', preventScroll);
-            }
-        }
-
-        // Prevent scroll when menu is open
-        function preventScroll(e) {
-            if (isMobileMenuOpen) {
-                e.preventDefault();
-                return false;
-            }
-        }
-
-        // Handle swipe gestures for mobile menu
-        function handleSwipeGesture() {
-            if (window.innerWidth > 768) return;
-            
-            const minSwipeDistance = 50;
-            const swipeDistance = touchEndX - touchStartX;
-            
-            // Swipe right to open menu (from left edge)
-            if (swipeDistance > minSwipeDistance && touchStartX < 50 && !isMobileMenuOpen) {
-                toggleMobileMenu();
-            }
-            
-            // Swipe left to close menu
-            if (swipeDistance < -minSwipeDistance && isMobileMenuOpen) {
-                toggleMobileMenu();
-            }
-        }
-
-        // Touch event handlers for swipe
-        document.addEventListener('touchstart', function(e) {
-            if (window.innerWidth > 768) return;
-            
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        document.addEventListener('touchend', function(e) {
-            if (window.innerWidth > 768) return;
-            
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
-        }, { passive: true });
-
-        // Initialize mobile menu handlers
-        function initMobileMenu() {
-            hamburgerMenu.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleMobileMenu();
-            });
-            
-            sidebarClose.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleMobileMenu();
-            });
-            
-            sidebarOverlay.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleMobileMenu();
-            });
-            
-            // Close menu when clicking on any nav item (mobile)
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        setTimeout(() => toggleMobileMenu(true), 100);
-                    }
-                });
-            });
-            
-            // Close menu when clicking outside on mobile
-            document.addEventListener('click', function(e) {
-                if (window.innerWidth > 768) return;
+                // Update sections
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
                 
-                if (isMobileMenuOpen) {
-                    const isHamburger = e.target.closest('.hamburger-menu');
-                    const isSidebar = e.target.closest('.sidebar');
-                    const isSidebarClose = e.target.closest('.sidebar-close');
-                    const isOverlay = e.target.closest('.sidebar-overlay');
-                    
-                    if (!isSidebar && !isHamburger && !isSidebarClose && !isOverlay) {
-                        toggleMobileMenu(true);
-                    }
-                }
-            });
-        }
-
-        // ========== UPDATED PROFILE POPUP FUNCTIONS ==========
-
-        let isProfilePopupVisible = false;
-
-        function createProfilePopup(userProfile) {
-            if (!userProfile) return '';
-            
-            const displayName = userProfile.displayName || 'User';
-            const email = userProfile.email || '';
-            const photoURL = userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`;
-            
-            return `
-                <div class="profile-popup-container">
-                    <div class="profile-popup-header">
-                        <div class="profile-popup-avatar" onclick="openProfilePopupWidget()">
-                            <img src="${photoURL}" alt="${displayName}" onerror="handleAvatarError(this)">
-                        </div>
-                        <div class="profile-popup-info">
-                            <div class="profile-popup-name">${displayName}</div>
-                            <div class="profile-popup-email">${email}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-popup-divider"></div>
-                    
-                    <div class="profile-popup-menu">
-                        <!-- NEW: Link to My Profile page -->
-                        <a href="https://aditya-cmd-max.github.io/profile/" class="profile-popup-menu-item" onclick="hideProfilePopup()">
-                            <span class="profile-popup-menu-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                </svg>
-                            </span>
-                            <span class="profile-popup-menu-text">My Profile</span>
-                        </a>
-                        
-                        <!-- CHANGED: From "Edit Profile" to "Edit Profile" (dashboard section) -->
-                        <a href="#profile" class="profile-popup-menu-item" onclick="showSection('profile'); hideProfilePopup();">
-                            <span class="profile-popup-menu-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                                </svg>
-                            </span>
-                            <span class="profile-popup-menu-text">Edit Profile</span>
-                        </a>
-                        
-                        <a href="#overview" class="profile-popup-menu-item" onclick="showSection('overview'); hideProfilePopup();">
-                            <span class="profile-popup-menu-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-                                </svg>
-                            </span>
-                            <span class="profile-popup-menu-text">Dashboard</span>
-                        </a>
-                        
-                        <a href="#analytics" class="profile-popup-menu-item" onclick="showSection('analytics'); hideProfilePopup();">
-                            <span class="profile-popup-menu-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                                </svg>
-                            </span>
-                            <span class="profile-popup-menu-text">Analytics</span>
-                        </a>
-                        
-                        <button class="profile-popup-menu-item" onclick="openProfilePopupWidget()">
-                            <span class="profile-popup-menu-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                                </svg>
-                            </span>
-                            <span class="profile-popup-menu-text">Change Photo</span>
-                        </button>
-                        
-                        <button class="profile-popup-menu-item" onclick="logout()">
-                            <span class="profile-popup-menu-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-                                </svg>
-                            </span>
-                            <span class="profile-popup-menu-text">Sign out</span>
-                        </button>
-                    </div>
-                    
-                    <div class="profile-popup-footer">
-                        <div class="profile-popup-privacy-link">
-                            <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank">Privacy Policy</a>
-                            •
-                            <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank">Terms of Service</a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // New function for opening widget from profile popup
-        function openProfilePopupWidget() {
-            hideProfilePopup();
-            openCloudinaryUploadWidget();
-        }
-
-        function attachPopupEventListeners() {
-            const changePhotoBtn = profilePopup.querySelector('.profile-popup-menu-item:nth-child(5)');
-            if (changePhotoBtn) {
-                changePhotoBtn.onclick = openProfilePopupWidget;
-            }
-            
-            const avatarClick = profilePopup.querySelector('.profile-popup-avatar');
-            if (avatarClick) {
-                avatarClick.onclick = openProfilePopupWidget;
-            }
-            
-            // Update My Profile link to include user ID
-            const myProfileLink = profilePopup.querySelector('a[href="https://aditya-cmd-max.github.io/profile/"]');
-            if (myProfileLink && currentUser) {
-                myProfileLink.href = `https://aditya-cmd-max.github.io/profile/?id=${currentUser.uid}`;
-            }
-        }
-
-        function showProfilePopup() {
-            if (!currentUserProfile) return;
-            
-            profilePopup.innerHTML = createProfilePopup(currentUserProfile);
-            attachPopupEventListeners();
-            profilePopup.style.display = 'block';
-            
-            // Force reflow to get correct dimensions
-            profilePopup.offsetHeight;
-            
-            // Position the popup relative to the clicked avatar
-            let avatarRect;
-            
-            if (window.innerWidth > 768) {
-                // Desktop: use desktop avatar
-                avatarRect = desktopProfileAvatar.getBoundingClientRect();
-            } else {
-                // Mobile: use mobile avatar
-                avatarRect = mobileProfileAvatar.getBoundingClientRect();
-            }
-            
-            const popupRect = profilePopup.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            // Calculate position - try to place below avatar first
-            let top = avatarRect.bottom + 8;
-            let left = avatarRect.left;
-            
-            // Check if popup would go off bottom of screen
-            if (top + popupRect.height > viewportHeight) {
-                // Place above avatar instead
-                top = avatarRect.top - popupRect.height - 8;
-                // Ensure it doesn't go off top
-                top = Math.max(8, top);
-            }
-            
-            // Check if popup would go off right side of screen
-            if (left + popupRect.width > viewportWidth) {
-                // Align right edge with avatar
-                left = avatarRect.right - popupRect.width;
-            }
-            
-            // Check if popup would go off left side of screen
-            if (left < 0) {
-                left = 8;
-            }
-            
-            // On mobile, center the popup
-            if (window.innerWidth <= 768) {
-                top = Math.max(80, (viewportHeight - popupRect.height) / 2);
-                left = (viewportWidth - popupRect.width) / 2;
-            }
-            
-            // Apply position - using fixed positioning
-            profilePopup.style.position = 'fixed';
-            profilePopup.style.top = `${top}px`;
-            profilePopup.style.left = `${left}px`;
-            profilePopup.style.right = 'auto';
-            
-            // Add active class for animation
-            setTimeout(() => {
-                profilePopup.classList.add('active');
-                isProfilePopupVisible = true;
-            }, 10);
-            
-            // Add click outside listener
-            setTimeout(() => {
-                document.addEventListener('click', handleClickOutsideProfilePopup);
-                document.addEventListener('touchstart', handleClickOutsideProfilePopup, { passive: true });
-            }, 100);
-        }
-
-        function hideProfilePopup() {
-            profilePopup.classList.remove('active');
-            setTimeout(() => {
-                profilePopup.style.display = 'none';
-                isProfilePopupVisible = false;
-            }, 200);
-            
-            document.removeEventListener('click', handleClickOutsideProfilePopup);
-            document.removeEventListener('touchstart', handleClickOutsideProfilePopup);
-        }
-
-        function toggleProfilePopup(e) {
-            if (e) e.stopPropagation();
-            
-            if (isProfilePopupVisible) {
-                hideProfilePopup();
-            } else {
-                showProfilePopup();
-            }
-        }
-
-        function handleClickOutsideProfilePopup(event) {
-            const isPopupClick = profilePopup.contains(event.target);
-            const isDesktopAvatarClick = desktopProfileAvatar.contains(event.target);
-            const isMobileAvatarClick = mobileProfileAvatar.contains(event.target);
-            const isSidebarAvatarClick = sidebarProfileAvatar.contains(event.target);
-            
-            if (!isPopupClick && !isDesktopAvatarClick && !isMobileAvatarClick && !isSidebarAvatarClick) {
-                hideProfilePopup();
-            }
-        }
-
-        // ========== NAVIGATION FUNCTIONALITY ==========
-
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('main > section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show selected section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.style.display = 'block';
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                // Update active nav item
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                    if (item.getAttribute('href') === `#${sectionId}`) {
-                        item.classList.add('active');
-                    }
-                });
-            }
-        }
-
-        // Set up nav item click handlers
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                const href = item.getAttribute('href');
-                if (href.startsWith('#')) {
-                    e.preventDefault();
-                    const sectionId = href.substring(1);
-                    showSection(sectionId);
-                }
-                // External links (like My Profile) will open normally
+                currentSection = sectionId;
             });
         });
 
-        // Toast notification function
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'info') {
+            toast.className = `toast toast-${type}`;
             toastMessage.textContent = message;
+            toastIcon.textContent = type === 'success' ? 'check_circle' : 
+                                   type === 'error' ? 'error' : 'info';
             toast.classList.add('show');
             
             setTimeout(() => {
@@ -3113,439 +1296,330 @@
             }, 3000);
         }
 
-        // ========== MAIN INITIALIZATION ==========
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Initialize UI components
-                loadThemePreference();
-                detectMobileDevice();
-                initMobileMenu();
-                
-                // Improve touch experience for all interactive elements
-                document.querySelectorAll('button, a, .nav-item, .btn, .profile-avatar-button').forEach(el => {
-                    el.style.touchAction = 'manipulation';
-                    el.style.msTouchAction = 'manipulation';
-                    el.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
-                });
-
-                // Initialize Firebase
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                
-                auth = firebase.auth();
-                db = firebase.firestore();
-
-                // Check authentication state
-                auth.onAuthStateChanged(async (user) => {
-                    if (user) {
-                        currentUser = user;
-                        await loadUserData(user);
-                        await loadUsageData(user.uid);
-                        setupAuthCookies(user);
-                        showToast(`Welcome back, ${user.displayName || 'User'}!`);
+        // ==================== CROPPER MODAL ====================
+        function openCropModal() {
+            // Create file input
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    selectedFile = file;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const image = document.getElementById('cropImage');
+                        image.src = event.target.result;
                         
-                        // Setup profile popup click handlers
-                        setupProfilePopupHandlers();
-                        
-                        // Update My Profile link with user ID
-                        const myProfileLink = document.getElementById('myProfileLink');
-                        if (myProfileLink) {
-                            myProfileLink.href = `https://aditya-cmd-max.github.io/profile/?id=${user.uid}`;
+                        // Initialize cropper
+                        if (cropper) {
+                            cropper.destroy();
                         }
-                        
-                        // Update sidebar user menu
-                        document.querySelector('.user-menu-email').textContent = 'View My Profile';
-                        document.querySelector('.user-menu-email').addEventListener('click', function(e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.location.href = `https://aditya-cmd-max.github.io/profile/?id=${user.uid}`;
+                        cropper = new Cropper(image, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            dragMode: 'move',
+                            autoCropArea: 1,
+                            cropBoxResizable: true,
+                            cropBoxMovable: true,
+                            minContainerWidth: 300,
+                            minContainerHeight: 300,
+                            responsive: true,
+                            background: false,
+                            modal: true,
+                            guides: true,
+                            center: true,
+                            highlight: false,
+                            toggleDragModeOnDblclick: false,
                         });
                         
-                        // Hide loading screen
-                        setTimeout(() => {
-                            loadingScreen.classList.add('hidden');
-                            document.body.style.overflow = 'auto';
-                        }, 500);
-                    } else {
-                        window.location.href = 'https://aditya-cmd-max.github.io/signin';
-                    }
-                });
-
-                // Update last sync time
-                setInterval(() => {
-                    const now = new Date();
-                    const timeString = now.toLocaleTimeString('en-US', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    });
-                    document.getElementById('lastSync').textContent = timeString;
-                }, 60000);
-                
-            } catch (error) {
-                console.error('Initialization error:', error);
-                loadingScreen.classList.add('hidden');
-                showToast('Error loading dashboard');
-            }
-        });
-
-        // Setup profile popup click handlers
-        function setupProfilePopupHandlers() {
-            desktopProfileAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleProfilePopup(e);
-            });
+                        document.getElementById('cropModal').classList.add('active');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
             
-            mobileProfileAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleProfilePopup(e);
-            });
-            
-            sidebarProfileAvatar.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleProfilePopup(e);
-            });
+            input.click();
         }
 
-        // Load user data from Firestore
+        function closeCropModal() {
+            document.getElementById('cropModal').classList.remove('active');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+
+        async function cropAndUpload() {
+            if (!cropper || !selectedFile || !currentUser) {
+                showToast('No image selected', 'error');
+                return;
+            }
+
+            try {
+                showToast('Processing image...', 'info');
+                
+                // Get cropped canvas
+                const canvas = cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+
+                // Convert to blob
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+                
+                // Convert to base64 for storage
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                
+                reader.onload = async () => {
+                    const base64Image = reader.result;
+                    
+                    // Update Firestore
+                    await db.collection('users').doc(currentUser.uid).set({
+                        photoURL: base64Image,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                    
+                    // Update Firebase Auth profile
+                    await currentUser.updateProfile({
+                        photoURL: base64Image
+                    });
+                    
+                    // Update UI
+                    const timestamp = Date.now();
+                    avatarImg.src = base64Image + '?t=' + timestamp;
+                    profileAvatarLarge.src = base64Image + '?t=' + timestamp;
+                    
+                    closeCropModal();
+                    showToast('Profile picture updated!', 'success');
+                    
+                    // Reload user data
+                    await loadUserData(currentUser);
+                };
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('Failed to upload image', 'error');
+            }
+        }
+
+        // ==================== LOAD USER DATA ====================
         async function loadUserData(user) {
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                currentProfile = userData;
                 
-                // Update greeting with animated username
-                const displayName = user.displayName || 'User';
-                const greetingElement = document.getElementById('greeting');
-                const userNameElement = document.getElementById('userName');
+                const displayName = user.displayName || user.email?.split('@')[0] || 'User';
                 
-                // Update the animated username
-                userNameElement.textContent = displayName;
+                // Update UI
+                userName.textContent = displayName;
+                userEmail.textContent = user.email;
+                profileDisplayName.textContent = displayName;
+                fullName.value = displayName;
+                email.value = user.email || '';
+                bio.value = userData.bio || '';
+                country.value = userData.country || '';
+                dob.value = userData.dob || '';
+                gender.value = userData.gender || '';
                 
-                // Update all other username displays
-                document.getElementById('sidebarUserName').textContent = displayName;
-                document.getElementById('profileUserName').textContent = displayName;
-                
-                // Update email
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('email').value = user.email || '';
-                
-                // Get avatar URL
-                let avatarUrl = null;
-                
-                if (userDoc.exists && userDoc.data().photoURL) {
-                    avatarUrl = userDoc.data().photoURL;
-                } else if (user.photoURL && !user.photoURL.includes('ui-avatars.com')) {
-                    avatarUrl = user.photoURL;
-                } else {
-                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=160`;
+                // Member since
+                const creationTime = user.metadata.creationTime;
+                if (creationTime) {
+                    const date = new Date(creationTime);
+                    memberSince.textContent = `Member since: ${date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
                 }
                 
-                // Update profile avatars
-                updateProfileAvatars(avatarUrl, false);
-                
-                // Calculate member since
-                const joinDate = user.metadata.creationTime;
-                const formattedDate = new Date(joinDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                document.getElementById('memberSince').textContent = `Member since: ${formattedDate}`;
-                
-                // Populate form fields
-                document.getElementById('fullName').value = displayName || '';
-                
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    currentUserProfile = {
-                        displayName: displayName,
-                        email: user.email,
-                        photoURL: avatarUrl,
-                        ...userData
-                    };
-                    
-                    document.getElementById('bio').value = userData.bio || '';
-                    document.getElementById('country').value = userData.country || '';
-                    document.getElementById('dob').value = userData.dob || '';
-                    document.getElementById('gender').value = userData.gender || '';
-                    
-                    // Calculate profile completion
-                    let completion = 0;
-                    if (displayName) completion += 20;
-                    if (user.email) completion += 20;
-                    if (userData.bio) completion += 20;
-                    if (userData.country) completion += 20;
-                    if (userData.dob) completion += 10;
-                    if (userData.gender) completion += 10;
-                    
-                    // Update all profile completion indicators
-                    document.getElementById('profileCompletion').textContent = `${completion}%`;
-                    document.getElementById('profileCompletionOverview').textContent = `${completion}%`;
-                    document.getElementById('profileProgressBar').style.width = `${completion}%`;
-                } else {
-                    currentUserProfile = {
-                        displayName: displayName,
-                        email: user.email,
-                        photoURL: avatarUrl
-                    };
+                // Avatar
+                let avatarUrl = userData.photoURL || user.photoURL;
+                if (!avatarUrl || avatarUrl.includes('ui-avatars.com')) {
+                    avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=B5651D&color=fff&size=400`;
                 }
+                
+                const timestamp = Date.now();
+                avatarImg.src = avatarUrl + '?t=' + timestamp;
+                profileAvatarLarge.src = avatarUrl + '?t=' + timestamp;
+                
+                // Calculate profile completion
+                let completion = 0;
+                if (displayName) completion += 25;
+                if (userData.bio) completion += 25;
+                if (userData.country) completion += 25;
+                if (userData.dob) completion += 25;
+                
+                document.getElementById('profileCompletion').textContent = completion + '%';
+                document.getElementById('profileProgress').style.width = completion + '%';
+                
+                // Load usage data
+                await loadUsageData(user.uid);
+                
             } catch (error) {
                 console.error('Error loading user data:', error);
-                showToast('Error loading user data');
+                showToast('Error loading profile', 'error');
             }
         }
 
-        // Update all profile avatars
-        function updateProfileAvatars(avatarUrl, isNewUpload = false) {
-            console.log('Updating avatars with URL:', avatarUrl, 'isNewUpload:', isNewUpload);
-            
-            // Add cache busting parameter
-            const cacheBuster = isNewUpload ? '?t=' + Date.now() : '?t=' + Date.now();
-            
-            // Update large profile picture
-            const profileAvatarImg = document.getElementById('profileAvatarImg');
-            if (profileAvatarImg) {
-                profileAvatarImg.src = avatarUrl + cacheBuster;
-                profileAvatarImg.alt = currentUser?.displayName || 'User';
-                
-                profileAvatarImg.onerror = function() {
-                    console.log('Large avatar failed to load, showing fallback:', avatarUrl);
-                    showLargeFallbackAvatar(this);
-                };
-            }
-            
-            // Update small avatars
-            const avatarElements = document.querySelectorAll('.profile-avatar-img');
-            avatarElements.forEach(img => {
-                if (img.id === 'profileAvatarImg') return;
-                
-                img.src = avatarUrl + cacheBuster;
-                img.alt = currentUser?.displayName || 'User';
-                
-                img.onerror = function() {
-                    console.log('Small avatar failed to load');
-                    handleAvatarError(this);
-                };
-            });
-        }
-
-        // Load usage data
+        // ==================== LOAD USAGE DATA ====================
         async function loadUsageData(userId) {
             try {
                 const usageDoc = await db.collection('usage').doc(userId).get();
+                const usageData = usageDoc.exists ? usageDoc.data() : {};
                 
-                if (usageDoc.exists) {
-                    const usageData = usageDoc.data();
-                    
-                    // Update app times
-                    const cloverTime = usageData.cloverAI || 0;
-                    const mindscribeTime = usageData.mindscribe || 0;
-                    const peoTime = usageData.peo || 0;
-                    
-                    document.getElementById('cloverTime').textContent = `${cloverTime} mins this week`;
-                    document.getElementById('mindscribeTime').textContent = `${mindscribeTime} mins this week`;
-                    document.getElementById('peoTime').textContent = `${peoTime} mins this week`;
-                    
-                    document.getElementById('cloverQuickTime').textContent = `${cloverTime}m`;
-                    document.getElementById('mindscribeQuickTime').textContent = `${mindscribeTime}m`;
-                    document.getElementById('peoQuickTime').textContent = `${peoTime}m`;
-                    
-                    // Calculate total time
-                    const totalMinutes = cloverTime + mindscribeTime + peoTime;
-                    const totalHours = (totalMinutes / 60).toFixed(1);
-                    
-                    // Update all total time displays
-                    document.getElementById('totalTime').textContent = `${totalHours}h`;
-                    document.getElementById('detailedTotalTime').textContent = `${totalHours} hours`;
-                    
-                    // Find most used app
-                    const apps = [
-                        { name: 'Clover AI', time: cloverTime },
-                        { name: 'MindScribe', time: mindscribeTime },
-                        { name: 'Peo', time: peoTime }
-                    ];
-                    
-                    const mostUsed = apps.reduce((prev, current) => 
-                        prev.time > current.time ? prev : current
-                    );
-                    
-                    document.getElementById('mostUsedApp').textContent = mostUsed.name;
-                    document.getElementById('mostUsedAppName').textContent = mostUsed.name;
-                    document.getElementById('mostUsedTime').textContent = `${mostUsed.time}m`;
-                    document.getElementById('mostUsedTimeLabel').textContent = `${mostUsed.time} minutes`;
-                    
-                    // Update streak
-                    const streak = usageData.streak || 0;
-                    document.getElementById('streak').textContent = `${streak} days`;
-                    document.getElementById('detailedStreak').textContent = `${streak} days`;
-                    
-                    // Update weekly total
-                    document.getElementById('weeklyTotal').textContent = `${totalMinutes} mins`;
-                    
-                    // Update apps used count
-                    const appsUsedCount = apps.filter(app => app.time > 0).length;
-                    document.getElementById('appsUsed').textContent = appsUsedCount;
-                }
+                const cloverTime = usageData.cloverAI || 0;
+                const mindscribeTime = usageData.mindscribe || 0;
+                const peoTime = usageData.peo || 0;
+                const streak = usageData.streak || 0;
+                
+                // Update app times
+                document.getElementById('cloverTime').textContent = `${cloverTime} mins this week`;
+                document.getElementById('mindscribeTime').textContent = `${mindscribeTime} mins this week`;
+                document.getElementById('peoTime').textContent = `${peoTime} mins this week`;
+                
+                // Calculate totals
+                const totalMinutes = cloverTime + mindscribeTime + peoTime;
+                const totalHours = (totalMinutes / 60).toFixed(1);
+                
+                document.getElementById('totalTime').textContent = `${totalHours}h`;
+                document.getElementById('totalHours').textContent = totalHours;
+                document.getElementById('weeklyActivity').textContent = totalMinutes;
+                document.getElementById('streakCount').textContent = streak;
+                
+                // Find most used app
+                const apps = [
+                    { name: 'Clover AI', time: cloverTime },
+                    { name: 'MindScribe', time: mindscribeTime },
+                    { name: 'Peo', time: peoTime }
+                ];
+                const mostUsed = apps.reduce((a, b) => a.time > b.time ? a : b);
+                
+                document.getElementById('mostUsedApp').textContent = `Most used: ${mostUsed.name}`;
+                document.getElementById('favoriteApp').textContent = mostUsed.name;
+                document.getElementById('favoriteTime').textContent = `${mostUsed.time} mins`;
+                
+                // Count used apps
+                const usedApps = apps.filter(a => a.time > 0).length;
+                document.getElementById('appsUsed').textContent = usedApps;
+                
+                // Weekly progress (assume 300 min goal)
+                const weeklyProgress = Math.min(100, (totalMinutes / 300) * 100);
+                document.getElementById('weeklyProgress').style.width = weeklyProgress + '%';
+                
+                // Daily average
+                const dailyAvg = Math.round(totalMinutes / 7);
+                document.getElementById('dailyAverage').textContent = dailyAvg;
+                
             } catch (error) {
                 console.error('Error loading usage data:', error);
             }
         }
 
-        // Setup authentication cookies for SSO
-        function setupAuthCookies(user) {
-            const sessionToken = btoa(JSON.stringify({
-                uid: user.uid,
-                email: user.email,
-                timestamp: Date.now()
-            }));
-            
-            document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
-            
-            localStorage.setItem('reverbit_auth', sessionToken);
-            localStorage.setItem('reverbit_user', JSON.stringify({
-                uid: user.uid,
-                email: user.email,
-                displayName: user.displayName,
-                photoURL: user.photoURL
-            }));
-        }
-
-        // Handle profile form submission
+        // ==================== PROFILE FORM ====================
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             if (!currentUser) return;
             
             try {
-                const fullName = document.getElementById('fullName').value.trim();
-                const userData = {
-                    bio: document.getElementById('bio').value.trim(),
-                    country: document.getElementById('country').value,
-                    dob: document.getElementById('dob').value,
-                    gender: document.getElementById('gender').value,
+                const formData = {
+                    displayName: fullName.value.trim(),
+                    bio: bio.value.trim(),
+                    country: country.value,
+                    dob: dob.value,
+                    gender: gender.value,
                     updatedAt: new Date().toISOString()
                 };
                 
-                // Only update displayName if it's different
-                if (fullName && fullName !== currentUser.displayName) {
-                    userData.fullName = fullName;
-                    
-                    // Update Firebase Auth display name
+                // Update Firestore
+                await db.collection('users').doc(currentUser.uid).set(formData, { merge: true });
+                
+                // Update Auth displayName if changed
+                if (formData.displayName !== currentUser.displayName) {
                     await currentUser.updateProfile({
-                        displayName: fullName
+                        displayName: formData.displayName
                     });
-                    
-                    // Update animated username
-                    document.getElementById('userName').textContent = fullName;
-                    document.getElementById('sidebarUserName').textContent = fullName;
-                    document.getElementById('profileUserName').textContent = fullName;
                 }
                 
-                // Update Firestore
-                await db.collection('users').doc(currentUser.uid).set(userData, { merge: true });
+                showToast('Profile updated successfully!', 'success');
                 
-                // Reload user data
+                // Reload data
                 await loadUserData(currentUser);
                 
-                showToast('Profile updated successfully!');
             } catch (error) {
                 console.error('Error updating profile:', error);
-                showToast('Error updating profile');
+                showToast('Error updating profile', 'error');
             }
         });
 
-        // Logout function
-        function logout() {
-            document.getElementById('logoutModal').style.display = 'flex';
-            hideProfilePopup();
+        function resetForm() {
+            if (currentUser && currentProfile) {
+                fullName.value = currentUser.displayName || '';
+                bio.value = currentProfile.bio || '';
+                country.value = currentProfile.country || '';
+                dob.value = currentProfile.dob || '';
+                gender.value = currentProfile.gender || '';
+                showToast('Form reset', 'info');
+            }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        async function confirmLogout() {
-            try {
-                await auth.signOut();
-                // Clear cookies and localStorage
-                document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-                localStorage.removeItem('reverbit_auth');
-                localStorage.removeItem('reverbit_user');
-                
-                // Redirect to signin
+        // ==================== AUTH STATE ====================
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUserData(user);
+                loadingScreen.classList.add('hidden');
+            } else {
                 window.location.href = 'https://aditya-cmd-max.github.io/signin';
-            } catch (error) {
-                console.error('Error signing out:', error);
-                showToast('Error signing out');
-            }
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Theme toggle with Shift+T
-            if (e.shiftKey && e.key === 'T') {
-                toggleTheme();
-            }
-            
-            // Toggle mobile menu with Shift+M
-            if (e.shiftKey && e.key === 'M' && window.innerWidth <= 768) {
-                toggleMobileMenu();
-            }
-            
-            // Close modals and popups with Escape
-            if (e.key === 'Escape') {
-                closeModal('logoutModal');
-                hideProfilePopup();
-                if (window.innerWidth <= 768 && isMobileMenuOpen) {
-                    toggleMobileMenu(true);
-                }
             }
         });
 
-        // Handle window resize
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(function() {
-                if (window.innerWidth > 768 && isMobileMenuOpen) {
-                    toggleMobileMenu(true);
-                }
-                
-                // Hide profile popup on resize
-                hideProfilePopup();
-                
-                // Update mobile detection
-                detectMobileDevice();
-            }, 250);
+        // ==================== MOBILE MENU ====================
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn?.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            if (window.innerWidth <= 1024) {
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '70px';
+                navLinks.style.left = '50%';
+                navLinks.style.transform = 'translateX(-50%)';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.background = 'var(--md-surface)';
+                navLinks.style.padding = 'var(--space-md)';
+                navLinks.style.borderRadius = 'var(--radius-xl)';
+                navLinks.style.border = '1px solid var(--md-outline)';
+                navLinks.style.width = '90%';
+                navLinks.style.zIndex = '100';
+            }
         });
 
-        // Update signout button
-        document.getElementById('signoutButton').addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            logout();
+        // Close mobile menu on click outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && !e.target.closest('.nav-links') && !e.target.closest('.mobile-menu-btn')) {
+                navLinks.style.display = 'none';
+            }
         });
 
-        // Add swipe indicator for better UX
-        function showSwipeIndicator() {
-            const indicator = document.createElement('div');
-            indicator.className = 'swipe-indicator visible';
-            document.body.appendChild(indicator);
-            
+        // ==================== NAVBAR SCROLL ====================
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ==================== INITIAL LOAD ====================
+        window.addEventListener('load', () => {
             setTimeout(() => {
-                indicator.remove();
-            }, 1000);
-        }
-
-        // Initialize swipe indicator on first mobile visit
-        if (detectMobileDevice()) {
-            setTimeout(() => {
-                showSwipeIndicator();
-            }, 2000);
-        }
+                loadingScreen.classList.add('hidden');
+            }, 500);
+        });
     </script>
 </body>
 </html>
