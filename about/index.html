@@ -15,11 +15,11 @@
     <title>Aditya Jha • The Visionary behind Reverbit</title>
     <meta name="description" content="Aditya Jha - Student, developer, and creator blending code with clear teaching to build tools that make learning click.">
     
-    <!-- Local Font - Begum -->
+    <!-- Local Font - Begum (paths updated to new domain) -->
     <style>
         @font-face {
             font-family: 'Begum';
-            src: url('https://aditya-cmd-max.github.io/reverbit/Begum-Regular.otf') format('opentype');
+            src: url('https://aditya-cmd-max.github.io/Begum-Regular.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -27,7 +27,7 @@
         
         @font-face {
             font-family: 'Begum';
-            src: url('https://aditya-cmd-max.github.io/reverbit/Begum-Bold.otf') format('opentype');
+            src: url('https://aditya-cmd-max.github.io/Begum-Bold.otf') format('opentype');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -35,7 +35,7 @@
         
         @font-face {
             font-family: 'Begum';
-            src: url('https://aditya-cmd-max.github.io/reverbit/Begum-Light.otf') format('opentype');
+            src: url('https://aditya-cmd-max.github.io/Begum-Light.otf') format('opentype');
             font-weight: 300;
             font-style: normal;
             font-display: swap;
@@ -69,20 +69,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg">
+    <!-- Favicon (updated) -->
+    <link rel="icon" type="image/svg+xml" href="https://aditya-cmd-max.github.io/logo-insvg.svg">
     
     <!-- Meta Tags -->
     <meta name="keywords" content="Aditya Jha, Reverbit, Founder, Creator, Developer, Student, AI Tools, Education, Technology">
     <meta name="author" content="Aditya Jha">
     <meta name="robots" content="index, follow">
     
-    <!-- Open Graph -->
+    <!-- Open Graph (updated) -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://aditya-cmd-max.github.io/reverbit/about/">
+    <meta property="og:url" content="https://aditya-cmd-max.github.io/about/">
     <meta property="og:title" content="Aditya Jha • The Visionary behind Reverbit">
     <meta property="og:description" content="Meet the creator behind Reverbit - a young innovator building AI tools for the future of education.">
-    <meta property="og:image" content="https://aditya-cmd-max.github.io/reverbit/adityajha.jpg">
+    <meta property="og:image" content="https://aditya-cmd-max.github.io/adityajha.jpg">
     
     <style>
         /* ============================================
@@ -288,6 +288,7 @@
             opacity: 0.15;
             color: var(--md-primary);
             filter: drop-shadow(0 0 20px rgba(var(--md-primary-rgb), 0.2));
+            transition: transform 0.1s ease-out;
         }
         
         .motif-1 {
@@ -1007,6 +1008,7 @@
             height: min(320px, 60vw);
             margin: 0 auto var(--space-xl);
             position: relative;
+            cursor: pointer;
         }
         
         .portrait-frame {
@@ -1085,6 +1087,14 @@
             animation: floatIcon 6s ease-in-out infinite;
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.2);
+            pointer-events: auto;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+        
+        .floating-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+            background: linear-gradient(135deg, var(--md-secondary), var(--md-primary));
         }
         
         .floating-icon:nth-child(1) {
@@ -1129,6 +1139,14 @@
             opacity: 0;
             transform: translateY(30px);
             animation: heroTextEntrance 1s ease forwards 0.8s;
+            cursor: pointer;
+            display: inline-block;
+            transition: var(--transition-bounce);
+        }
+        
+        .hero-title:hover {
+            transform: scale(1.02);
+            text-shadow: var(--shadow-glow);
         }
         
         .hero-title span {
@@ -1325,6 +1343,14 @@
             background: linear-gradient(135deg, rgba(var(--md-primary-rgb), 0.05), rgba(var(--md-secondary-rgb), 0.05));
             border-radius: var(--radius-xxxl);
             border: 1px solid var(--md-outline);
+            transition: var(--transition-bounce);
+            cursor: pointer;
+        }
+        
+        .about-quote:hover {
+            transform: scale(1.02);
+            border-color: var(--md-primary);
+            box-shadow: var(--md-elevation-4);
         }
         
         .about-quote::before,
@@ -1375,6 +1401,7 @@
             display: flex;
             margin-bottom: var(--space-xl);
             position: relative;
+            cursor: pointer;
         }
         
         .timeline-marker {
@@ -1470,6 +1497,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: var(--md-elevation-2);
+            cursor: pointer;
         }
         
         .skill-card::before {
@@ -1581,6 +1609,7 @@
             transition: var(--transition-bounce);
             position: relative;
             box-shadow: var(--md-elevation-2);
+            cursor: pointer;
         }
         
         .project-card::before {
@@ -1669,6 +1698,13 @@
             position: relative;
             overflow: hidden;
             box-shadow: var(--md-elevation-3);
+            transition: var(--transition-bounce);
+            cursor: pointer;
+        }
+        
+        .note-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--md-elevation-5);
         }
         
         .note-section::before {
@@ -1719,6 +1755,7 @@
             transition: var(--transition-bounce);
             position: relative;
             box-shadow: var(--md-elevation-2);
+            cursor: pointer;
         }
         
         .value-card::before {
@@ -1785,6 +1822,13 @@
             position: relative;
             margin-top: var(--space-xl);
             box-shadow: var(--md-elevation-3);
+            transition: var(--transition-bounce);
+            cursor: pointer;
+        }
+        
+        .contact-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--md-elevation-5);
         }
         
         .contact-section::before {
@@ -2300,7 +2344,7 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo">
-            <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit">
+            <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
         </div>
         <div class="loading-text">REVERBIT</div>
         <div class="loading-bar">
@@ -3083,11 +3127,11 @@
         </g>
     </svg>
     
-    <!-- Navbar -->
+    <!-- Navbar (all links updated to new domain) -->
     <nav class="navbar" id="navbar">
-        <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-brand">
+        <a href="https://aditya-cmd-max.github.io/" class="nav-brand">
             <div class="nav-logo">
-                <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
+                <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit Logo">
             </div>
             <div class="nav-brand-text">
                 <span class="nav-brand-name">Reverbit</span>
@@ -3095,11 +3139,11 @@
         </a>
         
         <div class="nav-links">
-            <a href="https://aditya-cmd-max.github.io/reverbit/" class="nav-link">
+            <a href="https://aditya-cmd-max.github.io/" class="nav-link">
                 <span class="material-icons-round">home</span>
                 Home
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="nav-link">
+            <a href="https://aditya-cmd-max.github.io/circuit" class="nav-link">
                 <span class="material-icons-round">menu_book</span>
                 Blogs
             </a>
@@ -3107,7 +3151,7 @@
                 <span class="material-icons-round">person</span>
                 The Creator
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-link">
+            <a href="https://aditya-cmd-max.github.io/ecosystem" class="nav-link">
                 <span class="material-icons-round">build</span>
                 Tools
             </a>
@@ -3135,12 +3179,12 @@
     <!-- Mobile Navigation Overlay -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
     
-    <!-- Mobile Navigation Drawer -->
+    <!-- Mobile Navigation Drawer (all links updated) -->
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
             <div class="nav-brand">
                 <div class="nav-logo">
-                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit">
+                    <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
                 </div>
                 <div class="nav-brand-text">
                     <span class="nav-brand-name">Reverbit</span>
@@ -3155,11 +3199,11 @@
         <div id="mobileAvatarContainer" class="mobile-avatar-container"></div>
         
         <div class="mobile-nav-links">
-            <a href="https://aditya-cmd-max.github.io/reverbit/" class="mobile-nav-link">
+            <a href="https://aditya-cmd-max.github.io/" class="mobile-nav-link">
                 <span class="material-icons-round">home</span>
                 Home
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="mobile-nav-link">
+            <a href="https://aditya-cmd-max.github.io/circuit" class="mobile-nav-link">
                 <span class="material-icons-round">menu_book</span>
                 Blogs
             </a>
@@ -3167,7 +3211,7 @@
                 <span class="material-icons-round">person</span>
                 The Creator
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="mobile-nav-link">
+            <a href="https://aditya-cmd-max.github.io/ecosystem" class="mobile-nav-link">
                 <span class="material-icons-round">build</span>
                 Tools
             </a>
@@ -3187,22 +3231,22 @@
         </div>
     </div>
     
-    <!-- Hero Section -->
+    <!-- Hero Section (image path updated) -->
     <section class="hero-section" id="hero">
         <div class="hero-content">
             <div class="portrait-container" data-aos="fade-down" data-aos-duration="1000">
                 <div class="portrait-frame">
-                    <img src="https://aditya-cmd-max.github.io/reverbit/adityajha.jpg" alt="Aditya Jha" class="portrait" onerror="this.onerror=null; this.src='https://via.placeholder.com/320x320/B5651D/ffffff?text=AJ';">
+                    <img src="https://aditya-cmd-max.github.io/adityajha.jpg" alt="Aditya Jha" class="portrait" onclick="alert('👋 Hello! Thanks for clicking!')" onerror="this.onerror=null; this.src='https://via.placeholder.com/320x320/B5651D/ffffff?text=AJ';">
                 </div>
                 <div class="floating-elements">
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="200">💻</div>
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="400">🚀</div>
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="600">🎨</div>
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="800">📱</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="200" onclick="alert('💻 Full-stack developer')">💻</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="400" onclick="alert('🚀 Building the future')">🚀</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="600" onclick="alert('🎨 UI/UX designer')">🎨</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="800" onclick="alert('📱 Mobile app creator')">📱</div>
                 </div>
             </div>
             
-            <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
+            <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200" onclick="alert('Aditya Jha · Founder of Reverbit')">
                 <span>Aditya Jha</span>
             </h1>
             
@@ -3239,7 +3283,7 @@
                 </div>
                 
                 <div class="about-intro" data-aos="fade-up" data-aos-delay="200">
-                    <blockquote class="about-quote">
+                    <blockquote class="about-quote" onclick="alert('\"I\'m a student and passionate self-taught developer.\"')">
                         "I'm a student and passionate self-taught developer. I started Reverbit to blend creativity, technology, and education into something unique. My dream is to build tools that make learning more interactive and accessible for everyone."
                     </blockquote>
                     
@@ -3262,7 +3306,7 @@
                 </div>
                 
                 <div class="story-timeline" data-aos="fade-up" data-aos-delay="200">
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="100" onclick="alert('Step 1: The Beginning — Started with HTML pages')">
                         <div class="timeline-marker">1</div>
                         <div class="timeline-content">
                             <h3>The Beginning</h3>
@@ -3270,7 +3314,7 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="200" onclick="alert('Step 2: Discovering UI/UX — Great code needs great design')">
                         <div class="timeline-marker">2</div>
                         <div class="timeline-content">
                             <h3>Discovering UI/UX</h3>
@@ -3278,7 +3322,7 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="300" onclick="alert('Step 3: Building Reverbit — Where tech meets creativity')">
                         <div class="timeline-marker">3</div>
                         <div class="timeline-content">
                             <h3>Building Reverbit</h3>
@@ -3286,7 +3330,7 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="400">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="400" onclick="alert('Step 4: Looking Forward — Excited about the future of web technologies')">
                         <div class="timeline-marker">4</div>
                         <div class="timeline-content">
                             <h3>Looking Forward</h3>
@@ -3310,7 +3354,7 @@
                 </div>
                 
                 <div class="skills-grid">
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="100">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="100" onclick="alert('Frontend Development: 90% — HTML, CSS, JavaScript, React')">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">code</span>
@@ -3323,7 +3367,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="200">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="200" onclick="alert('Backend Development: 80% — Node.js, Firebase, databases')">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">storage</span>
@@ -3336,7 +3380,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="300">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="300" onclick="alert('UI/UX Design: 85% — Figma, user research, prototyping')">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">palette</span>
@@ -3349,7 +3393,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="400">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="400" onclick="alert('AI & Machine Learning: 75% — Exploring AI for education')">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">psychology</span>
@@ -3378,7 +3422,7 @@
                 </div>
                 
                 <div class="projects-grid">
-                    <div class="project-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="project-card" data-aos="zoom-in" data-aos-delay="100" onclick="window.open('https://aditya-cmd-max.github.io/cloverai/', '_blank')">
                         <div class="project-image" style="background: linear-gradient(135deg, #B5651D 0%, #2A9D8F 100%);"></div>
                         <div class="project-content">
                             <h3 class="project-title">Clover AI</h3>
@@ -3391,7 +3435,7 @@
                         </div>
                     </div>
                     
-                    <div class="project-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="project-card" data-aos="zoom-in" data-aos-delay="200" onclick="window.open('https://aditya-cmd-max.github.io/mindscribe/', '_blank')">
                         <div class="project-image" style="background: linear-gradient(135deg, #2A9D8F 0%, #C0392B 100%);"></div>
                         <div class="project-content">
                             <h3 class="project-title">Mindscribe</h3>
@@ -3404,7 +3448,7 @@
                         </div>
                     </div>
                     
-                    <div class="project-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="project-card" data-aos="zoom-in" data-aos-delay="300" onclick="window.open('https://aditya-cmd-max.github.io/Peo/', '_blank')">
                         <div class="project-image" style="background: linear-gradient(135deg, #C0392B 0%, #B5651D 100%);"></div>
                         <div class="project-content">
                             <h3 class="project-title">Peo-TTS</h3>
@@ -3418,14 +3462,14 @@
                     </div>
                 </div>
                 
-                <!-- Note Section -->
-                <div class="note-section" data-aos="fade-up" data-aos-delay="400">
+                <!-- Note Section (updated links) -->
+                <div class="note-section" data-aos="fade-up" data-aos-delay="400" onclick="alert('Access all projects via Reverbit Axis app or web ecosystem!')">
                     <p>
                         <span class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">info</span>
                         Note: the above mentioned Projects can be accessed at 
-                        <a href="https://aditya-cmd-max.github.io/reverbit/downloadaxis/" target="_blank" class="note-highlight">Reverbit Axis</a> 
+                        <a href="https://aditya-cmd-max.github.io/downloadaxis/" target="_blank" class="note-highlight">Reverbit Axis</a> 
                         android app. Also, you can use their web versions at 
-                        <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem/" target="_blank" class="note-highlight">Reverbit Ecosystem</a>.
+                        <a href="https://aditya-cmd-max.github.io/ecosystem/" target="_blank" class="note-highlight">Reverbit Ecosystem</a>.
                     </p>
                 </div>
             </div>
@@ -3444,7 +3488,7 @@
                 </div>
                 
                 <div class="values-grid">
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="100" onclick="alert('Innovation: Pushing boundaries with new technologies')">
                         <div class="value-icon">
                             <span class="material-icons-round">lightbulb</span>
                         </div>
@@ -3452,7 +3496,7 @@
                         <p class="value-description">Pushing boundaries and exploring new technologies to create unique solutions that solve real problems.</p>
                     </div>
                     
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="200" onclick="alert('Attention to Detail: Small things make a big difference')">
                         <div class="value-icon">
                             <span class="material-icons-round">search</span>
                         </div>
@@ -3460,7 +3504,7 @@
                         <p class="value-description">Focusing on the small things that make a big difference in user experience and product quality.</p>
                     </div>
                     
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="300" onclick="alert('Collaboration: Working together to achieve more')">
                         <div class="value-icon">
                             <span class="material-icons-round">handshake</span>
                         </div>
@@ -3468,7 +3512,7 @@
                         <p class="value-description">Working together to achieve results greater than the sum of individual efforts through shared knowledge.</p>
                     </div>
                     
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="400" onclick="alert('Continuous Learning: Always growing and improving')">
                         <div class="value-icon">
                             <span class="material-icons-round">school</span>
                         </div>
@@ -3491,20 +3535,20 @@
                     <p class="section-subtitle">Have a project in mind or just want to chat about technology and design? I'd love to hear from you.</p>
                 </div>
                 
-                <div class="contact-section" data-aos="zoom-in" data-aos-delay="200">
-                    <a href="mailto:exonova1104@gmail.com" class="contact-email">
+                <div class="contact-section" data-aos="zoom-in" data-aos-delay="200" onclick="alert('📧 Feel free to email me!')">
+                    <a href="mailto:exonova1104@gmail.com" class="contact-email" onclick="event.stopPropagation();">
                         <span class="material-icons-round">email</span>
                         exonova1104@gmail.com
                     </a>
                     
                     <div class="social-links">
-                        <a href="https://github.com/aditya-cmd-max/" target="_blank" class="social-link">
+                        <a href="https://github.com/aditya-cmd-max/" target="_blank" class="social-link" onclick="event.stopPropagation();">
                             <span class="material-icons-round">code</span>
                         </a>
-                        <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" target="_blank" class="social-link">
+                        <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" target="_blank" class="social-link" onclick="event.stopPropagation();">
                             <span class="material-icons-round">linkedin</span>
                         </a>
-                        <a href="https://youtube.com/@Reverbit" target="_blank" class="social-link">
+                        <a href="https://youtube.com/@Reverbit" target="_blank" class="social-link" onclick="event.stopPropagation();">
                             <span class="material-icons-round">smart_display</span>
                         </a>
                     </div>
@@ -3513,13 +3557,13 @@
         </section>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer (all links updated) -->
     <footer class="footer">
         <div class="footer-grid">
             <div>
                 <div class="footer-brand-large">
                     <div class="footer-logo-img">
-                        <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit">
+                        <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
                     </div>
                     <div class="footer-brand-text">
                         <div class="footer-brand-name">Reverbit</div>
@@ -3531,11 +3575,11 @@
             
             <div class="footer-column">
                 <h3>Navigation</h3>
-                <a href="https://aditya-cmd-max.github.io/reverbit/" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/" class="footer-link">
                     <span class="material-icons-round">home</span>
                     Home
                 </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/circuit/" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/circuit/" class="footer-link">
                     <span class="material-icons-round">menu_book</span>
                     Blogs
                 </a>
@@ -3543,7 +3587,7 @@
                     <span class="material-icons-round">person</span>
                     The Creator
                 </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/ecosystem" class="footer-link">
                     <span class="material-icons-round">apps</span>
                     Ecosystem
                 </a>
