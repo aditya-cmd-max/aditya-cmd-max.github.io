@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,12 +11,6 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-
     <style>
         /* ==================== DESIGN SYSTEM ==================== */
         * {
@@ -1239,17 +1232,56 @@
         </div>
     </div>
 
-    <script>
+    <!-- Firebase SDK -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ==================== FIREBASE MODULAR IMPORTS ====================
+        import { initializeApp } from 'firebase/app';
+        import { 
+            getAuth, 
+            signOut, 
+            onAuthStateChanged,
+            connectAuthEmulator 
+        } from 'firebase/auth';
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            getDoc, 
+            getDocs, 
+            setDoc, 
+            updateDoc, 
+            deleteDoc, 
+            query, 
+            where, 
+            orderBy, 
+            limit, 
+            startAfter,
+            addDoc,
+            writeBatch,
+            increment,
+            serverTimestamp,
+            enableIndexedDbPersistence,
+            connectFirestoreEmulator 
+        } from 'firebase/firestore';
+
         // ==================== FIREBASE CONFIG ====================
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-  authDomain: "reverbit11.firebaseapp.com",
-  databaseURL: "https://reverbit11-default-rtdb.firebaseio.com",
-  projectId: "reverbit11",
-  storageBucket: "reverbit11.firebasestorage.app",
-  messagingSenderId: "607495314412",
-  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-  measurementId: "G-DMWMRM1M47"
+            authDomain: "reverbit11.firebaseapp.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9"
         };
 
         const ADMIN_EMAIL = 'adityajha1104@gmail.com';
@@ -1257,1385 +1289,1486 @@
         const SEARCH_DEBOUNCE_MS = 300;
         const MAX_SEARCH_RESULTS = 10;
         const BATCH_SIZE = 10;
-        const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
+
+        console.log('🔥 Firebase modular script starting...');
 
         // ==================== INITIALIZE FIREBASE ====================
-        firebase.initializeApp(FIREBASE_CONFIG);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        // Enable persistence
-        db.enablePersistence({ synchronizeTabs: true }).catch(err => {
-            console.warn('Persistence error:', err);
-        });
-
-        // ==================== GLOBAL STATE ====================
-        const State = {
-            currentUser: null,
-            currentUserProfile: null,
-            profileData: null,
-            profileOwner: null,
-            isOwner: false,
-            isFollowing: false,
-            isFollowLoading: false,
-            followersCount: 0,
-            followingCount: 0,
-            allUsers: [],
-            filteredUsers: [],
-            currentPage: 1,
-            selectedUserId: null,
-            searchTimeout: null,
-            currentFilter: 'all',
-            theme: localStorage.getItem('theme') || 'light',
-            toastTimeout: null,
-            isVerifying: false,
-            isDeleting: false,
-            isUploading: false,
-            retryCount: 0,
-            maxRetries: 3
-        };
-
-        // ==================== DOM ELEMENTS ====================
-        const Elements = {
-            loading: document.getElementById('loading'),
-            mainContent: document.getElementById('mainContent'),
-            contentArea: document.getElementById('contentArea'),
-            nav: document.getElementById('nav'),
-            searchInput: document.getElementById('searchInput'),
-            searchResults: document.getElementById('searchResults'),
-            toast: document.getElementById('toast'),
-            toastMessage: document.getElementById('toastMessage'),
-            followersModal: document.getElementById('followersModal'),
-            followingModal: document.getElementById('followingModal'),
-            followersList: document.getElementById('followersList'),
-            followingList: document.getElementById('followingList'),
-            followersModalTitle: document.getElementById('followersModalTitle'),
-            followingModalTitle: document.getElementById('followingModalTitle'),
-            verifyModal: document.getElementById('verifyModal'),
-            deleteModal: document.getElementById('deleteModal'),
-            shareModal: document.getElementById('shareModal'),
-            modalUserInfo: document.getElementById('modalUserInfo'),
-            verifyLevel: document.getElementById('verifyLevel'),
-            verifyNotes: document.getElementById('verifyNotes'),
-            deleteUserInfo: document.getElementById('deleteUserInfo'),
-            shareUrl: document.getElementById('shareUrl'),
-            saveVerificationBtn: document.getElementById('saveVerificationBtn'),
-            homeLink: document.getElementById('homeLink')
-        };
-
-        // ==================== THEME MANAGER ====================
-        const ThemeManager = {
-            init() {
-                this.apply(State.theme);
-                this.setupHomeLink();
-            },
+        try {
+            console.log('Initializing Firebase with config:', FIREBASE_CONFIG);
             
-            apply(theme) {
-                document.body.className = theme === 'dark' ? 'dark-theme' : '';
-                localStorage.setItem('theme', theme);
-                State.theme = theme;
-                this.updateNavIcon();
-            },
+            // Initialize Firebase app
+            const app = initializeApp(FIREBASE_CONFIG);
+            console.log('✅ Firebase app initialized');
+
+            // Initialize services
+            const auth = getAuth(app);
+            const db = getFirestore(app);
             
-            toggle() {
-                const newTheme = State.theme === 'light' ? 'dark' : 'light';
-                this.apply(newTheme);
-                UIManager.showToast(`Theme: ${newTheme} mode`, 'info');
-            },
-            
-            updateNavIcon() {
-                const icon = document.querySelector('#themeToggle i');
-                if (icon) {
-                    icon.className = State.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            console.log('✅ Firebase services initialized');
+
+            // Enable persistence with error handling (don't await, let it run in background)
+            enableIndexedDbPersistence(db, {
+                synchronizeTabs: true
+            }).then(() => {
+                console.log('✅ Offline persistence enabled');
+            }).catch(err => {
+                if (err.code === 'failed-precondition') {
+                    console.warn('⚠️ Persistence failed: Multiple tabs open');
+                } else if (err.code === 'unimplemented') {
+                    console.warn('⚠️ Persistence not supported');
+                } else {
+                    console.warn('⚠️ Persistence error:', err);
                 }
-            },
-            
-            setupHomeLink() {
-                if (Elements.homeLink) {
-                    Elements.homeLink.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        if (State.currentUser) {
-                            window.location.href = `?id=${State.currentUser.uid}`;
+            });
+
+            // ==================== GLOBAL STATE ====================
+            const State = {
+                currentUser: null,
+                currentUserProfile: null,
+                profileData: null,
+                profileOwner: null,
+                isOwner: false,
+                isFollowing: false,
+                isFollowLoading: false,
+                followersCount: 0,
+                followingCount: 0,
+                allUsers: [],
+                filteredUsers: [],
+                currentPage: 1,
+                selectedUserId: null,
+                searchTimeout: null,
+                currentFilter: 'all',
+                theme: localStorage.getItem('theme') || 'light',
+                toastTimeout: null,
+                isVerifying: false,
+                isDeleting: false,
+                isUploading: false,
+                retryCount: 0,
+                maxRetries: 3,
+                firebaseReady: true
+            };
+
+            // ==================== DOM ELEMENTS ====================
+            const Elements = {
+                loading: document.getElementById('loading'),
+                mainContent: document.getElementById('mainContent'),
+                contentArea: document.getElementById('contentArea'),
+                nav: document.getElementById('nav'),
+                searchInput: document.getElementById('searchInput'),
+                searchResults: document.getElementById('searchResults'),
+                toast: document.getElementById('toast'),
+                toastMessage: document.getElementById('toastMessage'),
+                followersModal: document.getElementById('followersModal'),
+                followingModal: document.getElementById('followingModal'),
+                followersList: document.getElementById('followersList'),
+                followingList: document.getElementById('followingList'),
+                followersModalTitle: document.getElementById('followersModalTitle'),
+                followingModalTitle: document.getElementById('followingModalTitle'),
+                verifyModal: document.getElementById('verifyModal'),
+                deleteModal: document.getElementById('deleteModal'),
+                shareModal: document.getElementById('shareModal'),
+                modalUserInfo: document.getElementById('modalUserInfo'),
+                verifyLevel: document.getElementById('verifyLevel'),
+                verifyNotes: document.getElementById('verifyNotes'),
+                deleteUserInfo: document.getElementById('deleteUserInfo'),
+                shareUrl: document.getElementById('shareUrl'),
+                saveVerificationBtn: document.getElementById('saveVerificationBtn'),
+                homeLink: document.getElementById('homeLink')
+            };
+
+            // ==================== THEME MANAGER ====================
+            const ThemeManager = {
+                init() {
+                    this.apply(State.theme);
+                    this.setupHomeLink();
+                },
+                
+                apply(theme) {
+                    document.body.className = theme === 'dark' ? 'dark-theme' : '';
+                    localStorage.setItem('theme', theme);
+                    State.theme = theme;
+                    this.updateNavIcon();
+                },
+                
+                toggle() {
+                    const newTheme = State.theme === 'light' ? 'dark' : 'light';
+                    this.apply(newTheme);
+                    UIManager.showToast(`Theme: ${newTheme} mode`, 'info');
+                },
+                
+                updateNavIcon() {
+                    const icon = document.querySelector('#themeToggle i');
+                    if (icon) {
+                        icon.className = State.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                },
+                
+                setupHomeLink() {
+                    if (Elements.homeLink) {
+                        Elements.homeLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            if (State.currentUser) {
+                                window.location.href = `?id=${State.currentUser.uid}`;
+                            } else {
+                                UIManager.showLanding();
+                            }
+                        });
+                    }
+                }
+            };
+
+            // ==================== AUTH MANAGER ====================
+            const AuthManager = {
+                init() {
+                    console.log('AuthManager initializing...');
+                    onAuthStateChanged(auth, user => this.handleAuthChange(user));
+                },
+                
+                async handleAuthChange(user) {
+                    console.log('🔥 Auth state changed:', user ? user.email : 'No user');
+                    
+                    State.currentUser = user;
+                    
+                    // ALWAYS hide loading when auth state changes
+                    UIManager.showLoading(false);
+                    
+                    if (user) {
+                        // First, ensure profile exists
+                        const profileCreated = await this.ensureUserProfile(user.uid);
+                        
+                        if (profileCreated) {
+                            // Load the profile we just created
+                            await this.loadUserProfile(user.uid);
+                        } else {
+                            // Load existing profile
+                            await this.loadUserProfile(user.uid);
+                        }
+                        
+                        // Update navigation
+                        UIManager.updateNav();
+                        
+                        // Handle URL parameters
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const userId = urlParams.get('id');
+                        
+                        if (userId) {
+                            await ProfileManager.loadProfile(userId);
+                        } else {
+                            window.location.href = `?id=${user.uid}`;
+                        }
+                        
+                        // Load users for search
+                        await UserManager.loadAllUsers();
+                    } else {
+                        State.currentUserProfile = null;
+                        UIManager.updateNav();
+                        
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const userId = urlParams.get('id');
+                        
+                        if (userId) {
+                            await ProfileManager.loadProfile(userId);
                         } else {
                             UIManager.showLanding();
                         }
-                    });
-                }
-            }
-        };
-
-        // ==================== AUTH MANAGER ====================
-        const AuthManager = {
-            init() {
-                auth.onAuthStateChanged(user => this.handleAuthChange(user));
-            },
-            
-            async handleAuthChange(user) {
-                console.log('Auth changed:', user ? user.email : 'No user');
+                    }
+                },
                 
-                State.currentUser = user;
-                
-                // ALWAYS hide loading when auth state changes
-                UIManager.showLoading(false);
-                
-                if (user) {
-                    // First, ensure profile exists
-                    const profileCreated = await this.ensureUserProfile(user.uid);
-                    
-                    if (profileCreated) {
-                        // Load the profile we just created
-                        await this.loadUserProfile(user.uid);
-                    }
-                    
-                    // Update navigation
-                    UIManager.updateNav();
-                    
-                    // Handle URL parameters
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const userId = urlParams.get('id');
-                    
-                    if (userId) {
-                        await ProfileManager.loadProfile(userId);
-                    } else {
-                        window.location.href = `?id=${user.uid}`;
-                    }
-                    
-                    // Load users for search
-                    await UserManager.loadAllUsers();
-                } else {
-                    State.currentUserProfile = null;
-                    UIManager.updateNav();
-                    
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const userId = urlParams.get('id');
-                    
-                    if (userId) {
-                        await ProfileManager.loadProfile(userId);
-                    } else {
-                        UIManager.showLanding();
-                    }
-                }
-            },
-            
-            async loadUserProfile(uid) {
-                try {
-                    const doc = await db.collection('users').doc(uid).get();
-                    if (doc.exists) {
-                        State.currentUserProfile = { uid: doc.id, ...doc.data() };
-                        console.log('User profile loaded:', State.currentUserProfile.displayName);
-                    }
-                } catch (error) {
-                    console.error('Error loading user profile:', error);
-                }
-            },
-            
-            async ensureUserProfile(uid) {
-                try {
-                    const doc = await db.collection('users').doc(uid).get();
-                    
-                    if (!doc.exists) {
-                        console.log('Creating new profile for user:', uid);
-                        await this.createUserProfile(uid);
-                        return true;
-                    } else {
-                        // Update last login
-                        await db.collection('users').doc(uid).update({
-                            lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-                            totalLogins: firebase.firestore.FieldValue.increment(1)
-                        });
-                        return false;
-                    }
-                } catch (error) {
-                    console.error('Error ensuring profile:', error);
-                    // If error, try to create profile anyway
+                async loadUserProfile(uid) {
                     try {
-                        await this.createUserProfile(uid);
-                        return true;
-                    } catch (createError) {
-                        console.error('Failed to create profile:', createError);
-                        UIManager.showToast('Error creating profile', 'error');
-                        return false;
+                        const docRef = doc(db, 'users', uid);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            State.currentUserProfile = { uid: docSnap.id, ...docSnap.data() };
+                            console.log('✅ User profile loaded:', State.currentUserProfile.displayName);
+                        }
+                    } catch (error) {
+                        console.error('❌ Error loading user profile:', error);
+                    }
+                },
+                
+                async ensureUserProfile(uid) {
+                    try {
+                        const docRef = doc(db, 'users', uid);
+                        const docSnap = await getDoc(docRef);
+                        
+                        if (!docSnap.exists()) {
+                            console.log('📝 Creating new profile for user:', uid);
+                            await this.createUserProfile(uid);
+                            return true;
+                        } else {
+                            // Update last login
+                            await updateDoc(docRef, {
+                                lastLogin: serverTimestamp(),
+                                totalLogins: increment(1)
+                            });
+                            return false;
+                        }
+                    } catch (error) {
+                        console.error('❌ Error ensuring profile:', error);
+                        // If error, try to create profile anyway
+                        try {
+                            await this.createUserProfile(uid);
+                            return true;
+                        } catch (createError) {
+                            console.error('❌ Failed to create profile:', createError);
+                            UIManager.showToast('Error creating profile', 'error');
+                            return false;
+                        }
+                    }
+                },
+                
+                async createUserProfile(uid) {
+                    const user = State.currentUser;
+                    const displayName = user.displayName || user.email.split('@')[0] || 'User';
+                    const username = this.generateUsername(displayName);
+                    
+                    const profile = {
+                        uid,
+                        email: user.email,
+                        displayName,
+                        username,
+                        photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=400`,
+                        bio: '',
+                        isPublic: true,
+                        verified: false,
+                        verifiedLevel: 'none',
+                        premiumVerified: false,
+                        followersCount: 0,
+                        followingCount: 0,
+                        streak: 0,
+                        totalLogins: 1,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp(),
+                        lastActive: serverTimestamp(),
+                        lastLogin: serverTimestamp()
+                    };
+                    
+                    const docRef = doc(db, 'users', uid);
+                    await setDoc(docRef, profile);
+                    console.log('✅ New user profile created:', uid);
+                    
+                    // Set the profile in state
+                    State.currentUserProfile = profile;
+                    
+                    // Show welcome message
+                    UIManager.showToast(`Welcome to Reverbit, ${displayName}!`, 'success');
+                    
+                    return profile;
+                },
+                
+                generateUsername(displayName) {
+                    return displayName.toLowerCase()
+                        .replace(/[^a-z0-9]/g, '')
+                        .substring(0, 15) + 
+                        Math.random().toString(36).substring(2, 6);
+                },
+                
+                async logout() {
+                    try {
+                        await signOut(auth);
+                        UIManager.showToast('Logged out successfully', 'success');
+                        window.location.href = '/';
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        UIManager.showToast('Error logging out', 'error');
                     }
                 }
-            },
-            
-            async createUserProfile(uid) {
-                const user = State.currentUser;
-                const displayName = user.displayName || user.email.split('@')[0] || 'User';
-                const username = this.generateUsername(displayName);
-                
-                const profile = {
-                    uid,
-                    email: user.email,
-                    displayName,
-                    username,
-                    photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=400`,
-                    bio: '',
-                    isPublic: true,
-                    verified: false,
-                    verifiedLevel: 'none',
-                    premiumVerified: false,
-                    followersCount: 0,
-                    followingCount: 0,
-                    streak: 0,
-                    totalLogins: 1,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                await db.collection('users').doc(uid).set(profile);
-                console.log('✅ New user profile created:', uid);
-                
-                // Set the profile in state
-                State.currentUserProfile = profile;
-                
-                // Show welcome message
-                UIManager.showToast(`Welcome to Reverbit, ${displayName}!`, 'success');
-                
-                return profile;
-            },
-            
-            generateUsername(displayName) {
-                return displayName.toLowerCase()
-                    .replace(/[^a-z0-9]/g, '')
-                    .substring(0, 15) + 
-                    Math.random().toString(36).substring(2, 6);
-            },
-            
-            async logout() {
-                try {
-                    await auth.signOut();
-                    UIManager.showToast('Logged out successfully', 'success');
-                    window.location.href = '/';
-                } catch (error) {
-                    console.error('Logout error:', error);
-                    UIManager.showToast('Error logging out', 'error');
-                }
-            }
-        };
+            };
 
-        // ==================== PROFILE MANAGER ====================
-        const ProfileManager = {
-            async loadProfile(userId) {
-                UIManager.showLoading(true);
-                
-                try {
-                    const doc = await db.collection('users').doc(userId).get();
+            // ==================== PROFILE MANAGER ====================
+            const ProfileManager = {
+                async loadProfile(userId) {
+                    UIManager.showLoading(true);
                     
-                    if (!doc.exists) {
-                        UIManager.showNotFound('Profile not found');
+                    try {
+                        console.log('Loading profile for:', userId);
+                        const docRef = doc(db, 'users', userId);
+                        const docSnap = await getDoc(docRef);
+                        
+                        if (!docSnap.exists()) {
+                            console.log('Profile not found for:', userId);
+                            UIManager.showNotFound('Profile not found');
+                            UIManager.showLoading(false);
+                            return;
+                        }
+
+                        State.profileData = { uid: docSnap.id, ...docSnap.data() };
+                        State.profileOwner = userId;
+                        State.isOwner = State.currentUser && State.currentUser.uid === userId;
+
+                        // Check privacy
+                        if (!State.profileData.isPublic && !State.isOwner && State.currentUser?.email !== ADMIN_EMAIL) {
+                            UIManager.showNotFound('This profile is private');
+                            UIManager.showLoading(false);
+                            return;
+                        }
+
+                        // Load followers count
+                        await FollowManager.loadProfileFollowData(userId);
+                        
+                        // Check follow status
+                        if (State.currentUser && !State.isOwner) {
+                            State.isFollowing = await FollowManager.checkFollowStatus(
+                                State.currentUser.uid, 
+                                userId
+                            );
+                        }
+
+                        this.renderProfile();
+                        
+                        // Update last active if owner
+                        if (State.isOwner) {
+                            await this.updateLastActive();
+                        }
+
+                    } catch (error) {
+                        console.error('❌ Error loading profile:', error);
+                        UIManager.showToast('Error loading profile', 'error');
+                        UIManager.showNotFound();
+                    } finally {
                         UIManager.showLoading(false);
-                        return;
                     }
-
-                    State.profileData = { uid: doc.id, ...doc.data() };
-                    State.profileOwner = userId;
-                    State.isOwner = State.currentUser && State.currentUser.uid === userId;
-
-                    // Check privacy
-                    if (!State.profileData.isPublic && !State.isOwner && State.currentUser?.email !== ADMIN_EMAIL) {
-                        UIManager.showNotFound('This profile is private');
-                        UIManager.showLoading(false);
-                        return;
-                    }
-
-                    // Load followers count
-                    await FollowManager.loadProfileFollowData(userId);
-                    
-                    // Check follow status
-                    if (State.currentUser && !State.isOwner) {
-                        State.isFollowing = await FollowManager.checkFollowStatus(
-                            State.currentUser.uid, 
-                            userId
-                        );
-                    }
-
-                    this.renderProfile();
-                    
-                    // Update last active if owner
-                    if (State.isOwner) {
-                        await this.updateLastActive();
-                    }
-
-                } catch (error) {
-                    console.error('Error loading profile:', error);
-                    UIManager.showToast('Error loading profile', 'error');
-                    UIManager.showNotFound();
-                } finally {
-                    UIManager.showLoading(false);
-                }
-            },
-            
-            renderProfile() {
-                const data = State.profileData;
-                if (!data) return;
+                },
                 
-                const memberDays = this.calculateMemberDays(data.createdAt);
-                const lastActive = this.formatLastActive(data.lastActive);
-                const verificationLevel = this.getVerificationLevel(data);
+                renderProfile() {
+                    const data = State.profileData;
+                    if (!data) return;
+                    
+                    const memberDays = this.calculateMemberDays(data.createdAt);
+                    const lastActive = this.formatLastActive(data.lastActive);
+                    const verificationLevel = this.getVerificationLevel(data);
 
-                const followButton = !State.isOwner && State.currentUser ? `
-                    <button class="btn ${State.isFollowing ? 'btn-success' : 'btn-primary'}" 
-                            id="followBtn" 
-                            onclick="FollowManager.toggleFollow()"
-                            ${State.isFollowLoading ? 'disabled' : ''}>
-                        <i class="fas fa-${State.isFollowLoading ? 'spinner fa-spin' : (State.isFollowing ? 'user-check' : 'user-plus')}"></i>
-                        ${State.isFollowLoading ? 'Processing...' : (State.isFollowing ? 'Following' : 'Follow')}
-                    </button>
-                ` : '';
+                    const followButton = !State.isOwner && State.currentUser ? `
+                        <button class="btn ${State.isFollowing ? 'btn-success' : 'btn-primary'}" 
+                                id="followBtn" 
+                                onclick="window.FollowManager.toggleFollow()"
+                                ${State.isFollowLoading ? 'disabled' : ''}>
+                            <i class="fas fa-${State.isFollowLoading ? 'spinner fa-spin' : (State.isFollowing ? 'user-check' : 'user-plus')}"></i>
+                            ${State.isFollowLoading ? 'Processing...' : (State.isFollowing ? 'Following' : 'Follow')}
+                        </button>
+                    ` : '';
 
-                Elements.contentArea.innerHTML = `
-                    <div class="profile-section">
-                        <div class="profile-header">
-                            <div class="profile-avatar">
-                                <img src="${this.getAvatarUrl(data)}" alt="${data.displayName}" class="profile-avatar-img" 
-                                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
-                                ${this.getAvatarBadge(data)}
-                                ${State.isOwner ? `
-                                    <div class="avatar-overlay" onclick="AvatarManager.handleUpload()">
-                                        <i class="fas fa-camera"></i>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            
-                            <div class="profile-info">
-                                <div>
-                                    <div class="profile-name-section">
-                                        <h1 class="profile-name">${this.escapeHtml(data.displayName) || 'User'}</h1>
-                                        <div class="profile-badges">
-                                            ${this.getBadges(data)}
-                                            ${data.email === ADMIN_EMAIL ? `
-                                                <span class="badge badge-admin">
-                                                    <i class="fas fa-shield-alt"></i> Admin
-                                                </span>
-                                            ` : ''}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="profile-email">
-                                        <i class="fas fa-envelope"></i> ${this.escapeHtml(data.email) || 'No email'}
-                                    </div>
-                                </div>
-                                
-                                <p class="profile-bio">${this.escapeHtml(data.bio) || 'No bio added yet.'}</p>
-                                
-                                <div class="profile-stats-grid">
-                                    <div class="profile-stat">
-                                        <div class="profile-stat-value">${data.streak || 0}</div>
-                                        <div class="profile-stat-label">Streak</div>
-                                    </div>
-                                    <div class="profile-stat">
-                                        <div class="profile-stat-value">${memberDays}</div>
-                                        <div class="profile-stat-label">Days</div>
-                                    </div>
-                                    <div class="profile-stat">
-                                        <div class="profile-stat-value">${data.totalLogins || 1}</div>
-                                        <div class="profile-stat-label">Logins</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="follow-stats">
-                                    <div class="follow-stat" onclick="FollowManager.showFollowers()">
-                                        <div class="follow-stat-value">${State.followersCount}</div>
-                                        <div class="follow-stat-label">Followers</div>
-                                    </div>
-                                    <div class="follow-stat" onclick="FollowManager.showFollowing()">
-                                        <div class="follow-stat-value">${State.followingCount}</div>
-                                        <div class="follow-stat-label">Following</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="profile-actions">
+                    Elements.contentArea.innerHTML = `
+                        <div class="profile-section">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <img src="${this.getAvatarUrl(data)}" alt="${data.displayName}" class="profile-avatar-img" 
+                                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
+                                    ${this.getAvatarBadge(data)}
                                     ${State.isOwner ? `
-                                        <button class="btn btn-primary" onclick="UIManager.showToast('Edit coming soon', 'info')">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>
-                                        <button class="btn btn-secondary" onclick="PrivacyManager.togglePrivacy()">
-                                            <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
-                                            ${data.isPublic ? 'Make Private' : 'Make Public'}
-                                        </button>
-                                    ` : followButton}
-                                    
-                                    <button class="btn btn-secondary" onclick="ShareManager.openModal()">
-                                        <i class="fas fa-share-alt"></i> Share
-                                    </button>
-                                    
-                                    ${State.currentUser?.email === ADMIN_EMAIL && !State.isOwner ? `
-                                        <button class="btn btn-secondary" onclick="AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
-                                            <i class="fas fa-shield-alt"></i> Manage
-                                        </button>
+                                        <div class="avatar-overlay" onclick="window.AvatarManager.handleUpload()">
+                                            <i class="fas fa-camera"></i>
+                                        </div>
                                     ` : ''}
                                 </div>
                                 
-                                <div class="profile-meta">
-                                    <span><i class="fas fa-clock"></i> Last: ${lastActive}</span>
-                                    <span><i class="fas fa-calendar"></i> Joined: ${this.formatDate(data.createdAt)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            },
-            
-            getVerificationLevel(data) {
-                if (data.verifiedLevel === 'premium') return 'premium';
-                if (data.verifiedLevel === 'basic' || data.verified) return 'basic';
-                return 'none';
-            },
-            
-            getBadges(data) {
-                const level = this.getVerificationLevel(data);
-                if (level === 'premium') {
-                    return '<span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>';
-                }
-                if (level === 'basic') {
-                    return '<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>';
-                }
-                return '';
-            },
-            
-            getAvatarBadge(data) {
-                const level = this.getVerificationLevel(data);
-                if (level === 'premium') {
-                    return '<div class="profile-avatar-badge profile-avatar-badge-premium"><i class="fas fa-crown"></i></div>';
-                }
-                if (level === 'basic') {
-                    return '<div class="profile-avatar-badge profile-avatar-badge-verified"><i class="fas fa-check"></i></div>';
-                }
-                return '';
-            },
-            
-            getAvatarUrl(user) {
-                if (user.photoURL && !user.photoURL.includes('ui-avatars.com')) {
-                    return user.photoURL;
-                }
-                return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true&size=400`;
-            },
-            
-            calculateMemberDays(createdAt) {
-                if (!createdAt) return 0;
-                try {
-                    const date = createdAt.seconds ? new Date(createdAt.seconds * 1000) : new Date(createdAt);
-                    return Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
-                } catch {
-                    return 0;
-                }
-            },
-            
-            formatDate(date) {
-                if (!date) return 'Unknown';
-                try {
-                    const d = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
-                    return d.toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
-                    });
-                } catch {
-                    return 'Unknown';
-                }
-            },
-            
-            formatLastActive(date) {
-                if (!date) return 'Never';
-                try {
-                    const last = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
-                    const now = new Date();
-                    const diff = Math.floor((now - last) / 60000);
-                    
-                    if (diff < 1) return 'Just now';
-                    if (diff < 60) return `${diff}m ago`;
-                    if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
-                    if (diff < 10080) return `${Math.floor(diff / 1440)}d ago`;
-                    return this.formatDate(date);
-                } catch {
-                    return 'Unknown';
-                }
-            },
-            
-            escapeHtml(text) {
-                if (!text) return text;
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            },
-            
-            async updateLastActive() {
-                if (!State.isOwner || !State.profileData) return;
-                try {
-                    await db.collection('users').doc(State.profileData.uid).update({
-                        lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                } catch (error) {
-                    console.error('Error updating last active:', error);
-                }
-            }
-        };
-
-        // ==================== FOLLOW MANAGER ====================
-        const FollowManager = {
-            async loadProfileFollowData(userId) {
-                try {
-                    const [followersSnap, followingSnap] = await Promise.all([
-                        db.collection('followers').where('followingId', '==', userId).get(),
-                        db.collection('followers').where('followerId', '==', userId).get()
-                    ]);
-                    
-                    State.followersCount = followersSnap.size;
-                    State.followingCount = followingSnap.size;
-                    
-                } catch (error) {
-                    console.error('Error loading follow data:', error);
-                }
-            },
-            
-            async checkFollowStatus(followerId, followingId) {
-                try {
-                    const snapshot = await db.collection('followers')
-                        .where('followerId', '==', followerId)
-                        .where('followingId', '==', followingId)
-                        .get();
-                    return !snapshot.empty;
-                } catch (error) {
-                    console.error('Error checking follow:', error);
-                    return false;
-                }
-            },
-            
-            async toggleFollow() {
-                if (State.isFollowLoading) return;
-                
-                if (!State.currentUser) {
-                    UIManager.showToast('Please sign in to follow', 'info');
-                    return;
-                }
-                
-                if (State.isOwner) {
-                    UIManager.showToast('You cannot follow yourself', 'warning');
-                    return;
-                }
-                
-                State.isFollowLoading = true;
-                this.updateFollowButton(true);
-                
-                try {
-                    if (State.isFollowing) {
-                        await this.unfollow();
-                    } else {
-                        await this.follow();
-                    }
-                    
-                    await this.loadProfileFollowData(State.profileOwner);
-                    
-                } catch (error) {
-                    console.error('Follow error:', error);
-                    UIManager.showToast('Error updating follow', 'error');
-                } finally {
-                    State.isFollowLoading = false;
-                    this.updateFollowButton(false);
-                }
-            },
-            
-            async follow() {
-                // Check if already following
-                const existing = await db.collection('followers')
-                    .where('followerId', '==', State.currentUser.uid)
-                    .where('followingId', '==', State.profileOwner)
-                    .get();
-                
-                if (!existing.empty) {
-                    throw new Error('Already following');
-                }
-                
-                // Create follow
-                await db.collection('followers').add({
-                    followerId: State.currentUser.uid,
-                    followingId: State.profileOwner,
-                    followerName: State.currentUserProfile?.displayName || State.currentUser.email,
-                    followingName: State.profileData.displayName || 'User',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Update counts
-                await Promise.all([
-                    db.collection('users').doc(State.profileOwner).update({
-                        followersCount: firebase.firestore.FieldValue.increment(1)
-                    }),
-                    db.collection('users').doc(State.currentUser.uid).update({
-                        followingCount: firebase.firestore.FieldValue.increment(1)
-                    })
-                ]);
-                
-                State.isFollowing = true;
-                UIManager.showToast(`Following ${State.profileData.displayName || 'user'}`);
-            },
-            
-            async unfollow() {
-                const snapshot = await db.collection('followers')
-                    .where('followerId', '==', State.currentUser.uid)
-                    .where('followingId', '==', State.profileOwner)
-                    .get();
-                
-                if (snapshot.empty) return;
-                
-                const batch = db.batch();
-                snapshot.docs.forEach(doc => batch.delete(doc.ref));
-                await batch.commit();
-                
-                await Promise.all([
-                    db.collection('users').doc(State.profileOwner).update({
-                        followersCount: firebase.firestore.FieldValue.increment(-1)
-                    }),
-                    db.collection('users').doc(State.currentUser.uid).update({
-                        followingCount: firebase.firestore.FieldValue.increment(-1)
-                    })
-                ]);
-                
-                State.isFollowing = false;
-                UIManager.showToast(`Unfollowed ${State.profileData.displayName || 'user'}`);
-            },
-            
-            updateFollowButton(loading) {
-                const btn = document.getElementById('followBtn');
-                if (btn) {
-                    btn.disabled = loading;
-                    btn.innerHTML = loading ? 
-                        '<i class="fas fa-spinner fa-spin"></i> Processing...' : 
-                        (State.isFollowing ? 
-                            '<i class="fas fa-user-check"></i> Following' : 
-                            '<i class="fas fa-user-plus"></i> Follow');
-                    btn.className = `btn ${State.isFollowing ? 'btn-success' : 'btn-primary'}`;
-                }
-            },
-            
-            async showFollowers() {
-                if (!State.profileData) return;
-                
-                Elements.followersModalTitle.textContent = `Followers of ${State.profileData.displayName || 'user'}`;
-                Elements.followersList.innerHTML = '<div class="text-center p-4"><div class="spinner-sm"></div><p>Loading...</p></div>';
-                Elements.followersModal.classList.add('active');
-                
-                try {
-                    const snapshot = await db.collection('followers')
-                        .where('followingId', '==', State.profileOwner)
-                        .get();
-                    
-                    if (snapshot.empty) {
-                        Elements.followersList.innerHTML = '<div class="text-center p-4">No followers yet</div>';
-                        return;
-                    }
-                    
-                    const followerIds = snapshot.docs.map(doc => doc.data().followerId);
-                    const followers = await this.getUserProfiles(followerIds);
-                    
-                    if (followers.length === 0) {
-                        Elements.followersList.innerHTML = '<div class="text-center p-4">No followers found</div>';
-                        return;
-                    }
-                    
-                    Elements.followersList.innerHTML = followers.map(user => `
-                        <div class="modal-user-item" onclick="UserManager.viewProfile('${user.uid}')">
-                            <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
-                            <div class="modal-user-info">
-                                <div class="modal-user-name">${user.displayName || 'User'}</div>
-                                <div class="modal-user-email">${user.email || ''}</div>
-                            </div>
-                        </div>
-                    `).join('');
-                    
-                } catch (error) {
-                    console.error('Error loading followers:', error);
-                    Elements.followersList.innerHTML = '<div class="text-center p-4 text-error">Error loading followers</div>';
-                }
-            },
-            
-            async showFollowing() {
-                if (!State.profileData) return;
-                
-                Elements.followingModalTitle.textContent = `${State.profileData.displayName || 'User'} follows`;
-                Elements.followingList.innerHTML = '<div class="text-center p-4"><div class="spinner-sm"></div><p>Loading...</p></div>';
-                Elements.followingModal.classList.add('active');
-                
-                try {
-                    const snapshot = await db.collection('followers')
-                        .where('followerId', '==', State.profileOwner)
-                        .get();
-                    
-                    if (snapshot.empty) {
-                        Elements.followingList.innerHTML = '<div class="text-center p-4">Not following anyone</div>';
-                        return;
-                    }
-                    
-                    const followingIds = snapshot.docs.map(doc => doc.data().followingId);
-                    const following = await this.getUserProfiles(followingIds);
-                    
-                    if (following.length === 0) {
-                        Elements.followingList.innerHTML = '<div class="text-center p-4">No followed users found</div>';
-                        return;
-                    }
-                    
-                    Elements.followingList.innerHTML = following.map(user => `
-                        <div class="modal-user-item" onclick="UserManager.viewProfile('${user.uid}')">
-                            <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
-                            <div class="modal-user-info">
-                                <div class="modal-user-name">${user.displayName || 'User'}</div>
-                                <div class="modal-user-email">${user.email || ''}</div>
-                            </div>
-                        </div>
-                    `).join('');
-                    
-                } catch (error) {
-                    console.error('Error loading following:', error);
-                    Elements.followingList.innerHTML = '<div class="text-center p-4 text-error">Error loading following</div>';
-                }
-            },
-            
-            async getUserProfiles(userIds) {
-                const profiles = [];
-                for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
-                    const batch = userIds.slice(i, i + BATCH_SIZE);
-                    const promises = batch.map(id => db.collection('users').doc(id).get());
-                    const snapshots = await Promise.all(promises);
-                    snapshots.forEach(snap => {
-                        if (snap.exists) {
-                            profiles.push({ uid: snap.id, ...snap.data() });
-                        }
-                    });
-                }
-                return profiles;
-            }
-        };
-
-        // ==================== USER MANAGER ====================
-        const UserManager = {
-            async loadAllUsers() {
-                try {
-                    const snapshot = await db.collection('users').get();
-                    State.allUsers = snapshot.docs.map(doc => ({
-                        uid: doc.id,
-                        ...doc.data()
-                    }));
-                    console.log(`Loaded ${State.allUsers.length} users`);
-                } catch (error) {
-                    console.error('Error loading users:', error);
-                    State.allUsers = [];
-                }
-            },
-            
-            viewProfile(userId) {
-                window.location.href = `?id=${userId}`;
-                Elements.searchResults.classList.remove('show');
-                Elements.searchInput.value = '';
-            }
-        };
-
-        // ==================== SEARCH MANAGER ====================
-        const SearchManager = {
-            search(query) {
-                query = query.trim().toLowerCase();
-                
-                if (!query || query.length < 2) {
-                    Elements.searchResults.classList.remove('show');
-                    return;
-                }
-                
-                Elements.searchResults.innerHTML = '<div class="p-4 text-center">Searching...</div>';
-                Elements.searchResults.classList.add('show');
-                
-                setTimeout(() => {
-                    try {
-                        const results = this.performSearch(query);
-                        this.displayResults(results, query);
-                    } catch (error) {
-                        console.error('Search error:', error);
-                        Elements.searchResults.innerHTML = '<div class="p-4 text-center text-error">Error searching</div>';
-                    }
-                }, 100);
-            },
-            
-            performSearch(query) {
-                return State.allUsers
-                    .filter(user => {
-                        if (!user.isPublic && user.uid !== State.currentUser?.uid) return false;
-                        
-                        const searchable = [
-                            user.displayName,
-                            user.email,
-                            user.username
-                        ].filter(Boolean).join(' ').toLowerCase();
-                        
-                        return searchable.includes(query);
-                    })
-                    .slice(0, MAX_SEARCH_RESULTS);
-            },
-            
-            displayResults(results, query) {
-                if (results.length === 0) {
-                    Elements.searchResults.innerHTML = `<div class="p-4 text-center">No users found</div>`;
-                    return;
-                }
-                
-                Elements.searchResults.innerHTML = results.map(user => `
-                    <div class="search-result-item" onclick="UserManager.viewProfile('${user.uid}')">
-                        <img src="${ProfileManager.getAvatarUrl(user)}" class="search-result-avatar">
-                        <div class="search-result-info">
-                            <div class="search-result-name">${user.displayName || 'User'}</div>
-                            <div class="search-result-email">${user.email || ''}</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        };
-
-        // ==================== ADMIN MANAGER ====================
-        const AdminManager = {
-            async showPanel() {
-                if (State.currentUser?.email !== ADMIN_EMAIL) {
-                    UIManager.showToast('Admin access required', 'error');
-                    return;
-                }
-
-                UIManager.showLoading(true);
-                
-                await UserManager.loadAllUsers();
-                
-                const stats = this.calculateStats();
-                
-                Elements.contentArea.innerHTML = `
-                    <div class="admin-section">
-                        <h2 class="section-title">Admin Verification Panel</h2>
-                        
-                        <div class="admin-stats">
-                            <div class="stat-card">
-                                <div class="stat-card-value">${stats.total}</div>
-                                <div class="stat-card-label">Total</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card-value">${stats.verified}</div>
-                                <div class="stat-card-label">Verified</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card-value">${stats.premium}</div>
-                                <div class="stat-card-label">Premium</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card-value">${stats.activeToday}</div>
-                                <div class="stat-card-label">Active</div>
-                            </div>
-                        </div>
-                        
-                        <div class="admin-filters">
-                            <button class="filter-btn active" onclick="AdminManager.filterUsers('all')">All</button>
-                            <button class="filter-btn" onclick="AdminManager.filterUsers('verified')">Verified</button>
-                            <button class="filter-btn" onclick="AdminManager.filterUsers('premium')">Premium</button>
-                            <button class="filter-btn" onclick="AdminManager.filterUsers('unverified')">Unverified</button>
-                        </div>
-                        
-                        <div class="users-list" id="usersList"></div>
-                        
-                        <div class="pagination">
-                            <button class="pagination-btn" id="prevPage" onclick="AdminManager.changePage('prev')" disabled>Prev</button>
-                            <span class="pagination-info" id="pageInfo">Page 1</span>
-                            <button class="pagination-btn" id="nextPage" onclick="AdminManager.changePage('next')">Next</button>
-                        </div>
-                    </div>
-                `;
-                
-                this.filterUsers('all');
-                UIManager.showLoading(false);
-            },
-            
-            calculateStats() {
-                const today = new Date().toDateString();
-                return {
-                    total: State.allUsers.length,
-                    verified: State.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic').length,
-                    premium: State.allUsers.filter(u => u.verifiedLevel === 'premium').length,
-                    activeToday: State.allUsers.filter(u => {
-                        if (!u.lastActive) return false;
-                        try {
-                            const last = u.lastActive.seconds ? new Date(u.lastActive.seconds * 1000) : new Date(u.lastActive);
-                            return last.toDateString() === today;
-                        } catch {
-                            return false;
-                        }
-                    }).length
-                };
-            },
-            
-            filterUsers(filter) {
-                State.currentFilter = filter;
-                
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter));
-                });
-                
-                switch (filter) {
-                    case 'verified':
-                        State.filteredUsers = State.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic');
-                        break;
-                    case 'premium':
-                        State.filteredUsers = State.allUsers.filter(u => u.verifiedLevel === 'premium');
-                        break;
-                    case 'unverified':
-                        State.filteredUsers = State.allUsers.filter(u => !u.verified && !u.verifiedLevel);
-                        break;
-                    default:
-                        State.filteredUsers = [...State.allUsers];
-                }
-                
-                State.currentPage = 1;
-                this.renderUsers();
-            },
-            
-            renderUsers() {
-                const start = (State.currentPage - 1) * USERS_PER_PAGE;
-                const end = start + USERS_PER_PAGE;
-                const paginatedUsers = State.filteredUsers.slice(start, end);
-                const totalPages = Math.ceil(State.filteredUsers.length / USERS_PER_PAGE);
-                
-                const prevBtn = document.getElementById('prevPage');
-                const nextBtn = document.getElementById('nextPage');
-                const pageInfo = document.getElementById('pageInfo');
-                
-                if (prevBtn && nextBtn && pageInfo) {
-                    prevBtn.disabled = State.currentPage === 1;
-                    nextBtn.disabled = State.currentPage === totalPages || totalPages === 0;
-                    pageInfo.textContent = `Page ${State.currentPage} of ${totalPages || 1}`;
-                }
-                
-                const usersList = document.getElementById('usersList');
-                if (!usersList) return;
-                
-                if (paginatedUsers.length === 0) {
-                    usersList.innerHTML = '<div class="text-center p-4">No users found</div>';
-                    return;
-                }
-                
-                usersList.innerHTML = paginatedUsers.map(user => {
-                    const level = ProfileManager.getVerificationLevel(user);
-                    return `
-                        <div class="user-row">
-                            <div class="user-row-info">
-                                <img src="${ProfileManager.getAvatarUrl(user)}" class="user-row-avatar">
-                                <div class="user-row-details">
-                                    <div class="user-row-name">
-                                        ${user.displayName || 'User'}
-                                        ${ProfileManager.getBadges(user)}
+                                <div class="profile-info">
+                                    <div>
+                                        <div class="profile-name-section">
+                                            <h1 class="profile-name">${this.escapeHtml(data.displayName) || 'User'}</h1>
+                                            <div class="profile-badges">
+                                                ${this.getBadges(data)}
+                                                ${data.email === ADMIN_EMAIL ? `
+                                                    <span class="badge badge-admin">
+                                                        <i class="fas fa-shield-alt"></i> Admin
+                                                    </span>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="profile-email">
+                                            <i class="fas fa-envelope"></i> ${this.escapeHtml(data.email) || 'No email'}
+                                        </div>
                                     </div>
-                                    <div class="user-row-email">${user.email || ''}</div>
+                                    
+                                    <p class="profile-bio">${this.escapeHtml(data.bio) || 'No bio added yet.'}</p>
+                                    
+                                    <div class="profile-stats-grid">
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-value">${data.streak || 0}</div>
+                                            <div class="profile-stat-label">Streak</div>
+                                        </div>
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-value">${memberDays}</div>
+                                            <div class="profile-stat-label">Days</div>
+                                        </div>
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-value">${data.totalLogins || 1}</div>
+                                            <div class="profile-stat-label">Logins</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="follow-stats">
+                                        <div class="follow-stat" onclick="window.FollowManager.showFollowers()">
+                                            <div class="follow-stat-value">${State.followersCount}</div>
+                                            <div class="follow-stat-label">Followers</div>
+                                        </div>
+                                        <div class="follow-stat" onclick="window.FollowManager.showFollowing()">
+                                            <div class="follow-stat-value">${State.followingCount}</div>
+                                            <div class="follow-stat-label">Following</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="profile-actions">
+                                        ${State.isOwner ? `
+                                            <button class="btn btn-primary" onclick="window.UIManager.showToast('Edit coming soon', 'info')">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="window.PrivacyManager.togglePrivacy()">
+                                                <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
+                                                ${data.isPublic ? 'Make Private' : 'Make Public'}
+                                            </button>
+                                        ` : followButton}
+                                        
+                                        <button class="btn btn-secondary" onclick="window.ShareManager.openModal()">
+                                            <i class="fas fa-share-alt"></i> Share
+                                        </button>
+                                        
+                                        ${State.currentUser?.email === ADMIN_EMAIL && !State.isOwner ? `
+                                            <button class="btn btn-secondary" onclick="window.AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
+                                                <i class="fas fa-shield-alt"></i> Manage
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                    
+                                    <div class="profile-meta">
+                                        <span><i class="fas fa-clock"></i> Last: ${lastActive}</span>
+                                        <span><i class="fas fa-calendar"></i> Joined: ${this.formatDate(data.createdAt)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="user-row-actions">
-                                <button class="btn btn-icon btn-secondary" onclick="UserManager.viewProfile('${user.uid}')" title="View">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-icon btn-secondary" onclick="AdminManager.openVerifyModal('${user.uid}', '${user.displayName || 'User'}', '${level}')" title="Verify">
-                                    <i class="fas fa-${level === 'premium' ? 'crown' : 'shield-alt'}"></i>
-                                </button>
-                                ${user.email !== ADMIN_EMAIL ? `
-                                    <button class="btn btn-icon btn-error" onclick="AdminManager.openDeleteModal('${user.uid}', '${user.displayName || 'User'}')" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                ` : ''}
                             </div>
                         </div>
                     `;
-                }).join('');
-            },
-            
-            changePage(direction) {
-                const totalPages = Math.ceil(State.filteredUsers.length / USERS_PER_PAGE);
+                },
                 
-                if (direction === 'prev' && State.currentPage > 1) {
-                    State.currentPage--;
-                } else if (direction === 'next' && State.currentPage < totalPages) {
-                    State.currentPage++;
-                }
+                getVerificationLevel(data) {
+                    if (data.verifiedLevel === 'premium') return 'premium';
+                    if (data.verifiedLevel === 'basic' || data.verified) return 'basic';
+                    return 'none';
+                },
                 
-                this.renderUsers();
-            },
-            
-            openVerifyModal(userId, userName, currentLevel) {
-                State.selectedUserId = userId;
-                State.isVerifying = false;
-                
-                Elements.modalUserInfo.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">
-                            ${(userName || 'U').charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                            <h4>${userName}</h4>
-                            <p class="text-tertiary">ID: ${userId}</p>
-                            <p class="text-tertiary">Current: ${currentLevel === 'premium' ? 'Premium' : currentLevel === 'basic' ? 'Basic' : 'None'}</p>
-                        </div>
-                    </div>
-                `;
-                
-                Elements.verifyLevel.value = currentLevel;
-                Elements.verifyNotes.value = '';
-                
-                Elements.verifyModal.classList.add('active');
-            },
-            
-            async saveVerification() {
-                if (State.isVerifying) return;
-                if (!State.selectedUserId) return;
-                
-                State.isVerifying = true;
-                const btn = Elements.saveVerificationBtn;
-                const originalText = btn.innerHTML;
-                
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-                
-                try {
-                    const level = Elements.verifyLevel.value;
-                    const notes = Elements.verifyNotes.value;
-                    
-                    const updateData = {
-                        verifiedLevel: level === 'none' ? null : level,
-                        verified: level !== 'none',
-                        verifiedAt: level !== 'none' ? firebase.firestore.FieldValue.serverTimestamp() : null,
-                        verifiedBy: level !== 'none' ? ADMIN_EMAIL : null,
-                        verificationNotes: notes || null,
-                        premiumVerified: level === 'premium',
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    
-                    await db.collection('users').doc(State.selectedUserId).update(updateData);
-                    
-                    UIManager.showToast(`User ${level === 'premium' ? 'Premium Verified' : level === 'basic' ? 'Verified' : 'Unverified'}!`);
-                    
-                    // Refresh admin panel
-                    if (Elements.contentArea.querySelector('.admin-section')) {
-                        await UserManager.loadAllUsers();
-                        this.filterUsers(State.currentFilter);
+                getBadges(data) {
+                    const level = this.getVerificationLevel(data);
+                    if (level === 'premium') {
+                        return '<span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>';
                     }
-                    
-                    // Refresh profile if viewing
-                    if (State.profileData?.uid === State.selectedUserId) {
-                        const doc = await db.collection('users').doc(State.selectedUserId).get();
-                        State.profileData = { uid: doc.id, ...doc.data() };
-                        ProfileManager.renderProfile();
+                    if (level === 'basic') {
+                        return '<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>';
                     }
-                    
-                    UIManager.closeModal('verifyModal');
-                    
-                } catch (error) {
-                    console.error('Verification error:', error);
-                    UIManager.showToast('Error: ' + error.message, 'error');
-                } finally {
-                    State.isVerifying = false;
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                }
-            },
-            
-            openDeleteModal(userId, userName) {
-                State.selectedUserId = userId;
-                State.isDeleting = false;
-                Elements.deleteUserInfo.innerHTML = `<strong>User:</strong> ${userName}<br><strong>ID:</strong> ${userId}`;
-                Elements.deleteModal.classList.add('active');
-            },
-            
-            async confirmDelete() {
-                if (State.isDeleting) return;
-                if (!State.selectedUserId) return;
+                    return '';
+                },
                 
-                State.isDeleting = true;
-                const btn = document.querySelector('#deleteModal .btn-error');
-                const originalText = btn.innerHTML;
-                
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-                
-                try {
-                    await db.collection('users').doc(State.selectedUserId).delete();
-                    UIManager.showToast('User deleted');
-                    
-                    if (Elements.contentArea.querySelector('.admin-section')) {
-                        await UserManager.loadAllUsers();
-                        this.filterUsers(State.currentFilter);
+                getAvatarBadge(data) {
+                    const level = this.getVerificationLevel(data);
+                    if (level === 'premium') {
+                        return '<div class="profile-avatar-badge profile-avatar-badge-premium"><i class="fas fa-crown"></i></div>';
                     }
-                    
-                    UIManager.closeModal('deleteModal');
-                    
-                } catch (error) {
-                    console.error('Delete error:', error);
-                    UIManager.showToast('Error: ' + error.message, 'error');
-                } finally {
-                    State.isDeleting = false;
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
+                    if (level === 'basic') {
+                        return '<div class="profile-avatar-badge profile-avatar-badge-verified"><i class="fas fa-check"></i></div>';
+                    }
+                    return '';
+                },
+                
+                getAvatarUrl(user) {
+                    if (user.photoURL && !user.photoURL.includes('ui-avatars.com')) {
+                        return user.photoURL;
+                    }
+                    return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true&size=400`;
+                },
+                
+                calculateMemberDays(createdAt) {
+                    if (!createdAt) return 0;
+                    try {
+                        const date = createdAt.seconds ? new Date(createdAt.seconds * 1000) : new Date(createdAt);
+                        return Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
+                    } catch {
+                        return 0;
+                    }
+                },
+                
+                formatDate(date) {
+                    if (!date) return 'Unknown';
+                    try {
+                        const d = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+                        return d.toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                        });
+                    } catch {
+                        return 'Unknown';
+                    }
+                },
+                
+                formatLastActive(date) {
+                    if (!date) return 'Never';
+                    try {
+                        const last = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+                        const now = new Date();
+                        const diff = Math.floor((now - last) / 60000);
+                        
+                        if (diff < 1) return 'Just now';
+                        if (diff < 60) return `${diff}m ago`;
+                        if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+                        if (diff < 10080) return `${Math.floor(diff / 1440)}d ago`;
+                        return this.formatDate(date);
+                    } catch {
+                        return 'Unknown';
+                    }
+                },
+                
+                escapeHtml(text) {
+                    if (!text) return text;
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                },
+                
+                async updateLastActive() {
+                    if (!State.isOwner || !State.profileData) return;
+                    try {
+                        const docRef = doc(db, 'users', State.profileData.uid);
+                        await updateDoc(docRef, {
+                            lastActive: serverTimestamp()
+                        });
+                    } catch (error) {
+                        console.error('Error updating last active:', error);
+                    }
                 }
-            }
-        };
+            };
 
-        // ==================== AVATAR MANAGER ====================
-        const AvatarManager = {
-            handleUpload() {
-                if (!State.currentUser) {
-                    UIManager.showToast('Please sign in', 'info');
-                    return;
-                }
+            // ==================== FOLLOW MANAGER ====================
+            const FollowManager = {
+                async loadProfileFollowData(userId) {
+                    try {
+                        const followersQuery = query(
+                            collection(db, 'followers'), 
+                            where('followingId', '==', userId)
+                        );
+                        const followingQuery = query(
+                            collection(db, 'followers'), 
+                            where('followerId', '==', userId)
+                        );
+                        
+                        const [followersSnap, followingSnap] = await Promise.all([
+                            getDocs(followersQuery),
+                            getDocs(followingQuery)
+                        ]);
+                        
+                        State.followersCount = followersSnap.size;
+                        State.followingCount = followingSnap.size;
+                        
+                    } catch (error) {
+                        console.error('Error loading follow data:', error);
+                    }
+                },
                 
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => this.upload(e.target.files[0]);
-                input.click();
-            },
-            
-            async upload(file) {
-                if (!file || !State.currentUser) return;
+                async checkFollowStatus(followerId, followingId) {
+                    try {
+                        const q = query(
+                            collection(db, 'followers'),
+                            where('followerId', '==', followerId),
+                            where('followingId', '==', followingId)
+                        );
+                        const snapshot = await getDocs(q);
+                        return !snapshot.empty;
+                    } catch (error) {
+                        console.error('Error checking follow:', error);
+                        return false;
+                    }
+                },
                 
-                if (State.isUploading) return;
-                
-                if (file.size > MAX_AVATAR_SIZE) {
-                    UIManager.showToast('Image too large (max 5MB)', 'error');
-                    return;
-                }
-                
-                if (!file.type.startsWith('image/')) {
-                    UIManager.showToast('Please select an image', 'error');
-                    return;
-                }
-                
-                State.isUploading = true;
-                UIManager.showToast('Uploading...', 'info');
-                
-                try {
-                    // Convert to base64
-                    const reader = new FileReader();
+                async toggleFollow() {
+                    if (State.isFollowLoading) return;
                     
-                    const result = await new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = () => reject(new Error('Failed to read file'));
-                        reader.readAsDataURL(file);
+                    if (!State.currentUser) {
+                        UIManager.showToast('Please sign in to follow', 'info');
+                        return;
+                    }
+                    
+                    if (State.isOwner) {
+                        UIManager.showToast('You cannot follow yourself', 'warning');
+                        return;
+                    }
+                    
+                    State.isFollowLoading = true;
+                    this.updateFollowButton(true);
+                    
+                    try {
+                        if (State.isFollowing) {
+                            await this.unfollow();
+                        } else {
+                            await this.follow();
+                        }
+                        
+                        await this.loadProfileFollowData(State.profileOwner);
+                        
+                    } catch (error) {
+                        console.error('Follow error:', error);
+                        UIManager.showToast('Error updating follow', 'error');
+                    } finally {
+                        State.isFollowLoading = false;
+                        this.updateFollowButton(false);
+                    }
+                },
+                
+                async follow() {
+                    // Check if already following
+                    const q = query(
+                        collection(db, 'followers'),
+                        where('followerId', '==', State.currentUser.uid),
+                        where('followingId', '==', State.profileOwner)
+                    );
+                    const existing = await getDocs(q);
+                    
+                    if (!existing.empty) {
+                        throw new Error('Already following');
+                    }
+                    
+                    // Create follow
+                    await addDoc(collection(db, 'followers'), {
+                        followerId: State.currentUser.uid,
+                        followingId: State.profileOwner,
+                        followerName: State.currentUserProfile?.displayName || State.currentUser.email,
+                        followingName: State.profileData.displayName || 'User',
+                        createdAt: serverTimestamp()
                     });
                     
-                    await db.collection('users').doc(State.currentUser.uid).update({
-                        photoURL: result,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    // Update counts
+                    const followerRef = doc(db, 'users', State.profileOwner);
+                    const followingRef = doc(db, 'users', State.currentUser.uid);
                     
-                    UIManager.showToast('Profile picture updated!', 'success');
+                    await Promise.all([
+                        updateDoc(followerRef, {
+                            followersCount: increment(1)
+                        }),
+                        updateDoc(followingRef, {
+                            followingCount: increment(1)
+                        })
+                    ]);
                     
-                    // Refresh profile
-                    if (State.profileData?.uid === State.currentUser.uid) {
-                        const doc = await db.collection('users').doc(State.currentUser.uid).get();
-                        State.profileData = { uid: doc.id, ...doc.data() };
-                        ProfileManager.renderProfile();
+                    State.isFollowing = true;
+                    UIManager.showToast(`Following ${State.profileData.displayName || 'user'}`);
+                },
+                
+                async unfollow() {
+                    const q = query(
+                        collection(db, 'followers'),
+                        where('followerId', '==', State.currentUser.uid),
+                        where('followingId', '==', State.profileOwner)
+                    );
+                    const snapshot = await getDocs(q);
+                    
+                    if (snapshot.empty) return;
+                    
+                    const batch = writeBatch(db);
+                    snapshot.docs.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                    
+                    const followerRef = doc(db, 'users', State.profileOwner);
+                    const followingRef = doc(db, 'users', State.currentUser.uid);
+                    
+                    await Promise.all([
+                        updateDoc(followerRef, {
+                            followersCount: increment(-1)
+                        }),
+                        updateDoc(followingRef, {
+                            followingCount: increment(-1)
+                        })
+                    ]);
+                    
+                    State.isFollowing = false;
+                    UIManager.showToast(`Unfollowed ${State.profileData.displayName || 'user'}`);
+                },
+                
+                updateFollowButton(loading) {
+                    const btn = document.getElementById('followBtn');
+                    if (btn) {
+                        btn.disabled = loading;
+                        btn.innerHTML = loading ? 
+                            '<i class="fas fa-spinner fa-spin"></i> Processing...' : 
+                            (State.isFollowing ? 
+                                '<i class="fas fa-user-check"></i> Following' : 
+                                '<i class="fas fa-user-plus"></i> Follow');
+                        btn.className = `btn ${State.isFollowing ? 'btn-success' : 'btn-primary'}`;
                     }
-                    
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    UIManager.showToast('Upload failed', 'error');
-                } finally {
-                    State.isUploading = false;
-                }
-            }
-        };
-
-        // ==================== PRIVACY MANAGER ====================
-        const PrivacyManager = {
-            async togglePrivacy() {
-                if (!State.isOwner || !State.profileData) return;
+                },
                 
-                try {
-                    const newStatus = !State.profileData.isPublic;
+                async showFollowers() {
+                    if (!State.profileData) return;
                     
-                    await db.collection('users').doc(State.profileData.uid).update({
-                        isPublic: newStatus,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    Elements.followersModalTitle.textContent = `Followers of ${State.profileData.displayName || 'user'}`;
+                    Elements.followersList.innerHTML = '<div class="text-center p-4"><div class="spinner-sm"></div><p>Loading...</p></div>';
+                    Elements.followersModal.classList.add('active');
                     
-                    State.profileData.isPublic = newStatus;
-                    ProfileManager.renderProfile();
+                    try {
+                        const q = query(
+                            collection(db, 'followers'),
+                            where('followingId', '==', State.profileOwner)
+                        );
+                        const snapshot = await getDocs(q);
+                        
+                        if (snapshot.empty) {
+                            Elements.followersList.innerHTML = '<div class="text-center p-4">No followers yet</div>';
+                            return;
+                        }
+                        
+                        const followerIds = snapshot.docs.map(doc => doc.data().followerId);
+                        const followers = await this.getUserProfiles(followerIds);
+                        
+                        if (followers.length === 0) {
+                            Elements.followersList.innerHTML = '<div class="text-center p-4">No followers found</div>';
+                            return;
+                        }
+                        
+                        Elements.followersList.innerHTML = followers.map(user => `
+                            <div class="modal-user-item" onclick="window.UserManager.viewProfile('${user.uid}')">
+                                <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
+                                <div class="modal-user-info">
+                                    <div class="modal-user-name">${user.displayName || 'User'}</div>
+                                    <div class="modal-user-email">${user.email || ''}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                        
+                    } catch (error) {
+                        console.error('Error loading followers:', error);
+                        Elements.followersList.innerHTML = '<div class="text-center p-4 text-error">Error loading followers</div>';
+                    }
+                },
+                
+                async showFollowing() {
+                    if (!State.profileData) return;
                     
-                    UIManager.showToast(`Profile is now ${newStatus ? 'public' : 'private'}`);
+                    Elements.followingModalTitle.textContent = `${State.profileData.displayName || 'User'} follows`;
+                    Elements.followingList.innerHTML = '<div class="text-center p-4"><div class="spinner-sm"></div><p>Loading...</p></div>';
+                    Elements.followingModal.classList.add('active');
                     
-                } catch (error) {
-                    console.error('Privacy error:', error);
-                    UIManager.showToast('Error updating privacy', 'error');
-                }
-            }
-        };
-
-        // ==================== SHARE MANAGER ====================
-        const ShareManager = {
-            openModal() {
-                Elements.shareUrl.textContent = window.location.href;
-                Elements.shareModal.classList.add('active');
-            },
-            
-            async copyLink() {
-                try {
-                    await navigator.clipboard.writeText(Elements.shareUrl.textContent);
-                    UIManager.showToast('Link copied!');
-                    UIManager.closeModal('shareModal');
-                } catch (error) {
-                    console.error('Copy error:', error);
-                    UIManager.showToast('Failed to copy', 'error');
-                }
-            },
-            
-            shareViaTwitter() {
-                const url = encodeURIComponent(Elements.shareUrl.textContent);
-                window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
-            },
-            
-            shareViaFacebook() {
-                const url = encodeURIComponent(Elements.shareUrl.textContent);
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-            },
-            
-            shareViaLinkedIn() {
-                const url = encodeURIComponent(Elements.shareUrl.textContent);
-                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
-            }
-        };
-
-        // ==================== UI MANAGER ====================
-        const UIManager = {
-            showLoading(show) {
-                Elements.loading.classList.toggle('hidden', !show);
-                // Always ensure main content is visible when loading is hidden
-                if (!show) {
-                    Elements.mainContent.style.display = 'block';
-                }
-            },
-            
-            hideAllSections() {
-                Elements.contentArea.innerHTML = '';
-            },
-            
-            showLanding() {
-                Elements.contentArea.innerHTML = `
-                    <div class="profile-section text-center">
-                        <i class="fas fa-users" style="font-size: 5rem; color: var(--primary-500); margin-bottom: var(--space-6);"></i>
-                        <h2 class="mb-4">Welcome to Reverbit</h2>
-                        <p class="text-secondary mb-6">Sign in to view your profile and connect with others.</p>
-                        <div class="flex gap-3 justify-center">
-                            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">Sign In</a>
-                            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">Sign Up</a>
-                        </div>
-                    </div>
-                `;
-            },
-            
-            showNotFound(message = 'Profile not found') {
-                Elements.contentArea.innerHTML = `
-                    <div class="not-found">
-                        <i class="fas fa-user-slash not-found-icon"></i>
-                        <h2 class="not-found-title">Profile Not Found</h2>
-                        <p class="not-found-text">${message}</p>
-                        <button class="btn btn-primary" onclick="window.location.href='/'">Go Home</button>
-                    </div>
-                `;
-            },
-            
-            showToast(message, type = 'success') {
-                if (State.toastTimeout) {
-                    clearTimeout(State.toastTimeout);
-                }
+                    try {
+                        const q = query(
+                            collection(db, 'followers'),
+                            where('followerId', '==', State.profileOwner)
+                        );
+                        const snapshot = await getDocs(q);
+                        
+                        if (snapshot.empty) {
+                            Elements.followingList.innerHTML = '<div class="text-center p-4">Not following anyone</div>';
+                            return;
+                        }
+                        
+                        const followingIds = snapshot.docs.map(doc => doc.data().followingId);
+                        const following = await this.getUserProfiles(followingIds);
+                        
+                        if (following.length === 0) {
+                            Elements.followingList.innerHTML = '<div class="text-center p-4">No followed users found</div>';
+                            return;
+                        }
+                        
+                        Elements.followingList.innerHTML = following.map(user => `
+                            <div class="modal-user-item" onclick="window.UserManager.viewProfile('${user.uid}')">
+                                <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
+                                <div class="modal-user-info">
+                                    <div class="modal-user-name">${user.displayName || 'User'}</div>
+                                    <div class="modal-user-email">${user.email || ''}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                        
+                    } catch (error) {
+                        console.error('Error loading following:', error);
+                        Elements.followingList.innerHTML = '<div class="text-center p-4 text-error">Error loading following</div>';
+                    }
+                },
                 
-                Elements.toast.className = `toast toast-${type}`;
-                Elements.toastMessage.textContent = message;
-                Elements.toast.classList.add('show');
-                
-                State.toastTimeout = setTimeout(() => {
-                    Elements.toast.classList.remove('show');
-                }, 3000);
-            },
-            
-            closeToast() {
-                if (State.toastTimeout) {
-                    clearTimeout(State.toastTimeout);
+                async getUserProfiles(userIds) {
+                    const profiles = [];
+                    for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
+                        const batch = userIds.slice(i, i + BATCH_SIZE);
+                        const promises = batch.map(id => getDoc(doc(db, 'users', id)));
+                        const snapshots = await Promise.all(promises);
+                        snapshots.forEach(snap => {
+                            if (snap.exists()) {
+                                profiles.push({ uid: snap.id, ...snap.data() });
+                            }
+                        });
+                    }
+                    return profiles;
                 }
-                Elements.toast.classList.remove('show');
-            },
-            
-            closeModal(modalId) {
-                document.getElementById(modalId).classList.remove('active');
-            },
-            
-            updateNav() {
-                const isAdmin = State.currentUser?.email === ADMIN_EMAIL;
+            };
+
+            // ==================== USER MANAGER ====================
+            const UserManager = {
+                async loadAllUsers() {
+                    try {
+                        const snapshot = await getDocs(collection(db, 'users'));
+                        State.allUsers = snapshot.docs.map(doc => ({
+                            uid: doc.id,
+                            ...doc.data()
+                        }));
+                        console.log(`Loaded ${State.allUsers.length} users`);
+                    } catch (error) {
+                        console.error('Error loading users:', error);
+                        State.allUsers = [];
+                    }
+                },
                 
-                Elements.nav.innerHTML = `
-                    <button class="btn btn-icon btn-secondary" id="themeToggle" onclick="ThemeManager.toggle()" title="Theme">
-                        <i class="fas fa-${State.theme === 'dark' ? 'sun' : 'moon'}"></i>
-                    </button>
-                    ${State.currentUser ? `
-                        <a href="?id=${State.currentUser.uid}" class="btn btn-primary">Profile</a>
-                        ${isAdmin ? `
-                            <button class="btn btn-secondary" onclick="AdminManager.showPanel()">Admin</button>
-                        ` : ''}
-                        <button class="btn btn-secondary" onclick="AuthManager.logout()">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
-                    ` : `
-                        <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-secondary">Sign In</a>
-                        <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-primary">Sign Up</a>
-                    `}
-                `;
-                
-                ThemeManager.updateNavIcon();
-            }
-        };
-
-        // ==================== INITIALIZATION ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Reverbit Profile initializing...');
-            
-            ThemeManager.init();
-            
-            // Initialize auth
-            AuthManager.init();
-
-            // Search input
-            Elements.searchInput.addEventListener('input', (e) => {
-                clearTimeout(State.searchTimeout);
-                State.searchTimeout = setTimeout(() => {
-                    SearchManager.search(e.target.value);
-                }, SEARCH_DEBOUNCE_MS);
-            });
-
-            // Close search on outside click
-            document.addEventListener('click', (e) => {
-                if (!Elements.searchResults.contains(e.target) && !Elements.searchInput.contains(e.target)) {
+                viewProfile(userId) {
+                    window.location.href = `?id=${userId}`;
                     Elements.searchResults.classList.remove('show');
+                    Elements.searchInput.value = '';
                 }
+            };
+
+            // ==================== SEARCH MANAGER ====================
+            const SearchManager = {
+                search(query) {
+                    query = query.trim().toLowerCase();
+                    
+                    if (!query || query.length < 2) {
+                        Elements.searchResults.classList.remove('show');
+                        return;
+                    }
+                    
+                    Elements.searchResults.innerHTML = '<div class="p-4 text-center">Searching...</div>';
+                    Elements.searchResults.classList.add('show');
+                    
+                    setTimeout(() => {
+                        try {
+                            const results = this.performSearch(query);
+                            this.displayResults(results, query);
+                        } catch (error) {
+                            console.error('Search error:', error);
+                            Elements.searchResults.innerHTML = '<div class="p-4 text-center text-error">Error searching</div>';
+                        }
+                    }, 100);
+                },
+                
+                performSearch(query) {
+                    return State.allUsers
+                        .filter(user => {
+                            if (!user.isPublic && user.uid !== State.currentUser?.uid) return false;
+                            
+                            const searchable = [
+                                user.displayName,
+                                user.email,
+                                user.username
+                            ].filter(Boolean).join(' ').toLowerCase();
+                            
+                            return searchable.includes(query);
+                        })
+                        .slice(0, MAX_SEARCH_RESULTS);
+                },
+                
+                displayResults(results, query) {
+                    if (results.length === 0) {
+                        Elements.searchResults.innerHTML = `<div class="p-4 text-center">No users found</div>`;
+                        return;
+                    }
+                    
+                    Elements.searchResults.innerHTML = results.map(user => `
+                        <div class="search-result-item" onclick="window.UserManager.viewProfile('${user.uid}')">
+                            <img src="${ProfileManager.getAvatarUrl(user)}" class="search-result-avatar">
+                            <div class="search-result-info">
+                                <div class="search-result-name">${user.displayName || 'User'}</div>
+                                <div class="search-result-email">${user.email || ''}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            };
+
+            // ==================== ADMIN MANAGER ====================
+            const AdminManager = {
+                async showPanel() {
+                    if (State.currentUser?.email !== ADMIN_EMAIL) {
+                        UIManager.showToast('Admin access required', 'error');
+                        return;
+                    }
+
+                    UIManager.showLoading(true);
+                    
+                    await UserManager.loadAllUsers();
+                    
+                    const stats = this.calculateStats();
+                    
+                    Elements.contentArea.innerHTML = `
+                        <div class="admin-section">
+                            <h2 class="section-title">Admin Verification Panel</h2>
+                            
+                            <div class="admin-stats">
+                                <div class="stat-card">
+                                    <div class="stat-card-value">${stats.total}</div>
+                                    <div class="stat-card-label">Total</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-value">${stats.verified}</div>
+                                    <div class="stat-card-label">Verified</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-value">${stats.premium}</div>
+                                    <div class="stat-card-label">Premium</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-value">${stats.activeToday}</div>
+                                    <div class="stat-card-label">Active</div>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-filters">
+                                <button class="filter-btn active" onclick="window.AdminManager.filterUsers('all')">All</button>
+                                <button class="filter-btn" onclick="window.AdminManager.filterUsers('verified')">Verified</button>
+                                <button class="filter-btn" onclick="window.AdminManager.filterUsers('premium')">Premium</button>
+                                <button class="filter-btn" onclick="window.AdminManager.filterUsers('unverified')">Unverified</button>
+                            </div>
+                            
+                            <div class="users-list" id="usersList"></div>
+                            
+                            <div class="pagination">
+                                <button class="pagination-btn" id="prevPage" onclick="window.AdminManager.changePage('prev')" disabled>Prev</button>
+                                <span class="pagination-info" id="pageInfo">Page 1</span>
+                                <button class="pagination-btn" id="nextPage" onclick="window.AdminManager.changePage('next')">Next</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    this.filterUsers('all');
+                    UIManager.showLoading(false);
+                },
+                
+                calculateStats() {
+                    const today = new Date().toDateString();
+                    return {
+                        total: State.allUsers.length,
+                        verified: State.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic').length,
+                        premium: State.allUsers.filter(u => u.verifiedLevel === 'premium').length,
+                        activeToday: State.allUsers.filter(u => {
+                            if (!u.lastActive) return false;
+                            try {
+                                const last = u.lastActive.seconds ? new Date(u.lastActive.seconds * 1000) : new Date(u.lastActive);
+                                return last.toDateString() === today;
+                            } catch {
+                                return false;
+                            }
+                        }).length
+                    };
+                },
+                
+                filterUsers(filter) {
+                    State.currentFilter = filter;
+                    
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter));
+                    });
+                    
+                    switch (filter) {
+                        case 'verified':
+                            State.filteredUsers = State.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic');
+                            break;
+                        case 'premium':
+                            State.filteredUsers = State.allUsers.filter(u => u.verifiedLevel === 'premium');
+                            break;
+                        case 'unverified':
+                            State.filteredUsers = State.allUsers.filter(u => !u.verified && !u.verifiedLevel);
+                            break;
+                        default:
+                            State.filteredUsers = [...State.allUsers];
+                    }
+                    
+                    State.currentPage = 1;
+                    this.renderUsers();
+                },
+                
+                renderUsers() {
+                    const start = (State.currentPage - 1) * USERS_PER_PAGE;
+                    const end = start + USERS_PER_PAGE;
+                    const paginatedUsers = State.filteredUsers.slice(start, end);
+                    const totalPages = Math.ceil(State.filteredUsers.length / USERS_PER_PAGE);
+                    
+                    const prevBtn = document.getElementById('prevPage');
+                    const nextBtn = document.getElementById('nextPage');
+                    const pageInfo = document.getElementById('pageInfo');
+                    
+                    if (prevBtn && nextBtn && pageInfo) {
+                        prevBtn.disabled = State.currentPage === 1;
+                        nextBtn.disabled = State.currentPage === totalPages || totalPages === 0;
+                        pageInfo.textContent = `Page ${State.currentPage} of ${totalPages || 1}`;
+                    }
+                    
+                    const usersList = document.getElementById('usersList');
+                    if (!usersList) return;
+                    
+                    if (paginatedUsers.length === 0) {
+                        usersList.innerHTML = '<div class="text-center p-4">No users found</div>';
+                        return;
+                    }
+                    
+                    usersList.innerHTML = paginatedUsers.map(user => {
+                        const level = ProfileManager.getVerificationLevel(user);
+                        return `
+                            <div class="user-row">
+                                <div class="user-row-info">
+                                    <img src="${ProfileManager.getAvatarUrl(user)}" class="user-row-avatar">
+                                    <div class="user-row-details">
+                                        <div class="user-row-name">
+                                            ${user.displayName || 'User'}
+                                            ${ProfileManager.getBadges(user)}
+                                        </div>
+                                        <div class="user-row-email">${user.email || ''}</div>
+                                    </div>
+                                </div>
+                                <div class="user-row-actions">
+                                    <button class="btn btn-icon btn-secondary" onclick="window.UserManager.viewProfile('${user.uid}')" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-secondary" onclick="window.AdminManager.openVerifyModal('${user.uid}', '${ProfileManager.escapeHtml(user.displayName || 'User')}', '${level}')" title="Verify">
+                                        <i class="fas fa-${level === 'premium' ? 'crown' : 'shield-alt'}"></i>
+                                    </button>
+                                    ${user.email !== ADMIN_EMAIL ? `
+                                        <button class="btn btn-icon btn-error" onclick="window.AdminManager.openDeleteModal('${user.uid}', '${ProfileManager.escapeHtml(user.displayName || 'User')}')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                },
+                
+                changePage(direction) {
+                    const totalPages = Math.ceil(State.filteredUsers.length / USERS_PER_PAGE);
+                    
+                    if (direction === 'prev' && State.currentPage > 1) {
+                        State.currentPage--;
+                    } else if (direction === 'next' && State.currentPage < totalPages) {
+                        State.currentPage++;
+                    }
+                    
+                    this.renderUsers();
+                },
+                
+                openVerifyModal(userId, userName, currentLevel) {
+                    State.selectedUserId = userId;
+                    State.isVerifying = false;
+                    
+                    Elements.modalUserInfo.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">
+                                ${(userName || 'U').charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <h4>${userName}</h4>
+                                <p class="text-tertiary">ID: ${userId}</p>
+                                <p class="text-tertiary">Current: ${currentLevel === 'premium' ? 'Premium' : currentLevel === 'basic' ? 'Basic' : 'None'}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    Elements.verifyLevel.value = currentLevel;
+                    Elements.verifyNotes.value = '';
+                    
+                    Elements.verifyModal.classList.add('active');
+                },
+                
+                async saveVerification() {
+                    if (State.isVerifying) return;
+                    if (!State.selectedUserId) return;
+                    
+                    State.isVerifying = true;
+                    const btn = Elements.saveVerificationBtn;
+                    const originalText = btn.innerHTML;
+                    
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    
+                    try {
+                        const level = Elements.verifyLevel.value;
+                        const notes = Elements.verifyNotes.value;
+                        
+                        const updateData = {
+                            verifiedLevel: level === 'none' ? null : level,
+                            verified: level !== 'none',
+                            verifiedAt: level !== 'none' ? serverTimestamp() : null,
+                            verifiedBy: level !== 'none' ? ADMIN_EMAIL : null,
+                            verificationNotes: notes || null,
+                            premiumVerified: level === 'premium',
+                            updatedAt: serverTimestamp()
+                        };
+                        
+                        const userRef = doc(db, 'users', State.selectedUserId);
+                        await updateDoc(userRef, updateData);
+                        
+                        UIManager.showToast(`User ${level === 'premium' ? 'Premium Verified' : level === 'basic' ? 'Verified' : 'Unverified'}!`);
+                        
+                        // Refresh admin panel
+                        if (Elements.contentArea.querySelector('.admin-section')) {
+                            await UserManager.loadAllUsers();
+                            this.filterUsers(State.currentFilter);
+                        }
+                        
+                        // Refresh profile if viewing
+                        if (State.profileData?.uid === State.selectedUserId) {
+                            const docRef = doc(db, 'users', State.selectedUserId);
+                            const docSnap = await getDoc(docRef);
+                            State.profileData = { uid: docSnap.id, ...docSnap.data() };
+                            ProfileManager.renderProfile();
+                        }
+                        
+                        UIManager.closeModal('verifyModal');
+                        
+                    } catch (error) {
+                        console.error('Verification error:', error);
+                        UIManager.showToast('Error: ' + error.message, 'error');
+                    } finally {
+                        State.isVerifying = false;
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                },
+                
+                openDeleteModal(userId, userName) {
+                    State.selectedUserId = userId;
+                    State.isDeleting = false;
+                    Elements.deleteUserInfo.innerHTML = `<strong>User:</strong> ${userName}<br><strong>ID:</strong> ${userId}`;
+                    Elements.deleteModal.classList.add('active');
+                },
+                
+                async confirmDelete() {
+                    if (State.isDeleting) return;
+                    if (!State.selectedUserId) return;
+                    
+                    State.isDeleting = true;
+                    const btn = document.querySelector('#deleteModal .btn-error');
+                    const originalText = btn.innerHTML;
+                    
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+                    
+                    try {
+                        const userRef = doc(db, 'users', State.selectedUserId);
+                        await deleteDoc(userRef);
+                        UIManager.showToast('User deleted');
+                        
+                        if (Elements.contentArea.querySelector('.admin-section')) {
+                            await UserManager.loadAllUsers();
+                            this.filterUsers(State.currentFilter);
+                        }
+                        
+                        UIManager.closeModal('deleteModal');
+                        
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        UIManager.showToast('Error: ' + error.message, 'error');
+                    } finally {
+                        State.isDeleting = false;
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                }
+            };
+
+            // ==================== AVATAR MANAGER ====================
+            const AvatarManager = {
+                handleUpload() {
+                    if (!State.currentUser) {
+                        UIManager.showToast('Please sign in', 'info');
+                        return;
+                    }
+                    
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = (e) => this.upload(e.target.files[0]);
+                    input.click();
+                },
+                
+                async upload(file) {
+                    if (!file || !State.currentUser) return;
+                    
+                    if (State.isUploading) return;
+                    
+                    const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
+                    
+                    if (file.size > MAX_AVATAR_SIZE) {
+                        UIManager.showToast('Image too large (max 5MB)', 'error');
+                        return;
+                    }
+                    
+                    if (!file.type.startsWith('image/')) {
+                        UIManager.showToast('Please select an image', 'error');
+                        return;
+                    }
+                    
+                    State.isUploading = true;
+                    UIManager.showToast('Uploading...', 'info');
+                    
+                    try {
+                        // Convert to base64
+                        const reader = new FileReader();
+                        
+                        const result = await new Promise((resolve, reject) => {
+                            reader.onload = () => resolve(reader.result);
+                            reader.onerror = () => reject(new Error('Failed to read file'));
+                            reader.readAsDataURL(file);
+                        });
+                        
+                        const userRef = doc(db, 'users', State.currentUser.uid);
+                        await updateDoc(userRef, {
+                            photoURL: result,
+                            updatedAt: serverTimestamp()
+                        });
+                        
+                        UIManager.showToast('Profile picture updated!', 'success');
+                        
+                        // Refresh profile
+                        if (State.profileData?.uid === State.currentUser.uid) {
+                            const docRef = doc(db, 'users', State.currentUser.uid);
+                            const docSnap = await getDoc(docRef);
+                            State.profileData = { uid: docSnap.id, ...docSnap.data() };
+                            ProfileManager.renderProfile();
+                        }
+                        
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        UIManager.showToast('Upload failed', 'error');
+                    } finally {
+                        State.isUploading = false;
+                    }
+                }
+            };
+
+            // ==================== PRIVACY MANAGER ====================
+            const PrivacyManager = {
+                async togglePrivacy() {
+                    if (!State.isOwner || !State.profileData) return;
+                    
+                    try {
+                        const newStatus = !State.profileData.isPublic;
+                        
+                        const userRef = doc(db, 'users', State.profileData.uid);
+                        await updateDoc(userRef, {
+                            isPublic: newStatus,
+                            updatedAt: serverTimestamp()
+                        });
+                        
+                        State.profileData.isPublic = newStatus;
+                        ProfileManager.renderProfile();
+                        
+                        UIManager.showToast(`Profile is now ${newStatus ? 'public' : 'private'}`);
+                        
+                    } catch (error) {
+                        console.error('Privacy error:', error);
+                        UIManager.showToast('Error updating privacy', 'error');
+                    }
+                }
+            };
+
+            // ==================== SHARE MANAGER ====================
+            const ShareManager = {
+                openModal() {
+                    Elements.shareUrl.textContent = window.location.href;
+                    Elements.shareModal.classList.add('active');
+                },
+                
+                async copyLink() {
+                    try {
+                        await navigator.clipboard.writeText(Elements.shareUrl.textContent);
+                        UIManager.showToast('Link copied!');
+                        UIManager.closeModal('shareModal');
+                    } catch (error) {
+                        console.error('Copy error:', error);
+                        UIManager.showToast('Failed to copy', 'error');
+                    }
+                },
+                
+                shareViaTwitter() {
+                    const url = encodeURIComponent(Elements.shareUrl.textContent);
+                    window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
+                },
+                
+                shareViaFacebook() {
+                    const url = encodeURIComponent(Elements.shareUrl.textContent);
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+                },
+                
+                shareViaLinkedIn() {
+                    const url = encodeURIComponent(Elements.shareUrl.textContent);
+                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+                }
+            };
+
+            // ==================== UI MANAGER ====================
+            const UIManager = {
+                showLoading(show) {
+                    if (Elements.loading) {
+                        Elements.loading.classList.toggle('hidden', !show);
+                    }
+                    // Always ensure main content is visible when loading is hidden
+                    if (!show && Elements.mainContent) {
+                        Elements.mainContent.style.display = 'block';
+                    }
+                },
+                
+                hideAllSections() {
+                    if (Elements.contentArea) {
+                        Elements.contentArea.innerHTML = '';
+                    }
+                },
+                
+                showLanding() {
+                    if (!Elements.contentArea) return;
+                    
+                    Elements.contentArea.innerHTML = `
+                        <div class="profile-section text-center">
+                            <i class="fas fa-users" style="font-size: 5rem; color: var(--primary-500); margin-bottom: var(--space-6);"></i>
+                            <h2 class="mb-4">Welcome to Reverbit</h2>
+                            <p class="text-secondary mb-6">Sign in to view your profile and connect with others.</p>
+                            <div class="flex gap-3 justify-center">
+                                <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-primary">Sign In</a>
+                                <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-secondary">Sign Up</a>
+                            </div>
+                        </div>
+                    `;
+                },
+                
+                showNotFound(message = 'Profile not found') {
+                    if (!Elements.contentArea) return;
+                    
+                    Elements.contentArea.innerHTML = `
+                        <div class="not-found">
+                            <i class="fas fa-user-slash not-found-icon"></i>
+                            <h2 class="not-found-title">Profile Not Found</h2>
+                            <p class="not-found-text">${message}</p>
+                            <button class="btn btn-primary" onclick="window.location.href='/'">Go Home</button>
+                        </div>
+                    `;
+                },
+                
+                showToast(message, type = 'success') {
+                    if (!Elements.toast || !Elements.toastMessage) return;
+                    
+                    if (State.toastTimeout) {
+                        clearTimeout(State.toastTimeout);
+                    }
+                    
+                    Elements.toast.className = `toast toast-${type}`;
+                    Elements.toastMessage.textContent = message;
+                    Elements.toast.classList.add('show');
+                    
+                    State.toastTimeout = setTimeout(() => {
+                        Elements.toast.classList.remove('show');
+                    }, 3000);
+                },
+                
+                closeToast() {
+                    if (State.toastTimeout) {
+                        clearTimeout(State.toastTimeout);
+                    }
+                    if (Elements.toast) {
+                        Elements.toast.classList.remove('show');
+                    }
+                },
+                
+                closeModal(modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.classList.remove('active');
+                    }
+                },
+                
+                updateNav() {
+                    if (!Elements.nav) return;
+                    
+                    const isAdmin = State.currentUser?.email === ADMIN_EMAIL;
+                    
+                    Elements.nav.innerHTML = `
+                        <button class="btn btn-icon btn-secondary" id="themeToggle" onclick="window.ThemeManager.toggle()" title="Theme">
+                            <i class="fas fa-${State.theme === 'dark' ? 'sun' : 'moon'}"></i>
+                        </button>
+                        ${State.currentUser ? `
+                            <a href="?id=${State.currentUser.uid}" class="btn btn-primary">Profile</a>
+                            ${isAdmin ? `
+                                <button class="btn btn-secondary" onclick="window.AdminManager.showPanel()">Admin</button>
+                            ` : ''}
+                            <button class="btn btn-secondary" onclick="window.AuthManager.logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        ` : `
+                            <a href="https://aditya-cmd-max.github.io/signin" class="btn btn-secondary">Sign In</a>
+                            <a href="https://aditya-cmd-max.github.io/signup" class="btn btn-primary">Sign Up</a>
+                        `}
+                    `;
+                    
+                    ThemeManager.updateNavIcon();
+                }
+            };
+
+            // ==================== INITIALIZATION ====================
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('🚀 Reverbit Profile initializing...');
+                
+                // Initialize theme
+                ThemeManager.init();
+
+                // Initialize auth
+                AuthManager.init();
+
+                // Search input
+                if (Elements.searchInput) {
+                    Elements.searchInput.addEventListener('input', (e) => {
+                        clearTimeout(State.searchTimeout);
+                        State.searchTimeout = setTimeout(() => {
+                            SearchManager.search(e.target.value);
+                        }, SEARCH_DEBOUNCE_MS);
+                    });
+                }
+
+                // Close search on outside click
+                document.addEventListener('click', (e) => {
+                    if (Elements.searchResults && Elements.searchInput && 
+                        !Elements.searchResults.contains(e.target) && 
+                        !Elements.searchInput.contains(e.target)) {
+                        Elements.searchResults.classList.remove('show');
+                    }
+                });
+
+                console.log('✅ Reverbit Profile initialized');
             });
 
-            console.log('Reverbit Profile initialized');
-        });
+            // ==================== EXPOSE GLOBALLY ====================
+            window.ThemeManager = ThemeManager;
+            window.AuthManager = AuthManager;
+            window.ProfileManager = ProfileManager;
+            window.FollowManager = FollowManager;
+            window.UserManager = UserManager;
+            window.AdminManager = AdminManager;
+            window.AvatarManager = AvatarManager;
+            window.PrivacyManager = PrivacyManager;
+            window.ShareManager = ShareManager;
+            window.UIManager = UIManager;
 
-        // ==================== GLOBAL FUNCTIONS ====================
-        window.ThemeManager = ThemeManager;
-        window.AuthManager = AuthManager;
-        window.ProfileManager = ProfileManager;
-        window.FollowManager = FollowManager;
-        window.UserManager = UserManager;
-        window.AdminManager = AdminManager;
-        window.AvatarManager = AvatarManager;
-        window.PrivacyManager = PrivacyManager;
-        window.ShareManager = ShareManager;
-        window.UIManager = UIManager;
-        
-        window.closeModal = (modalId) => UIManager.closeModal(modalId);
-        window.closeToast = () => UIManager.closeToast();
-        window.saveVerification = () => AdminManager.saveVerification();
-        window.confirmDelete = () => AdminManager.confirmDelete();
-        window.copyShareLink = () => ShareManager.copyLink();
-        window.shareViaTwitter = () => ShareManager.shareViaTwitter();
-        window.shareViaFacebook = () => ShareManager.shareViaFacebook();
-        window.shareViaLinkedIn = () => ShareManager.shareViaLinkedIn();
+            // Modal functions
+            window.closeModal = (modalId) => UIManager.closeModal(modalId);
+            window.closeToast = () => UIManager.closeToast();
+            window.saveVerification = () => AdminManager.saveVerification();
+            window.confirmDelete = () => AdminManager.confirmDelete();
+            window.copyShareLink = () => ShareManager.copyLink();
+            window.shareViaTwitter = () => ShareManager.shareViaTwitter();
+            window.shareViaFacebook = () => ShareManager.shareViaFacebook();
+            window.shareViaLinkedIn = () => ShareManager.shareViaLinkedIn();
+
+            console.log('🔥 Firebase initialized and ready');
+
+        } catch (error) {
+            console.error('❌ Fatal error initializing Firebase:', error);
+            document.getElementById('loading').innerHTML = `
+                <div class="text-error">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3>Failed to initialize</h3>
+                    <p>${error.message}</p>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
