@@ -404,19 +404,19 @@ this.toggleTheme = this.toggleTheme.bind(this);
     }
 
     handleOnline() {
-      this.state.isOnline = true;
-      console.log('📡 [Auth] Connection restored - Online');
-      this.showToast('Connection restored', 'success');
-      this.processOfflineQueue();
-      this.notifyOnlineListeners(true);
-    }
+  this.state.isOnline = true;
+  console.log('📡 [Auth] Connection restored - Online');
+  this.showToast('Connection restored', 'success');
+  this.processOfflineQueue();
+  this.notifyOnlineListeners(true);
+}
 
-    handleOffline() {
-      this.state.isOnline = false;
-      console.log('📡 [Auth] Connection lost - Offline');
-      this.showToast('You are offline. Changes will sync when connection returns.', 'warning');
-      this.notifyOnlineListeners(false);
-    }
+   handleOffline() {
+  this.state.isOnline = false;
+  console.log('📡 [Auth] Connection lost - Offline');
+  this.showToast('You are offline. Changes will sync when connection returns.', 'warning');
+  this.notifyOnlineListeners(false);
+}
 
     handleVisibilityChange() {
       console.log('👁️ [Auth] Page became visible');
