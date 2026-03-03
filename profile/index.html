@@ -887,16 +887,18 @@
             gap: var(--space-sm);
             flex-wrap: wrap;
         }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 16px;
-            border-radius: var(--radius-pill);
-            font-size: 0.9rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
+       .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    flex: 0 0 auto;   /* 👈 ADD THIS */
+}
         .badge-verified {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: white;
