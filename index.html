@@ -293,6 +293,7 @@
             opacity: 0.15;
             color: var(--md-primary);
             filter: drop-shadow(0 0 20px rgba(var(--md-primary-rgb), 0.2));
+            transition: transform 0.1s ease-out;
         }
         
         .motif-1 {
@@ -453,7 +454,7 @@
             font-family: var(--md-font-display);
             font-size: clamp(1.4rem, 3vw, 1.8rem);
             font-weight: 700;
-            background: White;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -2313,6 +2314,38 @@
         .delay-4 { transition-delay: 0.4s; }
         .delay-5 { transition-delay: 0.5s; }
         
+        /* Interactive Hover Effects */
+        .hover-scale {
+            transition: var(--transition-bounce);
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        .interactive-tool-card {
+            cursor: pointer;
+        }
+        
+        /* New interactive elements */
+        .tool-card {
+            cursor: pointer;
+        }
+        .tool-card .quick-preview {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: 5px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tool-card:hover .quick-preview {
+            opacity: 1;
+        }
+        
         /* Responsive Design */
         @media (max-width: 1024px) {
             .nav-links {
@@ -2446,7 +2479,7 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo">
-            <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit">
+            <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
         </div>
         <div class="loading-text">Reverbit</div>
         <div class="loading-bar">
@@ -3233,7 +3266,7 @@
     <nav class="navbar" id="navbar">
         <a href="#home" class="nav-brand">
             <div class="nav-logo">
-                <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
+                <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit Logo">
             </div>
             <div class="nav-brand-text">
                 <span class="nav-brand-name">Reverbit</span>
@@ -3245,15 +3278,15 @@
                 <span class="material-icons-round">home</span>
                 Home
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="nav-link">
+            <a href="https://aditya-cmd-max.github.io/circuit" class="nav-link">
                 <span class="material-icons-round">menu_book</span>
                 Blogs
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/about" class="nav-link">
+            <a href="https://aditya-cmd-max.github.io/about" class="nav-link">
                 <span class="material-icons-round">person</span>
                 The Creator
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="nav-link">
+            <a href="https://aditya-cmd-max.github.io/ecosystem" class="nav-link">
                 <span class="material-icons-round">build</span>
                 Tools
             </a>
@@ -3286,7 +3319,7 @@
         <div class="mobile-nav-header">
             <div class="nav-brand">
                 <div class="nav-logo">
-                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit">
+                    <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
                 </div>
                 <div class="nav-brand-text">
                     <span class="nav-brand-name">Reverbit</span>
@@ -3305,15 +3338,15 @@
                 <span class="material-icons-round">home</span>
                 Home
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="mobile-nav-link">
+            <a href="https://aditya-cmd-max.github.io/circuit" class="mobile-nav-link">
                 <span class="material-icons-round">menu_book</span>
                 Blogs
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/about" class="mobile-nav-link">
+            <a href="https://aditya-cmd-max.github.io/about" class="mobile-nav-link">
                 <span class="material-icons-round">person</span>
                 The Creator
             </a>
-            <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="mobile-nav-link">
+            <a href="https://aditya-cmd-max.github.io/ecosystem" class="mobile-nav-link">
                 <span class="material-icons-round">build</span>
                 Tools
             </a>
@@ -3338,7 +3371,7 @@
         <div class="hero-content">
             <div class="hero-logo-container">
                 <div class="hero-logo">
-                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo">
+                    <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit Logo">
                 </div>
             </div>
             
@@ -3384,7 +3417,7 @@
             </div>
             
             <div class="impact-grid">
-                <div class="impact-card reveal">
+                <div class="impact-card reveal" onclick="alert('Avg Rating 4.9 from 500+ daily users!')">
                     <div class="impact-icon">
                         <span class="material-icons-round">star</span>
                     </div>
@@ -3393,7 +3426,7 @@
                     <div class="impact-description">From 500+ Mails daily</div>
                 </div>
                 
-                <div class="impact-card reveal delay-1">
+                <div class="impact-card reveal delay-1" onclick="alert('500+ active accounts and growing!')">
                     <div class="impact-icon">
                         <span class="material-icons-round">people</span>
                     </div>
@@ -3402,7 +3435,7 @@
                     <div class="impact-description">Empowering content to increase curiosity.</div>
                 </div>
                 
-                <div class="impact-card reveal delay-2">
+                <div class="impact-card reveal delay-2" onclick="alert('Endless possibilities with AI Education')">
                     <div class="impact-icon">
                         <span class="material-icons-round">auto_awesome</span>
                     </div>
@@ -3430,122 +3463,128 @@
             
             <div class="tools-grid">
                 <!-- Clover AI -->
-                <div class="tool-card reveal">
+                <div class="tool-card reveal" onclick="window.open('https://aditya-cmd-max.github.io/cloverai/chat', '_blank')">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/clover.png" alt="Clover AI">
                     </div>
                     <h3 class="tool-name">Clover AI</h3>
                     <p class="tool-description">Intelligent tutoring system that adapts to each learner's needs with personalized learning paths.</p>
-                    <div class="tool-actions">
-                        <a href="https://aditya-cmd-max.github.io/cloverai/chat" class="tool-btn tool-btn-primary">
+                    <div class="tool-actions" onclick="event.stopPropagation();">
+                        <a href="https://aditya-cmd-max.github.io/cloverai/chat" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
                         </a>
-                        <a href="https://aditya-cmd-max.github.io/cloverai/" class="tool-btn">
+                        <a href="https://aditya-cmd-max.github.io/cloverai/" class="tool-btn" target="_blank">
                             <span class="material-icons-round">info</span>
                             Learn More
                         </a>
                     </div>
+                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- SkyCast -->
-                <div class="tool-card reveal delay-1">
+                <div class="tool-card reveal delay-1" onclick="window.open('https://aditya-cmd-max.github.io/exonovaweather/app', '_blank')">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/skycast.png" alt="SkyCast">
                     </div>
                     <h3 class="tool-name">SkyCast</h3>
                     <p class="tool-description">Interactive environmental science platform with real-world data visualization and predictive models.</p>
-                    <div class="tool-actions">
-                        <a href="https://aditya-cmd-max.github.io/exonovaweather/app" class="tool-btn tool-btn-primary">
+                    <div class="tool-actions" onclick="event.stopPropagation();">
+                        <a href="https://aditya-cmd-max.github.io/exonovaweather/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
                         </a>
-                        <a href="https://aditya-cmd-max.github.io/exonovaweather/" class="tool-btn">
+                        <a href="https://aditya-cmd-max.github.io/exonovaweather/" class="tool-btn" target="_blank">
                             <span class="material-icons-round">info</span>
                             Learn More
                         </a>
                     </div>
+                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- PopOut Pro -->
-                <div class="tool-card reveal delay-2">
+                <div class="tool-card reveal delay-2" onclick="window.open('https://aditya-cmd-max.github.io/popout/app.html', '_blank')">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/popout.png" alt="PopOut Pro">
                     </div>
                     <h3 class="tool-name">PopOut Pro</h3>
                     <p class="tool-description">AI-powered visual learning tool for creating engaging educational content with automatic diagram generation.</p>
-                    <div class="tool-actions">
-                        <a href="https://aditya-cmd-max.github.io/popout/app.html" class="tool-btn tool-btn-primary">
+                    <div class="tool-actions" onclick="event.stopPropagation();">
+                        <a href="https://aditya-cmd-max.github.io/popout/app.html" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
                         </a>
-                        <a href="https://aditya-cmd-max.github.io/popout/" class="tool-btn">
+                        <a href="https://aditya-cmd-max.github.io/popout/" class="tool-btn" target="_blank">
                             <span class="material-icons-round">info</span>
                             Learn More
                         </a>
                     </div>
+                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- Peo-TTS -->
-                <div class="tool-card reveal delay-3">
+                <div class="tool-card reveal delay-3" onclick="window.open('https://aditya-cmd-max.github.io/Peo/app', '_blank')">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/peo.png" alt="Peo-TTS">
                     </div>
                     <h3 class="tool-name">Peo-TTS</h3>
                     <p class="tool-description">Natural sounding text-to-speech for accessible learning materials with emotion and emphasis.</p>
-                    <div class="tool-actions">
-                        <a href="https://aditya-cmd-max.github.io/Peo/app" class="tool-btn tool-btn-primary">
+                    <div class="tool-actions" onclick="event.stopPropagation();">
+                        <a href="https://aditya-cmd-max.github.io/Peo/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
                         </a>
-                        <a href="https://aditya-cmd-max.github.io/Peo/" class="tool-btn">
+                        <a href="https://aditya-cmd-max.github.io/Peo/" class="tool-btn" target="_blank">
                             <span class="material-icons-round">info</span>
                             Learn More
                         </a>
                     </div>
+                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- Mindscribe -->
-                <div class="tool-card reveal delay-4">
+                <div class="tool-card reveal delay-4" onclick="window.open('https://aditya-cmd-max.github.io/mindscribe/app', '_blank')">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/mindscribe.png" alt="Mindscribe">
                     </div>
                     <h3 class="tool-name">Mindscribe</h3>
                     <p class="tool-description">Your digital notebook that makes everyday learning easier with AI-powered note-taking and organization.</p>
-                    <div class="tool-actions">
-                        <a href="https://aditya-cmd-max.github.io/mindscribe/app" class="tool-btn tool-btn-primary">
+                    <div class="tool-actions" onclick="event.stopPropagation();">
+                        <a href="https://aditya-cmd-max.github.io/mindscribe/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
                         </a>
-                        <a href="https://aditya-cmd-max.github.io/mindscribe/" class="tool-btn">
+                        <a href="https://aditya-cmd-max.github.io/mindscribe/" class="tool-btn" target="_blank">
                             <span class="material-icons-round">info</span>
                             Learn More
                         </a>
                     </div>
+                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- Clover Studio -->
-                <div class="tool-card reveal delay-5">
+                <div class="tool-card reveal delay-5" onclick="window.open('https://aditya-cmd-max.github.io/clover/app', '_blank')">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/cloverstudio.png" alt="Clover Studio">
                     </div>
                     <h3 class="tool-name">Clover Studio</h3>
                     <p class="tool-description">Transform creative concepts into structured learning experiences with intelligent creative guidance.</p>
-                    <div class="tool-actions">
-                        <a href="https://aditya-cmd-max.github.io/clover/app" class="tool-btn tool-btn-primary">
+                    <div class="tool-actions" onclick="event.stopPropagation();">
+                        <a href="https://aditya-cmd-max.github.io/clover/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
                         </a>
-                        <a href="https://aditya-cmd-max.github.io/clover/" class="tool-btn">
+                        <a href="https://aditya-cmd-max.github.io/clover/" class="tool-btn" target="_blank">
                             <span class="material-icons-round">info</span>
                             Learn More
                         </a>
                     </div>
+                    <span class="quick-preview">Quick Preview</span>
                 </div>
             </div>
             
             <div class="all-tools-btn">
-                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="btn btn-outline btn-large">
+                <a href="https://aditya-cmd-max.github.io/ecosystem" class="btn btn-outline btn-large">
                     <span class="material-icons-round">apps</span>
                     All Tools
                     <span class="material-icons-round">arrow_forward</span>
@@ -3569,7 +3608,7 @@
             </div>
             
             <div class="mission-grid">
-                <div class="mission-card reveal">
+                <div class="mission-card reveal" onclick="alert('Our Mission: Democratize knowledge with AI across India.')">
                     <div class="mission-icon">
                         <span class="material-icons-round">flag</span>
                     </div>
@@ -3577,7 +3616,7 @@
                     <p>Leveraging AI to democratize knowledge and transform traditional learning paradigms across India.</p>
                 </div>
                 
-                <div class="mission-card reveal delay-1">
+                <div class="mission-card reveal delay-1" onclick="alert('Our Vision: Personalized, accessible, engaging education for every student.')">
                     <div class="mission-icon">
                         <span class="material-icons-round">visibility</span>
                     </div>
@@ -3585,7 +3624,7 @@
                     <p>Making education personalized, accessible, and engaging for every student, everywhere.</p>
                 </div>
                 
-                <div class="mission-card reveal delay-2">
+                <div class="mission-card reveal delay-2" onclick="alert('Innovation: Pushing educational boundaries with cutting-edge technology.')">
                     <div class="mission-icon">
                         <span class="material-icons-round">lightbulb</span>
                     </div>
@@ -3613,7 +3652,7 @@
         <div class="testimonials-track">
             <div class="testimonials-slider">
                 <!-- Testimonial 1 -->
-                <div class="testimonial-card">
+                <div class="testimonial-card" onclick="alert('Prof. Ramesh K. from IIT Delhi')">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">Reverbit has completely transformed how I prepare my lectures. The AI writer saves me hours every week and the quality is exceptional.</p>
                     <div class="testimonial-author">
@@ -3626,7 +3665,7 @@
                 </div>
                 
                 <!-- Testimonial 2 -->
-                <div class="testimonial-card">
+                <div class="testimonial-card" onclick="alert('Sneha Mehta, Ed-tech Founder, Pune')">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">The Smart Quiz Engine is a game-changer. My students are more engaged and I can track progress in real time. Absolutely brilliant.</p>
                     <div class="testimonial-author">
@@ -3639,7 +3678,7 @@
                 </div>
                 
                 <!-- Testimonial 3 -->
-                <div class="testimonial-card">
+                <div class="testimonial-card" onclick="alert('Arjun Verma, Educator & YouTuber, Bengaluru')">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">Finally an Indian platform that rivals global products. The design is refined, the AI is sharp, and it keeps getting better. Proud to use it.</p>
                     <div class="testimonial-author">
@@ -3652,7 +3691,7 @@
                 </div>
                 
                 <!-- Duplicate for infinite scroll -->
-                <div class="testimonial-card">
+                <div class="testimonial-card" onclick="alert('Prof. Ramesh K. from IIT Delhi')">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">Reverbit has completely transformed how I prepare my lectures. The AI writer saves me hours every week and the quality is exceptional.</p>
                     <div class="testimonial-author">
@@ -3683,7 +3722,7 @@
             <div class="founder-content">
                 <div class="founder-image-frame">
                     <div class="founder-image">
-                        <img src="https://aditya-cmd-max.github.io/reverbit/adityajha.jpg" alt="Aditya Jha" onerror="this.style.display='none'; this.parentElement.innerHTML='AJ'">
+                        <img src="https://aditya-cmd-max.github.io/adityajha.jpg" alt="Aditya Jha" onerror="this.style.display='none'; this.parentElement.innerHTML='AJ'">
                     </div>
                     <div class="orbit-ring"></div>
                 </div>
@@ -3696,33 +3735,33 @@
                 </p>
                 
                 <div class="founder-tags">
-                    <span class="founder-tag">
+                    <span class="founder-tag" onclick="alert('AI/ML enthusiast and practitioner')">
                         <span class="material-icons-round">psychology</span>
                         AI/ML
                     </span>
-                    <span class="founder-tag">
+                    <span class="founder-tag" onclick="alert('Passionate about education for all')">
                         <span class="material-icons-round">school</span>
                         Education
                     </span>
-                    <span class="founder-tag">
+                    <span class="founder-tag" onclick="alert('Full-stack web developer')">
                         <span class="material-icons-round">code</span>
                         Web Dev
                     </span>
-                    <span class="founder-tag">
+                    <span class="founder-tag" onclick="alert('UX designer with an eye for detail')">
                         <span class="material-icons-round">design_services</span>
                         UX Design
                     </span>
-                    <span class="founder-tag">
+                    <span class="founder-tag" onclick="alert('Building the future of EdTech')">
                         <span class="material-icons-round">devices</span>
                         EdTech
                     </span>
-                    <span class="founder-tag">
+                    <span class="founder-tag" onclick="alert('Proudly made in India')">
                         <span class="material-icons-round">flag</span>
                         Made in India
                     </span>
                 </div>
                 
-                <a href="https://aditya-cmd-max.github.io/reverbit/about/" class="btn btn-outline btn-large">
+                <a href="https://aditya-cmd-max.github.io/about/" class="btn btn-outline btn-large">
                     <span class="material-icons-round">person</span>
                     Read More About Aditya
                 </a>
@@ -3744,7 +3783,7 @@
                 <p class="section-subtitle">Deep dives into AI, web dev, and the future of tech — straight from the creator's desk.</p>
             </div>
             
-            <div class="youtube-card">
+            <div class="youtube-card" onclick="window.open('https://youtube.com/@Reverbit', '_blank')">
                 <div class="youtube-icon">
                     <span class="material-icons-round">smart_display</span>
                 </div>
@@ -3810,7 +3849,7 @@
                 
                 <div>
                     <div class="app-features">
-                        <div class="app-feature reveal">
+                        <div class="app-feature reveal" onclick="alert('Study without internet — built for India\'s connectivity realities.')">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">offline_bolt</span>
                             </div>
@@ -3820,7 +3859,7 @@
                             </div>
                         </div>
                         
-                        <div class="app-feature reveal delay-1">
+                        <div class="app-feature reveal delay-1" onclick="alert('Adaptive learning paths that evolve with your progress.')">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">auto_awesome</span>
                             </div>
@@ -3830,7 +3869,7 @@
                             </div>
                         </div>
                         
-                        <div class="app-feature reveal delay-2">
+                        <div class="app-feature reveal delay-2" onclick="alert('Quiz Engine, AI Writer, Knowledge Graph — in your pocket.')">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">all_inclusive</span>
                             </div>
@@ -3840,7 +3879,7 @@
                             </div>
                         </div>
                         
-                        <div class="app-feature reveal delay-3">
+                        <div class="app-feature reveal delay-3" onclick="alert('Enterprise-grade protection with your data under your control.')">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">security</span>
                             </div>
@@ -3852,7 +3891,7 @@
                     </div>
                     
                     <div class="app-buttons">
-                        <a href="https://aditya-cmd-max.github.io/reverbit/base.apk" class="btn btn-primary">
+                        <a href="https://aditya-cmd-max.github.io/base.apk" class="btn btn-primary">
                             <span class="material-icons-round">android</span>
                             Download for Android
                         </a>
@@ -3877,7 +3916,7 @@
             <div>
                 <div class="footer-brand-large">
                     <div class="footer-logo">
-                        <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit">
+                        <img src="https://aditya-cmd-max.github.io/logo-insvg.svg" alt="Reverbit">
                     </div>
                     <div class="footer-brand-text">
                         <div class="footer-brand-name">Reverbit</div>
@@ -3897,7 +3936,7 @@
                     <span class="material-icons-round">build</span>
                     Tools
                 </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/circuit/" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/circuit/" class="footer-link">
                     <span class="material-icons-round">menu_book</span>
                     Blogs
                 </a>
@@ -3929,15 +3968,15 @@
             
             <div class="footer-column">
                 <h4>Company</h4>
-                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/ecosystem" class="footer-link">
                     <span class="material-icons-round">apps</span>
                     Ecosystem
                 </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/privacy" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/privacy" class="footer-link">
                     <span class="material-icons-round">privacy_tip</span>
                     Privacy
                 </a>
-                <a href="https://aditya-cmd-max.github.io/reverbit/terms" class="footer-link">
+                <a href="https://aditya-cmd-max.github.io/terms" class="footer-link">
                     <span class="material-icons-round">gavel</span>
                     Terms
                 </a>
@@ -3997,23 +4036,23 @@
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://aditya-cmd-max.github.io/reverbit/#organization",
+      "@id": "https://aditya-cmd-max.github.io/#organization",
       "name": "Reverbit Innovations",
       "legalName": "Reverbit Innovations",
-      "url": "https://aditya-cmd-max.github.io/reverbit/",
+      "url": "https://aditya-cmd-max.github.io/",
       "description": "Reverbit Innovations is a forward-thinking educational platform focused on simplifying science, technology, and practical learning to empower curious minds.",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg",
-        "contentUrl": "https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg",
+        "url": "https://aditya-cmd-max.github.io/logo-insvg.svg",
+        "contentUrl": "https://aditya-cmd-max.github.io/logo-insvg.svg",
         "width": 512,
         "height": 512
       },
       "founder": {
         "@type": "Person",
-        "@id": "https://aditya-cmd-max.github.io/reverbit/#founder",
+        "@id": "https://aditya-cmd-max.github.io/#founder",
         "name": "Aditya Jha",
-        "url": "https://aditya-cmd-max.github.io/reverbit/",
+        "url": "https://aditya-cmd-max.github.io/",
         "sameAs": "https://www.linkedin.com/in/aditya-jha-2b0860399"
       },
       "foundingDate": "2025-01-01",
@@ -4033,42 +4072,42 @@
 
     {
       "@type": "WebSite",
-      "@id": "https://aditya-cmd-max.github.io/reverbit/#website",
-      "url": "https://aditya-cmd-max.github.io/reverbit/",
+      "@id": "https://aditya-cmd-max.github.io/#website",
+      "url": "https://aditya-cmd-max.github.io/",
       "name": "Reverbit",
       "publisher": {
-        "@id": "https://aditya-cmd-max.github.io/reverbit/#organization"
+        "@id": "https://aditya-cmd-max.github.io/#organization"
       },
       "inLanguage": "en-IN",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://aditya-cmd-max.github.io/reverbit/?s={search_term_string}",
+        "target": "https://aditya-cmd-max.github.io/?s={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
 
     {
       "@type": "WebPage",
-      "@id": "https://aditya-cmd-max.github.io/reverbit/#homepage",
-      "url": "https://aditya-cmd-max.github.io/reverbit/",
+      "@id": "https://aditya-cmd-max.github.io/#homepage",
+      "url": "https://aditya-cmd-max.github.io/",
       "name": "Reverbit Innovations – Intelligence Meets Action.",
       "description": "Reverbit is India's next-gen educational platform offering amazing science facts, engaging quizzes, and motivational content crafted for curious minds.",
       "isPartOf": {
-        "@id": "https://aditya-cmd-max.github.io/reverbit/#website"
+        "@id": "https://aditya-cmd-max.github.io/#website"
       },
       "about": {
-        "@id": "https://aditya-cmd-max.github.io/reverbit/#organization"
+        "@id": "https://aditya-cmd-max.github.io/#organization"
       },
       "publisher": {
-        "@id": "https://aditya-cmd-max.github.io/reverbit/#organization"
+        "@id": "https://aditya-cmd-max.github.io/#organization"
       },
       "inLanguage": "en-IN",
       "mainEntity": {
-        "@id": "https://aditya-cmd-max.github.io/reverbit/#organization"
+        "@id": "https://aditya-cmd-max.github.io/#organization"
       },
       "primaryImageOfPage": {
         "@type": "ImageObject",
-        "url": "https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg",
+        "url": "https://aditya-cmd-max.github.io/logo-insvg.svg",
         "width": 512,
         "height": 512
       }
@@ -4076,7 +4115,7 @@
 
     {
       "@type": "ItemList",
-      "@id": "https://aditya-cmd-max.github.io/reverbit/#main-navigation",
+      "@id": "https://aditya-cmd-max.github.io/#main-navigation",
       "name": "Main Site Navigation",
       "itemListElement": [
         {
@@ -4085,7 +4124,7 @@
           "item": {
             "@type": "SiteNavigationElement",
             "name": "Home",
-            "url": "https://aditya-cmd-max.github.io/reverbit/"
+            "url": "https://aditya-cmd-max.github.io/"
           }
         },
         {
@@ -4094,7 +4133,7 @@
           "item": {
             "@type": "SiteNavigationElement",
             "name": "About",
-            "url": "https://aditya-cmd-max.github.io/reverbit/about/"
+            "url": "https://aditya-cmd-max.github.io/about/"
           }
         },
         {
@@ -4103,7 +4142,7 @@
           "item": {
             "@type": "SiteNavigationElement",
             "name": "Blogs",
-            "url": "https://aditya-cmd-max.github.io/reverbit/circuit/"
+            "url": "https://aditya-cmd-max.github.io/circuit/"
           }
         },
         {
@@ -4112,7 +4151,7 @@
           "item": {
             "@type": "SiteNavigationElement",
             "name": "Reverbit Ecosystem",
-            "url": "https://aditya-cmd-max.github.io/reverbit/ecosystem/"
+            "url": "https://aditya-cmd-max.github.io/ecosystem/"
           }
         }
       ]
