@@ -175,26 +175,11 @@
       this.functions = null;
       this.initialized = false;
       
-      // Bind methods to ensure 'this' works in callbacks
-      this.init = this.init.bind(this);
-      this.handleAuthChange = this.handleAuthChange.bind(this);
-      this.handleUserLogin = this.handleUserLogin.bind(this);
-      this.handleUserLogout = this.handleUserLogout.bind(this);
-      this.loadUserProfile = this.loadUserProfile.bind(this);
-      this.createCompleteProfile = this.createCompleteProfile.bind(this);
-      this.ensureProfileCompleteness = this.ensureProfileCompleteness.bind(this);
-      this.toggleProfilePopup = this.toggleProfilePopup.bind(this);
-      this.hideProfilePopup = this.hideProfilePopup.bind(this);
-      this.logout = this.logout.bind(this);
-      this.showToast = this.showToast.bind(this);
-      this.applyTheme = this.applyTheme.bind(this);
-      this.toggleTheme = this.toggleTheme.bind(this);
-      this.handleOnline = this.handleOnline.bind(this);
-      this.handleOffline = this.handleOffline.bind(this);
-      this.processOfflineQueue = this.processOfflineQueue.bind(this);
-      this.debug = this.debug.bind(this);
-      this.addProfileAvatar = this.addProfileAvatar.bind(this);
-      this.updateMobileAvatar = this.updateMobileAvatar.bind(this);
+      // Bind ONLY the essential methods that need binding
+this.init = this.init.bind(this);
+this.handleAuthChange = this.handleAuthChange.bind(this);
+this.logout = this.logout.bind(this);
+this.toggleTheme = this.toggleTheme.bind(this);
       
       console.log('📦 Reverbit Enterprise Auth v3.0.0 constructed');
     }
