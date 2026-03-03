@@ -352,33 +352,33 @@ this.toggleTheme = this.toggleTheme.bind(this);
       });
     }
 
-    setupEventListeners() {
-      // Online/Offline listeners
-      window.addEventListener('online', this.handleOnline);
-      window.addEventListener('offline', this.handleOffline);
-      
-      // Visibility change
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          this.handleVisibilityChange();
-        }
-      });
-      
-      // Before unload
-      window.addEventListener('beforeunload', () => {
-        this.cleanup();
-      });
-      
-      // Theme toggle if exists
-      if (Elements.themeToggle) {
-        Elements.themeToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.toggleTheme();
-        });
-      }
-      
-      console.log('👂 [Auth] Event listeners setup complete');
+  setupEventListeners() {
+  // Online/Offline listeners - use arrow functions to preserve this
+  window.addEventListener('online', () => this.handleOnline());
+  window.addEventListener('offline', () => this.handleOffline());
+  
+  // Visibility change
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      this.handleVisibilityChange();
     }
+  });
+  
+  // Before unload
+  window.addEventListener('beforeunload', () => {
+    this.cleanup();
+  });
+  
+  // Theme toggle if exists
+  if (Elements.themeToggle) {
+    Elements.themeToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.toggleTheme();
+    });
+  }
+  
+  console.log('👂 [Auth] Event listeners setup complete');
+}
 
     startBackgroundTasks() {
       // Sync interval
