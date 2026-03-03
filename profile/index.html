@@ -11,11 +11,17 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <!-- Firebase Modular SDK -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
 
     <style>
         /* ==================== DESIGN SYSTEM ==================== */
@@ -1238,17 +1244,54 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // ==================== FIREBASE MODULAR IMPORTS ====================
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            signOut, 
+            onAuthStateChanged,
+            connectAuthEmulator 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            getDoc, 
+            getDocs, 
+            setDoc, 
+            updateDoc, 
+            deleteDoc, 
+            query, 
+            where, 
+            orderBy, 
+            limit, 
+            startAfter,
+            addDoc,
+            writeBatch,
+            increment,
+            serverTimestamp,
+            enableIndexedDbPersistence,
+            connectFirestoreEmulator 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { 
+            getStorage, 
+            ref, 
+            uploadString, 
+            getDownloadURL,
+            connectStorageEmulator 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
         // ==================== FIREBASE CONFIG ====================
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
-  authDomain: "reverbit11.firebaseapp.com",
-  databaseURL: "https://reverbit11-default-rtdb.firebaseio.com",
-  projectId: "reverbit11",
-  storageBucket: "reverbit11.firebasestorage.app",
-  messagingSenderId: "607495314412",
-  appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
-  measurementId: "G-DMWMRM1M47"
+            authDomain: "reverbit11.firebaseapp.com",
+            databaseURL: "https://reverbit11-default-rtdb.firebaseio.com",
+            projectId: "reverbit11",
+            storageBucket: "reverbit11.firebasestorage.app",
+            messagingSenderId: "607495314412",
+            appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9",
+            measurementId: "G-DMWMRM1M47"
         };
 
         const ADMIN_EMAIL = 'adityajha1104@gmail.com';
@@ -1259,14 +1302,35 @@
         const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
 
         // ==================== INITIALIZE FIREBASE ====================
-        firebase.initializeApp(FIREBASE_CONFIG);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        console.log('Initializing Firebase with config:', FIREBASE_CONFIG);
         
-        // Enable persistence
-        db.enablePersistence({ synchronizeTabs: true }).catch(err => {
-            console.warn('Persistence error:', err);
-        });
+        // Initialize Firebase app
+        const app = initializeApp(FIREBASE_CONFIG);
+        console.log('Firebase app initialized');
+
+        // Initialize services
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        
+        console.log('Firebase services initialized');
+
+        // Enable persistence with error handling
+        try {
+            await enableIndexedDbPersistence(db, {
+                synchronizeTabs: true
+            }).catch(err => {
+                if (err.code === 'failed-precondition') {
+                    console.warn('Persistence failed: Multiple tabs open');
+                } else if (err.code === 'unimplemented') {
+                    console.warn('Persistence not supported');
+                } else {
+                    console.warn('Persistence error:', err);
+                }
+            });
+        } catch (err) {
+            console.warn('Persistence setup error:', err);
+        }
 
         // ==================== GLOBAL STATE ====================
         const State = {
@@ -1291,7 +1355,8 @@
             isDeleting: false,
             isUploading: false,
             retryCount: 0,
-            maxRetries: 3
+            maxRetries: 3,
+            firebaseReady: true
         };
 
         // ==================== DOM ELEMENTS ====================
@@ -1366,7 +1431,7 @@
         // ==================== AUTH MANAGER ====================
         const AuthManager = {
             init() {
-                auth.onAuthStateChanged(user => this.handleAuthChange(user));
+                onAuthStateChanged(auth, user => this.handleAuthChange(user));
             },
             
             async handleAuthChange(user) {
@@ -1418,9 +1483,10 @@
             
             async loadUserProfile(uid) {
                 try {
-                    const doc = await db.collection('users').doc(uid).get();
-                    if (doc.exists) {
-                        State.currentUserProfile = { uid: doc.id, ...doc.data() };
+                    const docRef = doc(db, 'users', uid);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        State.currentUserProfile = { uid: docSnap.id, ...docSnap.data() };
                         console.log('User profile loaded:', State.currentUserProfile.displayName);
                     }
                 } catch (error) {
@@ -1430,17 +1496,18 @@
             
             async ensureUserProfile(uid) {
                 try {
-                    const doc = await db.collection('users').doc(uid).get();
+                    const docRef = doc(db, 'users', uid);
+                    const docSnap = await getDoc(docRef);
                     
-                    if (!doc.exists) {
+                    if (!docSnap.exists()) {
                         console.log('Creating new profile for user:', uid);
                         await this.createUserProfile(uid);
                         return true;
                     } else {
                         // Update last login
-                        await db.collection('users').doc(uid).update({
-                            lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-                            totalLogins: firebase.firestore.FieldValue.increment(1)
+                        await updateDoc(docRef, {
+                            lastLogin: serverTimestamp(),
+                            totalLogins: increment(1)
                         });
                         return false;
                     }
@@ -1478,13 +1545,14 @@
                     followingCount: 0,
                     streak: 0,
                     totalLogins: 1,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    lastActive: serverTimestamp(),
+                    lastLogin: serverTimestamp()
                 };
                 
-                await db.collection('users').doc(uid).set(profile);
+                const docRef = doc(db, 'users', uid);
+                await setDoc(docRef, profile);
                 console.log('✅ New user profile created:', uid);
                 
                 // Set the profile in state
@@ -1505,7 +1573,7 @@
             
             async logout() {
                 try {
-                    await auth.signOut();
+                    await signOut(auth);
                     UIManager.showToast('Logged out successfully', 'success');
                     window.location.href = '/';
                 } catch (error) {
@@ -1521,15 +1589,16 @@
                 UIManager.showLoading(true);
                 
                 try {
-                    const doc = await db.collection('users').doc(userId).get();
+                    const docRef = doc(db, 'users', userId);
+                    const docSnap = await getDoc(docRef);
                     
-                    if (!doc.exists) {
+                    if (!docSnap.exists()) {
                         UIManager.showNotFound('Profile not found');
                         UIManager.showLoading(false);
                         return;
                     }
 
-                    State.profileData = { uid: doc.id, ...doc.data() };
+                    State.profileData = { uid: docSnap.id, ...docSnap.data() };
                     State.profileOwner = userId;
                     State.isOwner = State.currentUser && State.currentUser.uid === userId;
 
@@ -1578,7 +1647,7 @@
                 const followButton = !State.isOwner && State.currentUser ? `
                     <button class="btn ${State.isFollowing ? 'btn-success' : 'btn-primary'}" 
                             id="followBtn" 
-                            onclick="FollowManager.toggleFollow()"
+                            onclick="window.FollowManager.toggleFollow()"
                             ${State.isFollowLoading ? 'disabled' : ''}>
                         <i class="fas fa-${State.isFollowLoading ? 'spinner fa-spin' : (State.isFollowing ? 'user-check' : 'user-plus')}"></i>
                         ${State.isFollowLoading ? 'Processing...' : (State.isFollowing ? 'Following' : 'Follow')}
@@ -1593,7 +1662,7 @@
                                      onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.displayName || 'User')}&background=1a73e8&color=fff&bold=true'">
                                 ${this.getAvatarBadge(data)}
                                 ${State.isOwner ? `
-                                    <div class="avatar-overlay" onclick="AvatarManager.handleUpload()">
+                                    <div class="avatar-overlay" onclick="window.AvatarManager.handleUpload()">
                                         <i class="fas fa-camera"></i>
                                     </div>
                                 ` : ''}
@@ -1636,11 +1705,11 @@
                                 </div>
                                 
                                 <div class="follow-stats">
-                                    <div class="follow-stat" onclick="FollowManager.showFollowers()">
+                                    <div class="follow-stat" onclick="window.FollowManager.showFollowers()">
                                         <div class="follow-stat-value">${State.followersCount}</div>
                                         <div class="follow-stat-label">Followers</div>
                                     </div>
-                                    <div class="follow-stat" onclick="FollowManager.showFollowing()">
+                                    <div class="follow-stat" onclick="window.FollowManager.showFollowing()">
                                         <div class="follow-stat-value">${State.followingCount}</div>
                                         <div class="follow-stat-label">Following</div>
                                     </div>
@@ -1648,21 +1717,21 @@
                                 
                                 <div class="profile-actions">
                                     ${State.isOwner ? `
-                                        <button class="btn btn-primary" onclick="UIManager.showToast('Edit coming soon', 'info')">
+                                        <button class="btn btn-primary" onclick="window.UIManager.showToast('Edit coming soon', 'info')">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
-                                        <button class="btn btn-secondary" onclick="PrivacyManager.togglePrivacy()">
+                                        <button class="btn btn-secondary" onclick="window.PrivacyManager.togglePrivacy()">
                                             <i class="fas fa-${data.isPublic ? 'eye' : 'eye-slash'}"></i>
                                             ${data.isPublic ? 'Make Private' : 'Make Public'}
                                         </button>
                                     ` : followButton}
                                     
-                                    <button class="btn btn-secondary" onclick="ShareManager.openModal()">
+                                    <button class="btn btn-secondary" onclick="window.ShareManager.openModal()">
                                         <i class="fas fa-share-alt"></i> Share
                                     </button>
                                     
                                     ${State.currentUser?.email === ADMIN_EMAIL && !State.isOwner ? `
-                                        <button class="btn btn-secondary" onclick="AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
+                                        <button class="btn btn-secondary" onclick="window.AdminManager.openVerifyModal('${data.uid}', '${this.escapeHtml(data.displayName || 'User')}', '${verificationLevel}')">
                                             <i class="fas fa-shield-alt"></i> Manage
                                         </button>
                                     ` : ''}
@@ -1764,8 +1833,9 @@
             async updateLastActive() {
                 if (!State.isOwner || !State.profileData) return;
                 try {
-                    await db.collection('users').doc(State.profileData.uid).update({
-                        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                    const docRef = doc(db, 'users', State.profileData.uid);
+                    await updateDoc(docRef, {
+                        lastActive: serverTimestamp()
                     });
                 } catch (error) {
                     console.error('Error updating last active:', error);
@@ -1777,9 +1847,18 @@
         const FollowManager = {
             async loadProfileFollowData(userId) {
                 try {
+                    const followersQuery = query(
+                        collection(db, 'followers'), 
+                        where('followingId', '==', userId)
+                    );
+                    const followingQuery = query(
+                        collection(db, 'followers'), 
+                        where('followerId', '==', userId)
+                    );
+                    
                     const [followersSnap, followingSnap] = await Promise.all([
-                        db.collection('followers').where('followingId', '==', userId).get(),
-                        db.collection('followers').where('followerId', '==', userId).get()
+                        getDocs(followersQuery),
+                        getDocs(followingQuery)
                     ]);
                     
                     State.followersCount = followersSnap.size;
@@ -1792,10 +1871,12 @@
             
             async checkFollowStatus(followerId, followingId) {
                 try {
-                    const snapshot = await db.collection('followers')
-                        .where('followerId', '==', followerId)
-                        .where('followingId', '==', followingId)
-                        .get();
+                    const q = query(
+                        collection(db, 'followers'),
+                        where('followerId', '==', followerId),
+                        where('followingId', '==', followingId)
+                    );
+                    const snapshot = await getDocs(q);
                     return !snapshot.empty;
                 } catch (error) {
                     console.error('Error checking follow:', error);
@@ -1839,31 +1920,36 @@
             
             async follow() {
                 // Check if already following
-                const existing = await db.collection('followers')
-                    .where('followerId', '==', State.currentUser.uid)
-                    .where('followingId', '==', State.profileOwner)
-                    .get();
+                const q = query(
+                    collection(db, 'followers'),
+                    where('followerId', '==', State.currentUser.uid),
+                    where('followingId', '==', State.profileOwner)
+                );
+                const existing = await getDocs(q);
                 
                 if (!existing.empty) {
                     throw new Error('Already following');
                 }
                 
                 // Create follow
-                await db.collection('followers').add({
+                await addDoc(collection(db, 'followers'), {
                     followerId: State.currentUser.uid,
                     followingId: State.profileOwner,
                     followerName: State.currentUserProfile?.displayName || State.currentUser.email,
                     followingName: State.profileData.displayName || 'User',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: serverTimestamp()
                 });
                 
                 // Update counts
+                const followerRef = doc(db, 'users', State.profileOwner);
+                const followingRef = doc(db, 'users', State.currentUser.uid);
+                
                 await Promise.all([
-                    db.collection('users').doc(State.profileOwner).update({
-                        followersCount: firebase.firestore.FieldValue.increment(1)
+                    updateDoc(followerRef, {
+                        followersCount: increment(1)
                     }),
-                    db.collection('users').doc(State.currentUser.uid).update({
-                        followingCount: firebase.firestore.FieldValue.increment(1)
+                    updateDoc(followingRef, {
+                        followingCount: increment(1)
                     })
                 ]);
                 
@@ -1872,23 +1958,28 @@
             },
             
             async unfollow() {
-                const snapshot = await db.collection('followers')
-                    .where('followerId', '==', State.currentUser.uid)
-                    .where('followingId', '==', State.profileOwner)
-                    .get();
+                const q = query(
+                    collection(db, 'followers'),
+                    where('followerId', '==', State.currentUser.uid),
+                    where('followingId', '==', State.profileOwner)
+                );
+                const snapshot = await getDocs(q);
                 
                 if (snapshot.empty) return;
                 
-                const batch = db.batch();
+                const batch = writeBatch(db);
                 snapshot.docs.forEach(doc => batch.delete(doc.ref));
                 await batch.commit();
                 
+                const followerRef = doc(db, 'users', State.profileOwner);
+                const followingRef = doc(db, 'users', State.currentUser.uid);
+                
                 await Promise.all([
-                    db.collection('users').doc(State.profileOwner).update({
-                        followersCount: firebase.firestore.FieldValue.increment(-1)
+                    updateDoc(followerRef, {
+                        followersCount: increment(-1)
                     }),
-                    db.collection('users').doc(State.currentUser.uid).update({
-                        followingCount: firebase.firestore.FieldValue.increment(-1)
+                    updateDoc(followingRef, {
+                        followingCount: increment(-1)
                     })
                 ]);
                 
@@ -1917,9 +2008,11 @@
                 Elements.followersModal.classList.add('active');
                 
                 try {
-                    const snapshot = await db.collection('followers')
-                        .where('followingId', '==', State.profileOwner)
-                        .get();
+                    const q = query(
+                        collection(db, 'followers'),
+                        where('followingId', '==', State.profileOwner)
+                    );
+                    const snapshot = await getDocs(q);
                     
                     if (snapshot.empty) {
                         Elements.followersList.innerHTML = '<div class="text-center p-4">No followers yet</div>';
@@ -1935,7 +2028,7 @@
                     }
                     
                     Elements.followersList.innerHTML = followers.map(user => `
-                        <div class="modal-user-item" onclick="UserManager.viewProfile('${user.uid}')">
+                        <div class="modal-user-item" onclick="window.UserManager.viewProfile('${user.uid}')">
                             <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
                             <div class="modal-user-info">
                                 <div class="modal-user-name">${user.displayName || 'User'}</div>
@@ -1958,9 +2051,11 @@
                 Elements.followingModal.classList.add('active');
                 
                 try {
-                    const snapshot = await db.collection('followers')
-                        .where('followerId', '==', State.profileOwner)
-                        .get();
+                    const q = query(
+                        collection(db, 'followers'),
+                        where('followerId', '==', State.profileOwner)
+                    );
+                    const snapshot = await getDocs(q);
                     
                     if (snapshot.empty) {
                         Elements.followingList.innerHTML = '<div class="text-center p-4">Not following anyone</div>';
@@ -1976,7 +2071,7 @@
                     }
                     
                     Elements.followingList.innerHTML = following.map(user => `
-                        <div class="modal-user-item" onclick="UserManager.viewProfile('${user.uid}')">
+                        <div class="modal-user-item" onclick="window.UserManager.viewProfile('${user.uid}')">
                             <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
                             <div class="modal-user-info">
                                 <div class="modal-user-name">${user.displayName || 'User'}</div>
@@ -1995,10 +2090,10 @@
                 const profiles = [];
                 for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
                     const batch = userIds.slice(i, i + BATCH_SIZE);
-                    const promises = batch.map(id => db.collection('users').doc(id).get());
+                    const promises = batch.map(id => getDoc(doc(db, 'users', id)));
                     const snapshots = await Promise.all(promises);
                     snapshots.forEach(snap => {
-                        if (snap.exists) {
+                        if (snap.exists()) {
                             profiles.push({ uid: snap.id, ...snap.data() });
                         }
                     });
@@ -2011,7 +2106,7 @@
         const UserManager = {
             async loadAllUsers() {
                 try {
-                    const snapshot = await db.collection('users').get();
+                    const snapshot = await getDocs(collection(db, 'users'));
                     State.allUsers = snapshot.docs.map(doc => ({
                         uid: doc.id,
                         ...doc.data()
@@ -2077,7 +2172,7 @@
                 }
                 
                 Elements.searchResults.innerHTML = results.map(user => `
-                    <div class="search-result-item" onclick="UserManager.viewProfile('${user.uid}')">
+                    <div class="search-result-item" onclick="window.UserManager.viewProfile('${user.uid}')">
                         <img src="${ProfileManager.getAvatarUrl(user)}" class="search-result-avatar">
                         <div class="search-result-info">
                             <div class="search-result-name">${user.displayName || 'User'}</div>
@@ -2126,18 +2221,18 @@
                         </div>
                         
                         <div class="admin-filters">
-                            <button class="filter-btn active" onclick="AdminManager.filterUsers('all')">All</button>
-                            <button class="filter-btn" onclick="AdminManager.filterUsers('verified')">Verified</button>
-                            <button class="filter-btn" onclick="AdminManager.filterUsers('premium')">Premium</button>
-                            <button class="filter-btn" onclick="AdminManager.filterUsers('unverified')">Unverified</button>
+                            <button class="filter-btn active" onclick="window.AdminManager.filterUsers('all')">All</button>
+                            <button class="filter-btn" onclick="window.AdminManager.filterUsers('verified')">Verified</button>
+                            <button class="filter-btn" onclick="window.AdminManager.filterUsers('premium')">Premium</button>
+                            <button class="filter-btn" onclick="window.AdminManager.filterUsers('unverified')">Unverified</button>
                         </div>
                         
                         <div class="users-list" id="usersList"></div>
                         
                         <div class="pagination">
-                            <button class="pagination-btn" id="prevPage" onclick="AdminManager.changePage('prev')" disabled>Prev</button>
+                            <button class="pagination-btn" id="prevPage" onclick="window.AdminManager.changePage('prev')" disabled>Prev</button>
                             <span class="pagination-info" id="pageInfo">Page 1</span>
-                            <button class="pagination-btn" id="nextPage" onclick="AdminManager.changePage('next')">Next</button>
+                            <button class="pagination-btn" id="nextPage" onclick="window.AdminManager.changePage('next')">Next</button>
                         </div>
                     </div>
                 `;
@@ -2228,14 +2323,14 @@
                                 </div>
                             </div>
                             <div class="user-row-actions">
-                                <button class="btn btn-icon btn-secondary" onclick="UserManager.viewProfile('${user.uid}')" title="View">
+                                <button class="btn btn-icon btn-secondary" onclick="window.UserManager.viewProfile('${user.uid}')" title="View">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button class="btn btn-icon btn-secondary" onclick="AdminManager.openVerifyModal('${user.uid}', '${user.displayName || 'User'}', '${level}')" title="Verify">
+                                <button class="btn btn-icon btn-secondary" onclick="window.AdminManager.openVerifyModal('${user.uid}', '${ProfileManager.escapeHtml(user.displayName || 'User')}', '${level}')" title="Verify">
                                     <i class="fas fa-${level === 'premium' ? 'crown' : 'shield-alt'}"></i>
                                 </button>
                                 ${user.email !== ADMIN_EMAIL ? `
-                                    <button class="btn btn-icon btn-error" onclick="AdminManager.openDeleteModal('${user.uid}', '${user.displayName || 'User'}')" title="Delete">
+                                    <button class="btn btn-icon btn-error" onclick="window.AdminManager.openDeleteModal('${user.uid}', '${ProfileManager.escapeHtml(user.displayName || 'User')}')" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 ` : ''}
@@ -2298,14 +2393,15 @@
                     const updateData = {
                         verifiedLevel: level === 'none' ? null : level,
                         verified: level !== 'none',
-                        verifiedAt: level !== 'none' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                        verifiedAt: level !== 'none' ? serverTimestamp() : null,
                         verifiedBy: level !== 'none' ? ADMIN_EMAIL : null,
                         verificationNotes: notes || null,
                         premiumVerified: level === 'premium',
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        updatedAt: serverTimestamp()
                     };
                     
-                    await db.collection('users').doc(State.selectedUserId).update(updateData);
+                    const userRef = doc(db, 'users', State.selectedUserId);
+                    await updateDoc(userRef, updateData);
                     
                     UIManager.showToast(`User ${level === 'premium' ? 'Premium Verified' : level === 'basic' ? 'Verified' : 'Unverified'}!`);
                     
@@ -2317,8 +2413,9 @@
                     
                     // Refresh profile if viewing
                     if (State.profileData?.uid === State.selectedUserId) {
-                        const doc = await db.collection('users').doc(State.selectedUserId).get();
-                        State.profileData = { uid: doc.id, ...doc.data() };
+                        const docRef = doc(db, 'users', State.selectedUserId);
+                        const docSnap = await getDoc(docRef);
+                        State.profileData = { uid: docSnap.id, ...docSnap.data() };
                         ProfileManager.renderProfile();
                     }
                     
@@ -2353,7 +2450,8 @@
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
                 
                 try {
-                    await db.collection('users').doc(State.selectedUserId).delete();
+                    const userRef = doc(db, 'users', State.selectedUserId);
+                    await deleteDoc(userRef);
                     UIManager.showToast('User deleted');
                     
                     if (Elements.contentArea.querySelector('.admin-section')) {
@@ -2417,17 +2515,19 @@
                         reader.readAsDataURL(file);
                     });
                     
-                    await db.collection('users').doc(State.currentUser.uid).update({
+                    const userRef = doc(db, 'users', State.currentUser.uid);
+                    await updateDoc(userRef, {
                         photoURL: result,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        updatedAt: serverTimestamp()
                     });
                     
                     UIManager.showToast('Profile picture updated!', 'success');
                     
                     // Refresh profile
                     if (State.profileData?.uid === State.currentUser.uid) {
-                        const doc = await db.collection('users').doc(State.currentUser.uid).get();
-                        State.profileData = { uid: doc.id, ...doc.data() };
+                        const docRef = doc(db, 'users', State.currentUser.uid);
+                        const docSnap = await getDoc(docRef);
+                        State.profileData = { uid: docSnap.id, ...docSnap.data() };
                         ProfileManager.renderProfile();
                     }
                     
@@ -2448,9 +2548,10 @@
                 try {
                     const newStatus = !State.profileData.isPublic;
                     
-                    await db.collection('users').doc(State.profileData.uid).update({
+                    const userRef = doc(db, 'users', State.profileData.uid);
+                    await updateDoc(userRef, {
                         isPublic: newStatus,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        updatedAt: serverTimestamp()
                     });
                     
                     State.profileData.isPublic = newStatus;
@@ -2502,18 +2603,24 @@
         // ==================== UI MANAGER ====================
         const UIManager = {
             showLoading(show) {
-                Elements.loading.classList.toggle('hidden', !show);
+                if (Elements.loading) {
+                    Elements.loading.classList.toggle('hidden', !show);
+                }
                 // Always ensure main content is visible when loading is hidden
-                if (!show) {
+                if (!show && Elements.mainContent) {
                     Elements.mainContent.style.display = 'block';
                 }
             },
             
             hideAllSections() {
-                Elements.contentArea.innerHTML = '';
+                if (Elements.contentArea) {
+                    Elements.contentArea.innerHTML = '';
+                }
             },
             
             showLanding() {
+                if (!Elements.contentArea) return;
+                
                 Elements.contentArea.innerHTML = `
                     <div class="profile-section text-center">
                         <i class="fas fa-users" style="font-size: 5rem; color: var(--primary-500); margin-bottom: var(--space-6);"></i>
@@ -2528,6 +2635,8 @@
             },
             
             showNotFound(message = 'Profile not found') {
+                if (!Elements.contentArea) return;
+                
                 Elements.contentArea.innerHTML = `
                     <div class="not-found">
                         <i class="fas fa-user-slash not-found-icon"></i>
@@ -2539,6 +2648,8 @@
             },
             
             showToast(message, type = 'success') {
+                if (!Elements.toast || !Elements.toastMessage) return;
+                
                 if (State.toastTimeout) {
                     clearTimeout(State.toastTimeout);
                 }
@@ -2556,26 +2667,33 @@
                 if (State.toastTimeout) {
                     clearTimeout(State.toastTimeout);
                 }
-                Elements.toast.classList.remove('show');
+                if (Elements.toast) {
+                    Elements.toast.classList.remove('show');
+                }
             },
             
             closeModal(modalId) {
-                document.getElementById(modalId).classList.remove('active');
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('active');
+                }
             },
             
             updateNav() {
+                if (!Elements.nav) return;
+                
                 const isAdmin = State.currentUser?.email === ADMIN_EMAIL;
                 
                 Elements.nav.innerHTML = `
-                    <button class="btn btn-icon btn-secondary" id="themeToggle" onclick="ThemeManager.toggle()" title="Theme">
+                    <button class="btn btn-icon btn-secondary" id="themeToggle" onclick="window.ThemeManager.toggle()" title="Theme">
                         <i class="fas fa-${State.theme === 'dark' ? 'sun' : 'moon'}"></i>
                     </button>
                     ${State.currentUser ? `
                         <a href="?id=${State.currentUser.uid}" class="btn btn-primary">Profile</a>
                         ${isAdmin ? `
-                            <button class="btn btn-secondary" onclick="AdminManager.showPanel()">Admin</button>
+                            <button class="btn btn-secondary" onclick="window.AdminManager.showPanel()">Admin</button>
                         ` : ''}
-                        <button class="btn btn-secondary" onclick="AuthManager.logout()">
+                        <button class="btn btn-secondary" onclick="window.AuthManager.logout()">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
                     ` : `
@@ -2592,22 +2710,27 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('Reverbit Profile initializing...');
             
+            // Initialize theme
             ThemeManager.init();
-            
+
             // Initialize auth
             AuthManager.init();
 
             // Search input
-            Elements.searchInput.addEventListener('input', (e) => {
-                clearTimeout(State.searchTimeout);
-                State.searchTimeout = setTimeout(() => {
-                    SearchManager.search(e.target.value);
-                }, SEARCH_DEBOUNCE_MS);
-            });
+            if (Elements.searchInput) {
+                Elements.searchInput.addEventListener('input', (e) => {
+                    clearTimeout(State.searchTimeout);
+                    State.searchTimeout = setTimeout(() => {
+                        SearchManager.search(e.target.value);
+                    }, SEARCH_DEBOUNCE_MS);
+                });
+            }
 
             // Close search on outside click
             document.addEventListener('click', (e) => {
-                if (!Elements.searchResults.contains(e.target) && !Elements.searchInput.contains(e.target)) {
+                if (Elements.searchResults && Elements.searchInput && 
+                    !Elements.searchResults.contains(e.target) && 
+                    !Elements.searchInput.contains(e.target)) {
                     Elements.searchResults.classList.remove('show');
                 }
             });
@@ -2615,7 +2738,7 @@
             console.log('Reverbit Profile initialized');
         });
 
-        // ==================== GLOBAL FUNCTIONS ====================
+        // ==================== EXPOSE GLOBALLY ====================
         window.ThemeManager = ThemeManager;
         window.AuthManager = AuthManager;
         window.ProfileManager = ProfileManager;
@@ -2626,7 +2749,8 @@
         window.PrivacyManager = PrivacyManager;
         window.ShareManager = ShareManager;
         window.UIManager = UIManager;
-        
+
+        // Modal functions
         window.closeModal = (modalId) => UIManager.closeModal(modalId);
         window.closeToast = () => UIManager.closeToast();
         window.saveVerification = () => AdminManager.saveVerification();
@@ -2635,6 +2759,8 @@
         window.shareViaTwitter = () => ShareManager.shareViaTwitter();
         window.shareViaFacebook = () => ShareManager.shareViaFacebook();
         window.shareViaLinkedIn = () => ShareManager.shareViaLinkedIn();
+
+        console.log('Firebase initialized and ready');
     </script>
 </body>
 </html>
