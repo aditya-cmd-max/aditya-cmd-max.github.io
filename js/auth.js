@@ -418,13 +418,13 @@ this.toggleTheme = this.toggleTheme.bind(this);
   this.notifyOnlineListeners(false);
 }
 
-    handleVisibilityChange() {
-      console.log('👁️ [Auth] Page became visible');
-      if (this.state.currentUser) {
-        this.updateLastActive();
-        this.checkSession();
-      }
-    }
+  handleVisibilityChange() {
+  console.log('👁️ [Auth] Page became visible');
+  if (this.state.currentUser) {
+    this.updateLastActive();
+    this.checkSession();
+  }
+}
 
     cleanup() {
       console.log('🧹 [Auth] Cleaning up...');
