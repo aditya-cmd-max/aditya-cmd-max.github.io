@@ -5,19 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Reverbit · Dashboard</title>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GS6V9ZCN0K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GS6V9ZCN0K');
+    </script>
+    
+    <!-- Local Font - Begum -->
+    <style>
+        @font-face {
+            font-family: 'Begum';
+            src: url('https://aditya-cmd-max.github.io/Begum-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Begum';
+            src: url('https://aditya-cmd-max.github.io/Begum-Bold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Begum';
+            src: url('https://aditya-cmd-max.github.io/Begum-Light.otf') format('opentype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
     
     <!-- Material Icons Round -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <!-- Outfit Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     
-    <!-- Cropper.js for image cropping -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
+    
+    <!-- Cropper.js -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -68,22 +103,23 @@
             --md-elevation-5: 0 24px 32px rgba(26, 18, 8, 0.12);
             --md-elevation-6: 0 32px 48px rgba(26, 18, 8, 0.15);
             
-            --md-font-display: 'Playfair Display', serif;
+            --md-font-display: 'Begum', 'Playfair Display', serif;
             --md-font-body: 'Outfit', sans-serif;
             
             --space-xs: clamp(4px, 1vw, 8px);
-            --space-sm: clamp(8px, 2vw, 16px);
-            --space-md: clamp(16px, 3vw, 24px);
-            --space-lg: clamp(24px, 4vw, 32px);
-            --space-xl: clamp(32px, 5vw, 48px);
-            --space-xxl: clamp(48px, 6vw, 64px);
+            --space-sm: clamp(8px, 2vw, 12px);
+            --space-md: clamp(12px, 3vw, 16px);
+            --space-lg: clamp(16px, 4vw, 24px);
+            --space-xl: clamp(24px, 5vw, 32px);
+            --space-xxl: clamp(32px, 6vw, 48px);
+            --space-xxxl: clamp(48px, 8vw, 64px);
             
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --radius-xxl: 32px;
-            --radius-xxxl: 48px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-xxl: 28px;
+            --radius-xxxl: 36px;
             --radius-pill: 9999px;
             
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -100,6 +136,8 @@
             --md-background: #0E0A04;
             --md-on-background: #F5EDD6;
             --md-outline: rgba(205, 139, 69, 0.3);
+            --md-elevation-1: 0 2px 4px rgba(0,0,0,0.3);
+            --md-elevation-2: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         body {
@@ -123,11 +161,8 @@
             background: var(--md-primary);
             border-radius: 5px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--md-primary-dark);
-        }
 
-        /* ========== ANIMATED BACKGROUND ========== */
+        /* Animated Background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -136,6 +171,7 @@
             height: 100%;
             z-index: -2;
             overflow: hidden;
+            pointer-events: none;
         }
         .gradient-bg {
             position: absolute;
@@ -152,23 +188,37 @@
             100% { transform: translate(1%,1%) scale(0.95); opacity:0.9; }
         }
 
-        /* ========== NAVBAR ========== */
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+
+        /* ========== PREMIUM NAVBAR ========== */
         .navbar {
             position: fixed;
-            top: var(--space-md);
+            top: var(--space-lg);
             left: 50%;
             transform: translateX(-50%);
-            width: min(calc(100% - var(--space-xl)), 1400px);
+            width: min(calc(100% - var(--space-xxl)), 1400px);
             background: rgba(245, 237, 214, 0.85);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--md-outline);
             border-radius: var(--radius-xxxl);
-            padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-lg);
+            padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-xl);
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 100;
             box-shadow: var(--md-elevation-4);
+            transition: var(--transition);
         }
         .dark-theme .navbar {
             background: rgba(26, 18, 8, 0.85);
@@ -207,6 +257,7 @@
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .nav-links {
@@ -218,6 +269,7 @@
             padding: var(--space-sm) var(--space-lg);
             color: var(--md-on-surface);
             text-decoration: none;
+            font-family: var(--md-font-display);
             font-weight: 600;
             border-radius: var(--radius-pill);
             transition: var(--transition);
@@ -229,12 +281,17 @@
             color: var(--md-primary);
             background: rgba(var(--md-primary-rgb), 0.1);
         }
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: white;
+        }
 
         .nav-right {
             display: flex;
             align-items: center;
             gap: var(--space-sm);
         }
+
         .profile-avatar-btn {
             width: 44px;
             height: 44px;
@@ -270,7 +327,7 @@
         .theme-toggle:hover {
             transform: rotate(30deg);
             background: var(--md-primary);
-            color: var(--md-on-primary);
+            color: white;
         }
 
         .mobile-menu-btn {
@@ -291,10 +348,95 @@
             .mobile-menu-btn { display: flex; }
         }
 
-        /* ========== MAIN LAYOUT ========== */
+        /* Mobile Navigation */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s;
+        }
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 100%;
+            max-width: 320px;
+            height: 100vh;
+            background: var(--md-surface);
+            z-index: 999;
+            padding: var(--space-xl);
+            transition: right 0.5s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: var(--md-elevation-6);
+            border-left: 2px solid var(--md-outline);
+            overflow-y: auto;
+        }
+        .mobile-nav.open {
+            right: 0;
+        }
+        .mobile-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-md);
+            border-bottom: 2px solid var(--md-outline);
+        }
+        .mobile-nav-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-bounce);
+        }
+        .mobile-nav-close:hover {
+            background: var(--md-tertiary);
+            color: white;
+            transform: rotate(90deg);
+        }
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-lg) var(--space-xl);
+            color: var(--md-on-surface);
+            text-decoration: none;
+            font-family: var(--md-font-display);
+            font-size: 1.2rem;
+            border-radius: var(--radius-xxl);
+            transition: var(--transition);
+        }
+        .mobile-nav-link:hover {
+            background: rgba(var(--md-primary-rgb), 0.1);
+            transform: translateX(8px);
+            color: var(--md-primary);
+        }
+
+        /* ========== MAIN CONTENT ========== */
         .main-wrapper {
-            padding-top: 100px;
-            padding-bottom: var(--space-xxl);
+            padding-top: 140px; /* Increased space between navbar and content */
+            padding-bottom: var(--space-xxxl);
             min-height: 100vh;
         }
         .container {
@@ -303,30 +445,32 @@
             padding: 0 var(--space-lg);
         }
 
-        /* ========== HEADER CARD ========== */
+        /* ========== WELCOME CARD ========== */
         .welcome-card {
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
             border-radius: var(--radius-xxxl);
-            padding: var(--space-xl);
+            padding: var(--space-xl) var(--space-xxl);
             margin-bottom: var(--space-xl);
             box-shadow: var(--md-elevation-3);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: var(--space-lg);
+            gap: var(--space-xl);
         }
         .welcome-text h1 {
             font-family: var(--md-font-display);
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 4vw, 2.8rem);
             margin-bottom: var(--space-xs);
         }
         .animated-name {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             animation: gradientShift 3s ease infinite;
+            background-size: 200% 200%;
         }
         @keyframes gradientShift {
             0%,100% { background-position: 0% 50%; }
@@ -334,27 +478,35 @@
         }
         .welcome-stats {
             display: flex;
-            gap: var(--space-xl);
+            gap: var(--space-xxl);
         }
         .stat-item {
             text-align: center;
         }
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             color: var(--md-primary);
+            line-height: 1.2;
         }
         .stat-label {
             color: var(--md-on-surface-variant);
             font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* ========== SECTION NAVIGATION ========== */
-        .section-nav {
+        /* ========== SECTION TABS ========== */
+        .section-tabs {
             display: flex;
             gap: var(--space-sm);
             margin-bottom: var(--space-xl);
             flex-wrap: wrap;
+            position: sticky;
+            top: 100px;
+            z-index: 90;
+            background: var(--md-background);
+            padding: var(--space-md) 0;
         }
         .section-tab {
             padding: var(--space-sm) var(--space-xl);
@@ -368,6 +520,7 @@
             display: flex;
             align-items: center;
             gap: var(--space-sm);
+            font-family: var(--md-font-display);
         }
         .section-tab:hover {
             border-color: var(--md-primary);
@@ -378,8 +531,11 @@
             color: white;
             border-color: transparent;
         }
+        .section-tab .material-icons-round {
+            font-size: 1.2rem;
+        }
 
-        /* ========== DASHBOARD SECTIONS ========== */
+        /* ========== SECTIONS ========== */
         .dashboard-section {
             display: none;
             animation: fadeIn 0.5s ease;
@@ -394,8 +550,8 @@
 
         .section-title {
             font-family: var(--md-font-display);
-            font-size: 2rem;
-            margin-bottom: var(--space-lg);
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            margin-bottom: var(--space-xl);
             position: relative;
             padding-bottom: var(--space-sm);
         }
@@ -404,7 +560,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 60px;
+            width: 80px;
             height: 3px;
             background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
@@ -412,7 +568,7 @@
         /* ========== STATS GRID ========== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: var(--space-lg);
             margin-bottom: var(--space-xl);
         }
@@ -420,11 +576,11 @@
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
             border-radius: var(--radius-xxl);
-            padding: var(--space-lg);
+            padding: var(--space-xl);
             transition: var(--transition-bounce);
         }
         .stat-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-6px);
             box-shadow: var(--md-elevation-4);
             border-color: var(--md-primary);
         }
@@ -464,12 +620,12 @@
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
             border-radius: var(--radius-xxxl);
-            padding: var(--space-xl);
+            padding: var(--space-xl) var(--space-xxl);
             margin-bottom: var(--space-xl);
         }
         .profile-header {
             display: flex;
-            gap: var(--space-xl);
+            gap: var(--space-xxl);
             align-items: center;
             flex-wrap: wrap;
         }
@@ -477,6 +633,7 @@
             position: relative;
             width: 160px;
             height: 160px;
+            flex-shrink: 0;
         }
         .avatar-image {
             width: 100%;
@@ -484,6 +641,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--md-primary);
+            box-shadow: var(--md-elevation-3);
         }
         .avatar-edit {
             position: absolute;
@@ -506,17 +664,19 @@
             background: var(--md-secondary);
         }
         .profile-info h2 {
-            font-size: 2rem;
+            font-family: var(--md-font-display);
+            font-size: 2.2rem;
             margin-bottom: var(--space-xs);
         }
         .member-badge {
             display: inline-flex;
             align-items: center;
             gap: var(--space-xs);
-            padding: var(--space-xs) var(--space-md);
+            padding: var(--space-xs) var(--space-lg);
             background: var(--md-surface-variant);
             border-radius: var(--radius-pill);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            margin-top: var(--space-xs);
         }
 
         /* ========== FORM GRID ========== */
@@ -534,6 +694,7 @@
         .form-label {
             font-weight: 600;
             color: var(--md-on-surface);
+            font-family: var(--md-font-display);
         }
         .form-input, .form-select, .form-textarea {
             padding: var(--space-md) var(--space-lg);
@@ -543,6 +704,7 @@
             color: var(--md-on-surface);
             font-family: var(--md-font-body);
             transition: var(--transition);
+            font-size: 1rem;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
@@ -553,7 +715,8 @@
             grid-column: 1 / -1;
             display: flex;
             gap: var(--space-md);
-            margin-top: var(--space-lg);
+            margin-top: var(--space-xxl);
+            flex-wrap: wrap;
         }
 
         /* ========== APPS GRID ========== */
@@ -600,8 +763,9 @@
         }
         .app-title {
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: var(--space-xs);
+            font-family: var(--md-font-display);
         }
         .app-stats {
             color: var(--md-on-surface-variant);
@@ -611,7 +775,7 @@
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         /* ========== ACTIVITY TIMELINE ========== */
@@ -624,10 +788,14 @@
             padding: var(--space-md) 0;
             border-bottom: 1px solid var(--md-outline);
         }
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
         .timeline-time {
-            min-width: 80px;
+            min-width: 90px;
             color: var(--md-on-surface-variant);
             font-size: 0.9rem;
+            font-weight: 500;
         }
         .timeline-content {
             flex: 1;
@@ -648,6 +816,7 @@
             inset: 0;
             background: rgba(0,0,0,0.8);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             align-items: center;
             justify-content: center;
             z-index: 1000;
@@ -664,6 +833,7 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: var(--space-xl);
+            border: 1px solid var(--md-outline);
         }
         .modal-header {
             display: flex;
@@ -672,8 +842,9 @@
             margin-bottom: var(--space-lg);
         }
         .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: var(--md-font-display);
         }
         .modal-close {
             width: 44px;
@@ -686,6 +857,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: var(--transition);
         }
         .modal-close:hover {
             background: var(--md-tertiary);
@@ -694,15 +866,19 @@
         .cropper-container {
             max-height: 400px;
             margin: var(--space-lg) 0;
+            background: var(--md-surface-dim);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
         }
         .cropper-container img {
             max-width: 100%;
+            display: block;
         }
         .modal-actions {
             display: flex;
             gap: var(--space-md);
             justify-content: flex-end;
-            margin-top: var(--space-lg);
+            margin-top: var(--space-xl);
         }
 
         /* ========== BUTTONS ========== */
@@ -718,12 +894,15 @@
             cursor: pointer;
             transition: var(--transition-bounce);
             text-decoration: none;
+            font-family: var(--md-font-display);
+            font-size: 1rem;
+            min-width: 120px;
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: white;
         }
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-4px);
             box-shadow: var(--md-elevation-4);
         }
@@ -736,18 +915,22 @@
             background: var(--md-surface-dim);
             transform: translateY(-2px);
         }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         /* ========== TOAST ========== */
         .toast {
             position: fixed;
-            bottom: var(--space-lg);
+            bottom: var(--space-xl);
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
             border-radius: var(--radius-pill);
             padding: var(--space-md) var(--space-xl);
-            box-shadow: var(--md-elevation-5);
+            box-shadow: var(--md-elevation-6);
             display: flex;
             align-items: center;
             gap: var(--space-md);
@@ -759,9 +942,21 @@
         .toast.show {
             transform: translateX(-50%) translateY(0);
         }
-        .toast-success { background: var(--md-secondary); color: white; }
-        .toast-error { background: var(--md-tertiary); color: white; }
-        .toast-info { background: var(--md-primary); color: white; }
+        .toast-success {
+            background: var(--md-secondary);
+            color: white;
+            border: none;
+        }
+        .toast-error {
+            background: var(--md-tertiary);
+            color: white;
+            border: none;
+        }
+        .toast-info {
+            background: var(--md-primary);
+            color: white;
+            border: none;
+        }
 
         /* ========== LOADING ========== */
         .loading {
@@ -789,32 +984,155 @@
             margin-bottom: var(--space-md);
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            font-family: var(--md-font-display);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--md-primary);
+        }
 
-        /* ========== RESPONSIVE ========== */
+        /* ========== RESPONSIVE DESIGN ========== */
         @media (max-width: 768px) {
+            .main-wrapper {
+                padding-top: 120px;
+            }
+            
             .welcome-card {
                 flex-direction: column;
                 text-align: center;
+                padding: var(--space-lg);
             }
-            .welcome-text h1 {
-                font-size: 2rem;
+            
+            .welcome-stats {
+                width: 100%;
+                justify-content: space-around;
+                gap: var(--space-sm);
             }
+            
+            .stat-value {
+                font-size: 1.8rem;
+            }
+            
+            .section-tabs {
+                gap: var(--space-xs);
+                overflow-x: auto;
+                padding-bottom: var(--space-sm);
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                white-space: nowrap;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+            }
+            
+            .section-tabs::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .section-tab {
+                padding: var(--space-sm) var(--space-lg);
+                font-size: 0.9rem;
+                white-space: nowrap;
+            }
+            
+            .section-tab .material-icons-round {
+                font-size: 1rem;
+            }
+            
             .profile-header {
                 flex-direction: column;
                 text-align: center;
             }
+            
             .avatar-container {
                 margin: 0 auto;
             }
+            
+            .profile-info {
+                text-align: center;
+            }
+            
             .form-actions {
                 flex-direction: column;
             }
+            
             .btn {
                 width: 100%;
             }
-            .section-tab {
-                flex: 1;
-                justify-content: center;
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+            
+            .timeline-time {
+                min-width: auto;
+            }
+            
+            .modal-content {
+                padding: var(--space-lg);
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            .welcome-card {
+                padding: var(--space-md);
+            }
+            
+            .welcome-text h1 {
+                font-size: 1.6rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem;
+            }
+            
+            .section-tabs {
+                top: 80px;
+            }
+            
+            .profile-card {
+                padding: var(--space-lg);
+            }
+            
+            .avatar-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .profile-info h2 {
+                font-size: 1.8rem;
+            }
+            
+            .member-badge {
+                font-size: 0.85rem;
+                padding: var(--space-xs) var(--space-md);
+            }
+            
+            .app-card {
+                padding: var(--space-lg);
+            }
+            
+            .app-icon {
+                width: 52px;
+                height: 52px;
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -824,6 +1142,9 @@
     <div class="animated-bg">
         <div class="gradient-bg"></div>
     </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
 
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
@@ -842,17 +1163,49 @@
         </div>
         
         <div class="nav-right">
-            <button class="profile-avatar-btn" id="profileAvatar">
-                <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile" id="avatarImg">
-            </button>
+            <div id="desktopAvatar"></div>
+            
+            <a href="https://aditya-cmd-max.github.io/signin" class="sign-in-btn" id="signInButton" style="display: none;">
+                <span class="material-icons-round">login</span> Sign In
+            </a>
+            
             <button class="theme-toggle" id="themeToggle">
                 <span class="material-icons-round">dark_mode</span>
             </button>
+            
             <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <span class="material-icons-round">menu</span>
             </button>
         </div>
     </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <span class="nav-brand-name">Reverbit</span>
+            <button class="mobile-nav-close" id="mobileNavClose">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        
+        <div id="mobileAvatarContainer"></div>
+        
+        <div class="mobile-nav-links">
+            <a href="https://aditya-cmd-max.github.io/" class="mobile-nav-link">
+                <span class="material-icons-round">home</span> Home
+            </a>
+            <a href="https://aditya-cmd-max.github.io/circuit" class="mobile-nav-link">
+                <span class="material-icons-round">menu_book</span> Blogs
+            </a>
+            <a href="https://aditya-cmd-max.github.io/about" class="mobile-nav-link">
+                <span class="material-icons-round">person</span> Creator
+            </a>
+            <a href="https://aditya-cmd-max.github.io/ecosystem" class="mobile-nav-link">
+                <span class="material-icons-round">apps</span> Tools
+            </a>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <div class="main-wrapper">
@@ -860,8 +1213,8 @@
             <!-- Welcome Card -->
             <div class="welcome-card">
                 <div class="welcome-text">
-                    <h1>Welcome back, <span class="animated-name" id="userName">User</span>!</h1>
-                    <p id="userEmail" style="color: var(--md-on-surface-variant);">Loading...</p>
+                    <h1>Welcome, <span class="animated-name" id="userName">User</span>!</h1>
+                    <p id="userEmail" style="color: var(--md-on-surface-variant);">Loading your dashboard...</p>
                 </div>
                 <div class="welcome-stats">
                     <div class="stat-item">
@@ -879,8 +1232,8 @@
                 </div>
             </div>
 
-            <!-- Section Navigation -->
-            <div class="section-nav">
+            <!-- Section Tabs -->
+            <div class="section-tabs">
                 <button class="section-tab active" data-section="overview">
                     <span class="material-icons-round">dashboard</span>
                     Overview
@@ -917,19 +1270,19 @@
                         <div class="progress-bar">
                             <div class="progress-fill" id="profileProgress" style="width: 0%"></div>
                         </div>
-                        <p style="margin-top: var(--space-md);">Complete your profile for better experience</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Complete your profile for better experience</p>
                     </div>
                     
                     <div class="stat-card">
                         <div class="stat-icon">
                             <span class="material-icons-round">timeline</span>
                         </div>
-                        <div class="stat-value" id="weeklyActivity">0</div>
+                        <div class="stat-value" id="weeklyTotal">0</div>
                         <div class="stat-label">Minutes This Week</div>
                         <div class="progress-bar">
                             <div class="progress-fill" id="weeklyProgress" style="width: 0%"></div>
                         </div>
-                        <p style="margin-top: var(--space-md);" id="mostUsedApp">Most used: Loading...</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);" id="mostUsedApp">Most used: Loading...</p>
                     </div>
                     
                     <div class="stat-card">
@@ -938,7 +1291,7 @@
                         </div>
                         <div class="stat-value" id="achievementCount">0</div>
                         <div class="stat-label">Achievements</div>
-                        <p style="margin-top: var(--space-md);">Keep using apps to unlock more</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Keep using apps to unlock more</p>
                     </div>
                     
                     <div class="stat-card">
@@ -947,7 +1300,7 @@
                         </div>
                         <div class="stat-value" id="notificationCount">3</div>
                         <div class="stat-label">Notifications</div>
-                        <p style="margin-top: var(--space-md);">Latest: Profile incomplete</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Latest: Profile incomplete</p>
                     </div>
                 </div>
             </section>
@@ -980,7 +1333,7 @@
                     <form id="profileForm" class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Full Name</label>
-                            <input type="text" class="form-input" id="fullName" placeholder="Your name">
+                            <input type="text" class="form-input" id="fullName" placeholder="Your full name">
                         </div>
                         
                         <div class="form-group">
@@ -990,7 +1343,7 @@
                         
                         <div class="form-group">
                             <label class="form-label">Bio</label>
-                            <textarea class="form-textarea" id="bio" rows="3" placeholder="Tell us about yourself"></textarea>
+                            <textarea class="form-textarea" id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
                         </div>
                         
                         <div class="form-group">
@@ -1030,9 +1383,9 @@
                                 <span class="material-icons-round">undo</span>
                                 Reset
                             </button>
-                            <a href="https://aditya-cmd-max.github.io/profile/" class="btn btn-secondary">
+                            <a href="https://aditya-cmd-max.github.io/profile/" class="btn btn-secondary" target="_blank">
                                 <span class="material-icons-round">visibility</span>
-                                View Public Profile
+                                View Profile
                             </a>
                         </div>
                     </form>
@@ -1044,7 +1397,7 @@
                 <h2 class="section-title">My Apps</h2>
                 
                 <div class="apps-grid">
-                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/cloverai/" class="app-card" target="_blank">
                         <div class="app-icon">
                             <span class="material-icons-round">psychology</span>
                         </div>
@@ -1056,7 +1409,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/mindscribe/" class="app-card" target="_blank">
                         <div class="app-icon">
                             <span class="material-icons-round">edit_note</span>
                         </div>
@@ -1068,7 +1421,7 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/Peo/" class="app-card" target="_blank">
                         <div class="app-icon">
                             <span class="material-icons-round">record_voice_over</span>
                         </div>
@@ -1080,15 +1433,15 @@
                         </div>
                     </a>
                     
-                    <a href="https://aditya-cmd-max.github.io/popout/" class="app-card">
+                    <a href="https://aditya-cmd-max.github.io/popout/" class="app-card" target="_blank">
                         <div class="app-icon">
                             <span class="material-icons-round">visibility</span>
                         </div>
                         <h3 class="app-title">PopOut Pro</h3>
-                        <p class="app-stats">Visual learning</p>
+                        <p class="app-stats">Visual learning tool</p>
                         <div class="app-usage">
                             <span class="material-icons-round" style="color: var(--md-primary);">star</span>
-                            <span>Coming soon</span>
+                            <span>New</span>
                         </div>
                     </a>
                 </div>
@@ -1105,7 +1458,7 @@
                         </div>
                         <div class="stat-value" id="totalHours">0</div>
                         <div class="stat-label">Total Hours</div>
-                        <p>Across all apps</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Across all apps</p>
                     </div>
                     
                     <div class="stat-card">
@@ -1114,7 +1467,7 @@
                         </div>
                         <div class="stat-value" id="bestStreak">0</div>
                         <div class="stat-label">Best Streak</div>
-                        <p>Your record</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Your record</p>
                     </div>
                     
                     <div class="stat-card">
@@ -1123,7 +1476,7 @@
                         </div>
                         <div class="stat-value" id="favoriteApp">-</div>
                         <div class="stat-label">Favorite App</div>
-                        <p id="favoriteTime">0 mins</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);" id="favoriteTime">0 mins</p>
                     </div>
                     
                     <div class="stat-card">
@@ -1132,7 +1485,7 @@
                         </div>
                         <div class="stat-value" id="dailyAverage">0</div>
                         <div class="stat-label">Daily Average</div>
-                        <p>Minutes per day</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Minutes per day</p>
                     </div>
                 </div>
             </section>
@@ -1146,7 +1499,7 @@
                         <div class="timeline-item">
                             <div class="timeline-time">Just now</div>
                             <div class="timeline-content">
-                                <div class="timeline-title">Profile Viewed</div>
+                                <div class="timeline-title">Dashboard Viewed</div>
                                 <div class="timeline-desc">You checked your dashboard</div>
                             </div>
                         </div>
@@ -1154,14 +1507,21 @@
                             <div class="timeline-time">2h ago</div>
                             <div class="timeline-content">
                                 <div class="timeline-title">Clover AI Session</div>
-                                <div class="timeline-desc">Completed 3 lessons</div>
+                                <div class="timeline-desc">Completed 3 learning modules</div>
                             </div>
                         </div>
                         <div class="timeline-item">
                             <div class="timeline-time">Yesterday</div>
                             <div class="timeline-content">
                                 <div class="timeline-title">Profile Updated</div>
-                                <div class="timeline-desc">Changed profile picture</div>
+                                <div class="timeline-desc">Changed profile information</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">2 days ago</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">MindScribe Used</div>
+                                <div class="timeline-desc">Created 5 new notes</div>
                             </div>
                         </div>
                     </div>
@@ -1184,7 +1544,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeCropModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="cropAndUpload()">
+                <button class="btn btn-primary" onclick="cropAndUpload()" id="cropButton">
                     <span class="material-icons-round">crop</span>
                     Crop & Upload
                 </button>
@@ -1201,11 +1561,31 @@
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p>Loading Reverbit Dashboard...</p>
+        <div class="loading-text">Reverbit</div>
     </div>
 
     <script>
-        // ==================== FIREBASE CONFIG ====================
+        // ==================== GLOBAL VARIABLES ====================
+        let currentUser = null;
+        let currentProfile = null;
+        let cropper = null;
+        let selectedFile = null;
+        let db;
+
+        // DOM Elements
+        const loadingScreen = document.getElementById('loading');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastIcon = document.getElementById('toastIcon');
+        const themeToggle = document.getElementById('themeToggle');
+        const sectionTabs = document.querySelectorAll('.section-tab');
+        const sections = document.querySelectorAll('.dashboard-section');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+
+        // ==================== FIREBASE INIT ====================
         const firebaseConfig = {
             apiKey: "AIzaSyDE0eix0uVHuUS5P5DbuPA-SZt6pD8ob8A",
             authDomain: "reverbit11.firebaseapp.com",
@@ -1216,38 +1596,10 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // ==================== GLOBAL VARIABLES ====================
-        let currentUser = null;
-        let currentProfile = null;
-        let cropper = null;
-        let selectedFile = null;
-        let currentSection = 'overview';
-
-        // DOM Elements
-        const loadingScreen = document.getElementById('loading');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-        const toastIcon = document.getElementById('toastIcon');
-        const themeToggle = document.getElementById('themeToggle');
-        const sectionTabs = document.querySelectorAll('.section-tab');
-        const sections = document.querySelectorAll('.dashboard-section');
-        const profileAvatar = document.getElementById('profileAvatar');
-        const avatarImg = document.getElementById('avatarImg');
-        const profileAvatarLarge = document.getElementById('profileAvatarLarge');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-        const profileDisplayName = document.getElementById('profileDisplayName');
-        const fullName = document.getElementById('fullName');
-        const email = document.getElementById('email');
-        const bio = document.getElementById('bio');
-        const country = document.getElementById('country');
-        const dob = document.getElementById('dob');
-        const gender = document.getElementById('gender');
-        const memberSince = document.getElementById('memberSince');
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
 
         // ==================== THEME MANAGEMENT ====================
         function toggleTheme() {
@@ -1257,48 +1609,76 @@
             themeToggle.querySelector('.material-icons-round').textContent = isDark ? 'light_mode' : 'dark_mode';
         }
 
-        // Load saved theme
         const savedTheme = localStorage.getItem('theme') || 'light';
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-theme');
             themeToggle.querySelector('.material-icons-round').textContent = 'light_mode';
         }
-
         themeToggle.addEventListener('click', toggleTheme);
 
-        // ==================== SECTION NAVIGATION ====================
-        sectionTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const sectionId = tab.dataset.section;
-                
-                // Update tabs
-                sectionTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Update sections
-                sections.forEach(s => s.classList.remove('active'));
-                document.getElementById(sectionId).classList.add('active');
-                
-                currentSection = sectionId;
-            });
-        });
-
-        // ==================== TOAST NOTIFICATIONS ====================
+        // ==================== TOAST ====================
         function showToast(message, type = 'info') {
             toast.className = `toast toast-${type}`;
             toastMessage.textContent = message;
             toastIcon.textContent = type === 'success' ? 'check_circle' : 
                                    type === 'error' ? 'error' : 'info';
             toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // ==================== MOBILE MENU ====================
+        mobileMenuBtn?.addEventListener('click', () => {
+            mobileNav.classList.add('open');
+            mobileNavOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeMobileMenu() {
+            mobileNav.classList.remove('open');
+            mobileNavOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileNavClose?.addEventListener('click', closeMobileMenu);
+        mobileNavOverlay?.addEventListener('click', closeMobileMenu);
+
+        // ==================== SECTION NAVIGATION ====================
+        sectionTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const sectionId = tab.dataset.section;
+                
+                sectionTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+                
+                // On mobile, scroll to top of section
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            });
+        });
+
+        // ==================== SCROLL PROGRESS ====================
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+            
+            const navbar = document.getElementById('navbar');
+            if (winScroll > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
 
         // ==================== CROPPER MODAL ====================
         function openCropModal() {
-            // Create file input
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
@@ -1312,34 +1692,33 @@
                         const image = document.getElementById('cropImage');
                         image.src = event.target.result;
                         
-                        // Initialize cropper
-                        if (cropper) {
-                            cropper.destroy();
-                        }
-                        cropper = new Cropper(image, {
-                            aspectRatio: 1,
-                            viewMode: 1,
-                            dragMode: 'move',
-                            autoCropArea: 1,
-                            cropBoxResizable: true,
-                            cropBoxMovable: true,
-                            minContainerWidth: 300,
-                            minContainerHeight: 300,
-                            responsive: true,
-                            background: false,
-                            modal: true,
-                            guides: true,
-                            center: true,
-                            highlight: false,
-                            toggleDragModeOnDblclick: false,
-                        });
+                        if (cropper) cropper.destroy();
+                        
+                        setTimeout(() => {
+                            cropper = new Cropper(image, {
+                                aspectRatio: 1,
+                                viewMode: 1,
+                                dragMode: 'move',
+                                autoCropArea: 1,
+                                cropBoxResizable: true,
+                                cropBoxMovable: true,
+                                minContainerWidth: 250,
+                                minContainerHeight: 250,
+                                responsive: true,
+                                background: false,
+                                modal: true,
+                                guides: true,
+                                center: true,
+                                highlight: false,
+                                toggleDragModeOnDblclick: false,
+                            });
+                        }, 100);
                         
                         document.getElementById('cropModal').classList.add('active');
                     };
                     reader.readAsDataURL(file);
                 }
             };
-            
             input.click();
         }
 
@@ -1357,10 +1736,11 @@
                 return;
             }
 
+            const cropButton = document.getElementById('cropButton');
+            cropButton.disabled = true;
+            cropButton.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Processing...';
+
             try {
-                showToast('Processing image...', 'info');
-                
-                // Get cropped canvas
                 const canvas = cropper.getCroppedCanvas({
                     width: 400,
                     height: 400,
@@ -1368,42 +1748,37 @@
                     imageSmoothingQuality: 'high',
                 });
 
-                // Convert to blob
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
                 
-                // Convert to base64 for storage
                 const reader = new FileReader();
                 reader.readAsDataURL(blob);
                 
                 reader.onload = async () => {
                     const base64Image = reader.result;
                     
-                    // Update Firestore
                     await db.collection('users').doc(currentUser.uid).set({
                         photoURL: base64Image,
                         updatedAt: new Date().toISOString()
                     }, { merge: true });
                     
-                    // Update Firebase Auth profile
                     await currentUser.updateProfile({
                         photoURL: base64Image
                     });
                     
-                    // Update UI
                     const timestamp = Date.now();
-                    avatarImg.src = base64Image + '?t=' + timestamp;
-                    profileAvatarLarge.src = base64Image + '?t=' + timestamp;
+                    document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge').forEach(img => {
+                        if (img) img.src = base64Image + '?t=' + timestamp;
+                    });
                     
                     closeCropModal();
                     showToast('Profile picture updated!', 'success');
-                    
-                    // Reload user data
-                    await loadUserData(currentUser);
                 };
-                
             } catch (error) {
                 console.error('Upload error:', error);
                 showToast('Failed to upload image', 'error');
+            } finally {
+                cropButton.disabled = false;
+                cropButton.innerHTML = '<span class="material-icons-round">crop</span> Crop & Upload';
             }
         }
 
@@ -1417,21 +1792,22 @@
                 const displayName = user.displayName || user.email?.split('@')[0] || 'User';
                 
                 // Update UI
-                userName.textContent = displayName;
-                userEmail.textContent = user.email;
-                profileDisplayName.textContent = displayName;
-                fullName.value = displayName;
-                email.value = user.email || '';
-                bio.value = userData.bio || '';
-                country.value = userData.country || '';
-                dob.value = userData.dob || '';
-                gender.value = userData.gender || '';
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('profileDisplayName').textContent = displayName;
+                document.getElementById('fullName').value = displayName;
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('bio').value = userData.bio || '';
+                document.getElementById('country').value = userData.country || '';
+                document.getElementById('dob').value = userData.dob || '';
+                document.getElementById('gender').value = userData.gender || '';
                 
                 // Member since
                 const creationTime = user.metadata.creationTime;
                 if (creationTime) {
                     const date = new Date(creationTime);
-                    memberSince.textContent = `Member since: ${date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+                    document.getElementById('memberSince').textContent = 
+                        `Member since: ${date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
                 }
                 
                 // Avatar
@@ -1441,10 +1817,11 @@
                 }
                 
                 const timestamp = Date.now();
-                avatarImg.src = avatarUrl + '?t=' + timestamp;
-                profileAvatarLarge.src = avatarUrl + '?t=' + timestamp;
+                document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge').forEach(img => {
+                    if (img) img.src = avatarUrl + '?t=' + timestamp;
+                });
                 
-                // Calculate profile completion
+                // Profile completion
                 let completion = 0;
                 if (displayName) completion += 25;
                 if (userData.bio) completion += 25;
@@ -1454,7 +1831,6 @@
                 document.getElementById('profileCompletion').textContent = completion + '%';
                 document.getElementById('profileProgress').style.width = completion + '%';
                 
-                // Load usage data
                 await loadUsageData(user.uid);
                 
             } catch (error) {
@@ -1474,21 +1850,18 @@
                 const peoTime = usageData.peo || 0;
                 const streak = usageData.streak || 0;
                 
-                // Update app times
                 document.getElementById('cloverTime').textContent = `${cloverTime} mins this week`;
                 document.getElementById('mindscribeTime').textContent = `${mindscribeTime} mins this week`;
                 document.getElementById('peoTime').textContent = `${peoTime} mins this week`;
                 
-                // Calculate totals
                 const totalMinutes = cloverTime + mindscribeTime + peoTime;
                 const totalHours = (totalMinutes / 60).toFixed(1);
                 
                 document.getElementById('totalTime').textContent = `${totalHours}h`;
                 document.getElementById('totalHours').textContent = totalHours;
-                document.getElementById('weeklyActivity').textContent = totalMinutes;
+                document.getElementById('weeklyTotal').textContent = totalMinutes;
                 document.getElementById('streakCount').textContent = streak;
                 
-                // Find most used app
                 const apps = [
                     { name: 'Clover AI', time: cloverTime },
                     { name: 'MindScribe', time: mindscribeTime },
@@ -1499,16 +1872,14 @@
                 document.getElementById('mostUsedApp').textContent = `Most used: ${mostUsed.name}`;
                 document.getElementById('favoriteApp').textContent = mostUsed.name;
                 document.getElementById('favoriteTime').textContent = `${mostUsed.time} mins`;
+                document.getElementById('bestStreak').textContent = usageData.bestStreak || streak;
                 
-                // Count used apps
                 const usedApps = apps.filter(a => a.time > 0).length;
                 document.getElementById('appsUsed').textContent = usedApps;
                 
-                // Weekly progress (assume 300 min goal)
                 const weeklyProgress = Math.min(100, (totalMinutes / 300) * 100);
                 document.getElementById('weeklyProgress').style.width = weeklyProgress + '%';
                 
-                // Daily average
                 const dailyAvg = Math.round(totalMinutes / 7);
                 document.getElementById('dailyAverage').textContent = dailyAvg;
                 
@@ -1523,52 +1894,56 @@
             
             if (!currentUser) return;
             
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Saving...';
+            
             try {
                 const formData = {
-                    displayName: fullName.value.trim(),
-                    bio: bio.value.trim(),
-                    country: country.value,
-                    dob: dob.value,
-                    gender: gender.value,
+                    displayName: document.getElementById('fullName').value.trim(),
+                    bio: document.getElementById('bio').value.trim(),
+                    country: document.getElementById('country').value,
+                    dob: document.getElementById('dob').value,
+                    gender: document.getElementById('gender').value,
                     updatedAt: new Date().toISOString()
                 };
                 
-                // Update Firestore
                 await db.collection('users').doc(currentUser.uid).set(formData, { merge: true });
                 
-                // Update Auth displayName if changed
                 if (formData.displayName !== currentUser.displayName) {
                     await currentUser.updateProfile({
                         displayName: formData.displayName
                     });
                 }
                 
-                showToast('Profile updated successfully!', 'success');
-                
-                // Reload data
                 await loadUserData(currentUser);
+                showToast('Profile updated successfully!', 'success');
                 
             } catch (error) {
                 console.error('Error updating profile:', error);
                 showToast('Error updating profile', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="material-icons-round">save</span> Save Changes';
             }
         });
 
         function resetForm() {
             if (currentUser && currentProfile) {
-                fullName.value = currentUser.displayName || '';
-                bio.value = currentProfile.bio || '';
-                country.value = currentProfile.country || '';
-                dob.value = currentProfile.dob || '';
-                gender.value = currentProfile.gender || '';
+                document.getElementById('fullName').value = currentUser.displayName || '';
+                document.getElementById('bio').value = currentProfile.bio || '';
+                document.getElementById('country').value = currentProfile.country || '';
+                document.getElementById('dob').value = currentProfile.dob || '';
+                document.getElementById('gender').value = currentProfile.gender || '';
                 showToast('Form reset', 'info');
             }
         }
 
         // ==================== AUTH STATE ====================
-        auth.onAuthStateChanged(async (user) => {
+        firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
+                document.body.classList.add('user-signed-in');
                 await loadUserData(user);
                 loadingScreen.classList.add('hidden');
             } else {
@@ -1576,50 +1951,25 @@
             }
         });
 
-        // ==================== MOBILE MENU ====================
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.querySelector('.nav-links');
-        
-        mobileMenuBtn?.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            if (window.innerWidth <= 1024) {
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '70px';
-                navLinks.style.left = '50%';
-                navLinks.style.transform = 'translateX(-50%)';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.background = 'var(--md-surface)';
-                navLinks.style.padding = 'var(--space-md)';
-                navLinks.style.borderRadius = 'var(--radius-xl)';
-                navLinks.style.border = '1px solid var(--md-outline)';
-                navLinks.style.width = '90%';
-                navLinks.style.zIndex = '100';
-            }
-        });
-
-        // Close mobile menu on click outside
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 1024 && !e.target.closest('.nav-links') && !e.target.closest('.mobile-menu-btn')) {
-                navLinks.style.display = 'none';
-            }
-        });
-
-        // ==================== NAVBAR SCROLL ====================
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
+        // ==================== AUTH.JS INTEGRATION ====================
+        function checkAuth() {
+            if (window.ReverbitAuth) {
+                window.ReverbitAuth.addAuthListener((user, profile) => {
+                    if (user) {
+                        document.body.classList.add('user-signed-in');
+                    }
+                });
             } else {
-                navbar.classList.remove('scrolled');
+                setTimeout(checkAuth, 500);
             }
-        });
+        }
+        checkAuth();
 
-        // ==================== INITIAL LOAD ====================
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-            }, 500);
-        });
+        // ==================== EXPOSE GLOBALLY ====================
+        window.openCropModal = openCropModal;
+        window.closeCropModal = closeCropModal;
+        window.cropAndUpload = cropAndUpload;
+        window.resetForm = resetForm;
     </script>
 </body>
 </html>
