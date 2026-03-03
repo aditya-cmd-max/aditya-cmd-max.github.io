@@ -31,6 +31,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Flatpickr for Date Picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -228,6 +231,7 @@
         .nav-logo img {
             width: 24px;
             height: 24px;
+            filter: brightness(0) invert(1);
         }
 
         .nav-name {
@@ -504,6 +508,93 @@
             background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
 
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--md-spacing-xl);
+            position: relative;
+            padding: 0 var(--md-spacing-md);
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 60px;
+            right: 60px;
+            height: 2px;
+            background: var(--md-outline);
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--md-spacing-xs);
+        }
+
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--md-surface-variant);
+            border: 2px solid var(--md-outline);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--md-on-surface-variant);
+            transition: var(--md-transition);
+        }
+
+        .step.active .step-indicator {
+            background: var(--md-primary);
+            border-color: var(--md-primary);
+            color: white;
+        }
+
+        .step.completed .step-indicator {
+            background: var(--md-secondary);
+            border-color: var(--md-secondary);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--md-on-surface-variant);
+        }
+
+        .step.active .step-label {
+            color: var(--md-primary);
+            font-weight: 500;
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .form-header {
             text-align: center;
             margin-bottom: var(--md-spacing-xl);
@@ -534,6 +625,12 @@
             gap: var(--md-spacing-sm);
         }
 
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--md-spacing-md);
+        }
+
         .form-label {
             font-family: var(--md-font-heading);
             font-size: 0.95rem;
@@ -541,7 +638,7 @@
             color: var(--md-on-surface);
         }
 
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: var(--md-spacing-md) var(--md-spacing-lg);
             background: var(--md-surface);
@@ -553,7 +650,7 @@
             transition: var(--md-transition);
         }
 
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--md-primary);
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
@@ -666,6 +763,25 @@
             background: var(--md-primary-container);
             border-color: var(--md-primary);
             transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+        }
+
+        .btn-secondary:hover {
+            background: var(--md-outline);
+        }
+
+        .button-group {
+            display: flex;
+            gap: var(--md-spacing-md);
+            margin-top: var(--md-spacing-xl);
+        }
+
+        .button-group .btn {
+            flex: 1;
         }
 
         .divider {
@@ -911,6 +1027,25 @@
                 padding: var(--md-spacing-xl) var(--md-spacing-md);
                 margin-top: 70px;
             }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-steps::before {
+                left: 30px;
+                right: 30px;
+            }
+            
+            .step-indicator {
+                width: 35px;
+                height: 35px;
+                font-size: 0.875rem;
+            }
+            
+            .step-label {
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -1039,84 +1174,217 @@
                 </div>
             </div>
 
-            <!-- Right Side: Signup Form -->
+            <!-- Right Side: Multi-step Signup Form -->
             <div class="signup-right">
-                <div class="form-header">
-                    <h2 class="form-title">Create Your Account</h2>
-                    <p class="form-subtitle">Fill in your details to get started</p>
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-indicator">1</div>
+                        <span class="step-label">Account</span>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-indicator">2</div>
+                        <span class="step-label">Personal</span>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-indicator">3</div>
+                        <span class="step-label">Preferences</span>
+                    </div>
                 </div>
 
                 <form class="signup-form" id="signup-form">
-                    <div class="form-group">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
-                        <div class="error-message" id="nameError"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
-                        <div class="error-message" id="emailError"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <div class="input-with-icon">
-                            <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
-                            <button type="button" class="password-toggle" id="togglePassword">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                    <!-- Step 1: Account Information -->
+                    <div class="form-step active" id="step1">
+                        <div class="form-header">
+                            <h2 class="form-title">Create Your Account</h2>
+                            <p class="form-subtitle">Fill in your basic information to get started</p>
                         </div>
-                        <div class="password-strength">
-                            <div class="strength-bar">
-                                <div class="strength-fill" id="strengthFill"></div>
+
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
+                            <div class="error-message" id="nameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Username *</label>
+                            <input type="text" id="username" class="form-input" placeholder="Choose a username (letters, numbers, _ .)" required>
+                            <div class="error-message" id="usernameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password *</label>
+                            <div class="input-with-icon">
+                                <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
+                                <button type="button" class="password-toggle" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
-                            <div class="strength-text" id="strengthText">Password strength: Weak</div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <div class="strength-text" id="strengthText">Password strength: Weak</div>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
                         </div>
-                        <div class="error-message" id="passwordError"></div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Confirm Password</label>
-                        <div class="input-with-icon">
-                            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
-                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
-                                <i class="fas fa-eye"></i>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password *</label>
+                            <div class="input-with-icon">
+                                <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                                <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="confirmError"></div>
+                        </div>
+
+                        <div class="terms-group">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">
+                                I agree to the <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank" class="terms-link">Terms of Service</a> and <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank" class="terms-link">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-filled" onclick="nextStep()">
+                                Next <i class="fas fa-arrow-right"></i>
                             </button>
                         </div>
-                        <div class="error-message" id="confirmError"></div>
+
+                        <div class="divider">
+                            <div class="divider-line"></div>
+                            <span class="divider-text">Or sign up with</span>
+                            <div class="divider-line"></div>
+                        </div>
+
+                        <div class="social-signup">
+                            <button type="button" class="social-btn" id="googleSignUp">
+                                <img src="https://brandlogo.org/wp-content/uploads/2025/05/Google-G-Icon-2025.png.webp" alt="Google">
+                                <span>Continue with Google</span>
+                            </button>
+                        </div>
+
+                        <p class="signin-link">
+                            Already have an account?
+                            <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html">Sign in</a>
+                        </p>
                     </div>
 
-                    <div class="terms-group">
-                        <input type="checkbox" id="terms" required>
-                        <label for="terms">
-                            I agree to the <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank" class="terms-link">Terms of Service</a> and <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank" class="terms-link">Privacy Policy</a>
-                        </label>
+                    <!-- Step 2: Personal Information -->
+                    <div class="form-step" id="step2">
+                        <div class="form-header">
+                            <h2 class="form-title">Tell Us About Yourself</h2>
+                            <p class="form-subtitle">This helps us personalize your experience</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Country</label>
+                                <select id="country" class="form-select">
+                                    <option value="">Select your country</option>
+                                    <option value="US">United States</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="IN">India</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="BR">Brazil</option>
+                                    <option value="MX">Mexico</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select id="gender" class="form-select">
+                                    <option value="">Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" id="dob" class="form-input" max="2025-01-01" min="1900-01-01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea id="bio" class="form-input" rows="3" placeholder="Tell us a little about yourself (optional)" maxlength="500"></textarea>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-filled" onclick="nextStep()">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn btn-filled">
-                        <span>Create Account</span>
-                        <i class="fas fa-arrow-right"></i>
-                        <div class="loading" id="submitLoading"></div>
-                    </button>
+                    <!-- Step 3: Preferences -->
+                    <div class="form-step" id="step3">
+                        <div class="form-header">
+                            <h2 class="form-title">Customize Your Experience</h2>
+                            <p class="form-subtitle">Set your preferences (you can change these later)</p>
+                        </div>
 
-                    <div class="divider">
-                        <div class="divider-line"></div>
-                        <span class="divider-text">Or sign up with</span>
-                        <div class="divider-line"></div>
+                        <div class="form-group">
+                            <label class="form-label">Theme Preference</label>
+                            <select id="themePreference" class="form-select">
+                                <option value="light">Light Mode</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="auto">Auto (Follow System)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <select id="language" class="form-select">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="hi">Hindi</option>
+                                <option value="ja">Japanese</option>
+                                <option value="zh">Chinese</option>
+                            </select>
+                        </div>
+
+                        <div class="terms-group">
+                            <input type="checkbox" id="notifications" checked>
+                            <label for="notifications">Receive email notifications about updates and new features</label>
+                        </div>
+
+                        <div class="terms-group">
+                            <input type="checkbox" id="privacyMode">
+                            <label for="privacyMode">Enable privacy mode (profile hidden from public)</label>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="submit" class="btn btn-filled" id="submitBtn">
+                                <span>Create Account</span>
+                                <div class="loading" id="submitLoading"></div>
+                            </button>
+                        </div>
                     </div>
-
-                    <div class="social-signup">
-                        <button type="button" class="social-btn" id="googleSignUp">
-                            <img src="https://brandlogo.org/wp-content/uploads/2025/05/Google-G-Icon-2025.png.webp" alt="Google">
-                            <span>Continue with Google</span>
-                        </button>
-                    </div>
-
-                    <p class="signin-link">
-                        Already have an account?
-                        <a href="https://aditya-cmd-max.github.io/reverbit/authentication/signin.html">Sign in</a>
-                    </p>
                 </form>
             </div>
         </div>
@@ -1131,6 +1399,7 @@
         </p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         // Firebase Configuration
         const firebaseConfig = {
@@ -1156,11 +1425,29 @@
         const mobileNavClose = document.getElementById('mobileNavClose');
         const mobileNav = document.getElementById('mobileNav');
         const signupForm = document.getElementById('signup-form');
+        
+        // Step elements
+        const steps = document.querySelectorAll('.step');
+        const formSteps = document.querySelectorAll('.form-step');
+        let currentStep = 1;
+
+        // Form inputs
         const fullName = document.getElementById('fullName');
+        const username = document.getElementById('username');
         const email = document.getElementById('email');
         const password = document.getElementById('password');
         const confirmPassword = document.getElementById('confirmPassword');
+        const country = document.getElementById('country');
+        const gender = document.getElementById('gender');
+        const dob = document.getElementById('dob');
+        const bio = document.getElementById('bio');
+        const themePreference = document.getElementById('themePreference');
+        const language = document.getElementById('language');
+        const notifications = document.getElementById('notifications');
+        const privacyMode = document.getElementById('privacyMode');
+        
         const submitLoading = document.getElementById('submitLoading');
+        const submitBtn = document.getElementById('submitBtn');
         const successModal = document.getElementById('successModal');
         const successMessage = document.getElementById('successMessage');
         const strengthFill = document.getElementById('strengthFill');
@@ -1169,6 +1456,7 @@
 
         // Error elements
         const nameError = document.getElementById('nameError');
+        const usernameError = document.getElementById('usernameError');
         const emailError = document.getElementById('emailError');
         const passwordError = document.getElementById('passwordError');
         const confirmError = document.getElementById('confirmError');
@@ -1280,14 +1568,70 @@
             }
         });
 
-        // Validate form
-        function validateForm() {
+        // Username validation
+        username.addEventListener('input', () => {
+            const value = username.value;
+            const usernameRegex = /^[a-zA-Z0-9_.]+$/;
+            
+            if (value && !usernameRegex.test(value)) {
+                usernameError.textContent = 'Username can only contain letters, numbers, underscores and dots';
+                usernameError.classList.add('show');
+            } else if (value && value.length < 3) {
+                usernameError.textContent = 'Username must be at least 3 characters';
+                usernameError.classList.add('show');
+            } else if (value && value.length > 30) {
+                usernameError.textContent = 'Username must be less than 30 characters';
+                usernameError.classList.add('show');
+            } else {
+                usernameError.classList.remove('show');
+            }
+        });
+
+        // Step navigation functions
+        window.nextStep = function() {
+            if (currentStep === 1) {
+                if (!validateStep1()) return;
+            }
+            
+            if (currentStep < 3) {
+                // Update steps
+                steps[currentStep - 1].classList.remove('active');
+                steps[currentStep - 1].classList.add('completed');
+                steps[currentStep].classList.add('active');
+                
+                // Update form steps
+                formSteps[currentStep - 1].classList.remove('active');
+                formSteps[currentStep].classList.add('active');
+                
+                currentStep++;
+            }
+        };
+
+        window.prevStep = function() {
+            if (currentStep > 1) {
+                currentStep--;
+                
+                // Update steps
+                steps[currentStep].classList.remove('active', 'completed');
+                steps[currentStep - 1].classList.remove('completed');
+                steps[currentStep - 1].classList.add('active');
+                
+                // Update form steps
+                formSteps[currentStep].classList.remove('active');
+                formSteps[currentStep - 1].classList.add('active');
+            }
+        };
+
+        // Validate step 1
+        function validateStep1() {
             let isValid = true;
             
             // Reset errors
-            [nameError, emailError, passwordError, confirmError].forEach(el => {
-                el.textContent = '';
-                el.classList.remove('show');
+            [nameError, usernameError, emailError, passwordError, confirmError].forEach(el => {
+                if (el) {
+                    el.textContent = '';
+                    el.classList.remove('show');
+                }
             });
             
             // Validate name
@@ -1298,6 +1642,30 @@
             } else if (fullName.value.trim().length < 2) {
                 nameError.textContent = 'Name must be at least 2 characters';
                 nameError.classList.add('show');
+                isValid = false;
+            } else if (fullName.value.trim().length > 50) {
+                nameError.textContent = 'Name must be less than 50 characters';
+                nameError.classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate username
+            const usernameRegex = /^[a-zA-Z0-9_.]+$/;
+            if (!username.value.trim()) {
+                usernameError.textContent = 'Username is required';
+                usernameError.classList.add('show');
+                isValid = false;
+            } else if (!usernameRegex.test(username.value)) {
+                usernameError.textContent = 'Username can only contain letters, numbers, underscores and dots';
+                usernameError.classList.add('show');
+                isValid = false;
+            } else if (username.value.length < 3) {
+                usernameError.textContent = 'Username must be at least 3 characters';
+                usernameError.classList.add('show');
+                isValid = false;
+            } else if (username.value.length > 30) {
+                usernameError.textContent = 'Username must be less than 30 characters';
+                usernameError.classList.add('show');
                 isValid = false;
             }
             
@@ -1338,25 +1706,31 @@
             return isValid;
         }
 
-        // Create user profile in Firestore
+        // Create user profile in Firestore with all fields
         async function createUserProfile(user) {
             const displayName = fullName.value.trim();
             const now = firebase.firestore.Timestamp.now();
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Generate a valid username if not provided
+            const finalUsername = username.value.trim() || 
+                displayName.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substring(2, 6);
             
             const userData = {
                 uid: user.uid,
                 email: user.email,
                 displayName: displayName,
-                username: displayName.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substring(2, 6),
+                username: finalUsername,
                 photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true&size=400`,
-                isPublic: true,
+                isPublic: !privacyMode.checked,
                 createdAt: now,
                 updatedAt: now,
-                theme: savedTheme || 'light',
-                bio: '',
-                country: '',
-                gender: '',
-                dob: '',
+                theme: themePreference.value || savedTheme,
+                bio: bio.value || '',
+                country: country.value || '',
+                gender: gender.value || '',
+                dob: dob.value || '',
+                showApps: true,
                 streak: 0,
                 totalLogins: 1,
                 followersCount: 0,
@@ -1364,18 +1738,36 @@
                 verified: false,
                 verifiedLevel: 'none',
                 premiumVerified: false,
-                emailVerified: user.emailVerified,
+                cloudinaryImageId: '',
                 lastLogin: now,
                 lastActive: now,
+                lastSync: now,
+                appVersion: '1.0.0',
+                platform: 'web',
+                userAgent: navigator.userAgent,
+                emailVerified: user.emailVerified,
+                provider: 'email',
+                accountStatus: 'active',
                 preferences: {
-                    notifications: true,
-                    emailUpdates: true,
+                    notifications: notifications.checked,
+                    emailUpdates: notifications.checked,
                     autoSave: true,
-                    darkMode: savedTheme === 'dark',
-                    language: 'en'
+                    darkMode: themePreference.value === 'dark',
+                    language: language.value || 'en',
+                    privacyMode: privacyMode.checked
                 }
             };
             
+            // Remove undefined values
+            Object.keys(userData).forEach(key => {
+                if (userData[key] === undefined || userData[key] === null) {
+                    if (key !== 'dob' && key !== 'bio' && key !== 'country' && key !== 'gender') {
+                        userData[key] = '';
+                    }
+                }
+            });
+            
+            console.log('Creating user profile:', userData);
             await db.collection('users').doc(user.uid).set(userData);
             
             // Create usage record
@@ -1383,23 +1775,25 @@
                 cloverAI: 0,
                 mindscribe: 0,
                 peo: 0,
+                other: 0,
                 streak: 0,
                 lastUsed: now,
-                updatedAt: now
+                updatedAt: now,
+                weeklyActivity: {},
+                monthlyActivity: {}
             });
             
             return userData;
         }
 
-        // Handle signup
+        // Handle signup form submission
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!validateForm()) return;
+            if (currentStep !== 3) return;
             
             // Show loading
             submitLoading.style.display = 'block';
-            const submitBtn = signupForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             
             try {
@@ -1416,7 +1810,7 @@
                     displayName: fullName.value.trim()
                 });
                 
-                // Create Firestore profile
+                // Create Firestore profile with all fields
                 await createUserProfile(user);
                 
                 // Send verification email
@@ -1465,6 +1859,8 @@
                     case 'auth/too-many-requests':
                         errorMessage = 'Too many attempts. Please try again later.';
                         break;
+                    default:
+                        errorMessage = error.message;
                 }
                 
                 alert(errorMessage);
@@ -1474,7 +1870,7 @@
             }
         });
 
-        // Google Sign Up
+        // Google Sign Up with additional info
         googleSignUp.addEventListener('click', async () => {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('profile');
@@ -1488,15 +1884,17 @@
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 
                 if (!userDoc.exists) {
-                    // Create profile for new user
+                    // Create profile for new user with minimal required fields
                     const now = firebase.firestore.Timestamp.now();
+                    const displayName = user.displayName || user.email.split('@')[0];
+                    const username = displayName.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substring(2, 6);
                     
-                    await db.collection('users').doc(user.uid).set({
+                    const userData = {
                         uid: user.uid,
                         email: user.email,
-                        displayName: user.displayName || user.email.split('@')[0],
-                        username: (user.displayName || user.email.split('@')[0]).toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.random().toString(36).substring(2, 6),
-                        photoURL: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff&bold=true`,
+                        displayName: displayName,
+                        username: username,
+                        photoURL: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1a73e8&color=fff&bold=true`,
                         isPublic: true,
                         createdAt: now,
                         updatedAt: now,
@@ -1505,6 +1903,7 @@
                         country: '',
                         gender: '',
                         dob: '',
+                        showApps: true,
                         streak: 0,
                         totalLogins: 1,
                         followersCount: 0,
@@ -1512,25 +1911,39 @@
                         verified: false,
                         verifiedLevel: 'none',
                         premiumVerified: false,
-                        emailVerified: user.emailVerified,
+                        cloudinaryImageId: '',
                         lastLogin: now,
                         lastActive: now,
+                        lastSync: now,
+                        appVersion: '1.0.0',
+                        platform: 'web',
+                        userAgent: navigator.userAgent,
+                        emailVerified: user.emailVerified,
+                        provider: 'google.com',
+                        accountStatus: 'active',
                         preferences: {
                             notifications: true,
                             emailUpdates: true,
                             autoSave: true,
                             darkMode: savedTheme === 'dark',
-                            language: 'en'
+                            language: 'en',
+                            privacyMode: false
                         }
-                    });
+                    };
+                    
+                    console.log('Creating Google user profile:', userData);
+                    await db.collection('users').doc(user.uid).set(userData);
                     
                     await db.collection('usage').doc(user.uid).set({
                         cloverAI: 0,
                         mindscribe: 0,
                         peo: 0,
+                        other: 0,
                         streak: 0,
                         lastUsed: now,
-                        updatedAt: now
+                        updatedAt: now,
+                        weeklyActivity: {},
+                        monthlyActivity: {}
                     });
                 } else {
                     // Update last login for existing user
