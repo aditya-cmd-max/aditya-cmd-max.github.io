@@ -1249,8 +1249,7 @@
         import { 
             getAuth, 
             signOut, 
-            onAuthStateChanged,
-            connectAuthEmulator 
+            onAuthStateChanged
         } from 'firebase/auth';
         import { 
             getFirestore, 
@@ -1263,15 +1262,12 @@
             deleteDoc, 
             query, 
             where, 
-            orderBy, 
-            limit, 
-            startAfter,
             addDoc,
             writeBatch,
             increment,
             serverTimestamp,
             enableIndexedDbPersistence,
-            connectFirestoreEmulator 
+            Timestamp
         } from 'firebase/firestore';
 
         // ==================== FIREBASE CONFIG ====================
@@ -1306,7 +1302,7 @@
             
             console.log('✅ Firebase services initialized');
 
-            // Enable persistence with error handling (don't await, let it run in background)
+            // Enable persistence with error handling
             enableIndexedDbPersistence(db, {
                 synchronizeTabs: true
             }).then(() => {
@@ -1506,15 +1502,7 @@
                         }
                     } catch (error) {
                         console.error('❌ Error ensuring profile:', error);
-                        // If error, try to create profile anyway
-                        try {
-                            await this.createUserProfile(uid);
-                            return true;
-                        } catch (createError) {
-                            console.error('❌ Failed to create profile:', createError);
-                            UIManager.showToast('Error creating profile', 'error');
-                            return false;
-                        }
+                        return false;
                     }
                 },
                 
@@ -1541,7 +1529,30 @@
                         createdAt: serverTimestamp(),
                         updatedAt: serverTimestamp(),
                         lastActive: serverTimestamp(),
-                        lastLogin: serverTimestamp()
+                        lastLogin: serverTimestamp(),
+                        
+                        // Add minimal required fields
+                        country: '',
+                        gender: '',
+                        dob: '',
+                        showApps: false,
+                        cloudinaryImageId: '',
+                        theme: 'light',
+                        preferences: {
+                            notifications: true,
+                            emailUpdates: true,
+                            autoSave: true,
+                            darkMode: false,
+                            language: 'en',
+                            privacyMode: false
+                        },
+                        lastSync: serverTimestamp(),
+                        appVersion: '1.0.0',
+                        platform: 'web',
+                        userAgent: navigator.userAgent,
+                        emailVerified: user.emailVerified || false,
+                        provider: user.providerData[0]?.providerId || 'email',
+                        accountStatus: 'active'
                     };
                     
                     const docRef = doc(db, 'users', uid);
@@ -1780,7 +1791,7 @@
                 calculateMemberDays(createdAt) {
                     if (!createdAt) return 0;
                     try {
-                        const date = createdAt.seconds ? new Date(createdAt.seconds * 1000) : new Date(createdAt);
+                        const date = createdAt.toDate ? createdAt.toDate() : new Date(createdAt);
                         return Math.floor((new Date() - date) / (1000 * 60 * 60 * 24));
                     } catch {
                         return 0;
@@ -1790,7 +1801,7 @@
                 formatDate(date) {
                     if (!date) return 'Unknown';
                     try {
-                        const d = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+                        const d = date.toDate ? date.toDate() : new Date(date);
                         return d.toLocaleDateString('en-US', { 
                             year: 'numeric', 
                             month: 'short', 
@@ -1804,7 +1815,7 @@
                 formatLastActive(date) {
                     if (!date) return 'Never';
                     try {
-                        const last = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+                        const last = date.toDate ? date.toDate() : new Date(date);
                         const now = new Date();
                         const diff = Math.floor((now - last) / 60000);
                         
@@ -1842,6 +1853,8 @@
             const FollowManager = {
                 async loadProfileFollowData(userId) {
                     try {
+                        console.log('Loading follow data for user:', userId);
+                        
                         const followersQuery = query(
                             collection(db, 'followers'), 
                             where('followingId', '==', userId)
@@ -1852,27 +1865,42 @@
                         );
                         
                         const [followersSnap, followingSnap] = await Promise.all([
-                            getDocs(followersQuery),
-                            getDocs(followingQuery)
+                            getDocs(followersQuery).catch(err => {
+                                console.error('Error loading followers:', err);
+                                return { size: 0, docs: [] };
+                            }),
+                            getDocs(followingQuery).catch(err => {
+                                console.error('Error loading following:', err);
+                                return { size: 0, docs: [] };
+                            })
                         ]);
                         
-                        State.followersCount = followersSnap.size;
-                        State.followingCount = followingSnap.size;
+                        State.followersCount = followersSnap.size || 0;
+                        State.followingCount = followingSnap.size || 0;
+                        
+                        console.log('Follow counts - Followers:', State.followersCount, 'Following:', State.followingCount);
                         
                     } catch (error) {
                         console.error('Error loading follow data:', error);
+                        State.followersCount = 0;
+                        State.followingCount = 0;
                     }
                 },
                 
                 async checkFollowStatus(followerId, followingId) {
                     try {
+                        console.log('Checking follow status:', followerId, '->', followingId);
+                        
                         const q = query(
                             collection(db, 'followers'),
                             where('followerId', '==', followerId),
                             where('followingId', '==', followingId)
                         );
                         const snapshot = await getDocs(q);
-                        return !snapshot.empty;
+                        const isFollowing = !snapshot.empty;
+                        
+                        console.log('Follow status:', isFollowing);
+                        return isFollowing;
                     } catch (error) {
                         console.error('Error checking follow:', error);
                         return false;
@@ -1904,9 +1932,12 @@
                         
                         await this.loadProfileFollowData(State.profileOwner);
                         
+                        // Update the UI
+                        ProfileManager.renderProfile();
+                        
                     } catch (error) {
                         console.error('Follow error:', error);
-                        UIManager.showToast('Error updating follow', 'error');
+                        UIManager.showToast(error.message || 'Error updating follow', 'error');
                     } finally {
                         State.isFollowLoading = false;
                         this.updateFollowButton(false);
@@ -1914,6 +1945,8 @@
                 },
                 
                 async follow() {
+                    console.log('Attempting to follow:', State.profileOwner);
+                    
                     // Check if already following
                     const q = query(
                         collection(db, 'followers'),
@@ -1926,14 +1959,18 @@
                         throw new Error('Already following');
                     }
                     
-                    // Create follow
-                    await addDoc(collection(db, 'followers'), {
+                    // Create follow document
+                    const followData = {
                         followerId: State.currentUser.uid,
                         followingId: State.profileOwner,
                         followerName: State.currentUserProfile?.displayName || State.currentUser.email,
                         followingName: State.profileData.displayName || 'User',
                         createdAt: serverTimestamp()
-                    });
+                    };
+                    
+                    console.log('Creating follow:', followData);
+                    
+                    await addDoc(collection(db, 'followers'), followData);
                     
                     // Update counts
                     const followerRef = doc(db, 'users', State.profileOwner);
@@ -1942,10 +1979,10 @@
                     await Promise.all([
                         updateDoc(followerRef, {
                             followersCount: increment(1)
-                        }),
+                        }).catch(err => console.error('Error updating follower count:', err)),
                         updateDoc(followingRef, {
                             followingCount: increment(1)
-                        })
+                        }).catch(err => console.error('Error updating following count:', err))
                     ]);
                     
                     State.isFollowing = true;
@@ -1953,6 +1990,8 @@
                 },
                 
                 async unfollow() {
+                    console.log('Attempting to unfollow:', State.profileOwner);
+                    
                     const q = query(
                         collection(db, 'followers'),
                         where('followerId', '==', State.currentUser.uid),
@@ -1960,7 +1999,9 @@
                     );
                     const snapshot = await getDocs(q);
                     
-                    if (snapshot.empty) return;
+                    if (snapshot.empty) {
+                        throw new Error('Not following');
+                    }
                     
                     const batch = writeBatch(db);
                     snapshot.docs.forEach(doc => batch.delete(doc.ref));
@@ -1972,10 +2013,10 @@
                     await Promise.all([
                         updateDoc(followerRef, {
                             followersCount: increment(-1)
-                        }),
+                        }).catch(err => console.error('Error updating follower count:', err)),
                         updateDoc(followingRef, {
                             followingCount: increment(-1)
-                        })
+                        }).catch(err => console.error('Error updating following count:', err))
                     ]);
                     
                     State.isFollowing = false;
@@ -2003,11 +2044,15 @@
                     Elements.followersModal.classList.add('active');
                     
                     try {
+                        console.log('Loading followers for:', State.profileOwner);
+                        
                         const q = query(
                             collection(db, 'followers'),
                             where('followingId', '==', State.profileOwner)
                         );
                         const snapshot = await getDocs(q);
+                        
+                        console.log('Followers snapshot size:', snapshot.size);
                         
                         if (snapshot.empty) {
                             Elements.followersList.innerHTML = '<div class="text-center p-4">No followers yet</div>';
@@ -2015,7 +2060,10 @@
                         }
                         
                         const followerIds = snapshot.docs.map(doc => doc.data().followerId);
+                        console.log('Follower IDs:', followerIds);
+                        
                         const followers = await this.getUserProfiles(followerIds);
+                        console.log('Follower profiles:', followers.length);
                         
                         if (followers.length === 0) {
                             Elements.followersList.innerHTML = '<div class="text-center p-4">No followers found</div>';
@@ -2024,7 +2072,7 @@
                         
                         Elements.followersList.innerHTML = followers.map(user => `
                             <div class="modal-user-item" onclick="window.UserManager.viewProfile('${user.uid}')">
-                                <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
+                                <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff'">
                                 <div class="modal-user-info">
                                     <div class="modal-user-name">${user.displayName || 'User'}</div>
                                     <div class="modal-user-email">${user.email || ''}</div>
@@ -2034,7 +2082,7 @@
                         
                     } catch (error) {
                         console.error('Error loading followers:', error);
-                        Elements.followersList.innerHTML = '<div class="text-center p-4 text-error">Error loading followers</div>';
+                        Elements.followersList.innerHTML = '<div class="text-center p-4 text-error">Error loading followers. Please try again.</div>';
                     }
                 },
                 
@@ -2046,11 +2094,15 @@
                     Elements.followingModal.classList.add('active');
                     
                     try {
+                        console.log('Loading following for:', State.profileOwner);
+                        
                         const q = query(
                             collection(db, 'followers'),
                             where('followerId', '==', State.profileOwner)
                         );
                         const snapshot = await getDocs(q);
+                        
+                        console.log('Following snapshot size:', snapshot.size);
                         
                         if (snapshot.empty) {
                             Elements.followingList.innerHTML = '<div class="text-center p-4">Not following anyone</div>';
@@ -2058,7 +2110,10 @@
                         }
                         
                         const followingIds = snapshot.docs.map(doc => doc.data().followingId);
+                        console.log('Following IDs:', followingIds);
+                        
                         const following = await this.getUserProfiles(followingIds);
+                        console.log('Following profiles:', following.length);
                         
                         if (following.length === 0) {
                             Elements.followingList.innerHTML = '<div class="text-center p-4">No followed users found</div>';
@@ -2067,7 +2122,7 @@
                         
                         Elements.followingList.innerHTML = following.map(user => `
                             <div class="modal-user-item" onclick="window.UserManager.viewProfile('${user.uid}')">
-                                <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar">
+                                <img src="${ProfileManager.getAvatarUrl(user)}" class="modal-user-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff'">
                                 <div class="modal-user-info">
                                     <div class="modal-user-name">${user.displayName || 'User'}</div>
                                     <div class="modal-user-email">${user.email || ''}</div>
@@ -2077,21 +2132,27 @@
                         
                     } catch (error) {
                         console.error('Error loading following:', error);
-                        Elements.followingList.innerHTML = '<div class="text-center p-4 text-error">Error loading following</div>';
+                        Elements.followingList.innerHTML = '<div class="text-center p-4 text-error">Error loading following. Please try again.</div>';
                     }
                 },
                 
                 async getUserProfiles(userIds) {
+                    if (!userIds || userIds.length === 0) return [];
+                    
                     const profiles = [];
                     for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
                         const batch = userIds.slice(i, i + BATCH_SIZE);
-                        const promises = batch.map(id => getDoc(doc(db, 'users', id)));
-                        const snapshots = await Promise.all(promises);
-                        snapshots.forEach(snap => {
-                            if (snap.exists()) {
-                                profiles.push({ uid: snap.id, ...snap.data() });
-                            }
-                        });
+                        try {
+                            const promises = batch.map(id => getDoc(doc(db, 'users', id)));
+                            const snapshots = await Promise.all(promises);
+                            snapshots.forEach(snap => {
+                                if (snap.exists()) {
+                                    profiles.push({ uid: snap.id, ...snap.data() });
+                                }
+                            });
+                        } catch (err) {
+                            console.error('Error loading user profiles batch:', err);
+                        }
                     }
                     return profiles;
                 }
@@ -2168,7 +2229,7 @@
                     
                     Elements.searchResults.innerHTML = results.map(user => `
                         <div class="search-result-item" onclick="window.UserManager.viewProfile('${user.uid}')">
-                            <img src="${ProfileManager.getAvatarUrl(user)}" class="search-result-avatar">
+                            <img src="${ProfileManager.getAvatarUrl(user)}" class="search-result-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff'">
                             <div class="search-result-info">
                                 <div class="search-result-name">${user.displayName || 'User'}</div>
                                 <div class="search-result-email">${user.email || ''}</div>
@@ -2245,7 +2306,7 @@
                         activeToday: State.allUsers.filter(u => {
                             if (!u.lastActive) return false;
                             try {
-                                const last = u.lastActive.seconds ? new Date(u.lastActive.seconds * 1000) : new Date(u.lastActive);
+                                const last = u.lastActive.toDate ? u.lastActive.toDate() : new Date(u.lastActive);
                                 return last.toDateString() === today;
                             } catch {
                                 return false;
@@ -2308,7 +2369,7 @@
                         return `
                             <div class="user-row">
                                 <div class="user-row-info">
-                                    <img src="${ProfileManager.getAvatarUrl(user)}" class="user-row-avatar">
+                                    <img src="${ProfileManager.getAvatarUrl(user)}" class="user-row-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=1a73e8&color=fff'">
                                     <div class="user-row-details">
                                         <div class="user-row-name">
                                             ${user.displayName || 'User'}
@@ -2475,17 +2536,31 @@
                         return;
                     }
                     
+                    // Create file input
                     const input = document.createElement('input');
                     input.type = 'file';
                     input.accept = 'image/*';
-                    input.onchange = (e) => this.upload(e.target.files[0]);
+                    input.style.display = 'none';
+                    
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            this.upload(file);
+                        }
+                        document.body.removeChild(input);
+                    };
+                    
+                    document.body.appendChild(input);
                     input.click();
                 },
                 
                 async upload(file) {
                     if (!file || !State.currentUser) return;
                     
-                    if (State.isUploading) return;
+                    if (State.isUploading) {
+                        UIManager.showToast('Upload already in progress', 'info');
+                        return;
+                    }
                     
                     const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
                     
@@ -2504,17 +2579,12 @@
                     
                     try {
                         // Convert to base64
-                        const reader = new FileReader();
+                        const base64 = await this.fileToBase64(file);
                         
-                        const result = await new Promise((resolve, reject) => {
-                            reader.onload = () => resolve(reader.result);
-                            reader.onerror = () => reject(new Error('Failed to read file'));
-                            reader.readAsDataURL(file);
-                        });
-                        
+                        // Update Firestore with the base64 image
                         const userRef = doc(db, 'users', State.currentUser.uid);
                         await updateDoc(userRef, {
-                            photoURL: result,
+                            photoURL: base64,
                             updatedAt: serverTimestamp()
                         });
                         
@@ -2530,10 +2600,22 @@
                         
                     } catch (error) {
                         console.error('Upload error:', error);
-                        UIManager.showToast('Upload failed', 'error');
+                        UIManager.showToast('Upload failed: ' + error.message, 'error');
                     } finally {
                         State.isUploading = false;
                     }
+                },
+                
+                fileToBase64(file) {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = (error) => {
+                            console.error('FileReader error:', error);
+                            reject(new Error('Failed to read file'));
+                        };
+                    });
                 }
             };
 
