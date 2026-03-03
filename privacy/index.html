@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GS6V9ZCN0K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GS6V9ZCN0K');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Reverbit</title>
+    <meta name="description" content="Reverbit Privacy Policy - Learn how we collect, use, and protect your personal information.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Material Design 3 Color System */
+        :root {
+            /* Primary Colors - Blue Theme */
+            --md-primary: #1a73e8;
+            --md-primary-light: #4285f4;
+            --md-primary-dark: #0d47a1;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #d2e3fc;
+            --md-on-primary-container: #001d3d;
+            
+            /* Secondary Colors - Green Theme */
+            --md-secondary: #0d8a72;
+            --md-secondary-light: #34a853;
+            --md-secondary-dark: #0a5c42;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #b8f2e6;
+            --md-on-secondary-container: #00201a;
+            
+            /* Surface Colors */
+            --md-surface: #FFFFFF;
+            --md-on-surface: #202124;
+            --md-surface-variant: #F8F9FA;
+            --md-on-surface-variant: #5f6368;
+            
+            /* Background Colors */
+            --md-background: #FFFFFF;
+            --md-on-background: #202124;
+            
+            /* Outline Colors */
+            --md-outline: #DADCE0;
+            --md-outline-variant: #E8EAED;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-pill: 9999px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            --md-spacing-xxl: 48px;
+            
+            /* Typography */
+            --md-font-logo: 'Playfair Display', serif;
+            --md-font-heading: 'Inter', sans-serif;
+            --md-font-body: 'Lora', serif;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #202124;
+            --md-on-surface: #FFFFFF;
+            --md-surface-variant: #303134;
+            --md-on-surface-variant: #E8EAED;
+            --md-background: #202124;
+            --md-on-background: #FFFFFF;
+            --md-primary: #8ab4f8;
+            --md-primary-light: #aecbfa;
+            --md-primary-container: #174ea6;
+            --md-on-primary-container: #E8EAED;
+            --md-secondary: #81c995;
+            --md-secondary-light: #a8dab5;
+            --md-secondary-container: #0d8a72;
+            --md-on-secondary-container: #E8EAED;
+            --md-outline: #3C4043;
+            --md-outline-variant: #5F6368;
+            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--md-font-body);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--md-surface);
+            border-bottom: 1px solid var(--md-outline);
+            padding: var(--md-spacing-lg) 0;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--md-spacing-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            text-decoration: none;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-weight: 700;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .site-name {
+            font-family: var(--md-font-logo);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            letter-spacing: -0.5px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            background: var(--md-surface-variant);
+        }
+
+        .theme-toggle:hover {
+            background: var(--md-primary-container);
+            transform: rotate(15deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--md-spacing-xxl) var(--md-spacing-xl);
+            flex: 1;
+        }
+
+        /* Privacy Container */
+        .privacy-container {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            overflow: hidden;
+            box-shadow: var(--md-elevation-2);
+            position: relative;
+        }
+
+        .privacy-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .privacy-header {
+            padding: var(--md-spacing-xxl) var(--md-spacing-xxl) var(--md-spacing-lg);
+            text-align: center;
+            background: var(--md-surface-variant);
+        }
+
+        .privacy-title {
+            font-family: var(--md-font-logo);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+            position: relative;
+            display: inline-block;
+        }
+
+        .privacy-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: 3px;
+        }
+
+        .last-updated {
+            color: var(--md-on-surface-variant);
+            font-size: 1rem;
+            margin-top: var(--md-spacing-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+        }
+
+        .privacy-content {
+            padding: var(--md-spacing-xxl);
+        }
+
+        /* Policy Sections */
+        .policy-section {
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-xl);
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .policy-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+        }
+
+        .section-content {
+            margin-left: calc(48px + var(--md-spacing-md));
+        }
+
+        .section-content p {
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface-variant);
+        }
+
+        .section-content ul, .section-content ol {
+            margin-left: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface-variant);
+        }
+
+        .section-content li {
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .highlight {
+            background: var(--md-primary-container);
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border-left: 4px solid var(--md-primary);
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--md-spacing-lg) 0;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-radius-medium);
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            font-family: var(--md-font-heading);
+            font-weight: 600;
+            text-align: left;
+            padding: var(--md-spacing-md);
+        }
+
+        .data-table td {
+            padding: var(--md-spacing-md);
+            border-bottom: 1px solid var(--md-outline);
+            color: var(--md-on-surface-variant);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Contact Info */
+        .contact-card {
+            background: var(--md-surface-variant);
+            padding: var(--md-spacing-xl);
+            border-radius: var(--md-radius-large);
+            margin-top: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+        }
+
+        .contact-card h3 {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-sm);
+            color: var(--md-on-surface-variant);
+        }
+
+        .contact-item i {
+            width: 24px;
+            color: var(--md-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--md-surface);
+            border-top: 1px solid var(--md-outline);
+            padding: var(--md-spacing-xl);
+            margin-top: var(--md-spacing-xxl);
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .footer-link {
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            font-family: var(--md-font-heading);
+            font-size: 0.95rem;
+            transition: var(--md-transition);
+        }
+
+        .footer-link:hover {
+            color: var(--md-primary);
+        }
+
+        .copyright {
+            color: var(--md-on-surface-variant);
+            font-size: 0.875rem;
+            margin-top: var(--md-spacing-md);
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: var(--md-spacing-xl);
+            right: var(--md-spacing-xl);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            text-decoration: none;
+            box-shadow: var(--md-elevation-2);
+            transition: var(--md-transition);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: var(--md-elevation-4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 var(--md-spacing-lg);
+            }
+            
+            .main-content {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .privacy-header {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .privacy-content {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--md-spacing-sm);
+            }
+            
+            .section-content {
+                margin-left: 0;
+            }
+            
+            .back-to-top {
+                bottom: var(--md-spacing-lg);
+                right: var(--md-spacing-lg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 var(--md-spacing-md);
+            }
+            
+            .main-content {
+                padding: var(--md-spacing-lg) var(--md-spacing-md);
+            }
+            
+            .privacy-header {
+                padding: var(--md-spacing-lg) var(--md-spacing-md);
+            }
+            
+            .privacy-content {
+                padding: var(--md-spacing-lg) var(--md-spacing-md);
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="https://aditya-cmd-max.github.io/reverbit/" class="logo-container">
+                <div class="logo">
+                    <img src="https://aditya-cmd-max.github.io/reverbit/logo-insvg.svg" alt="Reverbit Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='R';">
+                </div>
+                <span class="site-name">Reverbit</span>
+            </a>
+            
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="privacy-container">
+            <div class="privacy-header">
+                <h1 class="privacy-title">Privacy Policy</h1>
+                <p class="last-updated">
+                    <i class="fas fa-calendar-alt"></i>
+                    Last Updated: January 20, 2024
+                </p>
+            </div>
+            
+            <div class="privacy-content">
+                <!-- Introduction -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h2 class="section-title">1. Introduction</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Welcome to Reverbit ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://aditya-cmd-max.github.io/reverbit/">https://aditya-cmd-max.github.io/reverbit/</a> and use our AI tools.</p>
+                        
+                        <div class="highlight">
+                            <p><strong>Please read this privacy policy carefully.</strong> If you do not agree with the terms of this privacy policy, please do not access the site or use our services.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Information We Collect -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h2 class="section-title">2. Information We Collect</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We collect several types of information from and about users of our website and services:</p>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Type of Information</th>
+                                    <th>What We Collect</th>
+                                    <th>Purpose</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Personal Information</strong></td>
+                                    <td>Name, email address, contact information (when voluntarily provided)</td>
+                                    <td>Account creation, communication, service delivery</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Usage Data</strong></td>
+                                    <td>IP address, browser type, device information, pages visited</td>
+                                    <td>Analytics, service improvement, security</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cookies & Tracking</strong></td>
+                                    <td>Cookies, analytics data (Google Analytics)</td>
+                                    <td>User preferences, analytics, marketing (with consent)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>AI Tool Interactions</strong></td>
+                                    <td>Input data for AI tools (text, images, etc.)</td>
+                                    <td>Service provision, tool improvement (anonymized)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- How We Use Your Information -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h2 class="section-title">3. How We Use Your Information</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We use the information we collect in the following ways:</p>
+                        
+                        <ul>
+                            <li>To provide, operate, and maintain our website and AI tools</li>
+                            <li>To improve, personalize, and expand our services</li>
+                            <li>To understand and analyze how you use our website</li>
+                            <li>To develop new products, services, features, and functionality</li>
+                            <li>To communicate with you for customer service, updates, and marketing purposes</li>
+                            <li>To prevent fraud and enhance security</li>
+                            <li>To comply with legal obligations</li>
+                        </ul>
+                        
+                        <div class="highlight">
+                            <p><strong>AI Processing Note:</strong> When you use our AI tools (Clover AI, SkyCast, PopOut Pro, etc.), your input data may be processed to generate outputs. We do not store this data permanently and process it anonymously where possible.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cookies and Tracking Technologies -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-cookie-bite"></i>
+                        </div>
+                        <h2 class="section-title">4. Cookies and Tracking Technologies</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We use cookies and similar tracking technologies to track activity on our website and store certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier.</p>
+                        
+                        <p><strong>Types of cookies we use:</strong></p>
+                        <ul>
+                            <li><strong>Essential Cookies:</strong> Required for the website to function properly</li>
+                            <li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website (Google Analytics)</li>
+                            <li><strong>Preference Cookies:</strong> Remember your preferences and settings</li>
+                            <li><strong>Marketing Cookies:</strong> Used to track visitors across websites for marketing (with your consent)</li>
+                        </ul>
+                        
+                        <p>You can control cookie settings through our cookie consent banner or your browser settings. However, disabling cookies may affect your experience on our website.</p>
+                    </div>
+                </section>
+
+                <!-- Third-Party Services -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h2 class="section-title">5. Third-Party Services</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We may employ third-party companies and individuals for the following reasons:</p>
+                        
+                        <ul>
+                            <li><strong>Google Analytics:</strong> To analyze website traffic and usage patterns</li>
+                            <li><strong>Hosting Services:</strong> To host our website and tools (GitHub Pages)</li>
+                            <li><strong>AI APIs:</strong> To power our AI tools with necessary APIs</li>
+                            <li><strong>Communication Tools:</strong> For customer support and communication</li>
+                        </ul>
+                        
+                        <p>These third parties have access to your information only to perform specific tasks on our behalf and are obligated not to disclose or use it for any other purpose.</p>
+                    </div>
+                </section>
+
+                <!-- Data Security -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h2 class="section-title">6. Data Security</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We implement appropriate technical and organizational security measures to protect your personal information. However, please note that no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                        
+                        <p><strong>Our security measures include:</strong></p>
+                        <ul>
+                            <li>HTTPS encryption for all data transmission</li>
+                            <li>Regular security assessments and updates</li>
+                            <li>Limited access to personal information</li>
+                            <li>Secure hosting environments</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Children's Privacy -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <h2 class="section-title">7. Children's Privacy</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Our services are not directed to individuals under the age of 13. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately.</p>
+                        
+                        <p>If we become aware that we have collected personal information from children without verification of parental consent, we take steps to remove that information from our servers.</p>
+                    </div>
+                </section>
+
+                <!-- Your Rights -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h2 class="section-title">8. Your Privacy Rights</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Depending on your location, you may have certain rights regarding your personal information:</p>
+                        
+                        <ul>
+                            <li><strong>Access:</strong> Request access to your personal information</li>
+                            <li><strong>Correction:</strong> Request correction of inaccurate information</li>
+                            <li><strong>Deletion:</strong> Request deletion of your personal information</li>
+                            <li><strong>Opt-out:</strong> Opt-out of marketing communications</li>
+                            <li><strong>Data Portability:</strong> Request transfer of your data</li>
+                            <li><strong>Consent Withdrawal:</strong> Withdraw consent at any time</li>
+                        </ul>
+                        
+                        <p>To exercise these rights, please contact us using the information below.</p>
+                    </div>
+                </section>
+
+                <!-- Changes to Privacy Policy -->
+                <section class="policy-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h2 class="section-title">9. Changes to This Privacy Policy</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+                        
+                        <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+                    </div>
+                </section>
+
+                <!-- Contact Information -->
+                <div class="contact-card">
+                    <h3>Contact Us</h3>
+                    <p>If you have any questions or concerns about this Privacy Policy, please contact us:</p>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email: <a href="exonova1104@gmail.com"exonova1104@gmail.com</a></span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-user"></i>
+                        <span>Founder: Aditya Jha</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Based in India</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://aditya-cmd-max.github.io/reverbit/" class="footer-link">Home</a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/about/" class="footer-link">About</a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/ecosystem" class="footer-link">Tools</a>
+                <a href="https://aditya-cmd-max.github.io/reverbit/circuit" class="footer-link">Blogs</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+            </div>
+            
+            <p class="copyright">
+                &copy; 2024 Reverbit Innovations. All rights reserved.<br>
+                Made with <i class="fas fa-heart" style="color: #ff4444;"></i> by Aditya Jha
+            </p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('.material-icons-round');
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+                themeIcon.textContent = 'light_mode';
+            }
+        }
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+
+        function toggleBackToTop() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        // Smooth scroll for anchor links
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            loadThemePreference();
+            initSmoothScroll();
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            window.addEventListener('scroll', toggleBackToTop);
+            
+            // Initialize back to top visibility
+            toggleBackToTop();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Add any responsive adjustments if needed
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Theme toggle with Shift+T
+            if (e.shiftKey && e.key === 'T') {
+                toggleTheme();
+            }
+            
+            // Escape key for accessibility
+            if (e.key === 'Escape') {
+                // Focus management could be added here
+            }
+        });
+    </script>
+</body>
+</html>

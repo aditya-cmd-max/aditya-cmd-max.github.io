@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top 5 Scientific Study Hacks - Exonova Blog</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Cookie&family=Gabriela&family=Oswald:wght@200..700&family=Paprika&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #fff;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+      background: linear-gradient(to right, #1a1a1a, #0f0f0f);
+    }
+    h1 {
+      font-size: 3rem;
+      color: #eee;
+    }
+    .published {
+      font-size: 1rem;
+      color: #bbb;
+      margin-top: 0.5rem;
+    }
+    .content {
+      padding: 3rem 10%;
+      font-size: 1.2rem;
+    }
+    .highlight {
+      background-color: #ff0;
+      color: #000 !important;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+   
+    
+    .blog-number {
+      color: #FFD700;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+    
+    
+    
+    .curved-img {
+      display: block;
+      margin: 4rem auto;
+      border: 10px solid #222;
+      border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%;
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+      width: 70%;
+      transition: transform 0.5s ease;
+    }
+    .curved-img:hover {
+      transform: scale(1.05);
+    }
+    .back-button {
+      display: inline-block;
+      margin: 4rem auto 2rem;
+      padding: 1rem 2rem;
+      border: 2px solid #fff;
+      border-radius: 30px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.4s ease;
+      background-color: transparent;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+    .back-button:hover {
+      background-color: #fff;
+      color: #000;
+      transform: scale(1.1);
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+      50% { box-shadow: 0 0 20px 5px rgba(255,255,255,0.2); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+ 
+    <div class="blog-number">Blog#3</div>
+    
+    <h1 data-aos="zoom-in">Top 5 Scientific Study Hacks Every Student Should Know</h1>
+    <p class="published">Published on 13th April, 2025</p>
+  </header>
+
+  <div class="content">
+    <p data-aos="fade-up" data-aos-delay="100">
+      Struggling to study smarter instead of harder? Science-backed study methods can improve your memory, focus, and academic performance significantly. These <span class="highlight">Top 5 Study Hacks</span> are not just trends—they’re rooted in cognitive psychology and neuroscience.
+    </p>
+
+    <p data-aos="fade-up" data-aos-delay="200">
+      <strong>1. The Pomodoro Technique</strong><br>
+      Study in 25-minute sessions followed by a 5-minute break. This method maximizes focus while preventing mental fatigue. The brain thrives in <span class="highlight">short, focused bursts</span> of attention.
+    </p>
+
+    <p data-aos="fade-up" data-aos-delay="300">
+      <strong>2. Active Recall</strong><br>
+      Instead of re-reading notes, close the book and try to recall key points. This strengthens memory by forcing your brain to <span class="highlight">retrieve information</span> actively.
+    </p>
+
+    <img src="https://www.avanse.com/blogs/images/Planning-to-study-abroad.jpg" alt="Study Hacks" class="curved-img" data-aos="zoom-in" data-aos-delay="400"/>
+
+    <p data-aos="fade-up" data-aos-delay="500">
+      <strong>3. Spaced Repetition</strong><br>
+      Spread out study sessions over days or weeks. This technique improves long-term memory retention through <span class="highlight">repeated exposure</span> to information at spaced intervals.
+    </p>
+
+    <p data-aos="fade-up" data-aos-delay="600">
+      <strong>4. Interleaving</strong><br>
+      Mix different subjects or problem types during a single study session. This forces your brain to adapt and improves <span class="highlight">problem-solving flexibility</span>.
+    </p>
+
+    <p data-aos="fade-up" data-aos-delay="700">
+      <strong>5. Teaching What You Learn</strong><br>
+      Try explaining a concept to someone else, or even to yourself. The act of teaching requires you to understand deeply and spot gaps in knowledge. It’s one of the most <span class="highlight">powerful learning strategies</span>.
+    </p>
+
+
+    <p><h4 style="font-family:Akaya Kanadaka";>Your Curiosity Helps us <Span class="highlight">Building you and us..</Span></p>
+      <p>Thank you</p></h4>
+    <div style="text-align: center;">
+      <a href="blogs.html" class="back-button" data-aos="fade-up" data-aos-delay="800">← Back to Blogs</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://unpkg.com/@barba/core"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+
+    anime({
+      targets: 'h1',
+      translateY: [-50, 0],
+      opacity: [0, 1],
+      duration: 1500,
+      easing: 'easeOutExpo'
+    });
+  </script>
+</body>
+</html>

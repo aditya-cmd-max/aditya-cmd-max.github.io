@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Page moved</title>
+  <style>
+    body {font-family: system-ui, Arial; padding: 40px; text-align:center;}
+    .box {max-width:600px;margin:0 auto;border:1px solid #eee;padding:30px;border-radius:12px;}
+    a.button {display:inline-block;margin-top:16px;padding:10px 18px;border-radius:8px;text-decoration:none;border:1px solid #ccc;}
+    small {color:#666}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>We moved — new location ready</h1>
+    <p>You're being redirected to the new page in <span id="count">3</span> seconds.</p>
+    <p>If nothing happens, click <a id="direct" href="https://aditya-cmd-max.github.io/reverbit/circuit/">this link</a>.</p>
+    <p><small>Redirecting to: <a href="https://aditya-cmd-max.github.io/exonova-/circuit/">https://aditya-cmd-max.github.io/reverbit/circuit/</a></small></p>
+  </div>
+
+  <script>
+    let t = 3;
+    const el = document.getElementById('count');
+    const target = 'https://aditya-cmd-max.github.io/reverbit/circuit/';
+    const id = setInterval(() => {
+      t--;
+      el.textContent = t;
+      if (t <= 0) {
+        clearInterval(id);
+        window.location.href = target;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
+
