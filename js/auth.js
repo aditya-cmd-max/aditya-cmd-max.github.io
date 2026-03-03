@@ -166,14 +166,14 @@
 
   // ==================== MAIN AUTH CLASS ====================
   class ReverbitEnterpriseAuth {
-    constructor() {
-      this.config = REVERBIT_CONFIG;
-      this.state = ReverbitState;
-      this.db = null;
-      this.auth = null;
-      this.storage = null;
-      this.functions = null;
-      this.initialized = false;
+   constructor() {
+  this.config = REVERBIT_CONFIG;
+  this.state = ReverbitState;
+  this.db = null;
+  this.auth = null;
+  this.storage = null;
+  this.functions = null;
+  this.initialized = false;
       
       // Bind ONLY the essential methods that need binding
 this.init = this.init.bind(this);
