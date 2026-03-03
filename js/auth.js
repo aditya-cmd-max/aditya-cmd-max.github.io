@@ -1,4 +1,4 @@
-// auth.js - Enterprise-Grade Advanced Profile System with Full Features
+// auth.js - Enterprise-Grade Advanced Profile System with Proper Data Extraction
 class ReverbitAuth {
     constructor() {
         this.firebaseConfig = {
@@ -34,6 +34,8 @@ class ReverbitAuth {
         this.pendingUpdates = new Map();
         this.offlineQueue = [];
         this.isOnline = navigator.onLine;
+        this.db = null;
+        this.auth = null;
         
         // Bind methods
         this.toggleProfilePopup = this.toggleProfilePopup.bind(this);
@@ -130,14 +132,13 @@ class ReverbitAuth {
     handleInitializationError(error) {
         if (this.retryCount < this.maxRetries) {
             this.retryCount++;
-            const delay = 2000 * Math.pow(2, this.retryCount - 1); // Exponential backoff
+            const delay = 2000 * Math.pow(2, this.retryCount - 1);
             console.log(`Auth: Retrying initialization (${this.retryCount}/${this.maxRetries}) in ${delay}ms...`);
             setTimeout(() => this.init(), delay);
         } else {
             console.error('Auth: Failed to initialize after', this.maxRetries, 'attempts');
             this.showToast('Authentication system failed to initialize. Please refresh the page.', 'error');
             
-            // Show fallback UI
             this.showFallbackUI();
         }
     }
@@ -180,11 +181,15 @@ class ReverbitAuth {
         
         try {
             const userDoc = await this.db.collection('users').doc(this.user.uid).get();
+            
+            // IMPORTANT: Call .data() to extract the actual data
             if (userDoc.exists) {
                 this.userProfile = userDoc.data();
+                this.userProfile.uid = userDoc.id;
                 this.cacheUserProfile();
                 this.updateProfileAvatar();
                 this.notifyAuthListeners();
+                console.log('Auth: User data synced successfully');
             }
         } catch (error) {
             console.error('Auth: Sync error:', error);
@@ -529,10 +534,10 @@ class ReverbitAuth {
                     await this.updateLastActive();
                     
                     console.log('Auth: User fully loaded:', this.user.email);
+                    console.log('Auth: User profile data:', this.userProfile);
                     
                     this.showWelcomeMessage();
                     
-                    // Check for pending email verification
                     if (!user.emailVerified) {
                         this.checkEmailVerification();
                     }
@@ -547,12 +552,15 @@ class ReverbitAuth {
                         console.error('Auth: Profile recovery failed:', createError);
                         this.showToast('Failed to load user profile', 'error');
                         
-                        // Try to load from cache
                         const cachedProfile = localStorage.getItem('reverbit_user_profile');
                         if (cachedProfile) {
-                            this.userProfile = JSON.parse(cachedProfile);
-                            console.log('Auth: Using cached profile');
-                            this.addOrUpdateProfileAvatar();
+                            try {
+                                this.userProfile = JSON.parse(cachedProfile);
+                                console.log('Auth: Using cached profile');
+                                this.addOrUpdateProfileAvatar();
+                            } catch (parseError) {
+                                console.error('Auth: Failed to parse cached profile:', parseError);
+                            }
                         }
                     }
                 }
@@ -619,17 +627,21 @@ class ReverbitAuth {
             
             if (userData && userUid) {
                 console.log('Auth: Found existing session for UID:', userUid);
-                this.user = JSON.parse(userData);
-                
                 try {
+                    this.user = JSON.parse(userData);
+                    
                     const currentUser = this.auth.currentUser;
                     if (currentUser && currentUser.uid === userUid) {
                         console.log('Auth: Session valid, loading profile...');
                         
                         const cachedProfile = localStorage.getItem('reverbit_user_profile');
                         if (cachedProfile) {
-                            this.userProfile = JSON.parse(cachedProfile);
-                            console.log('Auth: Loaded profile from cache');
+                            try {
+                                this.userProfile = JSON.parse(cachedProfile);
+                                console.log('Auth: Loaded profile from cache');
+                            } catch (parseError) {
+                                console.warn('Auth: Failed to parse cached profile:', parseError);
+                            }
                         }
                         
                         await this.loadUserProfile();
@@ -641,7 +653,6 @@ class ReverbitAuth {
                         
                         this.addOrUpdateProfileAvatar();
                         
-                        // Process offline queue if online
                         if (this.isOnline) {
                             this.processOfflineQueue();
                         }
@@ -649,16 +660,9 @@ class ReverbitAuth {
                         console.log('Auth: Session expired, clearing...');
                         this.clearSession();
                     }
-                } catch (sessionError) {
-                    console.warn('Auth: Session check failed:', sessionError);
-                    
-                    // Keep cached data but try to refresh
-                    if (this.user) {
-                        console.log('Auth: Using cached session data');
-                        this.addOrUpdateProfileAvatar();
-                    } else {
-                        this.clearSession();
-                    }
+                } catch (parseError) {
+                    console.warn('Auth: Failed to parse user data:', parseError);
+                    this.clearSession();
                 }
             } else {
                 console.log('Auth: No existing session found');
@@ -696,7 +700,6 @@ class ReverbitAuth {
                 clearInterval(checkInterval);
                 this.showToast('Email verified successfully!', 'success');
                 
-                // Update profile
                 if (this.db) {
                     await this.db.collection('users').doc(this.user.uid).update({
                         emailVerified: true,
@@ -711,7 +714,6 @@ class ReverbitAuth {
             }
         }, 5000);
         
-        // Stop checking after 5 minutes
         setTimeout(() => clearInterval(checkInterval), 300000);
     }
 
@@ -731,16 +733,27 @@ class ReverbitAuth {
                 const userRef = this.db.collection('users').doc(this.user.uid);
                 const userDoc = await userRef.get();
                 
+                // IMPORTANT: Call .data() to extract the actual data
                 if (userDoc.exists) {
-                    this.userProfile = userDoc.data();
-                    this.userProfile.uid = this.user.uid;
-                    console.log('Auth: Loaded existing profile for:', this.user.email);
+                    const rawData = userDoc.data();
+                    console.log('Auth: Raw profile data from Firestore:', rawData);
                     
-                    await this.ensureProfileFields(userRef);
-                    
-                    // Success - break out of retry loop
-                    break;
-                    
+                    // Ensure we have a proper object, not a ProgressEvent
+                    if (rawData && typeof rawData === 'object') {
+                        this.userProfile = {
+                            uid: userDoc.id,
+                            ...rawData
+                        };
+                        console.log('Auth: Loaded existing profile for:', this.user.email);
+                        
+                        await this.ensureProfileFields(userRef);
+                        
+                        // Success - break out of retry loop
+                        break;
+                    } else {
+                        console.error('Auth: Invalid profile data format:', rawData);
+                        throw new Error('Invalid profile data format');
+                    }
                 } else {
                     console.log('Auth: Creating new profile for:', this.user.email);
                     await this.createNewProfile(this.user, userRef);
@@ -755,7 +768,6 @@ class ReverbitAuth {
                     throw error;
                 }
                 
-                // Exponential backoff
                 await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retryCount)));
             }
         }
@@ -888,7 +900,6 @@ class ReverbitAuth {
         } catch (createError) {
             console.error('Auth: Profile creation failed:', createError);
             
-            // Check if it's a permissions error
             if (createError.code === 'permission-denied') {
                 console.error('Auth: Permission denied - check Firestore rules');
                 this.showToast('Profile creation blocked by security rules', 'error');
@@ -909,6 +920,8 @@ class ReverbitAuth {
     }
 
     async ensureProfileFields(userRef) {
+        if (!this.userProfile) return;
+        
         const requiredFields = {
             displayName: this.user.displayName || this.user.email?.split('@')[0] || 'User',
             username: this.generateUsername(this.userProfile.displayName || 'User', this.user.email),
@@ -948,7 +961,6 @@ class ReverbitAuth {
                 updates[key] = value;
                 needsUpdate = true;
             } else if (key === 'preferences' && typeof value === 'object') {
-                // Check nested preferences
                 const prefs = this.userProfile.preferences || {};
                 const prefUpdates = {};
                 
@@ -2015,13 +2027,13 @@ class ReverbitAuth {
             });
             
             if (this.userProfile) {
-                this.userProfile.lastLogin = new Date().toISOString();
+                const now = new Date();
+                this.userProfile.lastLogin = now.toISOString();
                 this.userProfile.totalLogins = (this.userProfile.totalLogins || 0) + 1;
             }
             
             await this.updateStreak();
             
-            // Create login activity
             await this.db.collection('activity').add({
                 userId: this.user.uid,
                 type: 'login',
@@ -2225,7 +2237,6 @@ class ReverbitAuth {
             this.updateLastActive();
             this.updateStreak();
             
-            // Check for pending operations
             if (this.isOnline) {
                 this.processOfflineQueue();
             }
@@ -2297,7 +2308,6 @@ class ReverbitAuth {
             
             await this.updateLastActive();
             
-            // Clear cookies
             document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.aditya-cmd-max.github.io';
             
             await this.auth.signOut();
@@ -3342,21 +3352,42 @@ class ReverbitAuth {
 // ================= GLOBAL INSTANCE & FUNCTIONS =================
 window.ReverbitAuth = new ReverbitAuth();
 
-// Debug functions
-window.debugAuth = async function() {
-    console.log('=== AUTH DEBUG ===');
-    console.log('User:', window.ReverbitAuth.getUser());
-    console.log('Profile:', window.ReverbitAuth.getUserProfile());
-    console.log('Theme:', window.ReverbitAuth.getCurrentTheme());
-    console.log('Dark Mode:', window.ReverbitAuth.isDarkModeActive());
-    console.log('Online Status:', window.ReverbitAuth.isOnline);
-    console.log('Offline Queue:', window.ReverbitAuth.offlineQueue.length, 'items');
-    console.log('Local Storage:', {
-        uid: localStorage.getItem('reverbit_user_uid'),
-        theme: localStorage.getItem('reverbit_theme'),
-        darkMode: localStorage.getItem('reverbit_dark_mode')
-    });
-    console.log('=== END DEBUG ===');
+// Debug function to check Firestore data properly
+window.debugFirestoreData = async function() {
+    console.log('=== FIRESTORE DEBUG ===');
+    try {
+        const auth = window.ReverbitAuth;
+        if (!auth.user) {
+            console.log('No user logged in');
+            return;
+        }
+        
+        const userDoc = await auth.db.collection('users').doc(auth.user.uid).get();
+        console.log('User document exists:', userDoc.exists);
+        
+        if (userDoc.exists) {
+            // IMPORTANT: Call .data() to get actual data
+            const userData = userDoc.data();
+            console.log('User data from Firestore:', userData);
+            console.log('User data fields:', Object.keys(userData));
+            console.log('DisplayName:', userData.displayName);
+            console.log('Email:', userData.email);
+        } else {
+            console.log('No user document found');
+        }
+        
+        // Check usage data
+        const usageDoc = await auth.db.collection('usage').doc(auth.user.uid).get();
+        if (usageDoc.exists) {
+            console.log('Usage data:', usageDoc.data());
+        } else {
+            console.log('No usage document found');
+        }
+        
+        console.log('=== END FIRESTORE DEBUG ===');
+    } catch (error) {
+        console.error('Debug error:', error);
+    }
 };
 
 window.viewPublicProfile = async function() {
@@ -3398,6 +3429,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }, 5 * 60 * 1000);
             }
+            
+            // Debug Firestore data after login
+            setTimeout(() => {
+                window.debugFirestoreData();
+            }, 2000);
         }
         
         console.log('Reverbit Auth: Initialization complete');
