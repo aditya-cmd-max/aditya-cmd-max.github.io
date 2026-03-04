@@ -41,9 +41,6 @@
     
     <!-- Material Icons Round -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=crown" />
     
     <!-- Font Awesome (fallback) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -141,6 +138,12 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             --shadow-glow: 0 0 30px rgba(var(--md-primary-rgb), 0.3);
+            
+            /* Badge Colors */
+            --badge-verified-bg: linear-gradient(135deg, #2196F3, #1976D2);
+            --badge-verified-color: white;
+            --badge-premium-bg: linear-gradient(135deg, #FFD700, #FFA500);
+            --badge-premium-color: #000000;
         }
 
         .dark-theme {
@@ -159,6 +162,9 @@
             --md-elevation-4: 0 16px 24px rgba(0,0,0,0.3);
             --md-elevation-5: 0 24px 32px rgba(0,0,0,0.4);
             --md-elevation-6: 0 32px 48px rgba(0,0,0,0.5);
+            
+            --badge-verified-bg: linear-gradient(135deg, #42A5F5, #1E88E5);
+            --badge-premium-bg: linear-gradient(135deg, #FFD700, #FF8C00);
         }
 
         body {
@@ -368,36 +374,6 @@
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-        }
-
-        /* Profile Avatar in Navbar */
-        .profile-avatar-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 2px solid var(--md-primary);
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            cursor: pointer;
-            overflow: hidden;
-            transition: var(--transition-bounce);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-weight: 600;
-            font-size: 1.2rem;
-            box-shadow: var(--md-elevation-3);
-            text-decoration: none;
-        }
-        .profile-avatar-btn:hover {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: var(--md-elevation-5);
-            border-color: var(--md-secondary);
-        }
-        .profile-avatar-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         /* Desktop Theme Toggle */
@@ -821,7 +797,7 @@
             transform: scale(1.02);
         }
 
-        /* Verification Badges on Avatar */
+        /* Verification Badges on Avatar - FIXED POSITIONING */
         .profile-avatar-badge {
             position: absolute;
             bottom: 15px;
@@ -834,13 +810,16 @@
             justify-content: center;
             border: 3px solid var(--md-surface);
             font-size: 28px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #000;
             box-shadow: var(--md-elevation-4);
+            z-index: 5;
         }
         .profile-avatar-badge.verified {
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: linear-gradient(135deg, #2196F3, #1976D2);
             color: white;
+        }
+        .profile-avatar-badge.premium {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
         }
         .avatar-overlay {
             position: absolute;
@@ -856,6 +835,7 @@
             color: white;
             font-size: 2.5rem;
             backdrop-filter: blur(2px);
+            z-index: 10;
         }
         .profile-avatar:hover .avatar-overlay { opacity: 1; }
 
@@ -867,12 +847,12 @@
             gap: var(--space-lg);
         }
 
-        /* Name and Badges Row */
+        /* Name and Badges Row - FIXED */
         .profile-name-row {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: var(--space-md);
+            gap: var(--space-sm);
             margin-bottom: var(--space-xs);
         }
         .profile-name {
@@ -883,43 +863,57 @@
             color: var(--md-on-surface);
         }
 
-        /* Badges Container */
+        /* Badges Container - FIXED */
         .profile-badges {
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: var(--space-xs);
             flex-wrap: wrap;
+            margin-left: var(--space-xs);
         }
-       .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 16px;
-    border-radius: var(--radius-pill);
-    font-size: 0.9rem;
-    font-weight: 600;
-    white-space: nowrap;
-     flex: 0 0 auto; 
-}
+
+        /* Badge Base Styles - FIXED */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            height: 32px;
+            box-shadow: var(--md-elevation-2);
+            transition: var(--transition);
+        }
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-4);
+        }
+        
+        /* Verified Badge - Blue Tick */
         .badge-verified {
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            background: linear-gradient(135deg, #2196F3, #1976D2);
             color: white;
         }
         .badge-verified .material-icons-round {
-            font-size: 1.2rem;
-            color: #FFD700;
-        }
-        .badge-premium {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: black;
-            padding: 6px 14px;
-            min-width: fit-content;
+            font-size: 1.1rem;
+            color: white;
         }
         
-        .badge-premium .material-icons-round {
-            font-size: 1.2rem;
-            color: #000;
+        /* Premium Badge - Yellow/Gold */
+        .badge-premium {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000000;
+            font-weight: 700;
         }
+        .badge-premium .material-icons-round {
+            font-size: 1.1rem;
+            color: #000000;
+        }
+        
+        /* Admin Badge */
         .badge-admin {
             background: var(--md-tertiary);
             color: white;
@@ -1694,8 +1688,8 @@
                     <label class="form-label">Verification Level</label>
                     <select id="verifyLevel" class="form-select">
                         <option value="none">Not Verified</option>
-                        <option value="basic">Basic Verified</option>
-                        <option value="premium">Premium Verified</option>
+                        <option value="basic">Basic Verified (Blue Tick)</option>
+                        <option value="premium">Premium Verified (Gold Crown)</option>
                     </select>
                 </div>
                 
@@ -2210,7 +2204,7 @@
                                 
                                 <!-- Info Section -->
                                 <div class="profile-info">
-                                    <!-- Name and Badges -->
+                                    <!-- Name and Badges - FIXED: Badges appear right after name -->
                                     <div class="profile-name-row">
                                         <h1 class="profile-name">${this.escapeHtml(data.displayName) || 'User'}</h1>
                                         <div class="profile-badges">
@@ -2330,8 +2324,9 @@
                 },
                 
                 getVerificationLevel(data) {
-                    if (data.verifiedLevel === 'premium') return 'premium';
-                    if (data.verifiedLevel === 'basic' || data.verified) return 'basic';
+                    if (!data) return 'none';
+                    if (data.verifiedLevel === 'premium' || data.premiumVerified === true) return 'premium';
+                    if (data.verifiedLevel === 'basic' || data.verified === true) return 'basic';
                     return 'none';
                 },
                 
@@ -2349,7 +2344,7 @@
                 getAvatarBadge(data) {
                     const level = this.getVerificationLevel(data);
                     if (level === 'premium') {
-                        return '<div class="profile-avatar-badge"><span class="material-icons-round">crown</span></div>';
+                        return '<div class="profile-avatar-badge premium"><span class="material-icons-round">crown</span></div>';
                     }
                     if (level === 'basic') {
                         return '<div class="profile-avatar-badge verified"><span class="material-icons-round">verified</span></div>';
@@ -2874,7 +2869,7 @@
                     return {
                         total: State.allUsers.length,
                         verified: State.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic').length,
-                        premium: State.allUsers.filter(u => u.verifiedLevel === 'premium').length,
+                        premium: State.allUsers.filter(u => u.verifiedLevel === 'premium' || u.premiumVerified === true).length,
                         activeToday: State.allUsers.filter(u => {
                             if (!u.lastActive) return false;
                             try {
@@ -2899,10 +2894,10 @@
                             State.filteredUsers = State.allUsers.filter(u => u.verified === true || u.verifiedLevel === 'basic');
                             break;
                         case 'premium':
-                            State.filteredUsers = State.allUsers.filter(u => u.verifiedLevel === 'premium');
+                            State.filteredUsers = State.allUsers.filter(u => u.verifiedLevel === 'premium' || u.premiumVerified === true);
                             break;
                         case 'unverified':
-                            State.filteredUsers = State.allUsers.filter(u => !u.verified && !u.verifiedLevel);
+                            State.filteredUsers = State.allUsers.filter(u => !u.verified && u.verifiedLevel !== 'basic' && u.verifiedLevel !== 'premium' && !u.premiumVerified);
                             break;
                         default:
                             State.filteredUsers = [...State.allUsers];
@@ -2945,7 +2940,9 @@
                                     <div class="user-row-details">
                                         <div class="user-row-name">
                                             ${user.displayName || 'User'}
-                                            ${ProfileManager.getBadges(user)}
+                                            <div class="profile-badges" style="display: inline-flex; margin-left: 8px;">
+                                                ${ProfileManager.getBadges(user)}
+                                            </div>
                                         </div>
                                         <div class="user-row-email">${user.email || ''}</div>
                                     </div>
@@ -2992,7 +2989,7 @@
                             <div>
                                 <h4>${userName}</h4>
                                 <p class="text-tertiary">ID: ${userId}</p>
-                                <p class="text-tertiary">Current: ${currentLevel === 'premium' ? 'Premium' : currentLevel === 'basic' ? 'Basic' : 'None'}</p>
+                                <p class="text-tertiary">Current: ${currentLevel === 'premium' ? 'Premium (Gold Crown)' : currentLevel === 'basic' ? 'Verified (Blue Tick)' : 'None'}</p>
                             </div>
                         </div>
                     `;
@@ -3019,7 +3016,7 @@
                         const notes = Elements.verifyNotes.value;
                         
                         const updateData = {
-                            verifiedLevel: level === 'none' ? null : level,
+                            verifiedLevel: level === 'none' ? 'none' : level,
                             verified: level !== 'none',
                             verifiedAt: level !== 'none' ? serverTimestamp() : null,
                             verifiedBy: level !== 'none' ? ADMIN_EMAIL : null,
@@ -3031,7 +3028,7 @@
                         const userRef = doc(db, 'users', State.selectedUserId);
                         await updateDoc(userRef, updateData);
                         
-                        UIManager.showToast(`User ${level === 'premium' ? 'Premium Verified' : level === 'basic' ? 'Verified' : 'Unverified'}!`);
+                        UIManager.showToast(`User ${level === 'premium' ? 'Premium Verified (Gold Crown)' : level === 'basic' ? 'Verified (Blue Tick)' : 'Unverified'}!`);
                         
                         if (Elements.contentArea.querySelector('.admin-section')) {
                             await UserManager.loadAllUsers();
