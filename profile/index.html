@@ -2333,7 +2333,7 @@
                 getBadges(data) {
                     const level = this.getVerificationLevel(data);
                     if (level === 'premium') {
-                        return '<span class="badge badge-premium"><span class="material-icons-round">crown</span> Premium</span>';
+                        return '<span class="badge badge-premium"><span class="material-icons-round">workspace_premium</span> Premium</span>';
                     }
                     if (level === 'basic') {
                         return '<span class="badge badge-verified"><span class="material-icons-round">verified</span> Verified</span>';
@@ -2344,7 +2344,7 @@
                 getAvatarBadge(data) {
                     const level = this.getVerificationLevel(data);
                     if (level === 'premium') {
-                        return '<div class="profile-avatar-badge premium"><span class="material-icons-round">crown</span></div>';
+                        return '<div class="profile-avatar-badge premium"><span class="material-icons-round">workspace_premium</span></div>';
                     }
                     if (level === 'basic') {
                         return '<div class="profile-avatar-badge verified"><span class="material-icons-round">verified</span></div>';
