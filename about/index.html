@@ -15,7 +15,7 @@
     <title>Aditya Jha • The Visionary behind Reverbit</title>
     <meta name="description" content="Aditya Jha - Student, developer, and creator blending code with clear teaching to build tools that make learning click.">
     
-    <!-- Local Font - Begum (paths updated to new domain) -->
+    <!-- Local Font - Begum -->
     <style>
         @font-face {
             font-family: 'Begum';
@@ -45,7 +45,7 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    <!-- Font Awesome - FIXED: Added for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDK -->
@@ -69,7 +69,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     
-    <!-- Favicon (updated) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://aditya-cmd-max.github.io/logo-insvg.svg">
     
     <!-- Meta Tags -->
@@ -77,7 +77,7 @@
     <meta name="author" content="Aditya Jha">
     <meta name="robots" content="index, follow">
     
-    <!-- Open Graph (updated) -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aditya-cmd-max.github.io/about/">
     <meta property="og:title" content="Aditya Jha • The Visionary behind Reverbit">
@@ -279,7 +279,7 @@
         }
         
         /* ============================================
-           FLOATING SVG ELEMENTS
+           FLOATING SVG ELEMENTS - PATHS LEFT EMPTY
            ============================================ */
         .floating-motif {
             position: fixed;
@@ -369,20 +369,13 @@
         }
         
         @keyframes navbarEntrance {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-100px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+            0% { opacity: 0; transform: translateX(-50%) translateY(-100px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         
         .dark-theme .navbar {
             background: rgba(26, 18, 8, 0.85);
             border-color: rgba(var(--md-secondary-rgb), 0.25);
-            box-shadow: var(--md-elevation-4), 0 0 30px rgba(var(--md-secondary-rgb), 0.2);
         }
         
         .navbar::before {
@@ -402,7 +395,6 @@
         
         .navbar.scrolled {
             top: var(--space-sm);
-            padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-md);
             background: rgba(245, 237, 214, 0.95);
             box-shadow: var(--md-elevation-5), 0 0 40px rgba(var(--md-primary-rgb), 0.3);
         }
@@ -416,15 +408,11 @@
             align-items: center;
             gap: var(--space-sm);
             text-decoration: none;
-            position: relative;
         }
         
         .nav-logo {
             width: clamp(44px, 5vw, 52px);
             height: clamp(44px, 5vw, 52px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: var(--transition-elastic);
             filter: drop-shadow(0 4px 8px rgba(var(--md-primary-rgb), 0.3));
         }
@@ -440,11 +428,6 @@
             filter: drop-shadow(0 8px 16px rgba(var(--md-primary-rgb), 0.5));
         }
         
-        .nav-brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
         .nav-brand-name {
             font-family: var(--md-font-display);
             font-size: clamp(1.4rem, 3vw, 1.8rem);
@@ -454,7 +437,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1.2;
-            letter-spacing: -0.5px;
         }
         
         .nav-links {
@@ -469,8 +451,6 @@
             text-decoration: none;
             font-family: var(--md-font-display);
             font-weight: 600;
-            font-size: clamp(0.9rem, 1.2vw, 1rem);
-            letter-spacing: 0.3px;
             border-radius: var(--radius-pill);
             transition: var(--transition-bounce);
             display: flex;
@@ -479,6 +459,7 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            cursor: pointer;
         }
         
         .nav-link::before {
@@ -500,15 +481,6 @@
             height: 300%;
         }
         
-        .nav-link .material-icons-round {
-            font-size: 1.3rem;
-            transition: transform 0.3s;
-        }
-        
-        .nav-link:hover .material-icons-round {
-            transform: translateY(-2px);
-        }
-        
         .nav-link:hover {
             color: var(--md-primary);
         }
@@ -516,11 +488,6 @@
         .nav-link.active {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: var(--md-on-primary);
-            box-shadow: var(--md-elevation-3);
-        }
-        
-        .nav-link.active::before {
-            display: none;
         }
         
         .nav-right {
@@ -529,35 +496,27 @@
             gap: var(--space-sm);
         }
         
-        /* Profile Avatar */
-        .profile-avatar-btn {
-            width: clamp(44px, 5vw, 48px);
-            height: clamp(44px, 5vw, 48px);
-            border-radius: 50%;
-            border: 2px solid var(--md-primary);
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            cursor: pointer;
-            overflow: hidden;
-            transition: var(--transition-elastic);
-            display: flex;
+        /* Profile Avatar - FIXED for auth.js integration */
+        .reverbit-profile-avatar {
+            width: 44px !important;
+            height: 44px !important;
+            border: 2px solid var(--md-primary) !important;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary)) !important;
+            box-shadow: var(--md-elevation-3) !important;
+            margin-left: 10px !important;
+            display: inline-flex !important;
+            vertical-align: middle !important;
+        }
+        
+        .reverbit-profile-avatar:hover {
+            transform: scale(1.15) rotate(5deg) !important;
+            box-shadow: var(--md-elevation-5) !important;
+        }
+        
+        #desktopAvatar {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-weight: 600;
-            font-size: 1.2rem;
-            box-shadow: var(--md-elevation-3);
-        }
-        
-        .profile-avatar-btn:hover {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: var(--md-elevation-5);
-            border-color: var(--md-secondary);
-        }
-        
-        .profile-avatar-btn img {
-            width: 100%;
             height: 100%;
-            object-fit: cover;
         }
         
         /* Desktop Theme Toggle */
@@ -574,36 +533,12 @@
             justify-content: center;
             transition: var(--transition-elastic);
             box-shadow: var(--md-elevation-2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .desktop-theme-toggle::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--md-primary), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
         }
         
         .desktop-theme-toggle:hover {
             transform: rotate(30deg) scale(1.15);
-            box-shadow: var(--md-elevation-4);
+            background: var(--md-primary);
             color: var(--md-on-primary);
-        }
-        
-        .desktop-theme-toggle:hover::before {
-            opacity: 0.2;
-        }
-        
-        .desktop-theme-toggle .material-icons-round {
-            font-size: 1.5rem;
-            transition: transform 0.3s;
-        }
-        
-        .desktop-theme-toggle:hover .material-icons-round {
-            transform: rotate(-30deg);
         }
         
         /* Sign In Button */
@@ -621,40 +556,11 @@
             transition: var(--transition-elastic);
             box-shadow: var(--md-elevation-3);
             border: none;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .sign-in-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
         }
         
         .sign-in-btn:hover {
             transform: translateY(-4px) scale(1.05);
             box-shadow: var(--md-elevation-5);
-        }
-        
-        .sign-in-btn:hover::before {
-            width: 300%;
-            height: 300%;
-        }
-        
-        .sign-in-btn .material-icons-round {
-            font-size: 1.3rem;
-            transition: transform 0.3s;
-        }
-        
-        .sign-in-btn:hover .material-icons-round {
-            transform: translateX(3px);
         }
         
         /* Hide sign in button when user is signed in */
@@ -680,33 +586,18 @@
             justify-content: center;
             transition: var(--transition-elastic);
             box-shadow: var(--md-elevation-3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .mobile-menu-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--md-primary), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
         }
         
         .mobile-menu-btn:hover {
             background: var(--md-primary);
             color: var(--md-on-primary);
             transform: rotate(90deg) scale(1.1);
-            box-shadow: var(--md-elevation-4);
         }
         
-        .mobile-menu-btn:hover::before {
-            opacity: 0.3;
-        }
-        
-        .mobile-menu-btn .material-icons-round {
-            font-size: 1.8rem;
-            transition: transform 0.3s;
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .desktop-theme-toggle { display: none; }
+            .mobile-menu-btn { display: flex; }
         }
         
         /* ============================================
@@ -761,19 +652,6 @@
             border-bottom: 2px solid var(--md-outline);
         }
         
-        .mobile-nav-header .nav-brand {
-            gap: var(--space-sm);
-        }
-        
-        .mobile-nav-header .nav-logo {
-            width: 48px;
-            height: 48px;
-        }
-        
-        .mobile-nav-header .nav-brand-name {
-            font-size: 1.8rem;
-        }
-        
         .mobile-nav-close {
             width: 48px;
             height: 48px;
@@ -786,18 +664,12 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition-elastic);
-            box-shadow: var(--md-elevation-2);
         }
         
         .mobile-nav-close:hover {
             background: var(--md-tertiary);
             color: var(--md-on-primary);
             transform: rotate(90deg) scale(1.15);
-            box-shadow: var(--md-elevation-4);
-        }
-        
-        .mobile-nav-close .material-icons-round {
-            font-size: 2rem;
         }
         
         .mobile-nav-links {
@@ -818,43 +690,13 @@
             font-weight: 600;
             border-radius: var(--radius-xxl);
             transition: var(--transition-bounce);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+            cursor: pointer;
         }
         
-        .mobile-nav-link::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(var(--md-primary-rgb), 0.15), transparent 70%);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-            z-index: -1;
-        }
-        
-        .mobile-nav-link:hover::before,
-        .mobile-nav-link.active::before {
-            width: 400%;
-            height: 400%;
-        }
-        
-        .mobile-nav-link:hover,
-        .mobile-nav-link.active {
-            color: var(--md-primary);
+        .mobile-nav-link:hover {
+            background: rgba(var(--md-primary-rgb), 0.1);
             transform: translateX(8px);
-        }
-        
-        .mobile-nav-link.active {
-            background: linear-gradient(135deg, rgba(var(--md-primary-rgb), 0.1), rgba(var(--md-secondary-rgb), 0.1));
-        }
-        
-        .mobile-nav-link .material-icons-round {
-            font-size: 1.8rem;
+            color: var(--md-primary);
         }
         
         /* Mobile avatar container */
@@ -872,7 +714,6 @@
             border-radius: var(--radius-xxl);
             padding: var(--space-md);
             border: 1px solid var(--md-outline);
-            box-shadow: var(--md-elevation-2);
         }
         
         .mobile-user-info {
@@ -893,8 +734,6 @@
             font-weight: 600;
             font-size: 1.5rem;
             overflow: hidden;
-            border: 2px solid var(--md-primary);
-            box-shadow: var(--md-elevation-3);
         }
         
         .mobile-user-avatar img {
@@ -903,14 +742,9 @@
             object-fit: cover;
         }
         
-        .mobile-user-details {
-            flex: 1;
-        }
-        
         .mobile-user-name {
             font-weight: 700;
             font-size: 1.1rem;
-            margin-bottom: 2px;
         }
         
         .mobile-user-email {
@@ -932,7 +766,6 @@
             color: var(--md-tertiary);
             font-family: var(--md-font-display);
             font-weight: 700;
-            font-size: 1rem;
             cursor: pointer;
             transition: var(--transition-elastic);
         }
@@ -941,7 +774,6 @@
             background: var(--md-tertiary);
             color: var(--md-on-primary);
             transform: translateY(-3px);
-            box-shadow: var(--md-elevation-4);
         }
         
         /* Mobile Theme Toggle */
@@ -956,12 +788,6 @@
             border: 1px solid var(--md-outline);
         }
         
-        .mobile-theme-toggle span {
-            font-size: 1.1rem;
-            font-weight: 600;
-            font-family: var(--md-font-display);
-        }
-        
         .mobile-theme-btn {
             width: 44px;
             height: 44px;
@@ -974,7 +800,6 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition-elastic);
-            box-shadow: var(--md-elevation-2);
         }
         
         .mobile-theme-btn:hover {
@@ -1008,7 +833,7 @@
             height: min(320px, 60vw);
             margin: 0 auto var(--space-xl);
             position: relative;
-            cursor: pointer;
+            cursor: default;
         }
         
         .portrait-frame {
@@ -1029,30 +854,6 @@
         @keyframes portraitGlow {
             0%, 100% { box-shadow: var(--md-elevation-6), 0 0 30px rgba(var(--md-primary-rgb), 0.3); }
             50% { box-shadow: var(--md-elevation-6), 0 0 50px rgba(var(--md-secondary-rgb), 0.5); }
-        }
-        
-        .portrait-frame::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 50%;
-            padding: 4px;
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary), var(--md-tertiary));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.7;
-            animation: borderRotate 4s linear infinite;
-        }
-        
-        @keyframes borderRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .portrait-frame:hover {
-            transform: scale(1.05);
         }
         
         .portrait {
@@ -1087,14 +888,8 @@
             animation: floatIcon 6s ease-in-out infinite;
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.2);
-            pointer-events: auto;
-            cursor: pointer;
+            pointer-events: none;
             transition: var(--transition-bounce);
-        }
-        
-        .floating-icon:hover {
-            transform: scale(1.2) rotate(10deg);
-            background: linear-gradient(135deg, var(--md-secondary), var(--md-primary));
         }
         
         .floating-icon:nth-child(1) {
@@ -1122,12 +917,8 @@
         }
         
         @keyframes floatIcon {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-15px) rotate(5deg);
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
         }
         
         .hero-title {
@@ -1139,14 +930,9 @@
             opacity: 0;
             transform: translateY(30px);
             animation: heroTextEntrance 1s ease forwards 0.8s;
-            cursor: pointer;
+            cursor: default;
             display: inline-block;
             transition: var(--transition-bounce);
-        }
-        
-        .hero-title:hover {
-            transform: scale(1.02);
-            text-shadow: var(--shadow-glow);
         }
         
         .hero-title span {
@@ -1164,10 +950,7 @@
         }
         
         @keyframes heroTextEntrance {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .hero-subtitle {
@@ -1202,7 +985,6 @@
             font-family: var(--md-font-display);
             font-weight: 700;
             font-size: 1.1rem;
-            letter-spacing: 0.5px;
             text-decoration: none;
             cursor: pointer;
             transition: var(--transition-elastic);
@@ -1285,10 +1067,6 @@
             border: 1px solid rgba(var(--md-primary-rgb), 0.2);
         }
         
-        .section-eyebrow .material-icons-round {
-            font-size: 1.2rem;
-        }
-        
         .section-title {
             font-family: var(--md-font-display);
             font-size: clamp(2.5rem, 5vw, 4rem);
@@ -1344,7 +1122,7 @@
             border-radius: var(--radius-xxxl);
             border: 1px solid var(--md-outline);
             transition: var(--transition-bounce);
-            cursor: pointer;
+            cursor: default;
         }
         
         .about-quote:hover {
@@ -1401,7 +1179,7 @@
             display: flex;
             margin-bottom: var(--space-xl);
             position: relative;
-            cursor: pointer;
+            cursor: default;
         }
         
         .timeline-marker {
@@ -1409,8 +1187,7 @@
             height: 80px;
             border-radius: 50%;
             background: var(--md-surface);
-            border: 3px solid;
-            border-color: var(--md-primary);
+            border: 3px solid var(--md-primary);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1497,7 +1274,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: var(--md-elevation-2);
-            cursor: pointer;
+            cursor: default;
         }
         
         .skill-card::before {
@@ -1577,22 +1354,6 @@
             transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
-        .skill-progress::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
         /* Projects Grid */
         .projects-grid {
             display: grid;
@@ -1633,16 +1394,6 @@
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             position: relative;
             overflow: hidden;
-        }
-        
-        .project-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, transparent, rgba(0,0,0,0.3));
         }
         
         .project-content {
@@ -1699,7 +1450,7 @@
             overflow: hidden;
             box-shadow: var(--md-elevation-3);
             transition: var(--transition-bounce);
-            cursor: pointer;
+            cursor: default;
         }
         
         .note-section:hover {
@@ -1729,8 +1480,6 @@
             font-weight: 600;
             text-decoration: none;
             transition: var(--transition);
-            position: relative;
-            padding: 0 var(--space-xs);
         }
         
         .note-highlight:hover {
@@ -1755,7 +1504,7 @@
             transition: var(--transition-bounce);
             position: relative;
             box-shadow: var(--md-elevation-2);
-            cursor: pointer;
+            cursor: default;
         }
         
         .value-card::before {
@@ -1812,7 +1561,7 @@
             font-size: 1.1rem;
         }
         
-        /* Contact Section */
+        /* Contact Section - FIXED social icons */
         .contact-section {
             text-align: center;
             padding: var(--space-xxl);
@@ -1823,7 +1572,7 @@
             margin-top: var(--space-xl);
             box-shadow: var(--md-elevation-3);
             transition: var(--transition-bounce);
-            cursor: pointer;
+            cursor: default;
         }
         
         .contact-section:hover {
@@ -1864,6 +1613,7 @@
             box-shadow: var(--md-elevation-4);
         }
         
+        /* FIXED: Social links with proper icons */
         .social-links {
             display: flex;
             justify-content: center;
@@ -1884,6 +1634,7 @@
             transition: var(--transition-bounce);
             border: 1px solid var(--md-outline);
             box-shadow: var(--md-elevation-2);
+            font-size: 1.8rem;
         }
         
         .social-link:hover {
@@ -1893,11 +1644,7 @@
             box-shadow: var(--md-elevation-4);
         }
         
-        .social-link .material-icons-round {
-            font-size: 1.8rem;
-        }
-        
-        /* Footer */
+        /* Footer - FIXED social icons */
         .footer {
             background: var(--md-surface-dim);
             padding: var(--space-xxxl) var(--space-lg) var(--space-lg);
@@ -1946,11 +1693,6 @@
             object-fit: contain;
         }
         
-        .footer-brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
         .footer-brand-name {
             font-family: var(--md-font-display);
             font-size: 2.5rem;
@@ -1993,19 +1735,9 @@
             transition: var(--transition-bounce);
         }
         
-        .footer-link .material-icons-round {
-            font-size: 1.3rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
         .footer-link:hover {
             color: var(--md-primary);
             transform: translateX(10px);
-        }
-        
-        .footer-link:hover .material-icons-round {
-            opacity: 1;
         }
         
         .footer-bottom {
@@ -2038,34 +1770,16 @@
             50% { transform: scale(1.2); }
         }
         
-        .footer-social {
-            display: flex;
-            gap: var(--space-md);
+        /* FIXED: Footer social icons with proper styling */
+        .footer .social-links {
+            margin-top: 0;
+            gap: var(--space-sm);
         }
         
-        .footer-social-link {
+        .footer .social-link {
             width: 48px;
             height: 48px;
-            border-radius: 50%;
             background: var(--md-surface);
-            border: 1px solid var(--md-outline);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-surface);
-            text-decoration: none;
-            transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-2);
-        }
-        
-        .footer-social-link:hover {
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            color: var(--md-on-primary);
-            transform: translateY(-8px) rotate(360deg);
-            box-shadow: var(--md-elevation-4);
-        }
-        
-        .footer-social-link .material-icons-round {
             font-size: 1.5rem;
         }
         
@@ -2168,10 +1882,6 @@
             box-shadow: var(--md-elevation-6);
         }
         
-        .back-to-top .material-icons-round {
-            font-size: 2rem;
-        }
-        
         /* Reveal Animations */
         .reveal {
             opacity: 0;
@@ -2192,18 +1902,6 @@
         
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .desktop-theme-toggle {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: flex;
-            }
-            
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
@@ -2285,59 +1983,6 @@
                 height: 50px;
             }
         }
-        
-        @media (max-width: 480px) {
-            .portrait-container {
-                width: 200px;
-                height: 200px;
-            }
-            
-            .floating-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 1.2rem;
-            }
-            
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-            
-            .section-title {
-                font-size: 2.2rem;
-            }
-            
-            .section-subtitle {
-                font-size: 1rem;
-            }
-            
-            .timeline-content {
-                padding: var(--space-lg);
-            }
-            
-            .timeline-content h3 {
-                font-size: 1.5rem;
-            }
-            
-            .skill-card,
-            .project-card,
-            .value-card {
-                padding: var(--space-lg);
-            }
-            
-            .contact-email {
-                font-size: 1rem;
-                padding: var(--space-sm) var(--space-lg);
-            }
-            
-            .social-link {
-                width: 50px;
-                height: 50px;
-            }
-        }
     </style>
 </head>
 <body class="light-theme">
@@ -2352,7 +1997,7 @@
         </div>
     </div>
     
-    <!-- Custom Cursor (Desktop only) -->
+    <!-- Custom Cursor -->
     <div class="cursor-primary" id="cursorPrimary"></div>
     <div class="cursor-secondary" id="cursorSecondary"></div>
     
@@ -2365,7 +2010,7 @@
         <div class="mesh-pattern"></div>
     </div>
     
-    <!-- Floating Indian Motifs -->
+    <!-- Floating Indian Motifs - Paths left empty as requested -->
     <svg class="floating-motif motif-1" viewBox="0 0 690 1280" preserveAspectRatio="xMidYMid meet">
         <g transform="translate(0,1280) scale(0.1,-0.1)" fill="currentColor">
             <path d="M3190 12793 c-193 -13 -500 -72 -652 -124 -366 -125 -695 -327 -990
@@ -3127,7 +2772,7 @@
         </g>
     </svg>
     
-    <!-- Navbar (all links updated to new domain) -->
+    <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <a href="https://aditya-cmd-max.github.io/" class="nav-brand">
             <div class="nav-logo">
@@ -3179,7 +2824,7 @@
     <!-- Mobile Navigation Overlay -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
     
-    <!-- Mobile Navigation Drawer (all links updated) -->
+    <!-- Mobile Navigation Drawer -->
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
             <div class="nav-brand">
@@ -3215,6 +2860,9 @@
                 <span class="material-icons-round">build</span>
                 Tools
             </a>
+            <button class="mobile-logout-btn" id="mobileLogoutBtn">
+                <span class="material-icons-round">logout</span> Logout
+            </button>
         </div>
         
         <a href="https://aditya-cmd-max.github.io/signin" class="mobile-nav-link" id="mobileSignInLink">
@@ -3231,22 +2879,22 @@
         </div>
     </div>
     
-    <!-- Hero Section (image path updated) -->
+    <!-- Hero Section -->
     <section class="hero-section" id="hero">
         <div class="hero-content">
             <div class="portrait-container" data-aos="fade-down" data-aos-duration="1000">
                 <div class="portrait-frame">
-                    <img src="https://aditya-cmd-max.github.io/adityajha.jpg" alt="Aditya Jha" class="portrait" onclick="alert('👋 Hello! Thanks for clicking!')" onerror="this.onerror=null; this.src='https://via.placeholder.com/320x320/B5651D/ffffff?text=AJ';">
+                    <img src="https://aditya-cmd-max.github.io/adityajha.jpg" alt="Aditya Jha" class="portrait" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Aditya+Jha&background=B5651D&color=fff&size=320';">
                 </div>
                 <div class="floating-elements">
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="200" onclick="alert('💻 Full-stack developer')">💻</div>
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="400" onclick="alert('🚀 Building the future')">🚀</div>
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="600" onclick="alert('🎨 UI/UX designer')">🎨</div>
-                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="800" onclick="alert('📱 Mobile app creator')">📱</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="200">💻</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="400">🚀</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="600">🎨</div>
+                    <div class="floating-icon" data-aos="zoom-in" data-aos-delay="800">📱</div>
                 </div>
             </div>
             
-            <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200" onclick="alert('Aditya Jha · Founder of Reverbit')">
+            <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
                 <span>Aditya Jha</span>
             </h1>
             
@@ -3283,7 +2931,7 @@
                 </div>
                 
                 <div class="about-intro" data-aos="fade-up" data-aos-delay="200">
-                    <blockquote class="about-quote" onclick="alert('\"I\'m a student and passionate self-taught developer.\"')">
+                    <blockquote class="about-quote">
                         "I'm a student and passionate self-taught developer. I started Reverbit to blend creativity, technology, and education into something unique. My dream is to build tools that make learning more interactive and accessible for everyone."
                     </blockquote>
                     
@@ -3306,7 +2954,7 @@
                 </div>
                 
                 <div class="story-timeline" data-aos="fade-up" data-aos-delay="200">
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="100" onclick="alert('Step 1: The Beginning — Started with HTML pages')">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
                         <div class="timeline-marker">1</div>
                         <div class="timeline-content">
                             <h3>The Beginning</h3>
@@ -3314,7 +2962,7 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="200" onclick="alert('Step 2: Discovering UI/UX — Great code needs great design')">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
                         <div class="timeline-marker">2</div>
                         <div class="timeline-content">
                             <h3>Discovering UI/UX</h3>
@@ -3322,7 +2970,7 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="300" onclick="alert('Step 3: Building Reverbit — Where tech meets creativity')">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
                         <div class="timeline-marker">3</div>
                         <div class="timeline-content">
                             <h3>Building Reverbit</h3>
@@ -3330,7 +2978,7 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="400" onclick="alert('Step 4: Looking Forward — Excited about the future of web technologies')">
+                    <div class="timeline-item" data-aos="fade-right" data-aos-delay="400">
                         <div class="timeline-marker">4</div>
                         <div class="timeline-content">
                             <h3>Looking Forward</h3>
@@ -3354,7 +3002,7 @@
                 </div>
                 
                 <div class="skills-grid">
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="100" onclick="alert('Frontend Development: 90% — HTML, CSS, JavaScript, React')">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="100">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">code</span>
@@ -3367,7 +3015,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="200" onclick="alert('Backend Development: 80% — Node.js, Firebase, databases')">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="200">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">storage</span>
@@ -3380,7 +3028,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="300" onclick="alert('UI/UX Design: 85% — Figma, user research, prototyping')">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="300">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">palette</span>
@@ -3393,7 +3041,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card" data-aos="flip-left" data-aos-delay="400" onclick="alert('AI & Machine Learning: 75% — Exploring AI for education')">
+                    <div class="skill-card" data-aos="flip-left" data-aos-delay="400">
                         <div class="skill-header">
                             <div class="skill-icon">
                                 <span class="material-icons-round">psychology</span>
@@ -3462,8 +3110,8 @@
                     </div>
                 </div>
                 
-                <!-- Note Section (updated links) -->
-                <div class="note-section" data-aos="fade-up" data-aos-delay="400" onclick="alert('Access all projects via Reverbit Axis app or web ecosystem!')">
+                <!-- Note Section -->
+                <div class="note-section" data-aos="fade-up" data-aos-delay="400">
                     <p>
                         <span class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">info</span>
                         Note: the above mentioned Projects can be accessed at 
@@ -3488,7 +3136,7 @@
                 </div>
                 
                 <div class="values-grid">
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="100" onclick="alert('Innovation: Pushing boundaries with new technologies')">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="value-icon">
                             <span class="material-icons-round">lightbulb</span>
                         </div>
@@ -3496,7 +3144,7 @@
                         <p class="value-description">Pushing boundaries and exploring new technologies to create unique solutions that solve real problems.</p>
                     </div>
                     
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="200" onclick="alert('Attention to Detail: Small things make a big difference')">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="value-icon">
                             <span class="material-icons-round">search</span>
                         </div>
@@ -3504,7 +3152,7 @@
                         <p class="value-description">Focusing on the small things that make a big difference in user experience and product quality.</p>
                     </div>
                     
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="300" onclick="alert('Collaboration: Working together to achieve more')">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="300">
                         <div class="value-icon">
                             <span class="material-icons-round">handshake</span>
                         </div>
@@ -3512,7 +3160,7 @@
                         <p class="value-description">Working together to achieve results greater than the sum of individual efforts through shared knowledge.</p>
                     </div>
                     
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="400" onclick="alert('Continuous Learning: Always growing and improving')">
+                    <div class="value-card" data-aos="fade-up" data-aos-delay="400">
                         <div class="value-icon">
                             <span class="material-icons-round">school</span>
                         </div>
@@ -3523,7 +3171,7 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- Contact Section - FIXED social icons -->
         <section class="section" id="contact">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -3535,21 +3183,21 @@
                     <p class="section-subtitle">Have a project in mind or just want to chat about technology and design? I'd love to hear from you.</p>
                 </div>
                 
-                <div class="contact-section" data-aos="zoom-in" data-aos-delay="200" onclick="alert('📧 Feel free to email me!')">
-                    <a href="mailto:exonova1104@gmail.com" class="contact-email" onclick="event.stopPropagation();">
+                <div class="contact-section" data-aos="zoom-in" data-aos-delay="200">
+                    <a href="mailto:exonova1104@gmail.com" class="contact-email">
                         <span class="material-icons-round">email</span>
                         exonova1104@gmail.com
                     </a>
                     
                     <div class="social-links">
-                        <a href="https://github.com/aditya-cmd-max/" target="_blank" class="social-link" onclick="event.stopPropagation();">
-                            <span class="material-icons-round">code</span>
+                        <a href="https://github.com/aditya-cmd-max/" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" target="_blank" class="social-link" onclick="event.stopPropagation();">
-                            <span class="material-icons-round">linkedin</span>
+                        <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="https://youtube.com/@Reverbit" target="_blank" class="social-link" onclick="event.stopPropagation();">
-                            <span class="material-icons-round">smart_display</span>
+                        <a href="https://youtube.com/@Reverbit" target="_blank" class="social-link">
+                            <i class="fab fa-youtube"></i>
                         </a>
                     </div>
                 </div>
@@ -3557,7 +3205,7 @@
         </section>
     </main>
 
-    <!-- Footer (all links updated) -->
+    <!-- Footer - FIXED social icons -->
     <footer class="footer">
         <div class="footer-grid">
             <div>
@@ -3640,9 +3288,21 @@
                 Made with love and code by Aditya Jha
             </div>
             
-            <div class="footer-copyright">
-                © 2026 Reverbit Innovations. All Rights Reserved
+            <div class="social-links">
+                <a href="https://github.com/aditya-cmd-max/" target="_blank" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" target="_blank" class="social-link">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://youtube.com/@Reverbit" target="_blank" class="social-link">
+                    <i class="fab fa-youtube"></i>
+                </a>
             </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; font-size: 0.9rem; color: var(--md-on-surface-variant);">
+            © 2026 Reverbit Innovations. All Rights Reserved
         </div>
     </footer>
 
@@ -3683,16 +3343,34 @@
         // ============================================
         function initAuth() {
             if (typeof window.ReverbitAuth !== 'undefined') {
-                window.ReverbitAuth.auth.onAuthStateChanged(async (user) => {
+                window.ReverbitAuth.addAuthListener((user, profile) => {
                     if (user) {
                         document.body.classList.add('user-signed-in');
+                        
+                        const signInBtn = document.getElementById('signInButton');
+                        const mobileSignIn = document.getElementById('mobileSignInLink');
+                        
+                        if (signInBtn) signInBtn.style.display = 'none';
+                        if (mobileSignIn) mobileSignIn.style.display = 'none';
+                        
+                        setTimeout(() => {
+                            if (!document.querySelector('.reverbit-profile-avatar')) {
+                                window.ReverbitAuth.addProfileAvatar();
+                            }
+                        }, 500);
                     } else {
                         document.body.classList.remove('user-signed-in');
+                        
+                        const signInBtn = document.getElementById('signInButton');
+                        const mobileSignIn = document.getElementById('mobileSignInLink');
+                        
+                        if (signInBtn) signInBtn.style.display = 'flex';
+                        if (mobileSignIn) mobileSignIn.style.display = 'flex';
                     }
                 });
                 
-                if (window.ReverbitAuth.getUser()) {
-                    document.body.classList.add('user-signed-in');
+                if (window.ReverbitAuth.isDarkModeActive && window.ReverbitAuth.isDarkModeActive()) {
+                    document.body.classList.add('dark-theme');
                 }
             } else {
                 setTimeout(initAuth, 100);
@@ -3783,7 +3461,7 @@
         themeToggle?.addEventListener('click', toggleTheme);
         mobileThemeToggle?.addEventListener('click', toggleTheme);
         
-        // Load saved theme (default light)
+        // Load saved theme
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-theme');
@@ -3818,6 +3496,14 @@
         
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeMobileNav();
+        });
+        
+        // Logout button
+        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+        mobileLogoutBtn?.addEventListener('click', () => {
+            if (window.ReverbitAuth) {
+                window.ReverbitAuth.logout();
+            }
         });
         
         // Back to top
