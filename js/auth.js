@@ -1033,18 +1033,28 @@ class ReverbitAuth {
 
     // ================= VERIFICATION HELPERS =================
     getVerificationLevel() {
-        if (!this.userProfile) return 'none';
-        
-        if (this.userProfile.verifiedLevel === 'premium' || this.userProfile.premiumVerified) {
-            return 'premium';
-        }
-        
-        if (this.userProfile.verifiedLevel === 'basic' || this.userProfile.verified) {
-            return 'basic';
-        }
-        
-        return 'none';
+    if (!this.userProfile) return 'none';
+    
+    // Check premium verification FIRST (explicit true check)
+    if (this.userProfile.verifiedLevel === 'premium' || 
+        this.userProfile.premiumVerified === true) {
+        return 'premium';
     }
+    
+    // Check basic verification (explicit true check)
+    if (this.userProfile.verifiedLevel === 'basic' || 
+        this.userProfile.verified === true) {
+        return 'basic';
+    }
+    
+    // Also check for string 'true' (sometimes stored as string)
+    if (this.userProfile.verified === 'true' || 
+        this.userProfile.premiumVerified === 'true') {
+        return this.userProfile.premiumVerified === 'true' ? 'premium' : 'basic';
+    }
+    
+    return 'none';
+}
 
     isVerified() {
         return this.getVerificationLevel() !== 'none';
