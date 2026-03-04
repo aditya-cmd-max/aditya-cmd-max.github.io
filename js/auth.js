@@ -1570,7 +1570,7 @@ class ReverbitAuth {
                     </a>
                     
                     ${isVerified ? `
-                    <a href="${profileUrl}#verification" target="_blank" class="profile-menu-item" id="profile-verification">
+                    <a href="https://aditya-cmd-max.github.io/verify/" target="_blank" class="profile-menu-item" id="profile-verification">
                         <span class="profile-menu-icon">
                             <i class="fas fa-shield-alt"></i>
                         </span>
@@ -1614,11 +1614,11 @@ class ReverbitAuth {
                         </div>
                     </div>
                     <div class="privacy-link">
-                        <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank">Privacy</a>
+                        <a href="https://aditya-cmd-max.github.io/privacy" target="_blank">Privacy</a>
                         •
-                        <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank">Terms</a>
+                        <a href="https://aditya-cmd-max.github.io/terms" target="_blank">Terms</a>
                         •
-                        <a href="https://aditya-cmd-max.github.io/reverbit/help" target="_blank">Help</a>
+                        <a href="https://aditya-cmd-max.github.io/help" target="_blank">Help</a>
                     </div>
                 </div>
             </div>
