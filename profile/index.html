@@ -2955,7 +2955,7 @@
                                         <span class="material-icons-round">visibility</span>
                                     </button>
                                     <button class="btn btn-icon btn-secondary" onclick="window.AdminManager.openVerifyModal('${user.uid}', '${ProfileManager.escapeHtml(user.displayName || 'User')}', '${level}')" title="Verify">
-                                        <span class="material-icons-round">${level === 'premium' ? 'crown' : 'verified'}</span>
+                                        <span class="material-icons-round">${level === 'premium' ? 'workspace_premium' : 'verified'}</span>
                                     </button>
                                     ${user.email !== ADMIN_EMAIL ? `
                                         <button class="btn btn-icon btn-error" onclick="window.AdminManager.openDeleteModal('${user.uid}', '${ProfileManager.escapeHtml(user.displayName || 'User')}')" title="Delete">
