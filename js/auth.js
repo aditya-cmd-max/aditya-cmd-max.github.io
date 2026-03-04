@@ -1,7 +1,7 @@
 // ====================================================================
 // auth.js 
 // Reverbit Innovations by Aditya Jha
-// PRODUCTION ENTERPRISE VERSION - COMPLETE FIX
+// ULTIMATE PRODUCTION VERSION - ALL FEATURES RESTORED & FIXED
 // ====================================================================
 
 class ReverbitAuth {
@@ -51,6 +51,8 @@ class ReverbitAuth {
         this.offlineQueue = [];
         this.isOnline = navigator.onLine;
         this.popupVisible = false;
+        this.profileLoadAttempts = 0;
+        this.maxProfileLoadAttempts = 3;
         
         // Bind methods
         this.toggleProfilePopup = this.toggleProfilePopup.bind(this);
@@ -66,13 +68,11 @@ class ReverbitAuth {
 
     // ================= INITIALIZATION =================
     async init() {
-        // Prevent multiple initializations
         if (this.initialized) {
             console.log('Auth: Already initialized');
             return this;
         }
         
-        // Return existing promise if initializing
         if (this.initPromise) {
             return this.initPromise;
         }
@@ -90,7 +90,7 @@ class ReverbitAuth {
                 await this.loadFirebaseSDK();
             }
             
-            // Initialize Firebase with error handling
+            // Initialize Firebase
             if (!firebase.apps.length) {
                 firebase.initializeApp(this.firebaseConfig);
                 console.log('Auth: Firebase initialized');
@@ -106,13 +106,13 @@ class ReverbitAuth {
                 cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
             });
             
-            // Enable persistence with retry
+            // Enable persistence
             await this.enablePersistence();
             
             // Initialize Cloudinary
             this.initCloudinaryWidget();
             
-            // Inject styles FIRST
+            // Inject styles
             this.injectStyles();
             
             // Setup auth listener
@@ -124,12 +124,12 @@ class ReverbitAuth {
             // Initialize theme
             this.initThemeSystem();
             
-            // Setup visibility listeners
+            // Setup listeners
             this.setupVisibilityListener();
             this.setupPeriodicUpdates();
             this.setupConnectivityListeners();
             
-            // CRITICAL: Force avatar creation after initialization
+            // Force avatar creation
             setTimeout(() => {
                 if (this.user) {
                     this.forceAvatarCreation();
@@ -243,6 +243,7 @@ class ReverbitAuth {
             if (this.user) {
                 this.syncUserData();
             }
+            this.showToast('You are back online!', 'success');
         } else {
             console.log('Auth: Offline mode activated');
             this.showToast('You are offline. Changes will sync when connection returns.', 'warning');
@@ -259,6 +260,7 @@ class ReverbitAuth {
                 this.cacheUserProfile();
                 this.updateProfileAvatar();
                 this.notifyAuthListeners();
+                this.showToast('Profile synced successfully', 'success');
             }
         } catch (error) {
             console.error('Auth: Sync error:', error);
@@ -269,6 +271,7 @@ class ReverbitAuth {
     addToOfflineQueue(operation, data) {
         this.offlineQueue.push({ operation, data, timestamp: Date.now() });
         localStorage.setItem('reverbit_offline_queue', JSON.stringify(this.offlineQueue));
+        console.log('Auth: Added to offline queue:', operation);
     }
 
     async processOfflineQueue() {
@@ -283,6 +286,7 @@ class ReverbitAuth {
         for (const item of queue) {
             try {
                 await this.processOfflineItem(item);
+                console.log('Auth: Processed offline item:', item.operation);
             } catch (error) {
                 console.error('Auth: Failed to process offline item:', error);
                 this.offlineQueue.push(item);
@@ -358,33 +362,77 @@ class ReverbitAuth {
     initThemeSystem() {
         console.log('Auth: Initializing theme system...');
         
+        const pageTheme = this.detectPageTheme();
         const savedTheme = localStorage.getItem('reverbit_theme');
-        if (savedTheme) {
+        
+        if (pageTheme && !savedTheme) {
+            this.currentTheme = pageTheme;
+            console.log('Auth: Detected page theme:', pageTheme);
+        } else if (savedTheme) {
             this.currentTheme = savedTheme;
+            console.log('Auth: Using saved theme:', savedTheme);
         } else if (this.userProfile && this.userProfile.theme) {
             this.currentTheme = this.userProfile.theme;
+            console.log('Auth: Using profile theme:', this.userProfile.theme);
+        } else {
+            this.currentTheme = 'auto';
+            console.log('Auth: Using auto theme detection');
         }
         
         this.applyTheme();
+        this.setupThemeObserver();
         
-        // Watch for system theme changes
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        mediaQuery.addEventListener('change', () => {
+        mediaQuery.addEventListener('change', (e) => {
             if (this.currentTheme === 'auto') {
+                console.log('Auth: System theme changed, updating...');
                 this.applyTheme();
             }
         });
     }
 
-    applyTheme() {
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setupThemeObserver() {
+        this.themeObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && 
+                    (mutation.attributeName === 'class' || mutation.attributeName === 'data-theme')) {
+                    const newTheme = this.detectPageTheme();
+                    if (newTheme && newTheme !== this.currentTheme) {
+                        this.currentTheme = newTheme;
+                        this.applyTheme();
+                        console.log('Auth: Detected theme change:', newTheme);
+                    }
+                }
+            });
+        });
         
-        if (this.currentTheme === 'dark') {
+        const config = { attributes: true, attributeFilter: ['class', 'data-theme'] };
+        this.themeObserver.observe(document.body, config);
+        this.themeObserver.observe(document.documentElement, config);
+    }
+
+    applyTheme() {
+        const pageTheme = this.detectPageTheme();
+        
+        if (pageTheme === 'dark') {
+            this.currentTheme = 'dark';
             this.isDarkMode = true;
-        } else if (this.currentTheme === 'light') {
+        } else if (pageTheme === 'light') {
+            this.currentTheme = 'light';
             this.isDarkMode = false;
         } else {
-            this.isDarkMode = systemDark;
+            switch (this.currentTheme) {
+                case 'dark':
+                    this.isDarkMode = true;
+                    break;
+                case 'light':
+                    this.isDarkMode = false;
+                    break;
+                case 'auto':
+                default:
+                    this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    break;
+            }
         }
         
         localStorage.setItem('reverbit_theme', this.currentTheme);
@@ -400,12 +448,39 @@ class ReverbitAuth {
             document.body.classList.remove('dark-theme');
         }
         
-        // Update popup if visible
         if (this.profilePopup && this.profilePopup.style.display === 'block') {
-            this.refreshProfilePopup();
+            this.updatePopupTheme();
         }
         
+        this.notifyThemeObservers();
+        
         console.log('Auth: Theme applied -', this.currentTheme, '(dark:', this.isDarkMode, ')');
+    }
+
+    updatePopupTheme() {
+        if (this.profilePopup) {
+            const wasVisible = this.profilePopup.style.display === 'block';
+            this.removeProfilePopup();
+            
+            if (wasVisible) {
+                setTimeout(() => {
+                    this.createProfilePopup();
+                    this.showProfilePopup();
+                }, 10);
+            }
+        }
+    }
+
+    notifyThemeObservers() {
+        this.profileObservers.forEach(observer => {
+            if (observer.onThemeChange) {
+                try {
+                    observer.onThemeChange(this.currentTheme, this.isDarkMode);
+                } catch (error) {
+                    console.error('Theme observer error:', error);
+                }
+            }
+        });
     }
 
     async toggleTheme(theme = null) {
@@ -482,6 +557,7 @@ class ReverbitAuth {
             script.src = 'https://upload-widget.cloudinary.com/global/all.js';
             script.async = true;
             script.onload = () => console.log('Auth: Cloudinary widget loaded');
+            script.onerror = (error) => console.error('Auth: Failed to load Cloudinary:', error);
             document.head.appendChild(script);
         }
     }
@@ -500,11 +576,18 @@ class ReverbitAuth {
                     displayName: user.displayName || user.email?.split('@')[0] || 'User',
                     photoURL: user.photoURL,
                     emailVerified: user.emailVerified,
-                    providerId: user.providerId
+                    providerId: user.providerId,
+                    metadata: {
+                        creationTime: user.metadata.creationTime,
+                        lastSignInTime: user.metadata.lastSignInTime
+                    }
                 };
+                
+                console.log('Auth: Loading profile for UID:', user.uid);
                 
                 try {
                     await this.loadUserProfile();
+                    
                     this.cacheUserData();
                     
                     if (this.userProfile?.theme) {
@@ -512,29 +595,91 @@ class ReverbitAuth {
                         this.applyTheme();
                     }
                     
-                    // CRITICAL: Force avatar creation
                     this.forceAvatarCreation();
                     
                     await this.trackLogin();
                     await this.updateLastActive();
                     
+                    console.log('Auth: User fully loaded:', this.user.email);
+                    
                     this.showWelcomeMessage();
+                    
+                    if (!user.emailVerified) {
+                        this.checkEmailVerification();
+                    }
                     
                 } catch (profileError) {
                     console.error('Auth: Profile loading failed:', profileError);
+                    this.profileLoadAttempts++;
                     
-                    // Try to create profile
-                    try {
-                        await this.createNewProfile(user);
-                        this.forceAvatarCreation();
-                    } catch (createError) {
-                        console.error('Auth: Profile recovery failed:', createError);
-                        
-                        // Try cached profile
-                        const cachedProfile = localStorage.getItem('reverbit_user_profile');
-                        if (cachedProfile) {
+                    // Try to recover using cached profile
+                    const cachedProfile = localStorage.getItem('reverbit_user_profile');
+                    if (cachedProfile) {
+                        try {
                             this.userProfile = JSON.parse(cachedProfile);
+                            console.log('Auth: Using cached profile');
                             this.forceAvatarCreation();
+                            this.showToast('Using cached profile data', 'info');
+                        } catch (e) {
+                            console.error('Auth: Failed to parse cached profile');
+                        }
+                    }
+                    
+                    // Try to create new profile
+                    if (this.profileLoadAttempts <= this.maxProfileLoadAttempts) {
+                        console.log('Auth: Attempting to create new profile (attempt', this.profileLoadAttempts, ')');
+                        try {
+                            await this.createNewProfile(user);
+                            this.forceAvatarCreation();
+                        } catch (createError) {
+                            console.error('Auth: Profile creation failed:', createError);
+                            
+                            // Create minimal local profile as last resort
+                            this.userProfile = {
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName || user.email?.split('@')[0] || 'User',
+                                username: this.generateUsername(user.displayName || 'User', user.email),
+                                photoURL: user.photoURL || this.getInitialsAvatar(user.displayName || 'User'),
+                                isPublic: true,
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString(),
+                                bio: '',
+                                country: '',
+                                gender: '',
+                                dob: '',
+                                showApps: true,
+                                streak: 0,
+                                totalLogins: 1,
+                                followersCount: 0,
+                                followingCount: 0,
+                                verified: false,
+                                verifiedLevel: 'none',
+                                premiumVerified: false,
+                                cloudinaryImageId: '',
+                                lastLogin: new Date().toISOString(),
+                                lastActive: new Date().toISOString(),
+                                lastSync: new Date().toISOString(),
+                                theme: this.currentTheme,
+                                preferences: {
+                                    notifications: true,
+                                    emailUpdates: true,
+                                    autoSave: true,
+                                    darkMode: this.isDarkMode,
+                                    language: 'en',
+                                    privacyMode: false
+                                },
+                                emailVerified: user.emailVerified,
+                                provider: user.providerData[0]?.providerId || 'password',
+                                appVersion: '1.0.0',
+                                platform: this.getPlatform(),
+                                userAgent: navigator.userAgent,
+                                accountStatus: 'active'
+                            };
+                            
+                            this.cacheUserProfile();
+                            this.forceAvatarCreation();
+                            this.showToast('Profile saved locally. Will sync when online.', 'warning');
                         }
                     }
                 }
@@ -546,6 +691,8 @@ class ReverbitAuth {
                 this.clearSession();
                 this.removeProfileAvatar();
                 this.removeProfilePopup();
+                this.currentTheme = 'auto';
+                this.applyTheme();
             }
             
             this.notifyAuthListeners();
@@ -553,13 +700,11 @@ class ReverbitAuth {
     }
 
     forceAvatarCreation() {
-        // Remove existing avatar
         const existingAvatar = document.querySelector('.reverbit-profile-avatar');
         if (existingAvatar) {
             existingAvatar.remove();
         }
         
-        // Create new avatar
         this.addOrUpdateProfileAvatar();
     }
 
@@ -590,6 +735,7 @@ class ReverbitAuth {
             if (offlineQueue) {
                 try {
                     this.offlineQueue = JSON.parse(offlineQueue);
+                    console.log('Auth: Restored offline queue with', this.offlineQueue.length, 'items');
                 } catch (e) {
                     console.warn('Auth: Failed to parse offline queue');
                 }
@@ -601,21 +747,19 @@ class ReverbitAuth {
             }
             
             if (userData && userUid) {
+                console.log('Auth: Found existing session for UID:', userUid);
                 this.user = JSON.parse(userData);
                 
                 const cachedProfile = localStorage.getItem('reverbit_user_profile');
                 if (cachedProfile) {
                     this.userProfile = JSON.parse(cachedProfile);
+                    console.log('Auth: Loaded profile from cache');
                     this.forceAvatarCreation();
-                }
-                
-                // Try to load fresh profile
-                if (this.auth.currentUser) {
-                    await this.loadUserProfile();
                 }
             }
         } catch (error) {
             console.error('Session check error:', error);
+            this.clearSession();
         }
     }
 
@@ -624,8 +768,38 @@ class ReverbitAuth {
         localStorage.removeItem('reverbit_user_uid');
         localStorage.removeItem('reverbit_user_email');
         localStorage.removeItem('reverbit_user_profile');
+        localStorage.removeItem('reverbit_auth');
         
         document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+
+    checkEmailVerification() {
+        const checkInterval = setInterval(async () => {
+            if (!this.user) {
+                clearInterval(checkInterval);
+                return;
+            }
+            
+            await this.user.reload();
+            if (this.user.emailVerified) {
+                clearInterval(checkInterval);
+                this.showToast('Email verified successfully!', 'success');
+                
+                if (this.db) {
+                    await this.db.collection('users').doc(this.user.uid).update({
+                        emailVerified: true,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                
+                if (this.userProfile) {
+                    this.userProfile.emailVerified = true;
+                    this.cacheUserProfile();
+                }
+            }
+        }, 5000);
+        
+        setTimeout(() => clearInterval(checkInterval), 300000);
     }
 
     // ================= PROFILE MANAGEMENT =================
@@ -640,6 +814,7 @@ class ReverbitAuth {
         
         while (retryCount < maxRetries) {
             try {
+                console.log('Auth: Loading profile from Firestore (attempt', retryCount + 1, ')...');
                 const userRef = this.db.collection('users').doc(this.user.uid);
                 const userDoc = await userRef.get();
                 
@@ -661,7 +836,10 @@ class ReverbitAuth {
                 retryCount++;
                 console.error(`Auth: Profile loading error (attempt ${retryCount}):`, error);
                 
-                if (retryCount === maxRetries) throw error;
+                if (retryCount === maxRetries) {
+                    throw error;
+                }
+                
                 await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
             }
         }
@@ -674,7 +852,6 @@ class ReverbitAuth {
         const username = this.generateUsername(displayName, user.email);
         const now = firebase.firestore.Timestamp.now();
         
-        // Complete profile with ALL required fields
         const userProfile = {
             uid: user.uid,
             email: user.email,
@@ -725,13 +902,41 @@ class ReverbitAuth {
             console.log('Auth: Profile created successfully');
             this.userProfile = userProfile;
             
+            await this.db.collection('usage').doc(user.uid).set({
+                cloverAI: 0,
+                mindscribe: 0,
+                peo: 0,
+                other: 0,
+                streak: 0,
+                lastUsed: now,
+                updatedAt: now,
+                weeklyActivity: {},
+                monthlyActivity: {}
+            });
+            
+            await this.db.collection('activity').add({
+                userId: user.uid,
+                type: 'account_created',
+                timestamp: now,
+                metadata: {
+                    displayName: displayName,
+                    email: user.email
+                }
+            });
+            
             this.showToast(`Welcome to Reverbit, ${displayName}!`, 'success');
             
         } catch (createError) {
             console.error('Auth: Profile creation failed:', createError);
             
-            // Store locally anyway
             this.userProfile = userProfile;
+            this.cacheUserProfile();
+            
+            this.addToOfflineQueue('createProfile', {
+                uid: user.uid,
+                profile: userProfile
+            });
+            
             this.showToast('Profile saved locally. Will sync when online.', 'warning');
         }
     }
@@ -777,6 +982,7 @@ class ReverbitAuth {
             premiumVerified: false,
             verifiedBy: null,
             verifiedAt: null,
+            verificationNotes: '',
             cloudinaryImageId: '',
             preferences: {
                 notifications: true,
@@ -786,7 +992,10 @@ class ReverbitAuth {
                 language: 'en',
                 privacyMode: false
             },
-            accountStatus: 'active'
+            accountStatus: 'active',
+            appVersion: '1.0.0',
+            platform: this.getPlatform(),
+            userAgent: navigator.userAgent
         };
         
         let needsUpdate = false;
@@ -796,6 +1005,21 @@ class ReverbitAuth {
             if (this.userProfile[key] === undefined || this.userProfile[key] === null) {
                 updates[key] = value;
                 needsUpdate = true;
+                console.log('Auth: Adding missing field:', key);
+            } else if (key === 'preferences' && typeof value === 'object') {
+                const prefs = this.userProfile.preferences || {};
+                const prefUpdates = {};
+                
+                for (const [prefKey, prefValue] of Object.entries(value)) {
+                    if (prefs[prefKey] === undefined) {
+                        prefUpdates[prefKey] = prefValue;
+                    }
+                }
+                
+                if (Object.keys(prefUpdates).length > 0) {
+                    updates.preferences = { ...prefs, ...prefUpdates };
+                    needsUpdate = true;
+                }
             }
         }
         
@@ -803,14 +1027,22 @@ class ReverbitAuth {
             updates.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
             await userRef.update(updates);
             Object.assign(this.userProfile, updates);
+            console.log('Auth: Added missing profile fields:', Object.keys(updates));
         }
     }
 
     // ================= VERIFICATION HELPERS =================
     getVerificationLevel() {
         if (!this.userProfile) return 'none';
-        if (this.userProfile.verifiedLevel === 'premium' || this.userProfile.premiumVerified) return 'premium';
-        if (this.userProfile.verifiedLevel === 'basic' || this.userProfile.verified) return 'basic';
+        
+        if (this.userProfile.verifiedLevel === 'premium' || this.userProfile.premiumVerified) {
+            return 'premium';
+        }
+        
+        if (this.userProfile.verifiedLevel === 'basic' || this.userProfile.verified) {
+            return 'basic';
+        }
+        
         return 'none';
     }
 
@@ -822,41 +1054,62 @@ class ReverbitAuth {
         return this.getVerificationLevel() === 'premium';
     }
 
+    getVerificationBadgeHTML(level = null) {
+        const verificationLevel = level || this.getVerificationLevel();
+        
+        if (verificationLevel === 'none') return '';
+        
+        const isPremium = verificationLevel === 'premium';
+        const icon = isPremium ? 'crown' : 'check-circle';
+        const text = isPremium ? 'Premium Verified' : 'Verified';
+        const colorClass = isPremium ? 'premium' : '';
+        
+        return `
+            <div class="verified-badge-popup ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
+                <i class="fas fa-${icon}"></i>
+                ${text}
+            </div>
+        `;
+    }
+
     getAvatarBadgeHTML() {
-        const level = this.getVerificationLevel();
-        if (level === 'none') return '';
+        const verificationLevel = this.getVerificationLevel();
         
-        const icon = level === 'premium' ? 'crown' : 'check';
-        const premiumClass = level === 'premium' ? 'premium' : '';
+        if (verificationLevel === 'none') return '';
         
-        return `<div class="avatar-verified-badge ${premiumClass}" title="${level === 'premium' ? 'Premium Verified' : 'Verified'}"><i class="fas fa-${icon}"></i></div>`;
+        const isPremium = verificationLevel === 'premium';
+        const icon = isPremium ? 'crown' : 'check';
+        const colorClass = isPremium ? 'premium' : '';
+        
+        return `
+            <div class="avatar-verified-badge ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
+                <i class="fas fa-${icon}"></i>
+            </div>
+        `;
     }
 
     // ================= PROFILE AVATAR UI =================
     addOrUpdateProfileAvatar() {
         console.log('Auth: Managing profile avatar UI...');
         
-        // Remove existing avatar
         const existingAvatar = document.querySelector('.reverbit-profile-avatar');
         if (existingAvatar) {
             existingAvatar.remove();
         }
         
-        // Find or create container
-        let container = this.findAvatarContainer();
-        if (!container) {
-            container = this.createFloatingHeader();
+        let headerActions = this.findAvatarContainer();
+        
+        if (!headerActions) {
+            headerActions = this.createFloatingHeader();
         }
         
-        // Create new avatar
-        this.createAvatarButton(container);
+        this.createAvatarButton(headerActions);
         this.createAvatarUploadInput();
         
         console.log('Auth: Avatar UI setup complete');
     }
 
     findAvatarContainer() {
-        // Try common header locations
         const selectors = [
             '.header-actions',
             '.app-header .actions',
@@ -871,10 +1124,8 @@ class ReverbitAuth {
             if (element) return element;
         }
         
-        // Look for any element that might contain user controls
         const header = document.querySelector('header, .header, .app-header, nav.navbar');
         if (header) {
-            // Create actions div if not exists
             let actions = header.querySelector('.header-actions');
             if (!actions) {
                 actions = document.createElement('div');
@@ -908,22 +1159,23 @@ class ReverbitAuth {
         this.profileAvatar.setAttribute('aria-label', 'User profile menu');
         this.profileAvatar.setAttribute('title', 'Profile menu');
         
-        // Avatar container
         const avatarContainer = document.createElement('div');
         avatarContainer.className = 'reverbit-avatar-container';
         
         const avatarImg = document.createElement('img');
         avatarImg.className = 'reverbit-avatar-img';
         avatarImg.alt = 'Profile avatar';
+        avatarImg.loading = 'lazy';
         
         avatarContainer.appendChild(avatarImg);
         
-        // Add verification badge if verified
         if (this.isVerified()) {
-            avatarContainer.appendChild(this.createVerificationBadge());
+            const badgeDiv = document.createElement('div');
+            badgeDiv.className = `avatar-verified-badge ${this.getVerificationLevel() === 'premium' ? 'premium' : ''}`;
+            badgeDiv.innerHTML = `<i class="fas fa-${this.getVerificationLevel() === 'premium' ? 'crown' : 'check'}"></i>`;
+            avatarContainer.appendChild(badgeDiv);
         }
         
-        // Upload overlay
         const uploadOverlay = document.createElement('div');
         uploadOverlay.className = 'reverbit-avatar-upload-overlay';
         uploadOverlay.innerHTML = `
@@ -933,7 +1185,6 @@ class ReverbitAuth {
             <span class="upload-text">Upload</span>
         `;
         
-        // Loading spinner
         const loadingSpinner = document.createElement('div');
         loadingSpinner.className = 'reverbit-avatar-loading';
         loadingSpinner.innerHTML = '<div class="spinner"></div>';
@@ -943,7 +1194,6 @@ class ReverbitAuth {
         this.profileAvatar.appendChild(uploadOverlay);
         this.profileAvatar.appendChild(loadingSpinner);
         
-        // Event listeners
         this.profileAvatar.addEventListener('click', (e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -965,23 +1215,18 @@ class ReverbitAuth {
             uploadOverlay.style.opacity = '0';
         });
         
-        // Insert at beginning of container
+        this.profileAvatar.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            this.showAvatarContextMenu(e);
+        });
+        
         if (container.firstChild) {
             container.insertBefore(this.profileAvatar, container.firstChild);
         } else {
             container.appendChild(this.profileAvatar);
         }
         
-        // Set image source
         this.updateProfileAvatar();
-    }
-
-    createVerificationBadge() {
-        const level = this.getVerificationLevel();
-        const badge = document.createElement('div');
-        badge.className = `avatar-verified-badge ${level === 'premium' ? 'premium' : ''}`;
-        badge.innerHTML = `<i class="fas fa-${level === 'premium' ? 'crown' : 'check'}"></i>`;
-        return badge;
     }
 
     createAvatarUploadInput() {
@@ -992,6 +1237,7 @@ class ReverbitAuth {
         this.avatarUploadInput = document.createElement('input');
         this.avatarUploadInput.type = 'file';
         this.avatarUploadInput.accept = 'image/*';
+        this.avatarUploadInput.capture = 'user';
         this.avatarUploadInput.style.cssText = `
             position: absolute;
             opacity: 0;
@@ -1023,19 +1269,16 @@ class ReverbitAuth {
         const displayName = this.userProfile.displayName || 'User';
         let photoURL = this.userProfile.photoURL;
         
-        // Ensure valid photo URL
         if (!photoURL || photoURL.includes('undefined') || photoURL.includes('null')) {
             photoURL = this.getInitialsAvatar(displayName);
         }
         
-        // Add cache buster
         const cacheBuster = `t=${Date.now()}`;
         photoURL += (photoURL.includes('?') ? '&' : '?') + cacheBuster;
         
         avatarImg.src = photoURL;
         avatarImg.alt = `${displayName}'s profile picture`;
         
-        // Handle load/error
         avatarImg.onload = () => {
             this.profileAvatar.classList.remove('loading');
         };
@@ -1048,8 +1291,6 @@ class ReverbitAuth {
         };
         
         this.profileAvatar.classList.add('loading');
-        
-        // Update verification badge
         this.updateAvatarVerificationBadge();
     }
 
@@ -1063,8 +1304,137 @@ class ReverbitAuth {
         }
         
         if (this.isVerified()) {
-            avatarContainer.appendChild(this.createVerificationBadge());
+            const badgeDiv = document.createElement('div');
+            badgeDiv.className = `avatar-verified-badge ${this.getVerificationLevel() === 'premium' ? 'premium' : ''}`;
+            badgeDiv.innerHTML = `<i class="fas fa-${this.getVerificationLevel() === 'premium' ? 'crown' : 'check'}"></i>`;
+            avatarContainer.appendChild(badgeDiv);
         }
+    }
+
+    showAvatarContextMenu(event) {
+        event.preventDefault();
+        
+        const existingMenu = document.querySelector('.avatar-context-menu');
+        if (existingMenu) {
+            existingMenu.remove();
+        }
+        
+        const contextMenu = document.createElement('div');
+        contextMenu.className = 'avatar-context-menu';
+        
+        const menuItems = [
+            { icon: 'fa-upload', text: 'Upload Photo', action: () => this.handleAvatarUpload() },
+            { icon: 'fa-camera', text: 'Take Photo', action: () => this.takePhoto() },
+            { icon: 'fa-user-circle', text: 'View Profile', action: () => this.viewProfile() },
+            { icon: 'fa-tachometer-alt', text: 'Dashboard', action: () => this.goToDashboard() },
+            { icon: 'fa-cog', text: 'Settings', action: () => this.openSettings() },
+            { icon: 'fa-sign-out-alt', text: 'Sign Out', action: () => this.logout() }
+        ];
+        
+        menuItems.forEach(item => {
+            const menuItem = document.createElement('button');
+            menuItem.className = 'context-menu-item';
+            menuItem.innerHTML = `
+                <i class="fas ${item.icon}" style="width: 16px;"></i>
+                <span>${item.text}</span>
+            `;
+            
+            menuItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                item.action();
+                contextMenu.remove();
+            });
+            
+            contextMenu.appendChild(menuItem);
+        });
+        
+        document.body.appendChild(contextMenu);
+        
+        const rect = contextMenu.getBoundingClientRect();
+        let left = event.clientX;
+        let top = event.clientY;
+        
+        if (left + rect.width > window.innerWidth) {
+            left = window.innerWidth - rect.width - 10;
+        }
+        if (top + rect.height > window.innerHeight) {
+            top = window.innerHeight - rect.height - 10;
+        }
+        
+        contextMenu.style.left = `${left}px`;
+        contextMenu.style.top = `${top}px`;
+        
+        const closeMenu = (e) => {
+            if (!contextMenu.contains(e.target)) {
+                contextMenu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        };
+        
+        setTimeout(() => {
+            document.addEventListener('click', closeMenu);
+        }, 100);
+    }
+
+    async takePhoto() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            this.showToast('Camera access not supported', 'error');
+            return;
+        }
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            this.showCameraInterface(stream);
+        } catch (error) {
+            console.error('Camera error:', error);
+            this.showToast('Camera access denied', 'error');
+        }
+    }
+
+    showCameraInterface(stream) {
+        const cameraModal = document.createElement('div');
+        cameraModal.className = 'camera-modal';
+        
+        const video = document.createElement('video');
+        video.autoplay = true;
+        video.srcObject = stream;
+        
+        const controls = document.createElement('div');
+        controls.className = 'camera-controls';
+        
+        const captureBtn = document.createElement('button');
+        captureBtn.innerHTML = '<i class="fas fa-camera"></i> Take Photo';
+        
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = 'Cancel';
+        
+        captureBtn.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            canvas.toBlob(async (blob) => {
+                if (blob) {
+                    const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+                    await this.uploadProfilePicture(file);
+                }
+                
+                stream.getTracks().forEach(track => track.stop());
+                cameraModal.remove();
+            }, 'image/jpeg', 0.9);
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            stream.getTracks().forEach(track => track.stop());
+            cameraModal.remove();
+        });
+        
+        controls.appendChild(captureBtn);
+        controls.appendChild(cancelBtn);
+        cameraModal.appendChild(video);
+        cameraModal.appendChild(controls);
+        document.body.appendChild(cameraModal);
     }
 
     // ================= PROFILE POPUP =================
@@ -1082,9 +1452,9 @@ class ReverbitAuth {
         
         document.body.appendChild(this.profilePopup);
         
-        // Position initially off-screen for measurement
-        this.profilePopup.style.visibility = 'hidden';
-        this.profilePopup.style.display = 'block';
+        setTimeout(() => {
+            this.attachPopupEventListeners();
+        }, 10);
         
         return this.profilePopup;
     }
@@ -1110,9 +1480,26 @@ class ReverbitAuth {
         const profileUrl = `https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`;
         const dashboardUrl = 'https://aditya-cmd-max.github.io/dashboard';
         
-        const level = this.getVerificationLevel();
-        const isVerified = level !== 'none';
+        const verificationLevel = this.getVerificationLevel();
+        const isVerified = verificationLevel !== 'none';
+        const verificationBadge = isVerified ? this.getVerificationBadgeHTML() : '';
+        
         const streak = this.userProfile.streak || 0;
+        const streakDisplay = streak > 0 ? `<span class="streak-badge">${streak} day${streak !== 1 ? 's' : ''}</span>` : '';
+        
+        const verifiedStatus = isVerified ? 
+            (verificationLevel === 'premium' ? 
+                '<span class="verified-status premium">Premium Verified</span>' : 
+                '<span class="verified-status">Verified</span>') : 
+            '';
+        
+        const emailVerifiedBadge = this.user.emailVerified ? 
+            '<span class="email-verified-badge" title="Email Verified"><i class="fas fa-check-circle"></i></span>' : 
+            '<span class="email-unverified-badge" title="Email Not Verified"><i class="fas fa-exclamation-circle"></i></span>';
+        
+        const joinDate = this.formatDate(this.userProfile.createdAt);
+        const lastActive = this.formatRelativeTime(this.userProfile.lastActive);
+        const memberDays = this.getMemberDays();
         
         this.profilePopup.innerHTML = `
             <div class="profile-popup-container">
@@ -1122,34 +1509,33 @@ class ReverbitAuth {
                             <img src="${photoURL}" alt="${displayName}" 
                                  onerror="this.src='${this.getInitialsAvatar(displayName)}'">
                             ${this.getAvatarBadgeHTML()}
-                            ${streak > 0 ? `<span class="streak-badge">${streak}</span>` : ''}
+                            ${streakDisplay}
                         </div>
-                        <button class="avatar-upload-btn" id="avatar-upload-btn">
+                        <button class="avatar-upload-btn" id="avatar-upload-btn" title="Upload new profile picture">
                             <i class="fas fa-camera"></i>
                         </button>
                     </div>
                     <div class="profile-info">
                         <div class="profile-name-container">
                             <div class="profile-name">${displayName}</div>
-                            ${this.user.emailVerified ? 
-                                '<span class="email-verified-badge" title="Email Verified"><i class="fas fa-check-circle"></i></span>' : 
-                                '<span class="email-unverified-badge" title="Email Not Verified"><i class="fas fa-exclamation-circle"></i></span>'}
+                            ${verificationBadge}
+                            ${emailVerifiedBadge}
                         </div>
                         <div class="profile-email">${email}</div>
                         <div class="profile-meta">
-                            ${isVerified ? `
-                                <span class="verified-status ${level === 'premium' ? 'premium' : ''}">
-                                    <i class="fas fa-${level === 'premium' ? 'crown' : 'check-circle'}"></i>
-                                    ${level === 'premium' ? 'Premium Verified' : 'Verified'}
-                                </span>
-                            ` : ''}
+                            ${verifiedStatus}
                             <span class="meta-item">
                                 <i class="fas fa-calendar"></i>
-                                Joined ${this.formatDate(this.userProfile.createdAt)}
+                                Joined ${joinDate}
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                Last active ${lastActive}
                             </span>
                         </div>
                         <button class="change-avatar-btn" id="change-avatar-btn">
-                            <i class="fas fa-edit"></i> Change photo
+                            <i class="fas fa-edit"></i>
+                            Change profile picture
                         </button>
                     </div>
                 </div>
@@ -1157,20 +1543,36 @@ class ReverbitAuth {
                 <div class="profile-divider"></div>
                 
                 <div class="profile-menu">
-                    <a href="${dashboardUrl}" class="profile-menu-item" target="_blank">
-                        <span class="profile-menu-icon"><i class="fas fa-tachometer-alt"></i></span>
+                    <a href="${dashboardUrl}" class="profile-menu-item" id="profile-dashboard">
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </span>
                         <span class="profile-menu-text">Dashboard</span>
                         <span class="menu-arrow">›</span>
                     </a>
                     
-                    <a href="${profileUrl}" target="_blank" class="profile-menu-item">
-                        <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
-                        <span class="profile-menu-text">Public Profile</span>
+                    <a href="${profileUrl}" target="_blank" class="profile-menu-item" id="profile-public">
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <span class="profile-menu-text">My Profile</span>
                         <span class="menu-arrow">›</span>
                     </a>
                     
+                    ${isVerified ? `
+                    <a href="${profileUrl}#verification" target="_blank" class="profile-menu-item" id="profile-verification">
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </span>
+                        <span class="profile-menu-text">Verification</span>
+                        <span class="menu-arrow">›</span>
+                    </a>
+                    ` : ''}
+                    
                     <button class="profile-menu-item" id="settings-btn">
-                        <span class="profile-menu-icon"><i class="fas fa-cog"></i></span>
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-cog"></i>
+                        </span>
                         <span class="profile-menu-text">Settings</span>
                         <span class="menu-arrow">›</span>
                     </button>
@@ -1178,8 +1580,10 @@ class ReverbitAuth {
                     <div class="profile-divider"></div>
                     
                     <button class="profile-menu-item" id="profile-signout">
-                        <span class="profile-menu-icon"><i class="fas fa-sign-out-alt"></i></span>
-                        <span class="profile-menu-text">Sign Out</span>
+                        <span class="profile-menu-icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </span>
+                        <span class="profile-menu-text">Sign out</span>
                         <span class="menu-arrow">›</span>
                     </button>
                 </div>
@@ -1195,23 +1599,20 @@ class ReverbitAuth {
                             <div class="stat-label">Streak</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-number">${this.getMemberDays()}</div>
+                            <div class="stat-number">${memberDays}</div>
                             <div class="stat-label">Days</div>
                         </div>
+                    </div>
+                    <div class="privacy-link">
+                        <a href="https://aditya-cmd-max.github.io/reverbit/privacy" target="_blank">Privacy</a>
+                        •
+                        <a href="https://aditya-cmd-max.github.io/reverbit/terms" target="_blank">Terms</a>
+                        •
+                        <a href="https://aditya-cmd-max.github.io/reverbit/help" target="_blank">Help</a>
                     </div>
                 </div>
             </div>
         `;
-        
-        // Attach event listeners
-        this.attachPopupEventListeners();
-    }
-
-    refreshProfilePopup() {
-        if (this.profilePopup && this.popupVisible) {
-            this.updatePopupContent();
-            this.positionPopup();
-        }
     }
 
     attachPopupEventListeners() {
@@ -1234,6 +1635,14 @@ class ReverbitAuth {
             });
         }
         
+        const dashboardBtn = this.profilePopup.querySelector('#profile-dashboard');
+        if (dashboardBtn) {
+            dashboardBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+            });
+        }
+        
         const uploadHandlers = [
             this.profilePopup.querySelector('#change-avatar-btn'),
             this.profilePopup.querySelector('#avatar-upload-btn'),
@@ -1247,6 +1656,12 @@ class ReverbitAuth {
                     e.stopPropagation();
                     this.handleAvatarUpload();
                 });
+            }
+        });
+        
+        this.profilePopup.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideProfilePopup();
             }
         });
     }
@@ -1274,29 +1689,18 @@ class ReverbitAuth {
             return;
         }
         
-        // Update content
         this.updatePopupContent();
+        this.attachPopupEventListeners();
         
-        // Show and position
         this.profilePopup.style.display = 'block';
         this.profilePopup.style.visibility = 'hidden';
         this.profilePopup.style.opacity = '0';
         
-        this.positionPopup();
-        
-        this.profilePopup.style.visibility = 'visible';
-        setTimeout(() => {
-            this.profilePopup.style.opacity = '1';
-            this.profilePopup.style.transform = 'scale(1)';
-            this.popupVisible = true;
-        }, 10);
-        
-        this.addPopupBackdrop();
-        document.addEventListener('click', this.handleClickOutside);
-    }
-
-    positionPopup() {
         const avatarRect = this.profileAvatar.getBoundingClientRect();
+        this.profilePopup.style.visibility = 'visible';
+        
+        this.profilePopup.offsetHeight;
+        
         const popupRect = this.profilePopup.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
@@ -1304,28 +1708,49 @@ class ReverbitAuth {
         let top, left;
         
         if (viewportWidth <= 640) {
-            // Center on mobile
             top = (viewportHeight - popupRect.height) / 2;
             left = (viewportWidth - popupRect.width) / 2;
         } else {
-            // Position near avatar
             top = avatarRect.bottom + 8;
             left = avatarRect.left;
             
-            // Adjust if off-screen
+            const spaceBelow = viewportHeight - avatarRect.bottom - 16;
+            const spaceAbove = avatarRect.top - 16;
+            
+            if (spaceBelow < popupRect.height) {
+                if (spaceAbove >= popupRect.height) {
+                    top = avatarRect.top - popupRect.height - 8;
+                } else {
+                    top = viewportHeight - popupRect.height - 16;
+                }
+            }
+            
             if (left + popupRect.width > viewportWidth) {
                 left = avatarRect.right - popupRect.width;
+                if (left < 16) {
+                    left = viewportWidth - popupRect.width - 16;
+                }
             }
-            if (left < 8) left = 8;
             
-            if (top + popupRect.height > viewportHeight) {
-                top = avatarRect.top - popupRect.height - 8;
-            }
-            if (top < 8) top = 8;
+            left = Math.max(16, Math.min(left, viewportWidth - popupRect.width - 16));
         }
+        
+        top = Math.max(16, Math.min(top, viewportHeight - popupRect.height - 16));
         
         this.profilePopup.style.top = `${top}px`;
         this.profilePopup.style.left = `${left}px`;
+        
+        setTimeout(() => {
+            this.profilePopup.style.opacity = '1';
+            this.profilePopup.style.transform = 'scale(1)';
+            this.popupVisible = true;
+            
+            const firstButton = this.profilePopup.querySelector('button, a');
+            if (firstButton) firstButton.focus();
+        }, 10);
+        
+        this.addPopupBackdrop();
+        document.addEventListener('click', this.handleClickOutside);
     }
 
     hideProfilePopup() {
@@ -1415,7 +1840,7 @@ class ReverbitAuth {
         
         try {
             this.showUploadingState(true);
-            this.showToast('Uploading...', 'info');
+            this.showToast('Uploading profile picture...', 'info');
             
             const formData = new FormData();
             formData.append('file', file);
@@ -1432,22 +1857,27 @@ class ReverbitAuth {
             
             const result = await response.json();
             const photoURL = result.secure_url;
+            const cloudinaryImageId = result.public_id;
             
-            // Update Firebase
             await this.db.collection('users').doc(this.user.uid).update({
                 photoURL: photoURL,
-                cloudinaryImageId: result.public_id,
+                cloudinaryImageId: cloudinaryImageId,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
-            // Update local
+            await this.auth.currentUser.updateProfile({ photoURL });
+            
             this.user.photoURL = photoURL;
             this.userProfile.photoURL = photoURL;
-            this.userProfile.cloudinaryImageId = result.public_id;
+            this.userProfile.cloudinaryImageId = cloudinaryImageId;
             
             this.cacheUserData();
             this.updateProfileAvatar();
-            this.refreshProfilePopup();
+            
+            if (this.profilePopup && this.popupVisible) {
+                this.updatePopupContent();
+                this.attachPopupEventListeners();
+            }
             
             this.showToast('Profile picture updated!', 'success');
             
@@ -1475,10 +1905,25 @@ class ReverbitAuth {
         try {
             await this.db.collection('users').doc(this.user.uid).update({
                 lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-                totalLogins: firebase.firestore.FieldValue.increment(1)
+                totalLogins: firebase.firestore.FieldValue.increment(1),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
+            if (this.userProfile) {
+                this.userProfile.totalLogins = (this.userProfile.totalLogins || 0) + 1;
+            }
+            
             await this.updateStreak();
+            
+            await this.db.collection('activity').add({
+                userId: this.user.uid,
+                type: 'login',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                metadata: {
+                    platform: this.getPlatform(),
+                    userAgent: navigator.userAgent
+                }
+            });
             
         } catch (error) {
             console.error('Auth: Login tracking error:', error);
@@ -1544,7 +1989,32 @@ class ReverbitAuth {
             if (diffDays === 1) return 'Yesterday';
             if (diffDays < 7) return `${diffDays} days ago`;
             if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            
             return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        } catch {
+            return 'Recently';
+        }
+    }
+
+    formatRelativeTime(date) {
+        if (!date) return 'Recently';
+        
+        try {
+            const d = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+            const now = new Date();
+            const diffMs = now - d;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
+            if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            
+            return this.formatDate(date);
         } catch {
             return 'Recently';
         }
@@ -1564,18 +2034,32 @@ class ReverbitAuth {
         }
     }
 
+    viewProfile() {
+        if (this.user) {
+            window.open(`https://aditya-cmd-max.github.io/profile/?id=${this.user.uid}`, '_blank');
+        }
+    }
+
+    goToDashboard() {
+        window.location.href = 'https://aditya-cmd-max.github.io/dashboard';
+    }
+
+    openSettings() {
+        window.location.href = 'https://aditya-cmd-max.github.io/dashboard#settings';
+    }
+
     showWelcomeMessage() {
         if (!this.userProfile) return;
         
         try {
-            const createdAt = this.userProfile.createdAt?.seconds ? 
+            const createdAt = this.userProfile.createdAt.seconds ? 
                 new Date(this.userProfile.createdAt.seconds * 1000) : 
                 new Date(this.userProfile.createdAt);
             const diffHours = (new Date() - createdAt) / (1000 * 60 * 60);
             
             if (diffHours < 24) {
                 setTimeout(() => {
-                    this.showToast(`Welcome, ${this.userProfile.displayName}!`, 'success');
+                    this.showToast(`Welcome to Reverbit, ${this.userProfile.displayName}!`, 'success');
                 }, 1000);
             }
         } catch (error) {
@@ -1593,21 +2077,22 @@ class ReverbitAuth {
     onVisibilityChange() {
         if (document.visibilityState === 'visible' && this.user) {
             this.updateLastActive();
+            this.updateStreak();
         }
     }
 
     onWindowFocus() {
         if (this.user) {
             this.updateLastActive();
+            this.updateStreak();
+            
             if (this.isOnline) {
                 this.processOfflineQueue();
             }
         }
     }
 
-    onWindowBlur() {
-        // Nothing needed
-    }
+    onWindowBlur() {}
 
     setupPeriodicUpdates() {
         this.updateInterval = setInterval(() => {
@@ -1623,22 +2108,26 @@ class ReverbitAuth {
             console.log('Auth: Logging out...');
             
             await this.updateLastActive();
+            
+            document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            
             await this.auth.signOut();
             
             this.clearSession();
-            this.removeProfileAvatar();
-            this.removeProfilePopup();
             
             if (this.updateInterval) {
                 clearInterval(this.updateInterval);
             }
             
-            this.showToast('Signed out successfully', 'success');
+            if (this.themeObserver) {
+                this.themeObserver.disconnect();
+            }
             
             setTimeout(() => {
                 window.location.href = 'https://aditya-cmd-max.github.io/signin';
             }, 300);
             
+            this.showToast('Signed out successfully', 'success');
             return true;
             
         } catch (error) {
@@ -1678,7 +2167,7 @@ class ReverbitAuth {
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        }, type === 'error' ? 5000 : 3000);
     }
 
     // ================= STYLES INJECTION =================
@@ -1695,18 +2184,41 @@ class ReverbitAuth {
                 padding: 2px;
                 background: linear-gradient(135deg, #B5651D, #2A9D8F) border-box;
                 cursor: pointer;
-                transition: all 0.3s ease;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 overflow: hidden;
                 flex-shrink: 0;
+                margin: 0;
                 position: relative;
                 display: block;
                 outline: none;
-                margin: 0;
             }
             
             .reverbit-profile-avatar:hover {
                 transform: scale(1.1);
                 box-shadow: 0 4px 20px rgba(181, 101, 29, 0.3);
+            }
+            
+            .reverbit-profile-avatar:focus-visible {
+                outline: 2px solid #B5651D;
+                outline-offset: 2px;
+            }
+            
+            .reverbit-profile-avatar.loading .reverbit-avatar-img {
+                opacity: 0.5;
+            }
+            
+            .reverbit-profile-avatar.uploading::after {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border: 2px solid transparent;
+                border-top-color: #B5651D;
+                border-radius: 50%;
+                animation: avatar-spin 1s linear infinite;
+                pointer-events: none;
             }
             
             .reverbit-avatar-container {
@@ -1721,9 +2233,11 @@ class ReverbitAuth {
                 border-radius: 50%;
                 object-fit: cover;
                 display: block;
-                background: #f5f5f5;
+                background: linear-gradient(135deg, #f5f5f5, #e8eaed);
+                transition: opacity 0.3s ease;
             }
             
+            /* Avatar Verification Badge */
             .avatar-verified-badge {
                 position: absolute;
                 bottom: -2px;
@@ -1740,15 +2254,27 @@ class ReverbitAuth {
                 z-index: 2;
                 font-size: 10px;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                animation: verified-pulse 2s infinite;
             }
             
             .dark-theme .avatar-verified-badge {
-                border-color: #1A1208;
+                border-color: #202124;
             }
             
             .avatar-verified-badge.premium {
                 background: linear-gradient(135deg, #FFD700, #FFA500);
                 color: #000;
+            }
+            
+            @keyframes verified-pulse {
+                0%, 100% { 
+                    opacity: 0.9;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                }
+                50% { 
+                    opacity: 1;
+                    box-shadow: 0 0 12px rgba(181, 101, 29, 0.4);
+                }
             }
             
             .reverbit-avatar-upload-overlay {
@@ -1769,6 +2295,19 @@ class ReverbitAuth {
                 color: white;
                 font-size: 10px;
                 text-align: center;
+                padding: 4px;
+            }
+            
+            .reverbit-avatar-upload-overlay svg {
+                width: 12px;
+                height: 12px;
+                margin-bottom: 2px;
+            }
+            
+            .reverbit-avatar-upload-overlay .upload-text {
+                font-size: 8px;
+                font-weight: 600;
+                line-height: 1;
             }
             
             .reverbit-avatar-loading {
@@ -1804,14 +2343,15 @@ class ReverbitAuth {
                 position: fixed;
                 background: #F5EDD6;
                 border-radius: 28px;
-                box-shadow: 0 8px 32px rgba(26, 18, 8, 0.12);
+                box-shadow: 0 8px 32px rgba(26, 18, 8, 0.12), 0 16px 48px rgba(26, 18, 8, 0.08);
                 min-width: 340px;
                 max-width: 380px;
                 z-index: 10000;
                 overflow: hidden;
                 opacity: 0;
                 transform: scale(0.95);
-                transition: opacity 0.3s ease, transform 0.3s ease;
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                            transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 border: 1px solid rgba(181, 101, 29, 0.3);
                 font-family: 'Outfit', sans-serif;
                 max-height: 85vh;
@@ -1856,11 +2396,26 @@ class ReverbitAuth {
                 border-color: #1A1208;
             }
             
+            .profile-avatar-large:hover .avatar-upload-btn {
+                opacity: 1;
+                transform: scale(1);
+            }
+            
             .profile-avatar-large img {
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
                 object-fit: cover;
+                background: #F5EDD6;
+                transition: transform 0.3s ease;
+            }
+            
+            .dark-theme .profile-avatar-large img {
+                background: #1A1208;
+            }
+            
+            .profile-avatar-large:hover img {
+                transform: scale(1.05);
             }
             
             .avatar-upload-btn {
@@ -1879,6 +2434,8 @@ class ReverbitAuth {
                 cursor: pointer;
                 opacity: 0;
                 transition: all 0.3s ease;
+                padding: 0;
+                font-size: 12px;
                 z-index: 3;
             }
             
@@ -1886,8 +2443,9 @@ class ReverbitAuth {
                 border-color: #1A1208;
             }
             
-            .profile-avatar-large:hover .avatar-upload-btn {
-                opacity: 1;
+            .avatar-upload-btn:hover {
+                background: #2A9D8F;
+                transform: scale(1.1);
             }
             
             .streak-badge {
@@ -1910,12 +2468,14 @@ class ReverbitAuth {
             
             .profile-info {
                 flex: 1;
+                min-width: 0;
             }
             
             .profile-name-container {
                 display: flex;
                 align-items: center;
                 gap: 8px;
+                flex-wrap: wrap;
                 margin-bottom: 4px;
             }
             
@@ -1924,12 +2484,17 @@ class ReverbitAuth {
                 font-weight: 600;
                 color: #1A1208;
                 line-height: 1.4;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-family: 'Begum', serif;
             }
             
             .dark-theme .profile-name {
                 color: #F5EDD6;
             }
             
+            /* Email Verification Badge */
             .email-verified-badge {
                 color: #2A9D8F;
                 font-size: 14px;
@@ -1940,10 +2505,41 @@ class ReverbitAuth {
                 font-size: 14px;
             }
             
+            /* Popup Verification Badge */
+            .verified-badge-popup {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: linear-gradient(135deg, #B5651D, #2A9D8F);
+                color: white;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: 600;
+                box-shadow: 0 2px 6px rgba(181, 101, 29, 0.3);
+                animation: verified-pulse 2s infinite;
+                white-space: nowrap;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .verified-badge-popup i {
+                font-size: 9px;
+            }
+            
+            .verified-badge-popup.premium {
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #000;
+                box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
+            }
+            
             .profile-email {
                 font-size: 14px;
                 color: #2D2010;
+                line-height: 1.4;
                 margin-bottom: 8px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
             .dark-theme .profile-email {
@@ -1973,6 +2569,7 @@ class ReverbitAuth {
                 background: rgba(42, 157, 143, 0.1);
                 padding: 2px 6px;
                 border-radius: 8px;
+                margin-bottom: 4px;
                 width: fit-content;
             }
             
@@ -1985,6 +2582,14 @@ class ReverbitAuth {
                 display: flex;
                 align-items: center;
                 gap: 6px;
+            }
+            
+            .meta-item i {
+                width: 12px;
+                height: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             
             .change-avatar-btn {
@@ -2010,6 +2615,7 @@ class ReverbitAuth {
             .change-avatar-btn:hover {
                 background: #CD8B45;
                 color: white;
+                transform: translateY(-1px);
             }
             
             .profile-divider {
@@ -2040,6 +2646,7 @@ class ReverbitAuth {
                 background: none;
                 width: 100%;
                 text-align: left;
+                position: relative;
             }
             
             .dark-theme .profile-menu-item {
@@ -2048,15 +2655,29 @@ class ReverbitAuth {
             
             .profile-menu-item:hover {
                 background: #EDE0C0;
+                transform: translateX(4px);
             }
             
             .dark-theme .profile-menu-item:hover {
                 background: #2D2010;
             }
             
+            .profile-menu-item:active {
+                background: #D4C49A;
+            }
+            
             .profile-menu-icon {
                 width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 color: #B5651D;
+                flex-shrink: 0;
+            }
+            
+            .profile-menu-text {
+                flex: 1;
             }
             
             .menu-arrow {
@@ -2074,10 +2695,14 @@ class ReverbitAuth {
             .profile-stats {
                 display: flex;
                 justify-content: space-around;
+                margin-bottom: 16px;
             }
             
             .stat-item {
-                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
             }
             
             .stat-number {
@@ -2085,6 +2710,7 @@ class ReverbitAuth {
                 font-weight: 700;
                 color: #B5651D;
                 line-height: 1;
+                font-family: 'Begum', serif;
             }
             
             .stat-label {
@@ -2098,10 +2724,40 @@ class ReverbitAuth {
                 color: #D4C49A;
             }
             
+            .privacy-link {
+                font-size: 12px;
+                color: #2D2010;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-top: 16px;
+            }
+            
+            .dark-theme .privacy-link {
+                color: #D4C49A;
+            }
+            
+            .privacy-link a {
+                color: #B5651D;
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+            
+            .dark-theme .privacy-link a {
+                color: #CD8B45;
+            }
+            
+            .privacy-link a:hover {
+                text-decoration: underline;
+            }
+            
             .profile-loading {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                justify-content: center;
                 padding: 40px;
                 gap: 16px;
             }
@@ -2118,6 +2774,14 @@ class ReverbitAuth {
             .dark-theme .loading-spinner {
                 border-color: #2D2010;
                 border-top-color: #CD8B45;
+            }
+            
+            .profile-loading p {
+                color: #2D2010;
+            }
+            
+            .dark-theme .profile-loading p {
+                color: #D4C49A;
             }
             
             /* Floating Header */
@@ -2143,6 +2807,63 @@ class ReverbitAuth {
                 border-color: rgba(205, 139, 69, 0.2);
             }
             
+            /* Context Menu */
+            .avatar-context-menu {
+                position: fixed;
+                background: #F5EDD6;
+                border: 1px solid rgba(181, 101, 29, 0.2);
+                border-radius: 20px;
+                box-shadow: 0 4px 20px rgba(26, 18, 8, 0.15);
+                z-index: 10001;
+                min-width: 180px;
+                overflow: hidden;
+                animation: menu-fade-in 0.2s ease;
+            }
+            
+            @keyframes menu-fade-in {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            
+            .dark-theme .avatar-context-menu {
+                background: #1A1208;
+                border-color: rgba(205, 139, 69, 0.2);
+            }
+            
+            .context-menu-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                padding: 10px 16px;
+                border: none;
+                background: none;
+                color: #1A1208;
+                font-family: 'Outfit', sans-serif;
+                font-size: 14px;
+                text-align: left;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+            }
+            
+            .dark-theme .context-menu-item {
+                color: #F5EDD6;
+            }
+            
+            .context-menu-item:hover {
+                background: #EDE0C0;
+            }
+            
+            .dark-theme .context-menu-item:hover {
+                background: #2D2010;
+            }
+            
             /* Popup Backdrop */
             .popup-backdrop {
                 position: fixed;
@@ -2153,49 +2874,62 @@ class ReverbitAuth {
                 background: rgba(0,0,0,0.4);
                 backdrop-filter: blur(2px);
                 z-index: 9997;
-            }
-            
-            /* Toast */
-            .reverbit-toast {
-                position: fixed;
-                bottom: 24px;
-                left: 50%;
-                transform: translateX(-50%) translateY(100px);
-                background: #202124;
-                color: white;
-                padding: 12px 20px;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                z-index: 10003;
                 opacity: 0;
-                transition: all 0.3s ease;
-                min-width: 300px;
-                max-width: 90%;
+                transition: opacity 0.2s ease;
             }
             
-            .reverbit-toast.show {
+            .popup-backdrop {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
             }
             
-            .toast-content {
+            /* Camera Modal */
+            .camera-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                z-index: 10002;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .camera-modal video {
+                width: 90%;
+                max-width: 500px;
+                border-radius: 12px;
+                background: #000;
+            }
+            
+            .camera-controls {
+                margin-top: 20px;
+                display: flex;
+                gap: 16px;
+            }
+            
+            .camera-controls button {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 8px;
             }
             
-            .toast-close {
-                background: none;
-                border: none;
-                color: rgba(255,255,255,0.7);
-                cursor: pointer;
-                padding: 4px;
+            .camera-controls button:first-child {
+                background: #1a73e8;
+                color: white;
             }
             
-            .reverbit-toast-success { background: #34a853; }
-            .reverbit-toast-error { background: #ea4335; }
-            .reverbit-toast-warning { background: #fbbc05; color: #202124; }
-            .reverbit-toast-info { background: #1a73e8; }
+            .camera-controls button:last-child {
+                background: #5f6368;
+                color: white;
+            }
             
             /* Auth Fallback */
             .auth-fallback {
@@ -2218,6 +2952,7 @@ class ReverbitAuth {
                 border-radius: 36px;
                 max-width: 400px;
                 text-align: center;
+                box-shadow: 0 8px 32px rgba(26, 18, 8, 0.2);
             }
             
             .dark-theme .auth-fallback-content {
@@ -2234,6 +2969,7 @@ class ReverbitAuth {
                 font-size: 24px;
                 margin-bottom: 16px;
                 color: #1A1208;
+                font-family: 'Begum', serif;
             }
             
             .dark-theme .auth-fallback-content h3 {
@@ -2266,15 +3002,98 @@ class ReverbitAuth {
                 box-shadow: 0 4px 12px rgba(181, 101, 29, 0.3);
             }
             
+            /* Accessibility */
+            .reverbit-profile-avatar:focus-visible,
+            .profile-menu-item:focus-visible,
+            .change-avatar-btn:focus-visible {
+                outline: 2px solid #B5651D;
+                outline-offset: 2px;
+            }
+            
+            /* Toast Notifications */
+            .reverbit-toast {
+                position: fixed;
+                bottom: 24px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: #202124;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                z-index: 10003;
+                opacity: 0;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                max-width: 90%;
+                width: max-content;
+                min-width: 300px;
+                pointer-events: none;
+            }
+            
+            .reverbit-toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                pointer-events: all;
+            }
+            
+            .toast-content {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .toast-icon {
+                font-size: 18px;
+            }
+            
+            .toast-message {
+                flex: 1;
+                font-size: 14px;
+                font-weight: 500;
+            }
+            
+            .toast-close {
+                background: none;
+                border: none;
+                color: rgba(255,255,255,0.7);
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 4px;
+                transition: color 0.2s ease;
+            }
+            
+            .toast-close:hover {
+                color: white;
+            }
+            
+            .reverbit-toast-success {
+                background: #34a853;
+            }
+            
+            .reverbit-toast-error {
+                background: #ea4335;
+            }
+            
+            .reverbit-toast-warning {
+                background: #fbbc05;
+                color: #202124;
+            }
+            
+            .reverbit-toast-info {
+                background: #1a73e8;
+            }
+            
             /* Responsive */
             @media (max-width: 640px) {
                 .reverbit-profile-popup {
                     position: fixed;
                     top: 50% !important;
                     left: 50% !important;
+                    right: auto !important;
                     transform: translate(-50%, -50%) scale(0.95) !important;
                     width: calc(100vw - 32px);
                     max-width: 360px;
+                    max-height: 80vh;
                 }
                 
                 .reverbit-profile-popup[style*="opacity: 1"] {
@@ -2287,8 +3106,23 @@ class ReverbitAuth {
                     text-align: center;
                 }
                 
+                .profile-info {
+                    text-align: center;
+                }
+                
                 .profile-name-container {
                     justify-content: center;
+                }
+                
+                .reverbit-floating-header {
+                    top: 8px;
+                    right: 8px;
+                    padding: 6px 10px;
+                }
+                
+                .reverbit-toast {
+                    min-width: 280px;
+                    width: calc(100% - 32px);
                 }
             }
         `;
@@ -2297,6 +3131,8 @@ class ReverbitAuth {
         styleEl.id = 'reverbit-auth-styles';
         styleEl.textContent = styles;
         document.head.appendChild(styleEl);
+        
+        console.log('Auth: Enterprise styles injected');
     }
 
     // ================= PUBLIC API =================
@@ -2362,29 +3198,103 @@ window.debugAuth = function() {
     console.log('Dark Mode:', window.ReverbitAuth.isDarkModeActive());
     console.log('Online:', window.ReverbitAuth.isOnline);
     console.log('Queue:', window.ReverbitAuth.offlineQueue.length);
+    console.log('Popup Visible:', window.ReverbitAuth.popupVisible);
+    console.log('Avatar Element:', document.querySelector('.reverbit-profile-avatar'));
     console.log('=== END DEBUG ===');
+};
+
+window.viewPublicProfile = async function() {
+    const link = await window.ReverbitAuth.generateProfileLink();
+    if (link) {
+        window.open(link, '_blank');
+    } else {
+        window.ReverbitAuth.showToast('Please sign in first', 'info');
+    }
 };
 
 // Auto-initialize
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        console.log('Reverbit Auth: Starting initialization...');
-        await window.ReverbitAuth.init();
-        console.log('Reverbit Auth: Ready');
+        console.log('Reverbit Auth: Page loaded, initializing...');
         
-        // Double-check avatar after a delay
-        setTimeout(() => {
-            if (window.ReverbitAuth.isAuthenticated() && !document.querySelector('.reverbit-profile-avatar')) {
-                window.ReverbitAuth.forceAvatarCreation();
+        const savedTheme = localStorage.getItem('reverbit_theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (savedTheme === 'auto' && systemPrefersDark)) {
+            document.body.classList.add('dark-theme');
+            document.documentElement.style.setProperty('color-scheme', 'dark');
+        }
+        
+        await window.ReverbitAuth.init();
+        
+        const user = window.ReverbitAuth.getUser();
+        if (user) {
+            const appName = window.ReverbitAuth.getCurrentAppName ? 
+                window.ReverbitAuth.getCurrentAppName() : 'reverbit';
+            
+            if (appName) {
+                setInterval(() => {
+                    if (window.ReverbitAuth.isAuthenticated()) {
+                        window.ReverbitAuth.trackUsage(appName, 5);
+                    }
+                }, 5 * 60 * 1000);
             }
-        }, 1000);
+        }
+        
+        console.log('Reverbit Auth: Initialization complete');
         
     } catch (error) {
         console.error('Reverbit Auth: Initialization failed:', error);
     }
 });
 
+// Get current app name helper
+window.ReverbitAuth.getCurrentAppName = function() {
+    const pathname = window.location.pathname;
+    const hostname = window.location.hostname;
+    const title = document.title.toLowerCase();
+    
+    if (pathname.includes('cloverai') || hostname.includes('clover') || title.includes('clover')) return 'cloverAI';
+    if (pathname.includes('mindscribe') || hostname.includes('mindscribe') || title.includes('mindscribe')) return 'mindscribe';
+    if (pathname.includes('peo') || hostname.includes('peo') || title.includes('peo')) return 'peo';
+    if (pathname.includes('reverbit') || hostname.includes('reverbit') || title.includes('reverbit')) return 'reverbit';
+    
+    const h1 = document.querySelector('h1');
+    if (h1) {
+        const text = h1.textContent.toLowerCase();
+        if (text.includes('clover')) return 'cloverAI';
+        if (text.includes('mindscribe')) return 'mindscribe';
+        if (text.includes('peo')) return 'peo';
+        if (text.includes('reverbit')) return 'reverbit';
+    }
+    
+    return 'other';
+};
+
+window.ReverbitAuth.trackUsage = async function(appName, minutes) {
+    if (!this.user || !this.db) return;
+    
+    try {
+        const usageRef = this.db.collection('usage').doc(this.user.uid);
+        await usageRef.set({
+            [appName]: firebase.firestore.FieldValue.increment(minutes),
+            lastUsed: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    } catch (error) {
+        console.error('Auth: Usage tracking error:', error);
+    }
+};
+
+// Storage listener for theme changes
+window.addEventListener('storage', (e) => {
+    if (e.key === 'reverbit_theme') {
+        window.ReverbitAuth.currentTheme = e.newValue || 'auto';
+        window.ReverbitAuth.applyTheme();
+    }
+});
+
 // Make auth globally accessible
 window.auth = window.ReverbitAuth;
 
-console.log('Reverbit Enterprise Auth System loaded');
+console.log('Reverbit Enterprise Auth System loaded successfully');
