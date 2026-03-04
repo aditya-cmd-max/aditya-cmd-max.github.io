@@ -25,11 +25,10 @@
     <meta property="og:description" content="India's next-gen educational platform offering amazing AI tools and innovative tech solutions for curious minds.">
     <meta property="og:image" content="https://aditya-cmd-max.github.io/logo-insvg.svg">
 
-    
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="manifest" href="site.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
     
     <!-- Local Font - Begum -->
     <style>
@@ -61,6 +60,9 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     
+    <!-- Font Awesome (for social icons fallback) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -85,13 +87,12 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://aditya-cmd-max.github.io/logo-insvg.svg">
 
-   <!-- Canonical URL -->
+    <!-- Canonical URL -->
     <link rel="canonical" href="https://aditya-cmd-max.github.io/">
 
-    
     <style>
         /* ============================================
-           ADITYA JHA _ THE BEST GUY 🤗
+           REVERBIT PREMIUM DESIGN SYSTEM - FIXED
            ============================================ */
         
         :root {
@@ -233,9 +234,7 @@
             background: linear-gradient(135deg, var(--md-primary-dark), var(--md-secondary-dark));
         }
         
-        /* ============================================
-           SPECTACULAR ANIMATED BACKGROUND
-           ============================================ */
+        /* Animated Background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -283,9 +282,7 @@
             100% { transform: translate(80px, 80px); }
         }
         
-        /* ============================================
-           FLOATING SVG ELEMENTS
-           ============================================ */
+        /* Floating SVG Elements */
         .floating-motif {
             position: fixed;
             z-index: -2;
@@ -312,31 +309,13 @@
             animation: floatMotif 35s ease-in-out infinite reverse;
         }
         
-        .motif-3 {
-            top: 40%;
-            right: 5%;
-            width: min(200px, 15vw);
-            height: min(200px, 15vw);
-            animation: floatMotif 25s ease-in-out infinite;
-        }
-        
-        .motif-4 {
-            bottom: 30%;
-            left: 5%;
-            width: min(220px, 18vw);
-            height: min(220px, 18vw);
-            animation: floatMotif 40s ease-in-out infinite reverse;
-        }
-        
         @keyframes floatMotif {
             0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
             33% { transform: translate(20px, -20px) rotate(2deg) scale(1.05); }
             66% { transform: translate(-15px, 15px) rotate(-2deg) scale(0.95); }
         }
         
-        /* ============================================
-           SCROLL PROGRESS
-           ============================================ */
+        /* Scroll Progress */
         .scroll-progress {
             position: fixed;
             top: 0;
@@ -349,16 +328,14 @@
             box-shadow: var(--shadow-glow);
         }
         
-        /* ============================================
-           ULTRA PREMIUM NAVBAR
-           ============================================ */
+        /* Premium Navbar */
         .navbar {
             position: fixed;
             top: var(--space-md);
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             width: min(calc(100% - var(--space-xl)), 1400px);
-            background: rgba(var(--md-surface-rgb, 245, 237, 214), 0.85);
+            background: rgba(245, 237, 214, 0.85);
             backdrop-filter: blur(20px) saturate(200%);
             -webkit-backdrop-filter: blur(20px) saturate(200%);
             border: 1px solid rgba(var(--md-primary-rgb), 0.2);
@@ -374,20 +351,13 @@
         }
         
         @keyframes navbarEntrance {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-100px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+            0% { opacity: 0; transform: translateX(-50%) translateY(-100px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         
         .dark-theme .navbar {
             background: rgba(26, 18, 8, 0.85);
             border-color: rgba(var(--md-secondary-rgb), 0.25);
-            box-shadow: var(--md-elevation-4), 0 0 30px rgba(var(--md-secondary-rgb), 0.2);
         }
         
         .navbar::before {
@@ -407,8 +377,7 @@
         
         .navbar.scrolled {
             top: var(--space-sm);
-            padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-md);
-            background: rgba(var(--md-surface-rgb, 245, 237, 214), 0.95);
+            background: rgba(245, 237, 214, 0.95);
             box-shadow: var(--md-elevation-5), 0 0 40px rgba(var(--md-primary-rgb), 0.3);
         }
         
@@ -421,15 +390,11 @@
             align-items: center;
             gap: var(--space-sm);
             text-decoration: none;
-            position: relative;
         }
         
         .nav-logo {
             width: clamp(44px, 5vw, 52px);
             height: clamp(44px, 5vw, 52px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: var(--transition-elastic);
             filter: drop-shadow(0 4px 8px rgba(var(--md-primary-rgb), 0.3));
         }
@@ -445,11 +410,6 @@
             filter: drop-shadow(0 8px 16px rgba(var(--md-primary-rgb), 0.5));
         }
         
-        .nav-brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
         .nav-brand-name {
             font-family: var(--md-font-display);
             font-size: clamp(1.4rem, 3vw, 1.8rem);
@@ -459,7 +419,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1.2;
-            letter-spacing: -0.5px;
         }
         
         .nav-links {
@@ -474,8 +433,6 @@
             text-decoration: none;
             font-family: var(--md-font-display);
             font-weight: 600;
-            font-size: clamp(0.9rem, 1.2vw, 1rem);
-            letter-spacing: 0.3px;
             border-radius: var(--radius-pill);
             transition: var(--transition-bounce);
             display: flex;
@@ -505,15 +462,6 @@
             height: 300%;
         }
         
-        .nav-link .material-icons-round {
-            font-size: 1.3rem;
-            transition: transform 0.3s;
-        }
-        
-        .nav-link:hover .material-icons-round {
-            transform: translateY(-2px);
-        }
-        
         .nav-link:hover {
             color: var(--md-primary);
         }
@@ -521,48 +469,12 @@
         .nav-link.active {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: var(--md-on-primary);
-            box-shadow: var(--md-elevation-3);
-        }
-        
-        .nav-link.active::before {
-            display: none;
         }
         
         .nav-right {
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-        }
-        
-        /* Profile Avatar */
-        .profile-avatar-btn {
-            width: clamp(44px, 5vw, 48px);
-            height: clamp(44px, 5vw, 48px);
-            border-radius: 50%;
-            border: 2px solid var(--md-primary);
-            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
-            cursor: pointer;
-            overflow: hidden;
-            transition: var(--transition-elastic);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--md-on-primary);
-            font-weight: 600;
-            font-size: 1.2rem;
-            box-shadow: var(--md-elevation-3);
-        }
-        
-        .profile-avatar-btn:hover {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: var(--md-elevation-5);
-            border-color: var(--md-secondary);
-        }
-        
-        .profile-avatar-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
         
         /* Desktop Theme Toggle */
@@ -579,36 +491,12 @@
             justify-content: center;
             transition: var(--transition-elastic);
             box-shadow: var(--md-elevation-2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .desktop-theme-toggle::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--md-primary), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
         }
         
         .desktop-theme-toggle:hover {
             transform: rotate(30deg) scale(1.15);
-            box-shadow: var(--md-elevation-4);
+            background: var(--md-primary);
             color: var(--md-on-primary);
-        }
-      
-        .desktop-theme-toggle:hover::before {
-            opacity: 0.2;
-        }
-        
-        .desktop-theme-toggle .material-icons-round {
-            font-size: 1.5rem;
-            transition: transform 0.3s;
-        }
-        
-        .desktop-theme-toggle:hover .material-icons-round {
-            transform: rotate(-30deg);
         }
         
         /* Sign In Button */
@@ -626,40 +514,11 @@
             transition: var(--transition-elastic);
             box-shadow: var(--md-elevation-3);
             border: none;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .sign-in-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
         }
         
         .sign-in-btn:hover {
             transform: translateY(-4px) scale(1.05);
             box-shadow: var(--md-elevation-5);
-        }
-        
-        .sign-in-btn:hover::before {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .sign-in-btn .material-icons-round {
-            font-size: 1.3rem;
-            transition: transform 0.3s;
-        }
-        
-        .sign-in-btn:hover .material-icons-round {
-            transform: translateX(3px);
         }
         
         /* Hide sign in button when user is signed in */
@@ -685,38 +544,21 @@
             justify-content: center;
             transition: var(--transition-elastic);
             box-shadow: var(--md-elevation-3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .mobile-menu-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--md-primary), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
         }
         
         .mobile-menu-btn:hover {
             background: var(--md-primary);
             color: var(--md-on-primary);
             transform: rotate(90deg) scale(1.1);
-            box-shadow: var(--md-elevation-4);
         }
         
-        .mobile-menu-btn:hover::before {
-            opacity: 0.3;
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .desktop-theme-toggle { display: none; }
+            .mobile-menu-btn { display: flex; }
         }
         
-        .mobile-menu-btn .material-icons-round {
-            font-size: 1.8rem;
-            transition: transform 0.3s;
-        }
-        
-        /* ============================================
-           PREMIUM MOBILE NAVIGATION
-           ============================================ */
+        /* Mobile Navigation */
         .mobile-nav-overlay {
             position: fixed;
             top: 0;
@@ -766,19 +608,6 @@
             border-bottom: 2px solid var(--md-outline);
         }
         
-        .mobile-nav-header .nav-brand {
-            gap: var(--space-sm);
-        }
-        
-        .mobile-nav-header .nav-logo {
-            width: 48px;
-            height: 48px;
-        }
-        
-        .mobile-nav-header .nav-brand-name {
-            font-size: 1.8rem;
-        }
-        
         .mobile-nav-close {
             width: 48px;
             height: 48px;
@@ -791,18 +620,12 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition-elastic);
-            box-shadow: var(--md-elevation-2);
         }
         
         .mobile-nav-close:hover {
             background: var(--md-tertiary);
             color: var(--md-on-primary);
             transform: rotate(90deg) scale(1.15);
-            box-shadow: var(--md-elevation-4);
-        }
-        
-        .mobile-nav-close .material-icons-round {
-            font-size: 2rem;
         }
         
         .mobile-nav-links {
@@ -823,43 +646,12 @@
             font-weight: 600;
             border-radius: var(--radius-xxl);
             transition: var(--transition-bounce);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
         }
         
-        .mobile-nav-link::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(var(--md-primary-rgb), 0.15), transparent 70%);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-            z-index: -1;
-        }
-        
-        .mobile-nav-link:hover::before,
-        .mobile-nav-link.active::before {
-            width: 400%;
-            height: 400%;
-        }
-        
-        .mobile-nav-link:hover,
-        .mobile-nav-link.active {
-            color: var(--md-primary);
+        .mobile-nav-link:hover {
+            background: rgba(var(--md-primary-rgb), 0.1);
             transform: translateX(8px);
-        }
-        
-        .mobile-nav-link.active {
-            background: linear-gradient(135deg, rgba(var(--md-primary-rgb), 0.1), rgba(var(--md-secondary-rgb), 0.1));
-        }
-        
-        .mobile-nav-link .material-icons-round {
-            font-size: 1.8rem;
+            color: var(--md-primary);
         }
         
         /* Mobile avatar container */
@@ -877,7 +669,6 @@
             border-radius: var(--radius-xxl);
             padding: var(--space-md);
             border: 1px solid var(--md-outline);
-            box-shadow: var(--md-elevation-2);
         }
         
         .mobile-user-info {
@@ -898,8 +689,6 @@
             font-weight: 600;
             font-size: 1.5rem;
             overflow: hidden;
-            border: 2px solid var(--md-primary);
-            box-shadow: var(--md-elevation-3);
         }
         
         .mobile-user-avatar img {
@@ -908,14 +697,9 @@
             object-fit: cover;
         }
         
-        .mobile-user-details {
-            flex: 1;
-        }
-        
         .mobile-user-name {
             font-weight: 700;
             font-size: 1.1rem;
-            margin-bottom: 2px;
         }
         
         .mobile-user-email {
@@ -937,7 +721,6 @@
             color: var(--md-tertiary);
             font-family: var(--md-font-display);
             font-weight: 700;
-            font-size: 1rem;
             cursor: pointer;
             transition: var(--transition-elastic);
         }
@@ -946,7 +729,6 @@
             background: var(--md-tertiary);
             color: var(--md-on-primary);
             transform: translateY(-3px);
-            box-shadow: var(--md-elevation-4);
         }
         
         /* Mobile Theme Toggle */
@@ -961,12 +743,6 @@
             border: 1px solid var(--md-outline);
         }
         
-        .mobile-theme-toggle span {
-            font-size: 1.1rem;
-            font-weight: 600;
-            font-family: var(--md-font-display);
-        }
-        
         .mobile-theme-btn {
             width: 44px;
             height: 44px;
@@ -979,7 +755,6 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition-elastic);
-            box-shadow: var(--md-elevation-2);
         }
         
         .mobile-theme-btn:hover {
@@ -988,9 +763,7 @@
             transform: rotate(30deg);
         }
         
-        /* ============================================
-           HERO SECTION
-           ============================================ */
+        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -1016,14 +789,7 @@
         }
         
         @keyframes heroLogoEntrance {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         
         .hero-logo {
@@ -1039,7 +805,7 @@
             height: 100%;
             object-fit: contain;
         }
-      
+        
         .hero-title {
             font-family: var(--md-font-display);
             font-size: clamp(3rem, 8vw, 5rem);
@@ -1052,10 +818,7 @@
         }
         
         @keyframes heroTextEntrance {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .hero-title span {
@@ -1089,14 +852,10 @@
             opacity: 0;
             transform: translateY(20px);
             animation: heroBadgeEntrance 1s ease forwards 1s;
-            box-shadow: var(--md-elevation-2);
         }
         
         @keyframes heroBadgeEntrance {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .hero-badge-dot {
@@ -1144,7 +903,6 @@
             font-family: var(--md-font-display);
             font-weight: 700;
             font-size: 1.1rem;
-            letter-spacing: 0.5px;
             text-decoration: none;
             cursor: pointer;
             transition: var(--transition-elastic);
@@ -1232,10 +990,6 @@
             border: 1px solid rgba(var(--md-primary-rgb), 0.2);
         }
         
-        .section-eyebrow .material-icons-round {
-            font-size: 1.2rem;
-        }
-        
         .section-title {
             font-family: var(--md-font-display);
             font-size: clamp(2.5rem, 5vw, 4rem);
@@ -1271,7 +1025,7 @@
             line-height: 1.8;
         }
         
-        /* Ornamental Border */
+        /* Ornament Border */
         .ornament-border {
             height: 8px;
             background: repeating-linear-gradient(
@@ -1308,27 +1062,12 @@
             overflow: hidden;
             transition: var(--transition-bounce);
             box-shadow: var(--md-elevation-2);
-        }
-        
-        .impact-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            opacity: 0;
-            transition: opacity 0.3s;
+            cursor: default;
         }
         
         .impact-card:hover {
             transform: translateY(-12px) scale(1.02);
             box-shadow: var(--md-elevation-5);
-        }
-        
-        .impact-card:hover::before {
-            opacity: 1;
         }
         
         .impact-icon {
@@ -1342,15 +1081,10 @@
             justify-content: center;
             color: var(--md-on-primary);
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-3);
         }
         
         .impact-card:hover .impact-icon {
             transform: rotate(10deg) scale(1.15);
-        }
-        
-        .impact-icon .material-icons-round {
-            font-size: 2.4rem;
         }
         
         .impact-number {
@@ -1375,7 +1109,7 @@
             line-height: 1.6;
         }
         
-        /* Tools Grid */
+        /* Tools Grid - FIXED: No popups */
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1392,44 +1126,12 @@
             overflow: hidden;
             transition: var(--transition-bounce);
             box-shadow: var(--md-elevation-2);
-        }
-        
-        .tool-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 80px;
-            height: 80px;
-            border-top: 3px solid var(--md-primary);
-            border-right: 3px solid var(--md-primary);
-            opacity: 0.3;
-            transition: opacity 0.3s, width 0.3s, height 0.3s;
-        }
-        
-        .tool-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 80px;
-            border-bottom: 3px solid var(--md-secondary);
-            border-left: 3px solid var(--md-secondary);
-            opacity: 0.3;
-            transition: opacity 0.3s, width 0.3s, height 0.3s;
+            cursor: default;
         }
         
         .tool-card:hover {
             transform: translateY(-15px) scale(1.02);
             box-shadow: var(--md-elevation-6);
-        }
-        
-        .tool-card:hover::before,
-        .tool-card:hover::after {
-            opacity: 1;
-            width: 100px;
-            height: 100px;
         }
         
         .tool-icon {
@@ -1443,12 +1145,10 @@
             margin-bottom: var(--space-lg);
             padding: var(--space-md);
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-3);
         }
         
         .tool-card:hover .tool-icon {
             transform: rotate(8deg) scale(1.15);
-            box-shadow: var(--md-elevation-4);
         }
         
         .tool-icon img {
@@ -1493,29 +1193,23 @@
             display: flex;
             align-items: center;
             gap: var(--space-xs);
-        }
-        
-        .tool-btn .material-icons-round {
-            font-size: 1.1rem;
+            cursor: pointer;
         }
         
         .tool-btn-primary {
             background: var(--md-primary);
             color: var(--md-on-primary);
             border-color: var(--md-primary);
-            box-shadow: var(--md-elevation-2);
         }
         
         .tool-btn-primary:hover {
             background: var(--md-primary-dark);
             transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--md-elevation-4);
         }
         
         .tool-btn:hover {
             background: var(--md-surface-variant);
             transform: translateY(-3px);
-            box-shadow: var(--md-elevation-3);
         }
         
         .all-tools-btn {
@@ -1538,7 +1232,7 @@
             padding: var(--space-xl);
             text-align: center;
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-2);
+            cursor: default;
         }
         
         .mission-card:hover {
@@ -1557,16 +1251,10 @@
             justify-content: center;
             color: var(--md-on-primary);
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-3);
         }
         
         .mission-card:hover .mission-icon {
             transform: scale(1.2) rotate(10deg);
-            box-shadow: var(--md-elevation-4);
-        }
-        
-        .mission-icon .material-icons-round {
-            font-size: 3rem;
         }
         
         .mission-title {
@@ -1619,7 +1307,7 @@
             padding: var(--space-xl);
             position: relative;
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-2);
+            cursor: default;
         }
         
         .testimonial-card:hover {
@@ -1664,7 +1352,6 @@
             color: var(--md-on-primary);
             font-weight: 700;
             font-size: 1.5rem;
-            box-shadow: var(--md-elevation-3);
         }
         
         .testimonial-info h4 {
@@ -1737,19 +1424,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        .orbit-ring::after {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: var(--md-tertiary);
-            border-radius: 50%;
-            box-shadow: 0 0 30px var(--md-tertiary);
-        }
-        
         .founder-name {
             font-family: var(--md-font-display);
             font-size: clamp(2.5rem, 4vw, 4rem);
@@ -1796,23 +1470,12 @@
             display: flex;
             align-items: center;
             gap: var(--space-xs);
-            box-shadow: var(--md-elevation-1);
-        }
-        
-        .founder-tag .material-icons-round {
-            font-size: 1.3rem;
-            color: var(--md-primary);
         }
         
         .founder-tag:hover {
             background: var(--md-primary);
             color: var(--md-on-primary);
             transform: translateY(-5px);
-            box-shadow: var(--md-elevation-4);
-        }
-        
-        .founder-tag:hover .material-icons-round {
-            color: var(--md-on-primary);
         }
         
         /* YouTube Section */
@@ -1829,7 +1492,7 @@
             padding: var(--space-xxl) var(--space-xl);
             text-align: center;
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-3);
+            cursor: default;
         }
         
         .youtube-card:hover {
@@ -1848,16 +1511,10 @@
             justify-content: center;
             color: white;
             transition: var(--transition-bounce);
-            box-shadow: var(--md-elevation-3);
         }
         
         .youtube-card:hover .youtube-icon {
             transform: scale(1.2) rotate(10deg);
-            box-shadow: var(--md-elevation-4);
-        }
-        
-        .youtube-icon .material-icons-round {
-            font-size: 3.5rem;
         }
         
         .youtube-name {
@@ -1950,48 +1607,11 @@
             opacity: 0.3;
         }
         
-        .phone-app-header {
-            font-family: var(--md-font-display);
-            font-size: 1.1rem;
-            color: var(--md-primary);
-            text-align: center;
-            margin-bottom: var(--space-lg);
-        }
-        
         .phone-element {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: var(--space-md);
             border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .phone-line {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
-        
-        .phone-line.short {
-            width: 60%;
-        }
-        
-        .phone-accent {
-            height: 40px;
-            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
-            border-radius: 12px;
-            margin-top: var(--space-sm);
-        }
-        
-        .phone-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 380px;
-            height: 380px;
-            background: radial-gradient(circle, rgba(var(--md-primary-rgb), 0.2), transparent 70%);
-            z-index: 1;
         }
         
         .app-features {
@@ -2004,14 +1624,11 @@
             padding: var(--space-md) 0;
             border-bottom: 1px solid var(--md-outline);
             transition: var(--transition);
+            cursor: default;
         }
         
         .app-feature:hover {
             transform: translateX(10px);
-        }
-        
-        .app-feature:last-child {
-            border-bottom: none;
         }
         
         .app-feature-icon {
@@ -2025,16 +1642,10 @@
             color: var(--md-on-primary);
             transition: var(--transition-bounce);
             flex-shrink: 0;
-            box-shadow: var(--md-elevation-2);
         }
         
         .app-feature:hover .app-feature-icon {
             transform: rotate(10deg) scale(1.15);
-            box-shadow: var(--md-elevation-3);
-        }
-        
-        .app-feature-icon .material-icons-round {
-            font-size: 2rem;
         }
         
         .app-feature-text h4 {
@@ -2057,7 +1668,7 @@
             flex-wrap: wrap;
         }
         
-        /* Footer */
+        /* Footer - FIXED SOCIAL ICONS */
         .footer {
             background: var(--md-surface-dim);
             padding: var(--space-xxxl) var(--space-lg) var(--space-lg);
@@ -2153,19 +1764,9 @@
             transition: var(--transition-bounce);
         }
         
-        .footer-link .material-icons-round {
-            font-size: 1.3rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
         .footer-link:hover {
             color: var(--md-primary);
             transform: translateX(10px);
-        }
-        
-        .footer-link:hover .material-icons-round {
-            opacity: 1;
         }
         
         .footer-bottom {
@@ -2198,6 +1799,7 @@
             50% { transform: scale(1.2); }
         }
         
+        /* FIXED SOCIAL ICONS */
         .footer-social {
             display: flex;
             gap: var(--space-md);
@@ -2216,6 +1818,7 @@
             text-decoration: none;
             transition: var(--transition-bounce);
             box-shadow: var(--md-elevation-2);
+            font-size: 24px;
         }
         
         .footer-social-link:hover {
@@ -2225,8 +1828,9 @@
             box-shadow: var(--md-elevation-4);
         }
         
-        .footer-social-link .material-icons-round {
-            font-size: 1.8rem;
+        .footer-social-link .material-icons-round,
+        .footer-social-link i {
+            font-size: 28px;
         }
         
         /* Loading Screen */
@@ -2308,58 +1912,43 @@
             transform: translateY(0);
         }
         
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; }
-        .delay-4 { transition-delay: 0.4s; }
-        .delay-5 { transition-delay: 0.5s; }
-        
-        /* Interactive Hover Effects */
-        .hover-scale {
-            transition: var(--transition-bounce);
-        }
-        .hover-scale:hover {
-            transform: scale(1.02);
+        /* Auth.js Integration Fixes */
+        .reverbit-profile-avatar {
+            width: 44px !important;
+            height: 44px !important;
+            border: 2px solid var(--md-primary) !important;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary)) !important;
+            box-shadow: var(--md-elevation-3) !important;
+            margin-left: 10px !important;
+            display: inline-flex !important;
+            vertical-align: middle !important;
         }
         
-        .interactive-tool-card {
-            cursor: pointer;
+        .reverbit-profile-avatar:hover {
+            transform: scale(1.15) rotate(5deg) !important;
+            box-shadow: var(--md-elevation-5) !important;
         }
         
-        /* New interactive elements */
-        .tool-card {
-            cursor: pointer;
-        }
-        .tool-card .quick-preview {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: var(--md-primary);
-            color: var(--md-on-primary);
-            padding: 5px 10px;
-            border-radius: var(--radius-pill);
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tool-card:hover .quick-preview {
-            opacity: 1;
+        #desktopAvatar {
+            display: inline-flex;
+            align-items: center;
+            height: 100%;
         }
         
-        /* Responsive Design */
+        .nav-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: var(--space-sm) !important;
+        }
+        
+        /* Hide sign-in button when logged in */
+        #signInButton[style*="display: none"],
+        #mobileSignInLink[style*="display: none"] {
+            display: none !important;
+        }
+        
+        /* Responsive */
         @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .desktop-theme-toggle {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: flex;
-            }
-            
             .tools-grid,
             .impact-grid,
             .mission-grid,
@@ -2370,40 +1959,9 @@
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            
-            .hero-logo {
-                width: 200px;
-                height: 200px;
-            }
         }
         
         @media (max-width: 768px) {
-            .navbar {
-                padding: var(--space-xs) var(--space-sm);
-            }
-            
-            .nav-brand-name {
-                font-size: 1.4rem;
-            }
-            
-            .hero {
-                padding: 100px var(--space-md) 60px;
-            }
-            
-            .hero-logo {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .hero-title {
-                font-size: clamp(2.5rem, 6vw, 3.5rem);
-            }
-            
-            .btn {
-                min-width: 180px;
-                padding: var(--space-sm) var(--space-lg);
-            }
-            
             .tools-grid,
             .impact-grid,
             .mission-grid,
@@ -2419,59 +1977,6 @@
                 flex-direction: column;
                 text-align: center;
             }
-            
-            .youtube-stats {
-                gap: var(--space-lg);
-            }
-            
-            .app-buttons {
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .hero-logo {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .hero-badge {
-                width: 100%;
-                justify-content: center;
-                font-size: 0.85rem;
-                padding: var(--space-xs) var(--space-md);
-            }
-            
-            .section {
-                padding: var(--space-xxl) var(--space-md);
-            }
-            
-            .section-title {
-                font-size: 2.5rem;
-            }
-            
-            .tool-card,
-            .impact-card,
-            .mission-card {
-                padding: var(--space-lg);
-            }
-            
-            .tool-name {
-                font-size: 1.8rem;
-            }
-            
-            .mobile-nav {
-                max-width: 300px;
-            }
-            
-            .footer-logo {
-                width: 70px;
-                height: 70px;
-            }
-            
-            .footer-brand-name {
-                font-size: 3rem;
-            }
         }
     </style>
 </head>
@@ -2486,10 +1991,6 @@
             <div class="loading-bar-fill"></div>
         </div>
     </div>
-    
-    <!-- Custom Cursor (Desktop only) -->
-    <div class="cursor-primary" id="cursorPrimary"></div>
-    <div class="cursor-secondary" id="cursorSecondary"></div>
     
     <!-- Scroll Progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -3190,8 +2691,8 @@
             25 c-4 -12 -13 -24 -20 -26 -9 -3 -9 2 0 22 15 32 32 35 20 4z m-567 -25 c22
             -27 49 -93 39 -93 -3 0 -21 9 -39 21 -29 18 -34 26 -34 60 0 46 5 48 34 12z
             m686 -12 c0 -34 -5 -42 -34 -60 -18 -12 -36 -21 -39 -21 -19 0 46 118 66 119
-            4 1 7 -17 7 -38z m-779 -13 c37 -26 48 -41 53 -68 11 -64 7 -90 -11 -90 -24
-            0 -132 26 -139 33 -7 6 36 157 44 157 3 0 27 -15 53 -32z m917 -36 c12 -38 22
+            4 1 7 -17 7 -38z m-779 -13 c37 -26 48 -41 53 -68 11 -64 7 -90 -11 -90 -24 0
+            -132 26 -139 33 -7 6 36 157 44 157 3 0 27 -15 53 -32z m917 -36 c12 -38 22
             -74 22 -80 0 -12 -46 -27 -119 -38 l-44 -7 6 64 c4 35 13 67 20 70 6 4 27 19
             46 33 19 14 38 26 41 26 3 0 16 -31 28 -68z m-672 0 c13 -18 12 -20 -6 -15
             -20 5 -50 39 -50 56 0 11 39 -17 56 -41z m397 20 c-5 -19 -16 -26 -63 -37 -3
@@ -3417,7 +2918,7 @@
             </div>
             
             <div class="impact-grid">
-                <div class="impact-card reveal" onclick="alert('Avg Rating 4.9 from 500+ daily users!')">
+                <div class="impact-card reveal">
                     <div class="impact-icon">
                         <span class="material-icons-round">star</span>
                     </div>
@@ -3426,7 +2927,7 @@
                     <div class="impact-description">From 500+ Mails daily</div>
                 </div>
                 
-                <div class="impact-card reveal delay-1" onclick="alert('500+ active accounts and growing!')">
+                <div class="impact-card reveal delay-1">
                     <div class="impact-icon">
                         <span class="material-icons-round">people</span>
                     </div>
@@ -3435,7 +2936,7 @@
                     <div class="impact-description">Empowering content to increase curiosity.</div>
                 </div>
                 
-                <div class="impact-card reveal delay-2" onclick="alert('Endless possibilities with AI Education')">
+                <div class="impact-card reveal delay-2">
                     <div class="impact-icon">
                         <span class="material-icons-round">auto_awesome</span>
                     </div>
@@ -3463,13 +2964,13 @@
             
             <div class="tools-grid">
                 <!-- Clover AI -->
-                <div class="tool-card reveal" onclick="window.open('https://aditya-cmd-max.github.io/cloverai/chat', '_blank')">
+                <div class="tool-card reveal">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/clover.png" alt="Clover AI">
                     </div>
                     <h3 class="tool-name">Clover AI</h3>
                     <p class="tool-description">Intelligent tutoring system that adapts to each learner's needs with personalized learning paths.</p>
-                    <div class="tool-actions" onclick="event.stopPropagation();">
+                    <div class="tool-actions">
                         <a href="https://aditya-cmd-max.github.io/cloverai/chat" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
@@ -3479,17 +2980,16 @@
                             Learn More
                         </a>
                     </div>
-                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- SkyCast -->
-                <div class="tool-card reveal delay-1" onclick="window.open('https://aditya-cmd-max.github.io/exonovaweather/app', '_blank')">
+                <div class="tool-card reveal delay-1">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/skycast.png" alt="SkyCast">
                     </div>
                     <h3 class="tool-name">SkyCast</h3>
                     <p class="tool-description">Interactive environmental science platform with real-world data visualization and predictive models.</p>
-                    <div class="tool-actions" onclick="event.stopPropagation();">
+                    <div class="tool-actions">
                         <a href="https://aditya-cmd-max.github.io/exonovaweather/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
@@ -3499,17 +2999,16 @@
                             Learn More
                         </a>
                     </div>
-                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- PopOut Pro -->
-                <div class="tool-card reveal delay-2" onclick="window.open('https://aditya-cmd-max.github.io/popout/app.html', '_blank')">
+                <div class="tool-card reveal delay-2">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/popout.png" alt="PopOut Pro">
                     </div>
                     <h3 class="tool-name">PopOut Pro</h3>
                     <p class="tool-description">AI-powered visual learning tool for creating engaging educational content with automatic diagram generation.</p>
-                    <div class="tool-actions" onclick="event.stopPropagation();">
+                    <div class="tool-actions">
                         <a href="https://aditya-cmd-max.github.io/popout/app.html" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
@@ -3519,17 +3018,16 @@
                             Learn More
                         </a>
                     </div>
-                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- Peo-TTS -->
-                <div class="tool-card reveal delay-3" onclick="window.open('https://aditya-cmd-max.github.io/Peo/app', '_blank')">
+                <div class="tool-card reveal delay-3">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/peo.png" alt="Peo-TTS">
                     </div>
                     <h3 class="tool-name">Peo-TTS</h3>
                     <p class="tool-description">Natural sounding text-to-speech for accessible learning materials with emotion and emphasis.</p>
-                    <div class="tool-actions" onclick="event.stopPropagation();">
+                    <div class="tool-actions">
                         <a href="https://aditya-cmd-max.github.io/Peo/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
@@ -3539,17 +3037,16 @@
                             Learn More
                         </a>
                     </div>
-                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- Mindscribe -->
-                <div class="tool-card reveal delay-4" onclick="window.open('https://aditya-cmd-max.github.io/mindscribe/app', '_blank')">
+                <div class="tool-card reveal delay-4">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/mindscribe.png" alt="Mindscribe">
                     </div>
                     <h3 class="tool-name">Mindscribe</h3>
                     <p class="tool-description">Your digital notebook that makes everyday learning easier with AI-powered note-taking and organization.</p>
-                    <div class="tool-actions" onclick="event.stopPropagation();">
+                    <div class="tool-actions">
                         <a href="https://aditya-cmd-max.github.io/mindscribe/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
@@ -3559,17 +3056,16 @@
                             Learn More
                         </a>
                     </div>
-                    <span class="quick-preview">Quick Preview</span>
                 </div>
                 
                 <!-- Clover Studio -->
-                <div class="tool-card reveal delay-5" onclick="window.open('https://aditya-cmd-max.github.io/clover/app', '_blank')">
+                <div class="tool-card reveal delay-5">
                     <div class="tool-icon">
                         <img src="https://aditya-cmd-max.github.io/cloverstudio.png" alt="Clover Studio">
                     </div>
                     <h3 class="tool-name">Clover Studio</h3>
                     <p class="tool-description">Transform creative concepts into structured learning experiences with intelligent creative guidance.</p>
-                    <div class="tool-actions" onclick="event.stopPropagation();">
+                    <div class="tool-actions">
                         <a href="https://aditya-cmd-max.github.io/clover/app" class="tool-btn tool-btn-primary" target="_blank">
                             <span class="material-icons-round">play_arrow</span>
                             Try Now
@@ -3579,7 +3075,6 @@
                             Learn More
                         </a>
                     </div>
-                    <span class="quick-preview">Quick Preview</span>
                 </div>
             </div>
             
@@ -3608,7 +3103,7 @@
             </div>
             
             <div class="mission-grid">
-                <div class="mission-card reveal" onclick="alert('Our Mission: Democratize knowledge with AI across India.')">
+                <div class="mission-card reveal">
                     <div class="mission-icon">
                         <span class="material-icons-round">flag</span>
                     </div>
@@ -3616,7 +3111,7 @@
                     <p>Leveraging AI to democratize knowledge and transform traditional learning paradigms across India.</p>
                 </div>
                 
-                <div class="mission-card reveal delay-1" onclick="alert('Our Vision: Personalized, accessible, engaging education for every student.')">
+                <div class="mission-card reveal delay-1">
                     <div class="mission-icon">
                         <span class="material-icons-round">visibility</span>
                     </div>
@@ -3624,7 +3119,7 @@
                     <p>Making education personalized, accessible, and engaging for every student, everywhere.</p>
                 </div>
                 
-                <div class="mission-card reveal delay-2" onclick="alert('Innovation: Pushing educational boundaries with cutting-edge technology.')">
+                <div class="mission-card reveal delay-2">
                     <div class="mission-icon">
                         <span class="material-icons-round">lightbulb</span>
                     </div>
@@ -3652,7 +3147,7 @@
         <div class="testimonials-track">
             <div class="testimonials-slider">
                 <!-- Testimonial 1 -->
-                <div class="testimonial-card" onclick="alert('Prof. Ramesh K. from IIT Delhi')">
+                <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">Reverbit has completely transformed how I prepare my lectures. The AI writer saves me hours every week and the quality is exceptional.</p>
                     <div class="testimonial-author">
@@ -3665,7 +3160,7 @@
                 </div>
                 
                 <!-- Testimonial 2 -->
-                <div class="testimonial-card" onclick="alert('Sneha Mehta, Ed-tech Founder, Pune')">
+                <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">The Smart Quiz Engine is a game-changer. My students are more engaged and I can track progress in real time. Absolutely brilliant.</p>
                     <div class="testimonial-author">
@@ -3678,7 +3173,7 @@
                 </div>
                 
                 <!-- Testimonial 3 -->
-                <div class="testimonial-card" onclick="alert('Arjun Verma, Educator & YouTuber, Bengaluru')">
+                <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">Finally an Indian platform that rivals global products. The design is refined, the AI is sharp, and it keeps getting better. Proud to use it.</p>
                     <div class="testimonial-author">
@@ -3691,7 +3186,7 @@
                 </div>
                 
                 <!-- Duplicate for infinite scroll -->
-                <div class="testimonial-card" onclick="alert('Prof. Ramesh K. from IIT Delhi')">
+                <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
                     <p class="testimonial-text">Reverbit has completely transformed how I prepare my lectures. The AI writer saves me hours every week and the quality is exceptional.</p>
                     <div class="testimonial-author">
@@ -3735,27 +3230,27 @@
                 </p>
                 
                 <div class="founder-tags">
-                    <span class="founder-tag" onclick="alert('AI/ML enthusiast and practitioner')">
+                    <span class="founder-tag">
                         <span class="material-icons-round">psychology</span>
                         AI/ML
                     </span>
-                    <span class="founder-tag" onclick="alert('Passionate about education for all')">
+                    <span class="founder-tag">
                         <span class="material-icons-round">school</span>
                         Education
                     </span>
-                    <span class="founder-tag" onclick="alert('Full-stack web developer')">
+                    <span class="founder-tag">
                         <span class="material-icons-round">code</span>
                         Web Dev
                     </span>
-                    <span class="founder-tag" onclick="alert('UX designer with an eye for detail')">
+                    <span class="founder-tag">
                         <span class="material-icons-round">design_services</span>
                         UX Design
                     </span>
-                    <span class="founder-tag" onclick="alert('Building the future of EdTech')">
+                    <span class="founder-tag">
                         <span class="material-icons-round">devices</span>
                         EdTech
                     </span>
-                    <span class="founder-tag" onclick="alert('Proudly made in India')">
+                    <span class="founder-tag">
                         <span class="material-icons-round">flag</span>
                         Made in India
                     </span>
@@ -3783,7 +3278,7 @@
                 <p class="section-subtitle">Deep dives into AI, web dev, and the future of tech — straight from the creator's desk.</p>
             </div>
             
-            <div class="youtube-card" onclick="window.open('https://youtube.com/@Reverbit', '_blank')">
+            <div class="youtube-card">
                 <div class="youtube-icon">
                     <span class="material-icons-round">smart_display</span>
                 </div>
@@ -3849,7 +3344,7 @@
                 
                 <div>
                     <div class="app-features">
-                        <div class="app-feature reveal" onclick="alert('Study without internet — built for India\'s connectivity realities.')">
+                        <div class="app-feature reveal">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">offline_bolt</span>
                             </div>
@@ -3859,7 +3354,7 @@
                             </div>
                         </div>
                         
-                        <div class="app-feature reveal delay-1" onclick="alert('Adaptive learning paths that evolve with your progress.')">
+                        <div class="app-feature reveal delay-1">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">auto_awesome</span>
                             </div>
@@ -3869,7 +3364,7 @@
                             </div>
                         </div>
                         
-                        <div class="app-feature reveal delay-2" onclick="alert('Quiz Engine, AI Writer, Knowledge Graph — in your pocket.')">
+                        <div class="app-feature reveal delay-2">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">all_inclusive</span>
                             </div>
@@ -3879,7 +3374,7 @@
                             </div>
                         </div>
                         
-                        <div class="app-feature reveal delay-3" onclick="alert('Enterprise-grade protection with your data under your control.')">
+                        <div class="app-feature reveal delay-3">
                             <div class="app-feature-icon">
                                 <span class="material-icons-round">security</span>
                             </div>
@@ -3995,13 +3490,13 @@
             
             <div class="footer-social">
                 <a href="https://www.linkedin.com/in/aditya-jha-2b0860399/" class="footer-social-link" target="_blank">
-                    <span class="material-icons-round">linkedin</span>
+                    <i class="fab fa-linkedin-in"></i>
                 </a>
                 <a href="https://github.com/aditya-cmd-max/" class="footer-social-link" target="_blank">
-                    <span class="material-icons-round">code</span>
+                    <i class="fab fa-github"></i>
                 </a>
                 <a href="https://youtube.com/@Reverbit/" class="footer-social-link" target="_blank">
-                    <span class="material-icons-round">smart_display</span>
+                    <i class="fab fa-youtube"></i>
                 </a>
             </div>
         </div>
@@ -4028,137 +3523,25 @@
         </div>
     </div>
     
-   <!-- Schema.org JSON-LD : Reverbit Innovations -->
-
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
     {
-      "@type": "Organization",
-      "@id": "https://aditya-cmd-max.github.io/#organization",
-      "name": "Reverbit Innovations",
-      "legalName": "Reverbit Innovations",
-      "url": "https://aditya-cmd-max.github.io/",
-      "description": "Reverbit Innovations is a forward-thinking educational platform focused on simplifying science, technology, and practical learning to empower curious minds.",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://aditya-cmd-max.github.io/logo-insvg.svg",
-        "contentUrl": "https://aditya-cmd-max.github.io/logo-insvg.svg",
-        "width": 512,
-        "height": 512
-      },
-      "founder": {
-        "@type": "Person",
-        "@id": "https://aditya-cmd-max.github.io/#founder",
-        "name": "Aditya Jha",
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Reverbit Innovations",
         "url": "https://aditya-cmd-max.github.io/",
-        "sameAs": "https://www.linkedin.com/in/aditya-jha-2b0860399"
-      },
-      "foundingDate": "2025-01-01",
-      "foundingLocation": {
-        "@type": "Place",
-        "name": "India",
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "IN"
-        }
-      },
-      "sameAs": [
-        "https://www.linkedin.com/in/aditya-jha-2b0860399",
-        "https://www.youtube.com/@Reverbit"
-      ]
-    },
-
-    {
-      "@type": "WebSite",
-      "@id": "https://aditya-cmd-max.github.io/#website",
-      "url": "https://aditya-cmd-max.github.io/",
-      "name": "Reverbit",
-      "publisher": {
-        "@id": "https://aditya-cmd-max.github.io/#organization"
-      },
-      "inLanguage": "en-IN",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://aditya-cmd-max.github.io/?s={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    },
-
-    {
-      "@type": "WebPage",
-      "@id": "https://aditya-cmd-max.github.io/#homepage",
-      "url": "https://aditya-cmd-max.github.io/",
-      "name": "Reverbit Innovations – Intelligence Meets Action.",
-      "description": "Reverbit is India's next-gen educational platform offering amazing science facts, engaging quizzes, and motivational content crafted for curious minds.",
-      "isPartOf": {
-        "@id": "https://aditya-cmd-max.github.io/#website"
-      },
-      "about": {
-        "@id": "https://aditya-cmd-max.github.io/#organization"
-      },
-      "publisher": {
-        "@id": "https://aditya-cmd-max.github.io/#organization"
-      },
-      "inLanguage": "en-IN",
-      "mainEntity": {
-        "@id": "https://aditya-cmd-max.github.io/#organization"
-      },
-      "primaryImageOfPage": {
-        "@type": "ImageObject",
-        "url": "https://aditya-cmd-max.github.io/logo-insvg.svg",
-        "width": 512,
-        "height": 512
-      }
-    },
-
-    {
-      "@type": "ItemList",
-      "@id": "https://aditya-cmd-max.github.io/#main-navigation",
-      "name": "Main Site Navigation",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "SiteNavigationElement",
-            "name": "Home",
-            "url": "https://aditya-cmd-max.github.io/"
-          }
+        "logo": "https://aditya-cmd-max.github.io/logo-insvg.svg",
+        "founder": {
+            "@type": "Person",
+            "name": "Aditya Jha"
         },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SiteNavigationElement",
-            "name": "About",
-            "url": "https://aditya-cmd-max.github.io/about/"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SiteNavigationElement",
-            "name": "Blogs",
-            "url": "https://aditya-cmd-max.github.io/circuit/"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SiteNavigationElement",
-            "name": "Reverbit Ecosystem",
-            "url": "https://aditya-cmd-max.github.io/ecosystem/"
-          }
-        }
-      ]
+        "sameAs": [
+            "https://www.linkedin.com/in/aditya-jha-2b0860399",
+            "https://www.youtube.com/@Reverbit",
+            "https://github.com/aditya-cmd-max"
+        ]
     }
-  ]
-}
-</script>
+    </script>
     
     <script>
         // ============================================
@@ -4171,110 +3554,64 @@
         });
 
         // ============================================
-        // Authentication System - Let auth.js handle everything
+        // Auth Integration
         // ============================================
         function initAuth() {
             if (typeof window.ReverbitAuth !== 'undefined') {
-                window.ReverbitAuth.auth.onAuthStateChanged(async (user) => {
+                console.log('✅ Auth found, integrating with homepage...');
+                
+                window.ReverbitAuth.addAuthListener((user, profile) => {
                     if (user) {
                         document.body.classList.add('user-signed-in');
+                        
+                        const signInBtn = document.getElementById('signInButton');
+                        const mobileSignIn = document.getElementById('mobileSignInLink');
+                        
+                        if (signInBtn) signInBtn.style.display = 'none';
+                        if (mobileSignIn) mobileSignIn.style.display = 'none';
+                        
+                        setTimeout(() => {
+                            if (!document.querySelector('.reverbit-profile-avatar')) {
+                                window.ReverbitAuth.addProfileAvatar();
+                            }
+                        }, 500);
                     } else {
                         document.body.classList.remove('user-signed-in');
+                        
+                        const signInBtn = document.getElementById('signInButton');
+                        const mobileSignIn = document.getElementById('mobileSignInLink');
+                        
+                        if (signInBtn) signInBtn.style.display = 'flex';
+                        if (mobileSignIn) mobileSignIn.style.display = 'flex';
                     }
                 });
                 
-                if (window.ReverbitAuth.getUser()) {
-                    document.body.classList.add('user-signed-in');
+                if (window.ReverbitAuth.isDarkModeActive()) {
+                    document.body.classList.add('dark-theme');
                 }
             } else {
                 setTimeout(initAuth, 100);
             }
         }
-        
+
         // ============================================
-        // GSAP Animations
-        // ============================================
-        gsap.registerPlugin(ScrollTrigger);
-        
         // Loading screen
+        // ============================================
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
             }, 1500);
         });
         
-        // Custom Cursor
-        if (window.innerWidth > 1024) {
-            const cursor = document.getElementById('cursorPrimary');
-            const cursorRing = document.getElementById('cursorSecondary');
-            
-            // Create trail elements
-            const trails = [];
-            for (let i = 0; i < 5; i++) {
-                const trail = document.createElement('div');
-                trail.className = 'cursor-trail';
-                document.body.appendChild(trail);
-                trails.push(trail);
-            }
-            
-            let mouseX = 0, mouseY = 0;
-            let trailPositions = [];
-            
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                
-                gsap.to(cursor, {
-                    x: mouseX,
-                    y: mouseY,
-                    duration: 0.1
-                });
-                
-                gsap.to(cursorRing, {
-                    x: mouseX,
-                    y: mouseY,
-                    duration: 0.2
-                });
-                
-                // Update trail positions
-                trailPositions.unshift({ x: mouseX, y: mouseY });
-                if (trailPositions.length > trails.length) {
-                    trailPositions.pop();
-                }
-                
-                // Update trail elements
-                trails.forEach((trail, index) => {
-                    if (trailPositions[index]) {
-                        gsap.to(trail, {
-                            x: trailPositions[index].x,
-                            y: trailPositions[index].y,
-                            duration: 0.1,
-                            opacity: 1 - (index * 0.15)
-                        });
-                    }
-                });
-            });
-            
-            document.querySelectorAll('a, button, .tool-card, .impact-card, .mission-card, .testimonial-card').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    gsap.to(cursor, { scale: 2, backgroundColor: 'var(--md-secondary)', duration: 0.2 });
-                    gsap.to(cursorRing, { scale: 2, borderColor: 'var(--md-secondary)', borderWidth: 3, duration: 0.2 });
-                });
-                el.addEventListener('mouseleave', () => {
-                    gsap.to(cursor, { scale: 1, backgroundColor: 'var(--md-primary)', duration: 0.2 });
-                    gsap.to(cursorRing, { scale: 1, borderColor: 'var(--md-secondary)', borderWidth: 2, duration: 0.2 });
-                });
-            });
-        }
-        
+        // ============================================
         // Scroll progress
+        // ============================================
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
             document.getElementById('scrollProgress').style.width = scrolled + '%';
             
-            // Navbar scroll effect
             const navbar = document.getElementById('navbar');
             if (winScroll > 50) {
                 navbar.classList.add('scrolled');
@@ -4283,37 +3620,34 @@
             }
         });
         
+        // ============================================
         // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const mobileThemeToggle = document.getElementById('mobileThemeToggle');
-        const themeIcons = document.querySelectorAll('.desktop-theme-toggle .material-icons-round, .mobile-theme-btn .material-icons-round');
-        
+        // ============================================
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
             const isDark = document.body.classList.contains('dark-theme');
-            themeIcons.forEach(icon => {
-                icon.textContent = isDark ? 'light_mode' : 'dark_mode';
-            });
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             
-            // Animate theme toggle
-            gsap.fromTo('.desktop-theme-toggle, .mobile-theme-btn', 
-                { scale: 1, rotate: 0 },
-                { scale: 1.2, rotate: 360, duration: 0.5, ease: 'back.out(1.7)' }
-            );
+            const icons = document.querySelectorAll('.desktop-theme-toggle .material-icons-round, .mobile-theme-btn .material-icons-round');
+            icons.forEach(icon => {
+                icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+            });
         }
         
-        themeToggle?.addEventListener('click', toggleTheme);
-        mobileThemeToggle?.addEventListener('click', toggleTheme);
-        
-        // Load saved theme (default light)
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-theme');
-            themeIcons.forEach(icon => icon.textContent = 'light_mode');
+            document.querySelectorAll('.desktop-theme-toggle .material-icons-round, .mobile-theme-btn .material-icons-round').forEach(icon => {
+                icon.textContent = 'light_mode';
+            });
         }
         
+        document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+        document.getElementById('mobileThemeToggle')?.addEventListener('click', toggleTheme);
+        
+        // ============================================
         // Mobile navigation
+        // ============================================
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileNav = document.getElementById('mobileNav');
         const mobileNavClose = document.getElementById('mobileNavClose');
@@ -4323,20 +3657,12 @@
             mobileNav.classList.add('open');
             mobileNavOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            gsap.to(mobileMenuBtn, { rotate: 90, scale: 1.1, duration: 0.3 });
-            gsap.fromTo(mobileNav.querySelectorAll('.mobile-nav-link'), 
-                { x: 50, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.4, stagger: 0.1 }
-            );
         }
         
         function closeMobileNav() {
             mobileNav.classList.remove('open');
             mobileNavOverlay.classList.remove('active');
             document.body.style.overflow = '';
-            
-            gsap.to(mobileMenuBtn, { rotate: 0, scale: 1, duration: 0.3 });
         }
         
         mobileMenuBtn?.addEventListener('click', openMobileNav);
@@ -4347,11 +3673,9 @@
             link.addEventListener('click', closeMobileNav);
         });
         
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeMobileNav();
-        });
-        
+        // ============================================
         // Smooth scroll for anchor links
+        // ============================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
                 const href = anchor.getAttribute('href');
@@ -4368,155 +3692,57 @@
             });
         });
         
-        // Reveal animations on scroll
+        // ============================================
+        // Reveal animations
+        // ============================================
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
+        }, { threshold: 0.2 });
         
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         
-        // Initialize auth
-        document.addEventListener('DOMContentLoaded', () => {
-            initAuth();
-        });
-        
+        // ============================================
         // Cookie banner
+        // ============================================
         const cookieBanner = document.getElementById('ex-cookie-consent');
         if (!localStorage.getItem('cookieConsent')) {
             setTimeout(() => {
                 cookieBanner.style.display = 'block';
-                gsap.from(cookieBanner, { y: 50, opacity: 0, duration: 0.5 });
             }, 3000);
         }
         
         document.getElementById('acceptCookies')?.addEventListener('click', () => {
             localStorage.setItem('cookieConsent', 'accepted');
-            gsap.to(cookieBanner, { y: 50, opacity: 0, duration: 0.3, onComplete: () => {
-                cookieBanner.style.display = 'none';
-            }});
+            cookieBanner.style.display = 'none';
         });
         
         document.getElementById('customizeCookies')?.addEventListener('click', () => {
             localStorage.setItem('cookieConsent', 'customized');
-            gsap.to(cookieBanner, { y: 50, opacity: 0, duration: 0.3, onComplete: () => {
-                cookieBanner.style.display = 'none';
-            }});
+            cookieBanner.style.display = 'none';
         });
         
-        // Parallax effect for floating elements
+        // ============================================
+        // Parallax effect
+        // ============================================
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const motifs = document.querySelectorAll('.floating-motif');
-            
             motifs.forEach((motif, index) => {
                 const speed = 0.1 + (index * 0.05);
                 motif.style.transform = `translateY(${scrolled * speed}px)`;
             });
         });
-    </script>
-
-
-<script>
-  // Debug auth initialization
-  console.log('🔍 Checking auth status...');
-  
-  function checkAuth() {
-    if (window.ReverbitAuth) {
-      console.log('✅ Auth found:', window.ReverbitAuth);
-      
-      // Add auth listener
-      window.ReverbitAuth.addAuthListener((user, profile) => {
-        console.log('👤 Auth state:', user ? user.email : 'logged out');
         
-        if (user) {
-          // Hide sign-in buttons
-          const signInBtn = document.getElementById('signInButton');
-          const mobileSignIn = document.getElementById('mobileSignInLink');
-          
-          if (signInBtn) signInBtn.style.display = 'none';
-          if (mobileSignIn) mobileSignIn.style.display = 'none';
-          
-          // Force avatar to appear after 1 second
-          setTimeout(() => {
-            if (!document.querySelector('.reverbit-profile-avatar')) {
-              console.log('⚠️ Avatar not found, forcing...');
-              window.ReverbitAuth.addProfileAvatar();
-            } else {
-              console.log('✅ Avatar found in DOM');
-            }
-          }, 1000);
-        } else {
-          const signInBtn = document.getElementById('signInButton');
-          const mobileSignIn = document.getElementById('mobileSignInLink');
-          
-          if (signInBtn) signInBtn.style.display = 'flex';
-          if (mobileSignIn) mobileSignIn.style.display = 'flex';
-        }
-      });
-      
-      // Connect theme toggles
-      const themeToggle = document.getElementById('themeToggle');
-      const mobileThemeToggle = document.getElementById('mobileThemeToggle');
-      
-      if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          window.ReverbitAuth.toggleTheme();
+        // ============================================
+        // Initialize
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
         });
-      }
-      
-      if (mobileThemeToggle) {
-        mobileThemeToggle.addEventListener('click', () => {
-          window.ReverbitAuth.toggleTheme();
-        });
-      }
-      
-    } else {
-      console.log('⏳ Waiting for auth...');
-      setTimeout(checkAuth, 500);
-    }
-  }
-  
-  checkAuth();
-  
-  // Manual test in console
-  window.testAuth = function() {
-    console.log('Current user:', window.ReverbitAuth?.getUser());
-    console.log('Profile:', window.ReverbitAuth?.getProfile());
-    if (window.ReverbitAuth?.getUser()) {
-      window.ReverbitAuth.addProfileAvatar();
-    }
-  };
-</script>
-
-<style>
-  /* Hide sign-in button when logged in */
-  #signInButton[style*="display: none"],
-  #mobileSignInLink[style*="display: none"] {
-    display: none !important;
-  }
-  
-  /* Ensure avatar is visible */
-  .reverbit-profile-avatar {
-    display: inline-flex !important;
-    margin-left: 10px !important;
-  }
-  
-  /* Desktop avatar container */
-  #desktopAvatar {
-    display: inline-flex;
-    align-items: center;
-  }
-</style>
-    
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
-}
-</script>
-
+    </script>
 </body>
 </html>
