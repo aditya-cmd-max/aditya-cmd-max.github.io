@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +33,7 @@
       color: #ededf2;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      transition: background 0.3s, color 0.3s;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     body.light-theme {
@@ -52,13 +51,13 @@
       border-radius: 32px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       overflow: hidden;
-      transition: background 0.3s, box-shadow 0.3s;
+      transition: background 0.2s, box-shadow 0.2s;
       border: 1px solid #2c2c34;
     }
 
     body.light-theme .app {
       background: #ffffff;
-      box-shadow: 0 20px 40px -12px rgba(0, 20, 50, 0.25);
+      box-shadow: 0 20px 40px -12px rgba(0, 20, 50, 0.2);
       border: 1px solid #e2e8f0;
     }
 
@@ -70,7 +69,7 @@
       display: flex;
       flex-direction: column;
       padding: 20px 0 14px 0;
-      transition: background 0.3s, border-color 0.3s;
+      transition: background 0.2s, border-color 0.2s;
     }
     body.light-theme .sidebar {
       background: #f8fafc;
@@ -130,6 +129,7 @@
     }
     body.light-theme .new-chat-btn { background: #ffffff; color: #1e293b; border-color: #d0d9e8; }
     .new-chat-btn:hover { background: #3d3d4a; transform: translateY(-1px); }
+    body.light-theme .new-chat-btn:hover { background: #e6edf5; }
 
     .search-chats {
       display: flex;
@@ -151,6 +151,18 @@
       font-family: 'Outfit', sans-serif;
       outline: none;
     }
+
+    .history-header {
+      padding: 8px 18px 6px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #9a9ab5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    body.light-theme .history-header { color: #64748b; }
 
     .history-list {
       flex: 1;
@@ -203,6 +215,7 @@
       margin-left: 2px;
     }
     .menu-dots:hover { opacity: 1; background: #3d3d4a; }
+    body.light-theme .menu-dots:hover { background: #d0d9e8; }
     
     .chat-menu {
       position: fixed;
@@ -258,6 +271,7 @@
       justify-content: center;
       margin-right: 12px;
       border: 1px solid #40404e;
+      transition: 0.2s;
     }
     body.light-theme .mobile-sidebar-toggle { background: #ffffff; color: #1e293b; border-color: #cbd5e1; }
 
@@ -331,7 +345,7 @@
       transition: filter 0.2s;
     }
     body.light-theme .logo-icon img {
-      filter: brightness(0) invert(0);
+      filter: brightness(0) invert(0.2);
     }
 
     .nav-settings {
@@ -339,6 +353,7 @@
       display: flex; align-items: center; justify-content: center; border-radius: 44px;
     }
     .nav-settings:hover { background: #2d2d38; }
+    body.light-theme .nav-settings:hover { background: #e6edf5; }
 
     .chat-container {
       flex: 1;
@@ -519,6 +534,7 @@
       display: flex; align-items: center; justify-content: center;
     }
     .action-btn:hover { background: #2f2f3a; color: white; }
+    body.light-theme .action-btn:hover { background: #e6edf5; }
 
     .send-btn {
       background: #4573cf; border: none; width: 48px; height: 48px; border-radius: 48px;
@@ -539,8 +555,11 @@
     .tool-btn {
       background: #242430; border: 1px solid #383846; color: #b0b0cc; padding: 6px 14px;
       border-radius: 30px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; cursor: pointer;
+      transition: 0.2s;
     }
     .tool-btn.active { background: #4573cf; color: white; border-color: #5f8ad4; }
+    body.light-theme .tool-btn { background: #f1f5f9; color: #1e293b; border-color: #cbd5e1; }
+    body.light-theme .tool-btn.active { background: #4573cf; color: white; border-color: #2f5bb7; }
 
     /* mobile improvements */
     @media (max-width: 768px) {
@@ -599,7 +618,7 @@
       </div>
       <button class="new-chat-btn" id="newChatBtn"><i class="fas fa-plus"></i> New chat</button>
       <div class="search-chats"><i class="fas fa-search"></i><input type="text" placeholder="Search chats..." id="searchInput"></div>
-      <div class="history-header"><span><i class="fas fa-history"></i> Chats</span></div>
+      <div class="history-header"><i class="fas fa-history"></i> Your chats</div>
       <div class="history-list" id="historyList"></div>
       <div class="sidebar-footer">
         <span>Ekatva AI</span>
@@ -915,8 +934,9 @@
 
       function renderHistory(chatsArray) {
         if (!chatsArray || chatsArray.length === 0) {
-          historyList.innerHTML = '<div class="history-item"><i class="fas fa-comment"></i> No chats yet</div>';
-          mobileHistoryList.innerHTML = '<div class="history-item"><i class="fas fa-comment"></i> No chats yet</div>';
+          const emptyHtml = '<div class="history-item"><i class="fas fa-comment"></i> No chats yet</div>';
+          historyList.innerHTML = emptyHtml;
+          mobileHistoryList.innerHTML = emptyHtml;
           return;
         }
         
@@ -925,7 +945,7 @@
           if (c.updatedAt) {
             try {
               const date = c.updatedAt.toDate ? c.updatedAt.toDate() : new Date(c.updatedAt);
-              dateStr = date.toLocaleDateString();
+              dateStr = date.toLocaleDateString([], { month: 'numeric', day: 'numeric' });
             } catch (e) {
               dateStr = '';
             }
@@ -1034,17 +1054,13 @@
         chatMenu.classList.remove('show');
       });
 
-      searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = chats.filter(c => (c.title || '').toLowerCase().includes(term));
+      function filterHistory(term) {
+        const filtered = chats.filter(c => (c.title || '').toLowerCase().includes(term.toLowerCase()));
         renderHistory(filtered);
-      });
-      
-      mobileSearchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = chats.filter(c => (c.title || '').toLowerCase().includes(term));
-        renderHistory(filtered);
-      });
+      }
+
+      searchInput.addEventListener('input', (e) => filterHistory(e.target.value));
+      mobileSearchInput.addEventListener('input', (e) => filterHistory(e.target.value));
 
       async function createNewChat() {
         if (!currentUser) { 
@@ -1322,8 +1338,9 @@
       function toggleTheme() {
         body.classList.toggle('light-theme');
         const isLight = body.classList.contains('light-theme');
-        themeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-        mobileThemeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        const icon = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        themeToggle.innerHTML = icon;
+        mobileThemeToggle.innerHTML = icon;
       }
       
       themeToggle.addEventListener('click', toggleTheme);
