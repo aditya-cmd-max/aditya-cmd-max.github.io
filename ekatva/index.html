@@ -710,6 +710,7 @@
       let messageCount = 0;
       let isGuestPromptShown = false;
       let activeChatIdForMenu = null;
+      let isFirstMessage = true;
 
       // URL parameter handling
       function getChatIdFromUrl() {
@@ -789,16 +790,15 @@
           mobileUserEmail.textContent = user.email;
           guestPromptDiv.style.display = 'none';
           
-          // Load chat history first
+          // Load chat history
           await loadChatHistory();
-          console.log('Chats loaded:', chats.length);
           
-          // Then handle current chat
+          // Handle current chat
           const urlChatId = getChatIdFromUrl();
           if (urlChatId && chats.some(c => c.id === urlChatId)) {
             await loadChat(urlChatId);
           } else if (chats.length > 0) {
-            // Load the most recent chat (first in list since we order by pinned desc, updatedAt desc)
+            // Load the most recent chat
             await loadChat(chats[0].id);
           } else {
             createNewChat();
@@ -836,7 +836,7 @@
         if (stored) {
           const messages = JSON.parse(stored);
           chatContainer.innerHTML = '';
-          messages.forEach(m => renderMessage(m.text, m.sender, m.useMarkdown, false));
+          messages.forEach(m => renderMessage(m.text, m.sender, m.useMarkdown || false, false));
         } else {
           showWelcomeScreen(true);
         }
@@ -848,23 +848,13 @@
         showWelcomeScreen(true);
         messageCount = 0;
         isGuestPromptShown = false;
+        isFirstMessage = true;
       }
 
       async function loadChatHistory() {
         if (!currentUser) return [];
         
         try {
-          console.log('Loading chat history for user:', currentUser.uid);
-          
-          // Try without orderBy first to test if any chats exist
-          const simpleSnapshot = await db.collection('chats')
-            .where('userId', '==', currentUser.uid)
-            .limit(10)
-            .get();
-          
-          console.log('Simple query result:', simpleSnapshot.size, 'chats');
-          
-          // Now get properly ordered chats
           const snapshot = await db.collection('chats')
             .where('userId', '==', currentUser.uid)
             .orderBy('pinned', 'desc')
@@ -883,42 +873,15 @@
             };
           });
           
-          console.log('Processed chats:', chats);
           renderHistory(chats);
           return chats;
         } catch (e) { 
           console.error("Firestore read error:", e); 
-          
-          // Fallback to simple query if ordering fails
-          try {
-            const fallbackSnapshot = await db.collection('chats')
-              .where('userId', '==', currentUser.uid)
-              .limit(50)
-              .get();
-            
-            chats = fallbackSnapshot.docs.map(doc => {
-              const data = doc.data();
-              return { 
-                id: doc.id, 
-                ...data, 
-                pinned: data.pinned || false,
-                title: data.title || 'New chat'
-              };
-            });
-            
-            console.log('Fallback chats:', chats);
-            renderHistory(chats);
-          } catch (fallbackError) {
-            console.error('Fallback also failed:', fallbackError);
-          }
-          
           return [];
         }
       }
 
       function renderHistory(chatsArray) {
-        console.log('Rendering history with', chatsArray.length, 'chats');
-        
         if (!chatsArray || chatsArray.length === 0) {
           historyList.innerHTML = '<div class="history-item"><i class="fas fa-comment"></i> No chats yet</div>';
           mobileHistoryList.innerHTML = '<div class="history-item"><i class="fas fa-comment"></i> No chats yet</div>';
@@ -926,7 +889,6 @@
         }
         
         const html = chatsArray.map(c => {
-          // Format date
           let dateStr = '';
           if (c.updatedAt) {
             try {
@@ -951,13 +913,10 @@
         historyList.innerHTML = html;
         mobileHistoryList.innerHTML = html;
 
-        // Add click listeners
         document.querySelectorAll('.history-item[data-chat-id]').forEach(el => {
           el.addEventListener('click', (e) => {
             if (e.target.closest('.menu-dots')) return;
-            const chatId = el.dataset.chatId;
-            console.log('History item clicked:', chatId);
-            loadChat(chatId);
+            loadChat(el.dataset.chatId);
           });
         });
 
@@ -1012,9 +971,6 @@
             updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
           });
           loadChatHistory();
-          if (currentChatId === activeChatIdForMenu) {
-            // Update current chat title in UI if needed
-          }
         }
         chatMenu.classList.remove('show');
       });
@@ -1023,20 +979,19 @@
         if (!activeChatIdForMenu || !currentUser) return;
         if (!confirm('Delete this chat permanently?')) return;
         
-        // Delete all messages in the chat first
+        // Delete all messages first
         const messagesRef = db.collection('chats').doc(activeChatIdForMenu).collection('messages');
         const messages = await messagesRef.get();
         const batch = db.batch();
         messages.docs.forEach(doc => batch.delete(doc.ref));
         await batch.commit();
         
-        // Then delete the chat document
+        // Delete chat
         await db.collection('chats').doc(activeChatIdForMenu).delete();
         
         if (currentChatId === activeChatIdForMenu) {
           currentChatId = null;
           chatContainer.innerHTML = '';
-          // Load another chat if available
           if (chats.length > 1) {
             const nextChat = chats.find(c => c.id !== activeChatIdForMenu);
             if (nextChat) loadChat(nextChat.id);
@@ -1075,11 +1030,12 @@
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(), 
             pinned: false
           });
-          console.log('New chat created:', ref.id);
+          
           currentChatId = ref.id;
           setChatIdInUrl(currentChatId);
           chatContainer.innerHTML = '';
           showWelcomeScreen(true);
+          isFirstMessage = true;
           await loadChatHistory();
         } catch (e) {
           console.error('Error creating chat:', e);
@@ -1088,7 +1044,6 @@
       }
 
       async function loadChat(chatId) {
-        console.log('Loading chat:', chatId);
         currentChatId = chatId;
         setChatIdInUrl(chatId);
         
@@ -1102,19 +1057,19 @@
             .orderBy('timestamp')
             .get();
           
-          console.log('Messages loaded:', msgsSnap.size);
           chatContainer.innerHTML = '';
           
           if (msgsSnap.empty) {
             showWelcomeScreen(true);
+            isFirstMessage = true;
           } else {
             msgsSnap.forEach(doc => {
               const m = doc.data();
               renderMessage(m.text, m.sender, m.useMarkdown || false, false);
             });
+            isFirstMessage = false;
           }
           
-          // Update active state in history
           renderHistory(chats);
         } catch (e) {
           console.error("Error loading chat:", e);
@@ -1182,7 +1137,6 @@
               useMarkdown: useMarkdown || false, 
               timestamp: firebase.firestore.FieldValue.serverTimestamp() 
             }).then(() => {
-              // Update chat's updatedAt
               return db.collection('chats').doc(currentChatId).update({ 
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
               });
@@ -1252,11 +1206,12 @@
       async function processSend(messageText) {
         userInput.value = '';
         
-        // Remove welcome block if present
+        // Remove welcome block
         if (chatContainer.querySelector('.welcome-block')) {
           chatContainer.innerHTML = '';
         }
         
+        // Save user message
         renderMessage(messageText, 'user', false, true);
         setThinking(true);
 
@@ -1292,14 +1247,12 @@
           renderMessage(reply, 'ai', true, true);
           
           // Auto-generate title from first user message
-          if (currentUser && currentChatId && !currentChatId.startsWith('guest')) {
+          if (currentUser && currentChatId && !currentChatId.startsWith('guest') && isFirstMessage) {
             const chatRef = db.collection('chats').doc(currentChatId);
-            const chatDoc = await chatRef.get();
-            if (chatDoc.exists && chatDoc.data().title === 'New chat') {
-              const title = messageText.split(' ').slice(0, 5).join(' ') + '...';
-              await chatRef.update({ title });
-              loadChatHistory();
-            }
+            const title = messageText.split(' ').slice(0, 5).join(' ') + '...';
+            await chatRef.update({ title });
+            isFirstMessage = false;
+            loadChatHistory();
           }
         } catch (err) {
           setThinking(false);
