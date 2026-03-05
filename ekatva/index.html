@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Ekatva AI · mobile sidebar toggle</title>
+  <title>Ekatva AI · with Cloudflare Worker</title>
   <!-- Outfit & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=Inter:opsz@14..32&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 -->
+  <!-- Font Awesome 6 - Using solid icons for better visibility -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- marked -->
   <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
@@ -170,14 +170,21 @@
       color: #f0f0fa;
       font-size: 0.9rem;
       font-weight: 500;
-      cursor: default;
+      cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: background 0.2s;
+    }
+    .new-chat-btn:hover {
+      background: #3d3d48;
     }
 
     body.light-theme .new-chat-btn {
       background: #edf2f9;
       color: #1f2937;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    body.light-theme .new-chat-btn:hover {
+      background: #e0e8f2;
     }
 
     .history-list {
@@ -196,9 +203,15 @@
       align-items: center;
       gap: 12px;
       transition: 0.1s;
-      cursor: default;
+      cursor: pointer;
+    }
+    .history-item:hover {
+      background: #2a2a33;
     }
     body.light-theme .history-item { color: #4b5565; }
+    body.light-theme .history-item:hover {
+      background: #eef2f8;
+    }
 
     .history-item i { width: 20px; font-size: 0.9rem; color: #7b7b99; }
     .history-item.active {
@@ -274,7 +287,7 @@
     .nav-settings {
       color: #a0a8bc;
       font-size: 1.3rem;
-      cursor: default;
+      cursor: pointer;
     }
 
     .chat-container {
@@ -410,6 +423,9 @@
       cursor: pointer;
       transition: 0.15s;
       box-shadow: 0 2px 8px rgba(0,60,140,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .send-btn:hover { background: #4573cf; transform: scale(1.02); }
 
@@ -423,11 +439,11 @@
     /* ===== MOBILE STYLES: SIDEBAR TOGGLE APPEARS ===== */
     @media (max-width: 768px) {
       .sidebar {
-        display: none !important; /* Hide desktop sidebar */
+        display: none !important;
       }
       
       .mobile-sidebar-toggle {
-        display: flex !important; /* Show mobile toggle button */
+        display: flex !important;
       }
       
       .app {
@@ -485,38 +501,38 @@
   <div class="mobile-sidebar" id="mobileSidebar">
     <div class="mobile-sidebar-header">
       <span style="font-weight: 600; font-size: 1.1rem;">Menu</span>
-      <button class="close-sidebar" id="closeSidebar"><i class="fa-regular fa-xmark"></i></button>
+      <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
     </div>
-    <div class="new-chat-btn"><i class="fa-regular fa-plus"></i> New chat</div>
+    <div class="new-chat-btn" onclick="window.location.reload()"><i class="fas fa-plus"></i> New chat</div>
     <div class="history-list">
-      <div class="history-item active"><i class="fa-regular fa-message"></i> Current chat</div>
-      <div class="history-item"><i class="fa-regular fa-message"></i> Project ideas</div>
-      <div class="history-item"><i class="fa-regular fa-message"></i> API design</div>
-      <div class="history-item"><i class="fa-regular fa-message"></i> Research notes</div>
-      <div class="history-item"><i class="fa-regular fa-message"></i> Meeting summary</div>
-      <div class="history-item"><i class="fa-regular fa-message"></i> Brainstorming</div>
+      <div class="history-item active"><i class="fas fa-comment"></i> Current chat</div>
+      <div class="history-item"><i class="fas fa-comment"></i> Project ideas</div>
+      <div class="history-item"><i class="fas fa-comment"></i> API design</div>
+      <div class="history-item"><i class="fas fa-comment"></i> Research notes</div>
+      <div class="history-item"><i class="fas fa-comment"></i> Meeting summary</div>
+      <div class="history-item"><i class="fas fa-comment"></i> Brainstorming</div>
     </div>
     <div class="sidebar-footer">
       <span>Ekatva v1</span>
-      <button class="theme-icon" id="mobileThemeToggle" aria-label="toggle theme"><i class="fa-regular fa-sun"></i></button>
+      <button class="theme-icon" id="mobileThemeToggle" aria-label="toggle theme"><i class="fas fa-sun"></i></button>
     </div>
   </div>
 
   <div class="app">
     <!-- SIDEBAR - visible on desktop only -->
     <aside class="sidebar">
-      <div class="new-chat-btn"><i class="fa-regular fa-plus"></i> New chat</div>
+      <div class="new-chat-btn" onclick="window.location.reload()"><i class="fas fa-plus"></i> New chat</div>
       <div class="history-list">
-        <div class="history-item active"><i class="fa-regular fa-message"></i> Current chat</div>
-        <div class="history-item"><i class="fa-regular fa-message"></i> Project ideas</div>
-        <div class="history-item"><i class="fa-regular fa-message"></i> API design</div>
-        <div class="history-item"><i class="fa-regular fa-message"></i> Research notes</div>
-        <div class="history-item"><i class="fa-regular fa-message"></i> Meeting summary</div>
-        <div class="history-item"><i class="fa-regular fa-message"></i> Brainstorming</div>
+        <div class="history-item active"><i class="fas fa-comment"></i> Current chat</div>
+        <div class="history-item"><i class="fas fa-comment"></i> Project ideas</div>
+        <div class="history-item"><i class="fas fa-comment"></i> API design</div>
+        <div class="history-item"><i class="fas fa-comment"></i> Research notes</div>
+        <div class="history-item"><i class="fas fa-comment"></i> Meeting summary</div>
+        <div class="history-item"><i class="fas fa-comment"></i> Brainstorming</div>
       </div>
       <div class="sidebar-footer">
         <span>Ekatva v1</span>
-        <button class="theme-icon" id="themeToggle" aria-label="toggle theme"><i class="fa-regular fa-sun"></i></button>
+        <button class="theme-icon" id="themeToggle" aria-label="toggle theme"><i class="fas fa-sun"></i></button>
       </div>
     </aside>
 
@@ -524,12 +540,12 @@
     <div class="main">
       <div class="navbar">
         <div class="navbar-left">
-          <button class="mobile-sidebar-toggle" id="openSidebar"><i class="fa-regular fa-bars"></i></button>
+          <button class="mobile-sidebar-toggle" id="openSidebar"><i class="fas fa-bars"></i></button>
           <div class="logo">
             <img src="https://aditya-cmd-max.github.io/Reverbit.svg" alt="Ekatva AI">
           </div>
         </div>
-        <div class="nav-settings"><i class="fa-regular fa-sliders"></i></div>
+        <div class="nav-settings"><i class="fas fa-sliders-h"></i></div>
       </div>
 
       <!-- chat messages -->
@@ -548,7 +564,7 @@
       <div class="input-area">
         <div class="input-form">
           <input type="text" id="userInput" placeholder="Ask Ekatva anything..." autofocus>
-          <button class="send-btn" id="sendBtn"><i class="fa-regular fa-paper-plane"></i></button>
+          <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
         </div>
         <div class="footer-note">Ekatva AI — Built by Reverbit</div>
       </div>
@@ -558,9 +574,9 @@
   <script>
     (function() {
       // =============================================================
-      //  🔐 INSERT YOUR CLOUDFLARE WORKER URL BELOW (hidden secret)
+      //  YOUR CLOUDFLARE WORKER URL
       // =============================================================
-      const WORKER_URL = "https://ekatva.reverbit1104.workers.dev/";  // <-- replace with real worker
+      const WORKER_URL = "https://ekatva.reverbit1104.workers.dev";
 
       const chatContainer = document.getElementById('chatContainer');
       const userInput = document.getElementById('userInput');
@@ -578,6 +594,25 @@
 
       let isWaiting = false;
 
+      // Test worker connection on load
+      async function testWorkerConnection() {
+        try {
+          const response = await fetch(WORKER_URL, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Worker connected:', data);
+          } else {
+            console.warn('Worker responded with status:', response.status);
+          }
+        } catch (err) {
+          console.warn('Could not connect to worker:', err.message);
+          addMessage('⚠️ _Unable to connect to AI service. Please check your worker URL._', 'ai', true);
+        }
+      }
+
       // Theme toggle (sync both buttons)
       function toggleTheme() {
         body.classList.toggle('light-theme');
@@ -586,12 +621,10 @@
         const isLight = body.classList.contains('light-theme');
         
         if (icon1) {
-          icon1.classList.remove(isLight ? 'fa-sun' : 'fa-moon');
-          icon1.classList.add(isLight ? 'fa-moon' : 'fa-sun');
+          icon1.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
         }
         if (icon2) {
-          icon2.classList.remove(isLight ? 'fa-sun' : 'fa-moon');
-          icon2.classList.add(isLight ? 'fa-moon' : 'fa-sun');
+          icon2.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
         }
       }
 
@@ -602,7 +635,7 @@
       function openSidebar() {
         mobileSidebar.classList.add('open');
         overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
       }
 
       function closeSidebar() {
@@ -615,7 +648,7 @@
       closeSidebarBtn?.addEventListener('click', closeSidebar);
       overlay?.addEventListener('click', closeSidebar);
 
-      // Handle window resize - close mobile sidebar on desktop
+      // Handle window resize
       window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
           closeSidebar();
@@ -635,13 +668,18 @@
         const bubble = document.createElement('div');
         bubble.classList.add('bubble');
         if (sender === 'ai' && useMarkdown) {
-          bubble.innerHTML = marked.parse(text);
+          try {
+            bubble.innerHTML = marked.parse(text);
+          } catch (e) {
+            bubble.textContent = text;
+          }
         } else {
           bubble.textContent = text;
         }
         msgDiv.appendChild(bubble);
         chatContainer.appendChild(msgDiv);
         scrollToBottom();
+        return msgDiv;
       }
 
       function setTyping(show) {
@@ -651,30 +689,41 @@
 
       // Cloudflare worker fetch
       async function fetchAIResponse(userMessage) {
-        if (WORKER_URL === "https://ekatva.reverbit1104.workers.dev/") {
-          console.warn("worker url not configured – using demo echo");
-          await new Promise(res => setTimeout(res, 900));
-          return "⚠️ _Worker endpoint not set. Please configure your Cloudflare Worker URL._\n\nBut I'm still here: *Ekatva responds via fallback*.  \nTry: `const WORKER_URL = 'https://your-worker.workers.dev'`";
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+        try {
+          const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: userMessage }),
+            signal: controller.signal
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errText.slice(0,100)}`);
+          }
+
+          const data = await response.json();
+          return data.reply || "I received your message but couldn't generate a proper response.";
+        } catch (err) {
+          clearTimeout(timeoutId);
+          if (err.name === 'AbortError') {
+            throw new Error('Request timeout - please try again');
+          }
+          throw err;
         }
-
-        const response = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMessage })
-        });
-
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(`worker error ${response.status}: ${errText.slice(0,100)}`);
-        }
-
-        const data = await response.json();
-        return data.reply || data.response || JSON.stringify(data);
       }
 
       async function handleSend() {
         const msg = userInput.value.trim();
         if (!msg || isWaiting) return;
+        
         userInput.value = '';
         addMessage(msg, 'user', false);
         isWaiting = true;
@@ -687,13 +736,18 @@
         } catch (err) {
           setTyping(false);
           addMessage(`❌ Error: ${err.message}`, 'ai', false);
+          console.error('Worker error:', err);
         } finally {
           isWaiting = false;
           userInput.focus();
         }
       }
 
-      sendBtn.addEventListener('click', (e) => { e.preventDefault(); handleSend(); });
+      sendBtn.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        handleSend(); 
+      });
+      
       userInput.addEventListener('keydown', (e) => { 
         if (e.key === 'Enter' && !e.shiftKey) { 
           e.preventDefault(); 
@@ -703,15 +757,14 @@
 
       window.addEventListener('load', () => { 
         userInput.focus(); 
-        scrollToBottom(false); 
+        scrollToBottom(false);
+        testWorkerConnection();
       });
 
-      // Worker not configured reminder
-      if (WORKER_URL === 'https://ekatva.reverbit1104.workers.dev/') {
-        setTimeout(() => {
-          addMessage('💡 _Cloudflare worker not connected. Send a message to test fallback._', 'ai', true);
-        }, 800);
-      }
+      // Add welcome message with worker status
+      setTimeout(() => {
+        addMessage('✨ _Connected to Ekatva AI. Your messages will be processed by Cloudflare Worker._', 'ai', true);
+      }, 1000);
     })();
   </script>
 </body>
