@@ -382,13 +382,22 @@
     .message.ai { align-self: flex-start; }
 
     .message-avatar {
-      width: 40px; height: 40px; border-radius: 40px;
-      background: #2d2d38; display: flex; align-items: center; justify-content: center;
-      margin-right: 12px; font-size: 0.9rem; color: #b0b0cc; flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      background: #2d2d38;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 0.9rem;
+      color: #b0b0cc;
+      flex-shrink: 0;
       border: 1px solid #40404e;
       object-fit: cover;
       background-size: cover;
       background-position: center;
+      overflow: hidden;
     }
     body.light-theme .message-avatar { background: #eef2f6; border-color: #cbd5e1; color: #475569; }
     .message.user .message-avatar { background: #4573cf; color: white; border-color: #5f8ad4; }
@@ -735,79 +744,48 @@
               photoURL: 'https://ui-avatars.com/api/?name=Aditya+Jha&size=128&background=3b4b6a&color=fff',
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-              isPublic: true,
-              bio: 'Ekatva AI User',
-              country: 'IN',
-              gender: 'male',
-              dob: '',
-              showApps: true,
-              streak: 0,
-              totalLogins: 1,
-              followersCount: 0,
-              followingCount: 0,
-              verified: true,
-              verifiedLevel: 'premium',
-              premiumVerified: true,
-              cloudinaryImageId: '',
-              lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-              lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-              theme: 'dark',
-              preferences: {
-                notifications: true,
-                emailUpdates: true,
-                autoSave: true,
-                darkMode: true,
-                language: 'en',
-                privacyMode: false
-              },
-              lastSync: firebase.firestore.FieldValue.serverTimestamp(),
-              appVersion: '2.0.0',
-              platform: 'web',
-              userAgent: navigator.userAgent,
-              emailVerified: true,
-              provider: 'email',
-              accountStatus: 'active'
+              isPublic: true
             });
           });
         }
       });
 
       auth.onAuthStateChanged(async (user) => {
-        console.log('Auth state changed:', user ? user.email : 'Guest');
         currentUser = user;
         
         if (user) {
           let displayName = user.displayName || user.email?.split('@')[0] || 'User';
           let photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${displayName}&size=128&background=3b4b6a&color=fff`;
           
-          desktopUserAvatar.style.backgroundImage = `url(${photoURL})`; 
+          // Clear existing background and set new one
+          desktopUserAvatar.style.backgroundImage = `url('${photoURL}')`;
+          desktopUserAvatar.style.backgroundSize = 'cover';
           desktopUserAvatar.textContent = '';
-          mobileUserAvatar.style.backgroundImage = `url(${photoURL})`; 
+          
+          mobileUserAvatar.style.backgroundImage = `url('${photoURL}')`;
+          mobileUserAvatar.style.backgroundSize = 'cover';
           mobileUserAvatar.textContent = '';
+          
           desktopUserName.textContent = displayName;
           desktopUserEmail.textContent = user.email;
           mobileUserName.textContent = displayName;
           mobileUserEmail.textContent = user.email;
           guestPromptDiv.style.display = 'none';
           
-          // Load chat history
           await loadChatHistory();
           
-          // Handle current chat
           const urlChatId = getChatIdFromUrl();
           if (urlChatId && chats.some(c => c.id === urlChatId)) {
             await loadChat(urlChatId);
           } else if (chats.length > 0) {
-            // Load the most recent chat
             await loadChat(chats[0].id);
           } else {
             createNewChat();
           }
         } else {
-          // Guest mode
-          desktopUserAvatar.textContent = 'G'; 
+          desktopUserAvatar.textContent = 'G';
           desktopUserAvatar.style.backgroundImage = '';
-          mobileUserAvatar.textContent = 'G'; 
+          mobileUserAvatar.textContent = 'G';
           mobileUserAvatar.style.backgroundImage = '';
           desktopUserName.textContent = 'Guest';
           desktopUserEmail.textContent = 'not signed in';
@@ -979,14 +957,12 @@
         if (!activeChatIdForMenu || !currentUser) return;
         if (!confirm('Delete this chat permanently?')) return;
         
-        // Delete all messages first
         const messagesRef = db.collection('chats').doc(activeChatIdForMenu).collection('messages');
         const messages = await messagesRef.get();
         const batch = db.batch();
         messages.docs.forEach(doc => batch.delete(doc.ref));
         await batch.commit();
         
-        // Delete chat
         await db.collection('chats').doc(activeChatIdForMenu).delete();
         
         if (currentChatId === activeChatIdForMenu) {
@@ -1039,7 +1015,6 @@
           await loadChatHistory();
         } catch (e) {
           console.error('Error creating chat:', e);
-          alert('Failed to create new chat. Please check your connection.');
         }
       }
 
@@ -1095,11 +1070,15 @@
         
         const avatarDiv = document.createElement('div'); 
         avatarDiv.classList.add('message-avatar');
+        
         if (sender === 'ai') {
           avatarDiv.innerHTML = '<i class="fas fa-robot"></i>';
         } else {
+          // Clear any previous content
+          avatarDiv.innerHTML = '';
           if (currentUser?.photoURL) {
-            avatarDiv.style.backgroundImage = `url(${currentUser.photoURL})`;
+            avatarDiv.style.backgroundImage = `url('${currentUser.photoURL}')`;
+            avatarDiv.style.backgroundSize = 'cover';
           } else {
             avatarDiv.textContent = 'U';
           }
@@ -1130,7 +1109,6 @@
         
         if (save) {
           if (currentUser && currentChatId && !currentChatId.startsWith('guest')) {
-            // Save to Firestore
             db.collection('chats').doc(currentChatId).collection('messages').add({ 
               text, 
               sender, 
@@ -1142,7 +1120,6 @@
               });
             }).catch(e => console.error('Error saving message:', e));
           } else if (currentChatId && currentChatId.startsWith('guest')) {
-            // Save guest messages to localStorage
             const stored = localStorage.getItem(`guest_chat_${currentChatId}`);
             const messages = stored ? JSON.parse(stored) : [];
             messages.push({ text, sender, useMarkdown: useMarkdown || false, timestamp: Date.now() });
@@ -1206,12 +1183,10 @@
       async function processSend(messageText) {
         userInput.value = '';
         
-        // Remove welcome block
         if (chatContainer.querySelector('.welcome-block')) {
           chatContainer.innerHTML = '';
         }
         
-        // Save user message
         renderMessage(messageText, 'user', false, true);
         setThinking(true);
 
@@ -1246,7 +1221,6 @@
           setThinking(false);
           renderMessage(reply, 'ai', true, true);
           
-          // Auto-generate title from first user message
           if (currentUser && currentChatId && !currentChatId.startsWith('guest') && isFirstMessage) {
             const chatRef = db.collection('chats').doc(currentChatId);
             const title = messageText.split(' ').slice(0, 5).join(' ') + '...';
@@ -1327,10 +1301,9 @@
       mobileNewChat.addEventListener('click', createNewChat);
       
       document.getElementById('settingsBtn').addEventListener('click', () => {
-        alert('⚙️ Settings panel coming soon!\n\n• Theme preferences\n• Notification settings\n• Account management');
+        alert('Settings coming soon!');
       });
 
-      // Check URL on load
       setTimeout(() => {
         if (!currentUser && !currentChatId) {
           const urlChatId = getChatIdFromUrl();
