@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Ekatva AI · with Cloudflare Worker</title>
+  <title>Ekatva AI</title>
   <!-- Outfit & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -552,7 +552,7 @@
       <!-- chat messages -->
       <div id="chatContainer" class="chat-container">
         <div class="message ai">
-          <div class="bubble">👋 Hello, I'm Ekatva. Ask me anything — I'm here to help.</div>
+          <div class="bubble"> Hello, I'm Ekatva. Ask me anything — I'm here to help.</div>
         </div>
       </div>
 
@@ -574,9 +574,7 @@
 
   <script>
     (function() {
-      // =============================================================
-      //  YOUR CLOUDFLARE WORKER URL
-      // =============================================================
+
       const WORKER_URL = "https://ekatvaai.reverbit1104.workers.dev/";
 
       const chatContainer = document.getElementById('chatContainer');
@@ -691,7 +689,7 @@
       // Cloudflare worker fetch
       async function fetchAIResponse(userMessage) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 400000); // 15 second timeout
 
         try {
           const response = await fetch(WORKER_URL, {
