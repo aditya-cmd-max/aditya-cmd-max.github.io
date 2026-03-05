@@ -90,22 +90,58 @@
       border-right: 1px solid #e2e8f0;
     }
 
+    /* Ekatva Logo at top left */
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      padding: 0 18px 20px 18px;
+      border-bottom: 1px solid #2c2c34;
+      margin-bottom: 12px;
+    }
+    body.light-theme .sidebar-logo { border-bottom-color: #e2e8f0; }
+    .sidebar-logo img {
+      height: 32px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      transition: filter 0.2s;
+    }
+    body.light-theme .sidebar-logo img {
+      filter: brightness(0) invert(0.2);
+    }
+    .sidebar-logo span {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-left: 10px;
+      background: linear-gradient(135deg, #FF9500, #FF6A00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* User profile at bottom left */
+    .sidebar-footer-profile {
+      margin-top: auto;
+      padding: 16px 18px 8px;
+      border-top: 1px solid #2c2c34;
+    }
+    body.light-theme .sidebar-footer-profile { border-top-color: #dee5f0; }
+
     .user-profile-mini {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 0 18px 20px 18px;
-      border-bottom: 1px solid #2c2c34;
-      margin-bottom: 12px;
-      position: relative;
+      padding: 10px;
+      border-radius: 60px;
       cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
     }
-    body.light-theme .user-profile-mini { border-bottom-color: #e2e8f0; }
+    .user-profile-mini:hover { background: #2a2a35; }
+    body.light-theme .user-profile-mini:hover { background: #eef2f6; }
 
     .user-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 44px;
+      width: 48px;
+      height: 48px;
+      border-radius: 48px;
       background: linear-gradient(135deg, #3b4b6a, #1f2b45);
       display: flex;
       align-items: center;
@@ -124,24 +160,65 @@
       flex: 1;
       overflow: hidden;
     }
-    .user-name { font-weight: 600; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-email { font-size: 0.75rem; color: #9a9ab5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-name { 
+      font-weight: 600; 
+      font-size: 1rem; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .user-email { 
+      font-size: 0.75rem; 
+      color: #9a9ab5; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
     body.light-theme .user-email { color: #64748b; }
+
+    /* Verification badges */
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 18px;
+      background: #1e88e5;
+      color: white;
+      font-size: 0.7rem;
+    }
+    .premium-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
 
     /* User dropdown menu */
     .user-dropdown {
       position: absolute;
-      top: 100%;
-      left: 18px;
-      width: calc(100% - 36px);
+      bottom: 100%;
+      left: 10px;
+      width: calc(100% - 20px);
       background: #2d2d38;
       border: 1px solid #4a4a5a;
       border-radius: 16px;
       padding: 8px 0;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
       z-index: 1200;
       display: none;
       backdrop-filter: blur(8px);
+      margin-bottom: 10px;
     }
     .light-theme .user-dropdown {
       background: rgba(255,255,255,0.95);
@@ -296,15 +373,13 @@
     .history-item .time-badge { font-size: 0.65rem; color: #8a8aa8; margin-right: 4px; }
 
     .sidebar-footer {
-      padding: 16px 18px 8px;
-      border-top: 1px solid #2c2c34;
+      padding: 8px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 0.8rem;
       color: #8a8aa8;
     }
-    body.light-theme .sidebar-footer { border-top-color: #dee5f0; }
 
     /* ----- mobile sidebar / overlay ----- */
     .mobile-sidebar-toggle {
@@ -397,13 +472,6 @@
     body.light-theme .logo-icon img {
       filter: brightness(0) invert(0.2);
     }
-
-    .nav-settings {
-      color: #a0a8bc; font-size: 1.3rem; cursor: pointer; width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center; border-radius: 44px;
-    }
-    .nav-settings:hover { background: #2d2d38; }
-    body.light-theme .nav-settings:hover { background: #e6edf5; }
 
     .chat-container {
       flex: 1;
@@ -654,10 +722,72 @@
     }
     .modal-btn.danger:hover { background: #d95a5a; }
 
-    /* Settings modal specific */
+    /* Profile modal specific */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 80px;
+      background-size: cover;
+      background-position: center;
+    }
+    .profile-info h2 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+    .profile-username {
+      color: #9a9ab5;
+      margin-bottom: 8px;
+    }
+    .profile-badges {
+      display: flex;
+      gap: 8px;
+    }
+    .profile-detail-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #2c2c34;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .light-theme .profile-detail-item { border-bottom-color: #e2e8f0; }
+    .profile-detail-item i {
+      width: 24px;
+      color: #FF9500;
+    }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .stat-card {
+      background: #242430;
+      border-radius: 20px;
+      padding: 12px;
+      text-align: center;
+    }
+    .light-theme .stat-card { background: #f1f5f9; }
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #FF9500;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #9a9ab5;
+    }
+
+    /* Settings option */
     .settings-option {
       padding: 12px 0;
       border-bottom: 1px solid #2c2c34;
+      cursor: pointer;
     }
     .light-theme .settings-option { border-bottom-color: #e2e8f0; }
     .settings-option:last-child { border-bottom: none; }
@@ -816,21 +946,54 @@
 </head>
 <body>
   <!-- Modals -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal">
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <div class="profile-info">
+          <h2 id="profileDisplayName">User</h2>
+          <div class="profile-username" id="profileUsername">@username</div>
+          <div class="profile-badges" id="profileBadges"></div>
+        </div>
+      </div>
+      
+      <div class="profile-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="profileStreak">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="profileLogins">0</div>
+          <div class="stat-label">Total Logins</div>
+        </div>
+      </div>
+
+      <div class="profile-detail-item">
+        <i class="fas fa-envelope"></i>
+        <span id="profileEmail">email@example.com</span>
+      </div>
+      <div class="profile-detail-item">
+        <i class="fas fa-calendar"></i>
+        <span id="profileMemberSince">Member since ...</span>
+      </div>
+      <div class="profile-detail-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="profileCountry">Not set</span>
+      </div>
+      <div class="profile-detail-item">
+        <i class="fas fa-venus-mars"></i>
+        <span id="profileGender">Not specified</span>
+      </div>
+      
+      <div class="modal-actions" style="margin-top: 20px;">
+        <button class="modal-btn primary" id="closeProfileBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="settingsModal">
     <div class="modal">
       <h3>Settings</h3>
-      <div class="settings-option">
-        <div class="settings-row">
-          <span class="settings-label">Username</span>
-          <span id="settingsUsername">User</span>
-        </div>
-      </div>
-      <div class="settings-option">
-        <div class="settings-row">
-          <span class="settings-label">View profile</span>
-          <i class="fas fa-chevron-right" style="color: #9a9ab5;"></i>
-        </div>
-      </div>
       <div class="settings-option">
         <div class="settings-row">
           <span class="settings-label">Appearance</span>
@@ -887,47 +1050,70 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="mobile-sidebar" id="mobileSidebar">
     <div class="mobile-sidebar-header">
-      <div class="user-profile-mini" style="padding:0;border:none;">
-        <div class="user-avatar" id="mobileUserAvatar">G</div>
-        <div class="user-info">
-          <div class="user-name" id="mobileUserName">Ekatva</div>
-          <div class="user-email" id="mobileUserEmail"></div>
-        </div>
+      <div class="logo">
+        <span class="logo-icon">
+          <img src="https://aditya-cmd-max.github.io/Reverbit.svg" alt="Ekatva">
+        </span>
+        <span>Ekatva</span>
       </div>
       <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
     </div>
     <button class="new-chat-btn" id="mobileNewChat"><i class="fas fa-plus"></i> New chat</button>
     <div class="search-chats"><i class="fas fa-search"></i><input type="text" placeholder="Search chats..." id="mobileSearchInput"></div>
     <div class="history-list" id="mobileHistoryList"></div>
-    <div class="sidebar-footer"><span>Ekatva AI</span><button class="theme-icon" id="mobileThemeToggle"><i class="fas fa-sun"></i></button></div>
+    <div class="sidebar-footer-profile">
+      <div class="user-profile-mini" id="mobileUserProfileMini">
+        <div class="user-avatar" id="mobileUserAvatar">E</div>
+        <div class="user-info">
+          <div class="user-name" id="mobileUserName">Ekatva</div>
+          <div class="user-email" id="mobileUserEmail"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="app">
     <!-- DESKTOP SIDEBAR -->
     <aside class="sidebar">
-      <div class="user-profile-mini" id="userProfileMini">
-        <div class="user-avatar" id="desktopUserAvatar">G</div>
-        <div class="user-info">
-          <div class="user-name" id="desktopUserName">Ekatva</div>
-          <div class="user-email" id="desktopUserEmail"></div>
-        </div>
-        <!-- User dropdown menu -->
-        <div class="user-dropdown" id="userDropdown">
-          <div class="user-dropdown-item" id="dropdownSettings">
-            <i class="fas fa-sliders-h"></i> Settings
-          </div>
-          <div class="user-dropdown-item" id="dropdownLogout">
-            <i class="fas fa-sign-out-alt"></i> Log Out
-          </div>
-        </div>
+      <!-- Ekatva Logo at top left -->
+      <div class="sidebar-logo">
+        <img src="https://aditya-cmd-max.github.io/Reverbit.svg" alt="Ekatva">
+        <span>Ekatva</span>
       </div>
+
       <button class="new-chat-btn" id="newChatBtn"><i class="fas fa-plus"></i> New chat</button>
       <div class="search-chats"><i class="fas fa-search"></i><input type="text" placeholder="Search chats..." id="searchInput"></div>
       <div class="history-header"><i class="fas fa-history"></i> Your chats</div>
       <div class="history-list" id="historyList"></div>
-      <div class="sidebar-footer">
-        <span>Ekatva AI</span>
-        <button class="theme-icon" id="themeToggle"><i class="fas fa-sun"></i></button>
+
+      <!-- User profile at bottom left -->
+      <div class="sidebar-footer-profile">
+        <div class="user-profile-mini" id="userProfileMini">
+          <div class="user-avatar" id="desktopUserAvatar">E</div>
+          <div class="user-info">
+            <div class="user-name" id="desktopUserName">
+              Ekatva
+              <span id="verificationBadge" style="display: none;"></span>
+            </div>
+            <div class="user-email" id="desktopUserEmail"></div>
+          </div>
+          <!-- User dropdown menu -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item" id="dropdownViewProfile">
+              <i class="fas fa-user"></i> View Profile
+            </div>
+            <div class="user-dropdown-item" id="dropdownSettings">
+              <i class="fas fa-sliders-h"></i> Settings
+            </div>
+            <div class="user-dropdown-item" id="dropdownLogout">
+              <i class="fas fa-sign-out-alt"></i> Log Out
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-footer">
+          <span>Ekatva AI</span>
+          <button class="theme-icon" id="themeToggle"><i class="fas fa-sun"></i></button>
+        </div>
       </div>
     </aside>
 
@@ -942,7 +1128,6 @@
             </span>
           </div>
         </div>
-        <div class="nav-settings" id="settingsBtn"><i class="fas fa-sliders-h"></i></div>
       </div>
 
       <!-- chat messages container -->
@@ -1070,11 +1255,24 @@
       const menuDelete = document.getElementById('menuDelete');
 
       // Modal elements
+      const profileModal = document.getElementById('profileModal');
       const settingsModal = document.getElementById('settingsModal');
       const deleteConfirmModal = document.getElementById('deleteConfirmModal');
       const renameModal = document.getElementById('renameModal');
       const logoutConfirmModal = document.getElementById('logoutConfirmModal');
-      const settingsUsername = document.getElementById('settingsUsername');
+
+      const profileAvatar = document.getElementById('profileAvatar');
+      const profileDisplayName = document.getElementById('profileDisplayName');
+      const profileUsername = document.getElementById('profileUsername');
+      const profileBadges = document.getElementById('profileBadges');
+      const profileEmail = document.getElementById('profileEmail');
+      const profileMemberSince = document.getElementById('profileMemberSince');
+      const profileCountry = document.getElementById('profileCountry');
+      const profileGender = document.getElementById('profileGender');
+      const profileStreak = document.getElementById('profileStreak');
+      const profileLogins = document.getElementById('profileLogins');
+      const closeProfileBtn = document.getElementById('closeProfileBtn');
+
       const themeToggleModal = document.getElementById('themeToggleModal');
       const closeSettingsBtn = document.getElementById('closeSettingsBtn');
       const deleteAccountBtn = document.getElementById('deleteAccountBtn');
@@ -1089,9 +1287,10 @@
       // Dropdown elements
       const userProfileMini = document.getElementById('userProfileMini');
       const userDropdown = document.getElementById('userDropdown');
+      const dropdownViewProfile = document.getElementById('dropdownViewProfile');
       const dropdownSettings = document.getElementById('dropdownSettings');
       const dropdownLogout = document.getElementById('dropdownLogout');
-      const settingsBtn = document.getElementById('settingsBtn');
+      const verificationBadge = document.getElementById('verificationBadge');
 
       // SVG template for AI avatar
       const aiAvatarSVG = `
@@ -1119,6 +1318,7 @@
       let activeChatIdForMenu = null;
       let isFirstMessage = true;
       let chatToRename = null;
+      let userProfileData = null;
 
       // URL parameter handling
       function getChatIdFromUrl() {
@@ -1137,13 +1337,45 @@
         if (e.code === 'auth/user-not-found') {
           auth.createUserWithEmailAndPassword('adityajha1104@gmail.com', 'test123').then(cred => {
             db.collection('users').doc(cred.user.uid).set({
+              uid: cred.user.uid,
               email: cred.user.email, 
               displayName: 'Aditya Jha', 
               username: 'adityajha1104',
               photoURL: 'https://ui-avatars.com/api/?name=Aditya+Jha&size=128&background=3b4b6a&color=fff',
+              isPublic: true,
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-              isPublic: true
+              bio: '',
+              country: '',
+              gender: '',
+              dob: '',
+              showApps: false,
+              streak: 0,
+              totalLogins: 1,
+              followersCount: 0,
+              followingCount: 0,
+              verified: false,
+              verifiedLevel: 'none',
+              premiumVerified: false,
+              cloudinaryImageId: '',
+              lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+              lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+              theme: 'dark',
+              preferences: {
+                notifications: true,
+                emailUpdates: true,
+                autoSave: true,
+                darkMode: true,
+                language: 'en',
+                privacyMode: false
+              },
+              lastSync: firebase.firestore.FieldValue.serverTimestamp(),
+              appVersion: '1.0.0',
+              platform: 'web',
+              userAgent: navigator.userAgent,
+              emailVerified: false,
+              provider: 'email',
+              accountStatus: 'active'
             });
           });
         }
@@ -1167,6 +1399,65 @@
         themeToggleModal.classList.toggle('active', isLight);
       }
 
+      // Fetch user profile data from Firestore
+      async function fetchUserProfile(uid) {
+        try {
+          const userDoc = await db.collection('users').doc(uid).get();
+          if (userDoc.exists) {
+            userProfileData = userDoc.data();
+            updateVerificationBadge(userProfileData);
+            return userProfileData;
+          }
+        } catch (e) {
+          console.error('Error fetching user profile:', e);
+        }
+        return null;
+      }
+
+      // Update verification badge based on user data
+      function updateVerificationBadge(profileData) {
+        if (!profileData) return;
+        
+        if (profileData.premiumVerified || profileData.verifiedLevel === 'premium') {
+          verificationBadge.innerHTML = '<span class="premium-badge">PREMIUM</span>';
+          verificationBadge.style.display = 'inline';
+        } else if (profileData.verified || profileData.verifiedLevel === 'basic') {
+          verificationBadge.innerHTML = '<span class="verified-badge"><i class="fas fa-check"></i></span>';
+          verificationBadge.style.display = 'inline';
+        } else {
+          verificationBadge.style.display = 'none';
+        }
+      }
+
+      // Show profile modal with user data
+      function showProfileModal() {
+        if (!userProfileData) return;
+        
+        profileAvatar.style.backgroundImage = `url('${userProfileData.photoURL || `https://ui-avatars.com/api/?name=${userProfileData.displayName}&size=80&background=3b4b6a&color=fff`}')`;
+        profileAvatar.style.backgroundSize = 'cover';
+        profileDisplayName.textContent = userProfileData.displayName || 'User';
+        profileUsername.textContent = `@${userProfileData.username || 'username'}`;
+        profileEmail.textContent = userProfileData.email || '';
+        
+        const memberDate = userProfileData.createdAt ? userProfileData.createdAt.toDate() : new Date();
+        profileMemberSince.textContent = `Member since ${memberDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+        
+        profileCountry.textContent = userProfileData.country || 'Not set';
+        profileGender.textContent = userProfileData.gender ? userProfileData.gender.replace('-', ' ') : 'Not specified';
+        profileStreak.textContent = userProfileData.streak || 0;
+        profileLogins.textContent = userProfileData.totalLogins || 0;
+        
+        // Add badges
+        profileBadges.innerHTML = '';
+        if (userProfileData.premiumVerified || userProfileData.verifiedLevel === 'premium') {
+          profileBadges.innerHTML = '<span class="premium-badge">PREMIUM</span>';
+        } else if (userProfileData.verified || userProfileData.verifiedLevel === 'basic') {
+          profileBadges.innerHTML = '<span class="verified-badge"><i class="fas fa-check"></i> Verified</span>';
+        }
+        
+        showModal(profileModal);
+      }
+
       auth.onAuthStateChanged(async (user) => {
         currentUser = user;
         
@@ -1182,12 +1473,14 @@
           mobileUserAvatar.style.backgroundSize = 'cover';
           mobileUserAvatar.textContent = '';
           
-          desktopUserName.textContent = displayName;
+          desktopUserName.innerHTML = displayName + ' <span id="verificationBadge"></span>';
           desktopUserEmail.textContent = user.email;
           mobileUserName.textContent = displayName;
           mobileUserEmail.textContent = user.email;
-          settingsUsername.textContent = displayName;
           guestPromptDiv.style.display = 'none';
+          
+          // Fetch user profile data
+          await fetchUserProfile(user.uid);
           
           await loadChatHistory();
           
@@ -1204,11 +1497,11 @@
           desktopUserAvatar.style.backgroundImage = '';
           mobileUserAvatar.textContent = 'E';
           mobileUserAvatar.style.backgroundImage = '';
-          desktopUserName.textContent = 'Ekatva';
+          desktopUserName.innerHTML = 'Ekatva';
           desktopUserEmail.textContent = '';
           mobileUserName.textContent = 'Ekatva';
           mobileUserEmail.textContent = '';
-          settingsUsername.textContent = 'Guest';
+          verificationBadge.style.display = 'none';
           chats = [];
           renderHistory([]);
           
@@ -1360,6 +1653,13 @@
         userDropdown.classList.toggle('show');
       });
 
+      dropdownViewProfile.addEventListener('click', () => {
+        userDropdown.classList.remove('show');
+        if (currentUser) {
+          showProfileModal();
+        }
+      });
+
       dropdownSettings.addEventListener('click', () => {
         userDropdown.classList.remove('show');
         showModal(settingsModal);
@@ -1370,8 +1670,8 @@
         showModal(logoutConfirmModal);
       });
 
-      settingsBtn.addEventListener('click', () => {
-        showModal(settingsModal);
+      closeProfileBtn.addEventListener('click', () => {
+        hideModal(profileModal);
       });
 
       closeSettingsBtn.addEventListener('click', () => {
