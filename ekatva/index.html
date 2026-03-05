@@ -689,7 +689,7 @@
       // Cloudflare worker fetch
       async function fetchAIResponse(userMessage) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 400000); // 15 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 25000); // 15 second timeout
 
         try {
           const response = await fetch(WORKER_URL, {
