@@ -14,6 +14,9 @@
   <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
   <!-- DOMPurify for security -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+  <!-- Highlight.js for code syntax -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -57,29 +60,43 @@
       --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
       --gradient-ai: linear-gradient(135deg, var(--accent-primary), #FF6B6B);
+      --code-bg: #1E1E2E;
+      --code-text: #E5E5E5;
+      --code-keyword: #FF79C6;
+      --code-string: #F1FA8C;
+      --code-comment: #6272A4;
+      --code-function: #50FA7B;
+      --code-number: #BD93F9;
     }
 
-    /* LIGHT THEME (PURE BLACK & WHITE - NO PINK) */
+    /* LIGHT THEME (PURE BLACK & WHITE WITH PINK TINT) */
     :root.light-theme {
-      --bg-surface: #FFFFFF;
-      --bg-surface-raised: #F5F5F7;
-      --bg-surface-higher: #EEEEF0;
+      --bg-surface: #FFF5F7;
+      --bg-surface-raised: #FFFAFC;
+      --bg-surface-higher: #FFF0F3;
       --bg-sidebar: #1A1A1A;
       --bg-sidebar-raised: #222222;
       --text-primary: #000000;
       --text-secondary: #333333;
       --text-tertiary: #666666;
-      --border-subtle: #E0E0E0;
-      --border-strong: #CCCCCC;
-      --accent-primary: #000000;
-      --accent-hover: #222222;
-      --accent-soft: rgba(0, 0, 0, 0.05);
-      --shadow-xs: 0 2px 4px rgba(0,0,0,0.02);
-      --shadow-sm: 0 4px 8px rgba(0,0,0,0.03);
-      --shadow-md: 0 8px 16px rgba(0,0,0,0.04);
-      --shadow-lg: 0 12px 24px rgba(0,0,0,0.05);
-      --shadow-xl: 0 20px 40px rgba(0,0,0,0.06);
-      --gradient-ai: linear-gradient(135deg, #000000, #333333);
+      --border-subtle: #FFE4E8;
+      --border-strong: #FFD0D6;
+      --accent-primary: #FF69B4;
+      --accent-hover: #FF85C0;
+      --accent-soft: rgba(255, 105, 180, 0.1);
+      --shadow-xs: 0 2px 4px rgba(255,105,180,0.05);
+      --shadow-sm: 0 4px 8px rgba(255,105,180,0.08);
+      --shadow-md: 0 8px 16px rgba(255,105,180,0.1);
+      --shadow-lg: 0 12px 24px rgba(255,105,180,0.12);
+      --shadow-xl: 0 20px 40px rgba(255,105,180,0.15);
+      --gradient-ai: linear-gradient(135deg, #FF69B4, #FF1493);
+      --code-bg: #F5F0F2;
+      --code-text: #2D1B2D;
+      --code-keyword: #D61A6D;
+      --code-string: #A52A2A;
+      --code-comment: #7A5A7A;
+      --code-function: #2E8B57;
+      --code-number: #8A2BE2;
     }
 
     body {
@@ -107,6 +124,22 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--text-tertiary);
     }
+
+    /* Code Syntax Highlighting */
+    .hljs {
+      background: var(--code-bg) !important;
+      color: var(--code-text) !important;
+      border-radius: var(--radius-lg);
+      padding: 16px !important;
+      font-family: var(--font-mono) !important;
+      font-size: 14px !important;
+    }
+    .hljs-keyword { color: var(--code-keyword) !important; }
+    .hljs-string { color: var(--code-string) !important; }
+    .hljs-comment { color: var(--code-comment) !important; }
+    .hljs-function { color: var(--code-function) !important; }
+    .hljs-number { color: var(--code-number) !important; }
+    .hljs-title { color: var(--code-function) !important; }
 
     /* ---------- APP LAYOUT ---------- */
     .app {
@@ -136,11 +169,11 @@
     .logo {
       height: 26px;
       width: auto;
-      filter: brightness(0) invert(1); /* Always white in dark mode */
+      filter: brightness(0) invert(1);
       transition: filter 0.3s ease;
     }
     .light-theme .logo {
-      filter: brightness(0) invert(0); /* Black in light mode */
+      filter: brightness(0) invert(1); /* Keep white in sidebar */
     }
 
     .new-chat-btn {
@@ -440,6 +473,27 @@
       background: var(--bg-surface);
     }
 
+    /* Mobile Menu Icon - Replaced with dots */
+    .mobile-menu-icon {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-size: 20px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      margin-right: 12px;
+    }
+    .mobile-menu-icon:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent-primary);
+    }
+
     /* Guest Theme Toggle */
     .guest-theme-toggle {
       margin-left: auto;
@@ -458,9 +512,6 @@
     .guest-theme-toggle:hover {
       background: var(--accent-soft);
       border-color: var(--accent-primary);
-    }
-    .guest-theme-toggle i {
-      font-size: 18px;
     }
 
     .chat-container {
@@ -543,6 +594,7 @@
       background-position: center;
       overflow: hidden;
       border: 2px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
     }
     .message.user .message-avatar {
       background: var(--accent-primary);
@@ -550,6 +602,7 @@
       border-color: transparent;
       font-weight: 600;
       font-size: 18px;
+      box-shadow: 0 4px 12px var(--accent-soft);
     }
 
     /* AI Avatar with external SVG */
@@ -571,7 +624,7 @@
       flex: 1;
     }
 
-    /* Message Bubble - Compact for user */
+    /* Message Bubble - User on right */
     .message.user .bubble {
       background: var(--accent-primary);
       color: white;
@@ -640,20 +693,22 @@
       border: 1px solid var(--border-subtle);
     }
     .bubble pre {
-      background: var(--bg-surface-raised);
-      padding: 20px;
-      border-radius: var(--radius-2xl);
-      overflow-x: auto;
+      background: var(--code-bg);
+      padding: 0;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
       margin: 20px 0;
       border: 1px solid var(--border-subtle);
     }
     .bubble pre code {
       background: transparent;
-      color: var(--text-primary);
-      padding: 0;
+      color: var(--code-text);
+      padding: 20px;
       font-family: var(--font-mono);
       font-size: 14px;
       line-height: 1.6;
+      display: block;
+      overflow-x: auto;
     }
     /* Enhanced Table Styles */
     .bubble table {
@@ -663,7 +718,7 @@
       margin: 20px 0;
       font-size: 14px;
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-2xl);
+      border-radius: var(--radius-xl);
       overflow: hidden;
     }
     .bubble th {
@@ -724,7 +779,7 @@
       background: rgba(244, 67, 54, 0.1);
     }
 
-    /* Thinking Indicator - Simple "Thinking..." with gradient animation */
+    /* Thinking Indicator */
     .thinking-indicator {
       display: flex;
       align-items: center;
@@ -750,7 +805,7 @@
       100% { background-position: 200% center; }
     }
 
-    /* Typing Animation for AI Response */
+    /* Typing Animation */
     .typing-animation {
       display: inline-flex;
       gap: 4px;
@@ -849,35 +904,62 @@
       border-top: 1px solid var(--border-subtle);
     }
 
-    .tools-bar {
-      display: flex;
-      gap: 8px;
+    /* Plus Menu */
+    .plus-menu-container {
+      position: relative;
       margin-bottom: 16px;
-      flex-wrap: wrap;
     }
-    .tool-btn {
-      padding: 10px 20px;
+    .plus-menu-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
       background: var(--bg-surface-raised);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-2xl);
-      color: var(--text-secondary);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      font-weight: 500;
+      color: var(--text-primary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
       cursor: pointer;
       transition: var(--transition);
+      font-size: 20px;
     }
-    .tool-btn:hover {
+    .plus-menu-btn:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent-primary);
+    }
+    .plus-menu {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 8px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 8px;
+      display: none;
+      z-index: 20;
+      min-width: 200px;
+    }
+    .plus-menu.show {
+      display: block;
+    }
+    .plus-menu-item {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+    .plus-menu-item:hover {
       background: var(--bg-surface-higher);
-      color: var(--text-primary);
     }
-    .tool-btn.active {
-      background: var(--accent-primary);
-      color: white;
-      border-color: transparent;
+    .plus-menu-item i {
+      width: 18px;
+      color: var(--accent-primary);
     }
 
     .input-form {
@@ -887,7 +969,7 @@
       background: var(--bg-surface-raised);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-2xl);
-      padding: 6px 6px 6px 24px;
+      padding: 6px 6px 6px 20px;
       transition: var(--transition);
     }
     .input-form:focus-within {
@@ -907,6 +989,10 @@
     .input-form input::placeholder {
       color: var(--text-tertiary);
     }
+    .input-form input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     .action-btn {
       width: 46px;
@@ -922,9 +1008,13 @@
       align-items: center;
       justify-content: center;
     }
-    .action-btn:hover {
+    .action-btn:hover:not(:disabled) {
       color: var(--accent-primary);
       background: var(--accent-soft);
+    }
+    .action-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
 
     .send-btn {
@@ -942,12 +1032,25 @@
       justify-content: center;
       box-shadow: var(--shadow-sm);
     }
-    .send-btn:hover {
+    .send-btn:hover:not(:disabled) {
       background: var(--accent-hover);
-      transform: scale(1.05) rotate(90deg);
+      transform: scale(1.05);
+    }
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .send-btn.stop {
+      background: #F44336;
+    }
+    .send-btn.stop:hover {
+      background: #D32F2F;
     }
     .send-btn i {
-      transform: rotate(90deg);
+      transition: transform 0.2s;
+    }
+    .send-btn.stop i {
+      transform: rotate(0deg);
     }
 
     /* File Preview */
@@ -1252,11 +1355,14 @@
       .sidebar {
         display: none;
       }
-      .mobile-sidebar-toggle {
+      .mobile-menu-icon {
         display: flex;
       }
+      .mobile-sidebar-toggle {
+        display: none;
+      }
       .navbar {
-        padding: 0 20px;
+        padding: 0 16px;
       }
       .chat-container {
         padding: 20px;
@@ -1267,22 +1373,18 @@
       .message-avatar {
         width: 38px;
         height: 38px;
-        margin: 0 10px;
+        margin: 0 8px;
       }
       .input-area {
-        padding: 20px;
-      }
-      .tools-bar .tool-btn {
-        padding: 8px 16px;
-        font-size: 13px;
+        padding: 16px;
       }
       .back-to-bottom {
         bottom: 100px;
-        right: 20px;
+        right: 16px;
       }
       .guest-prompt {
         bottom: 100px;
-        padding: 12px 20px;
+        padding: 12px 16px;
       }
     }
   </style>
@@ -1356,7 +1458,8 @@
         </div>
       </div>
       <div class="modal-actions" style="margin-top: 24px;">
-        <button class="modal-btn secondary" id="closeSettingsBtn">Close</button>
+        <button class="modal-btn secondary" id="cancelSettingsBtn">Cancel</button>
+        <button class="modal-btn primary" id="saveSettingsBtn">Save</button>
       </div>
     </div>
   </div>
@@ -1467,10 +1570,10 @@
     <!-- Main Chat Area -->
     <div class="main">
       <div class="navbar">
-        <button class="mobile-sidebar-toggle" id="openSidebar">
-          <i class="fas fa-bars"></i>
+        <button class="mobile-menu-icon" id="openMobileMenu">
+          <i class="fas fa-ellipsis-v"></i>
         </button>
-        <img src="https://aditya-cmd-max.github.io/Reverbit.svg" alt="Ekatva" class="logo" style="height: 22px; margin-left: 10px;">
+        <img src="https://aditya-cmd-max.github.io/Reverbit.svg" alt="Ekatva" class="logo" style="height: 22px;">
         
         <!-- Guest Theme Toggle (only visible to guests) -->
         <div class="guest-theme-toggle" id="guestThemeToggle" style="display: none;">
@@ -1517,16 +1620,26 @@
           <i class="fas fa-times remove-file" id="removeFile"></i>
         </div>
 
-        <div class="tools-bar">
-          <button class="tool-btn" id="webSearchBtn"><i class="fas fa-globe"></i> Web</button>
-          <button class="tool-btn" id="codeBtn"><i class="fas fa-code"></i> Code</button>
-          <button class="tool-btn" id="analyzeBtn"><i class="fas fa-chart-line"></i> Analyze</button>
-          <button class="tool-btn" id="imageBtn"><i class="fas fa-image"></i> Image</button>
+        <!-- Plus Menu -->
+        <div class="plus-menu-container">
+          <button class="plus-menu-btn" id="plusMenuBtn">
+            <i class="fas fa-plus"></i>
+          </button>
+          <div class="plus-menu" id="plusMenu">
+            <div class="plus-menu-item" id="plusUpload">
+              <i class="fas fa-upload"></i> Upload File
+            </div>
+            <div class="plus-menu-item" id="plusWebSearch">
+              <i class="fas fa-globe"></i> Web Search
+            </div>
+            <div class="plus-menu-item" id="plusCode">
+              <i class="fas fa-code"></i> Code Mode
+            </div>
+          </div>
         </div>
 
         <div class="input-form">
           <input type="text" id="userInput" placeholder="Ask Ekatva anything..." autofocus>
-          <button class="action-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
           <button class="send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></button>
         </div>
 
@@ -1572,7 +1685,13 @@
         breaks: true,
         gfm: true,
         headerIds: false,
-        mangle: false
+        mangle: false,
+        highlight: function(code, lang) {
+          if (lang && hljs.getLanguage(lang)) {
+            return hljs.highlight(code, { language: lang }).value;
+          }
+          return hljs.highlightAuto(code).value;
+        }
       });
 
       // DOM Elements
@@ -1583,13 +1702,20 @@
       const guestPromptDiv = document.getElementById('guestPrompt');
       const signInBtn = document.getElementById('signInRedirectBtn');
       const body = document.body;
-      const openSidebarBtn = document.getElementById('openSidebar');
-      const closeSidebarBtn = document.getElementById('closeSidebar');
+      const openMobileMenu = document.getElementById('openMobileMenu');
       const mobileSidebar = document.getElementById('mobileSidebar');
       const overlay = document.getElementById('sidebarOverlay');
       const backToBottomBtn = document.getElementById('backToBottom');
       const guestThemeToggle = document.getElementById('guestThemeToggle');
       const guestThemeIcon = document.getElementById('guestThemeIcon');
+      const closeSidebar = document.getElementById('closeSidebar');
+
+      // Plus Menu Elements
+      const plusMenuBtn = document.getElementById('plusMenuBtn');
+      const plusMenu = document.getElementById('plusMenu');
+      const plusUpload = document.getElementById('plusUpload');
+      const plusWebSearch = document.getElementById('plusWebSearch');
+      const plusCode = document.getElementById('plusCode');
 
       // User profile elements
       const desktopUserAvatar = document.getElementById('desktopUserAvatar');
@@ -1600,18 +1726,11 @@
       const mobileUserEmail = document.getElementById('mobileUserEmail');
 
       // Input elements
-      const attachBtn = document.getElementById('attachBtn');
       const fileInput = document.getElementById('fileInput');
       const filePreview = document.getElementById('filePreview');
       const fileNameSpan = document.getElementById('fileName');
       const fileSizeSpan = document.getElementById('fileSize');
       const removeFileBtn = document.getElementById('removeFile');
-      
-      // Tool buttons
-      const webSearchBtn = document.getElementById('webSearchBtn');
-      const codeBtn = document.getElementById('codeBtn');
-      const analyzeBtn = document.getElementById('analyzeBtn');
-      const imageBtn = document.getElementById('imageBtn');
 
       // History elements
       const historyList = document.getElementById('historyList');
@@ -1650,7 +1769,8 @@
       // Settings modal elements
       const themeToggle = document.getElementById('themeToggle');
       const notificationsToggle = document.getElementById('notificationsToggle');
-      const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+      const cancelSettingsBtn = document.getElementById('cancelSettingsBtn');
+      const saveSettingsBtn = document.getElementById('saveSettingsBtn');
       const deleteAccountBtn = document.getElementById('deleteAccountBtn');
 
       // Delete confirmation
@@ -1679,7 +1799,7 @@
       let currentUser = null;
       let currentChatId = null;
       let selectedFile = null;
-      let activeTools = { webSearch: false, code: false, analyze: false, image: false };
+      let activeTools = { webSearch: false, code: false };
       let chats = [];
       let messageCount = 0;
       let isGuestPromptShown = false;
@@ -1687,7 +1807,8 @@
       let isFirstMessage = true;
       let chatToRename = null;
       let userProfileData = null;
-      let isTyping = false;
+      let isWaitingForResponse = false;
+      let abortController = null;
 
       // Helper Functions
       function getChatIdFromUrl() {
@@ -1715,7 +1836,9 @@
         const isDark = body.classList.contains('dark-theme');
         
         // Update toggles
-        if (themeToggle) themeToggle.classList.toggle('active', isDark);
+        if (themeToggle) {
+          themeToggle.classList.toggle('active', isDark);
+        }
         
         // Update guest toggle icon
         if (guestThemeIcon) {
@@ -1741,6 +1864,30 @@
       // Guest theme toggle
       if (guestThemeToggle) {
         guestThemeToggle.addEventListener('click', toggleTheme);
+      }
+
+      // Theme toggle in settings
+      if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+      }
+
+      // Save Settings
+      if (saveSettingsBtn) {
+        saveSettingsBtn.addEventListener('click', () => {
+          // Save notification preference
+          const notificationsActive = notificationsToggle.classList.contains('active');
+          localStorage.setItem('notifications', notificationsActive ? 'enabled' : 'disabled');
+          hideModal(settingsModal);
+        });
+      }
+
+      if (cancelSettingsBtn) {
+        cancelSettingsBtn.addEventListener('click', () => {
+          // Reset toggle to match current theme
+          const isDark = body.classList.contains('dark-theme');
+          themeToggle.classList.toggle('active', isDark);
+          hideModal(settingsModal);
+        });
       }
 
       // Auto sign in (demo)
@@ -1974,7 +2121,39 @@
         if (!e.target.closest('.user-profile') && !e.target.closest('.user-dropdown')) {
           userDropdown.classList.remove('show');
         }
+        if (!e.target.closest('.plus-menu') && !e.target.closest('.plus-menu-btn')) {
+          plusMenu.classList.remove('show');
+        }
       });
+
+      // Plus Menu
+      if (plusMenuBtn) {
+        plusMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          plusMenu.classList.toggle('show');
+        });
+      }
+
+      if (plusUpload) {
+        plusUpload.addEventListener('click', () => {
+          fileInput.click();
+          plusMenu.classList.remove('show');
+        });
+      }
+
+      if (plusWebSearch) {
+        plusWebSearch.addEventListener('click', () => {
+          activeTools.webSearch = !activeTools.webSearch;
+          plusMenu.classList.remove('show');
+        });
+      }
+
+      if (plusCode) {
+        plusCode.addEventListener('click', () => {
+          activeTools.code = !activeTools.code;
+          plusMenu.classList.remove('show');
+        });
+      }
 
       // User dropdown
       if (userProfileMini) {
@@ -1987,9 +2166,41 @@
       }
 
       if (mobileUserProfile) {
-        mobileUserProfile.addEventListener('click', () => {
+        mobileUserProfile.addEventListener('click', (e) => {
+          e.stopPropagation();
           if (currentUser) {
-            showProfileModal();
+            // Show dropdown on mobile
+            const dropdown = userDropdown.cloneNode(true);
+            dropdown.id = 'mobileUserDropdown';
+            dropdown.style.position = 'fixed';
+            dropdown.style.bottom = 'auto';
+            dropdown.style.top = '50%';
+            dropdown.style.left = '50%';
+            dropdown.style.transform = 'translate(-50%, -50%)';
+            dropdown.style.width = '200px';
+            dropdown.classList.add('show');
+            
+            // Add event listeners to cloned items
+            dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+              item.addEventListener('click', () => {
+                if (item.textContent.includes('Profile')) showProfileModal();
+                if (item.textContent.includes('Settings')) showModal(settingsModal);
+                if (item.textContent.includes('Log out')) showModal(logoutConfirmModal);
+                dropdown.remove();
+              });
+            });
+            
+            document.body.appendChild(dropdown);
+            
+            // Remove on outside click
+            setTimeout(() => {
+              document.addEventListener('click', function removeDropdown(e) {
+                if (!dropdown.contains(e.target)) {
+                  dropdown.remove();
+                  document.removeEventListener('click', removeDropdown);
+                }
+              });
+            }, 100);
           }
         });
       }
@@ -2017,12 +2228,6 @@
 
       // Modal close buttons
       if (closeProfileBtn) closeProfileBtn.addEventListener('click', () => hideModal(profileModal));
-      if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', () => hideModal(settingsModal));
-
-      // Theme toggle
-      if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-      }
 
       // Notifications toggle
       if (notificationsToggle) {
@@ -2265,6 +2470,11 @@
             let html = marked.parse(text);
             html = DOMPurify.sanitize(html);
             bubble.innerHTML = html;
+            
+            // Apply syntax highlighting to code blocks
+            bubble.querySelectorAll('pre code').forEach((block) => {
+              hljs.highlightElement(block);
+            });
           } catch (e) {
             bubble.textContent = text;
           }
@@ -2364,10 +2574,6 @@
       }
 
       // File handling
-      if (attachBtn) {
-        attachBtn.addEventListener('click', () => fileInput.click());
-      }
-      
       if (fileInput) {
         fileInput.addEventListener('change', (e) => {
           const file = e.target.files[0];
@@ -2395,8 +2601,22 @@
         });
       }
 
-      // Send message with typing animation
+      // Send message with stop functionality
       async function handleSend() {
+        if (isWaitingForResponse) {
+          // Stop current response
+          if (abortController) {
+            abortController.abort();
+            abortController = null;
+          }
+          isWaitingForResponse = false;
+          setThinking(false);
+          sendBtn.classList.remove('stop');
+          sendBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+          userInput.disabled = false;
+          return;
+        }
+
         const text = userInput.value.trim();
         if ((!text && !selectedFile) || !currentChatId) return;
 
@@ -2429,6 +2649,12 @@
         }
         
         renderMessage(messageText, 'user', false, true);
+        
+        // Disable input and change button to stop
+        isWaitingForResponse = true;
+        userInput.disabled = true;
+        sendBtn.classList.add('stop');
+        sendBtn.innerHTML = '<i class="fas fa-stop"></i>';
         setThinking(true);
 
         try {
@@ -2440,8 +2666,8 @@
           let enhanced = messageText;
           if (toolsActive) enhanced += `\n[Enable tools: ${toolsActive}]`;
 
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 15000);
+          abortController = new AbortController();
+          const timeout = setTimeout(() => abortController.abort(), 30000);
           
           const res = await fetch(WORKER_URL, {
             method: 'POST',
@@ -2450,7 +2676,7 @@
               message: enhanced,
               userId: currentUser?.uid || 'guest'
             }),
-            signal: controller.signal
+            signal: abortController.signal
           });
           
           clearTimeout(timeout);
@@ -2470,12 +2696,24 @@
             await loadChatHistory();
           }
         } catch (err) {
-          setThinking(false);
-          renderMessage(`❌ Error: ${err.message}. Please try again.`, 'ai', false, true);
+          if (err.name === 'AbortError') {
+            setThinking(false);
+            renderMessage('❌ Response stopped by user.', 'ai', false, true);
+          } else {
+            setThinking(false);
+            renderMessage(`❌ Error: ${err.message}. Please try again.`, 'ai', false, true);
+          }
         } finally {
+          // Re-enable input
+          isWaitingForResponse = false;
+          userInput.disabled = false;
+          sendBtn.classList.remove('stop');
+          sendBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+          abortController = null;
           selectedFile = null;
           fileInput.value = '';
           filePreview.style.display = 'none';
+          userInput.focus();
         }
       }
 
@@ -2488,53 +2726,24 @@
       
       if (userInput) {
         userInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
+          if (e.key === 'Enter' && !e.shiftKey && !isWaitingForResponse) {
             e.preventDefault();
             handleSend();
           }
         });
       }
 
-      // Tool buttons
-      if (webSearchBtn) {
-        webSearchBtn.addEventListener('click', () => {
-          activeTools.webSearch = !activeTools.webSearch;
-          webSearchBtn.classList.toggle('active');
-        });
-      }
-      
-      if (codeBtn) {
-        codeBtn.addEventListener('click', () => {
-          activeTools.code = !activeTools.code;
-          codeBtn.classList.toggle('active');
-        });
-      }
-      
-      if (analyzeBtn) {
-        analyzeBtn.addEventListener('click', () => {
-          activeTools.analyze = !activeTools.analyze;
-          analyzeBtn.classList.toggle('active');
-        });
-      }
-
-      if (imageBtn) {
-        imageBtn.addEventListener('click', () => {
-          activeTools.image = !activeTools.image;
-          imageBtn.classList.toggle('active');
-        });
-      }
-
-      // Mobile sidebar
-      if (openSidebarBtn) {
-        openSidebarBtn.addEventListener('click', () => {
+      // Mobile menu
+      if (openMobileMenu) {
+        openMobileMenu.addEventListener('click', () => {
           mobileSidebar.classList.add('open');
           overlay.classList.add('active');
           document.body.style.overflow = 'hidden';
         });
       }
       
-      if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', () => {
+      if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
           mobileSidebar.classList.remove('open');
           overlay.classList.remove('active');
           document.body.style.overflow = '';
