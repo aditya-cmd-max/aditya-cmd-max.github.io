@@ -1793,7 +1793,6 @@
                 
                 // Update UI
                 document.getElementById('userName').textContent = displayName;
-                document.title = "Dashboard - " + username;
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('profileDisplayName').textContent = displayName;
                 document.getElementById('fullName').value = displayName;
@@ -1802,7 +1801,8 @@
                 document.getElementById('country').value = userData.country || '';
                 document.getElementById('dob').value = userData.dob || '';
                 document.getElementById('gender').value = userData.gender || '';
-                
+                document.title = "Dashboard - " + username;
+             
                 // Member since
                 const creationTime = user.metadata.creationTime;
                 if (creationTime) {
