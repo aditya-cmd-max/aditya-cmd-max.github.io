@@ -1801,7 +1801,7 @@
                 document.getElementById('country').value = userData.country || '';
                 document.getElementById('dob').value = userData.dob || '';
                 document.getElementById('gender').value = userData.gender || '';
-                document.title = "Dashboard - " + username;
+    
              
                 // Member since
                 const creationTime = user.metadata.creationTime;
@@ -1974,9 +1974,8 @@
         window.resetForm = resetForm;
     </script>
 <script>
-
-// set page title
->
-    
+<script>
+document.title = "Dashboard - " + username;
+</script>
 </body>
 </html>
