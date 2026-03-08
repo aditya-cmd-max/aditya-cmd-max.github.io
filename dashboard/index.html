@@ -1793,6 +1793,7 @@
                 
                 // Update UI
                 document.getElementById('userName').textContent = displayName;
+                document.title = "Dashboard - " + username;
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('profileDisplayName').textContent = displayName;
                 document.getElementById('fullName').value = displayName;
@@ -1975,14 +1976,7 @@
 <script>
 
 // set page title
-let username = localStorage.getItem("username") || "User";
-
-// update heading
-document.getElementById("userName").textContent = username;
-
-// update browser tab title
-document.title = `Dashboard - ${username}`;
-</script>
+>
     
 </body>
 </html>
