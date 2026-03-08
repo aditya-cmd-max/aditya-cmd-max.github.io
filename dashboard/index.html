@@ -1975,7 +1975,13 @@
 <script>
 
 // set page title
-document.title = "Dashboard - " + username;
+let username = localStorage.getItem("username") || "User";
+
+// update heading
+document.getElementById("userName").textContent = username;
+
+// update browser tab title
+document.title = `Dashboard - ${username}`;
 </script>
     
 </body>
