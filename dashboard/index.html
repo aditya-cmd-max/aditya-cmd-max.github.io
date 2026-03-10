@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Dashboard </title>
+    <title>Dashboard - Reverbit</title>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GS6V9ZCN0K"></script>
@@ -50,7 +50,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
     
     <!-- Cropper.js -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
@@ -58,7 +57,7 @@
 
     <style>
         /* ============================================
-           REVERBIT PREMIUM DESIGN SYSTEM
+           REVERBIT PREMIUM DESIGN SYSTEM - ENHANCED
            ============================================ */
         
         * {
@@ -435,7 +434,7 @@
 
         /* ========== MAIN CONTENT ========== */
         .main-wrapper {
-            padding-top: 140px; /* Increased space between navbar and content */
+            padding-top: 140px;
             padding-bottom: var(--space-xxxl);
             min-height: 100vh;
         }
@@ -615,7 +614,7 @@
             transition: width 0.5s ease;
         }
 
-        /* ========== PROFILE CARD ========== */
+        /* ========== PROFILE CARD - REDESIGNED ========== */
         .profile-card {
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
@@ -623,18 +622,30 @@
             padding: var(--space-xl) var(--space-xxl);
             margin-bottom: var(--space-xl);
         }
+
+        /* Profile Header Section */
         .profile-header {
             display: flex;
             gap: var(--space-xxl);
             align-items: center;
             flex-wrap: wrap;
+            margin-bottom: var(--space-xxl);
+            padding-bottom: var(--space-xl);
+            border-bottom: 1px solid var(--md-outline);
         }
+
+        .avatar-section {
+            flex-shrink: 0;
+            text-align: center;
+        }
+
         .avatar-container {
             position: relative;
             width: 160px;
             height: 160px;
-            flex-shrink: 0;
+            margin: 0 auto var(--space-md);
         }
+
         .avatar-image {
             width: 100%;
             height: 100%;
@@ -643,59 +654,203 @@
             border: 4px solid var(--md-primary);
             box-shadow: var(--md-elevation-3);
         }
-        .avatar-edit {
+
+        .avatar-edit-btn {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
+            bottom: 5px;
+            right: 5px;
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: var(--md-primary);
-            border: 2px solid white;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border: 2px solid var(--md-on-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             cursor: pointer;
             transition: var(--transition-bounce);
+            box-shadow: var(--md-elevation-2);
         }
-        .avatar-edit:hover {
-            transform: scale(1.15);
-            background: var(--md-secondary);
+
+        .avatar-edit-btn:hover {
+            transform: scale(1.15) rotate(10deg);
         }
-        .profile-info h2 {
+
+        .avatar-edit-btn .material-icons-round {
+            font-size: 1.4rem;
+        }
+
+        .profile-info-section {
+            flex: 1;
+        }
+
+        .profile-name-section {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+
+        .profile-name-section h2 {
             font-family: var(--md-font-display);
             font-size: 2.2rem;
-            margin-bottom: var(--space-xs);
+            margin: 0;
         }
-        .member-badge {
+
+        .verification-badge {
             display: inline-flex;
             align-items: center;
             gap: var(--space-xs);
             padding: var(--space-xs) var(--space-lg);
-            background: var(--md-surface-variant);
             border-radius: var(--radius-pill);
-            font-size: 0.95rem;
-            margin-top: var(--space-xs);
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
-        /* ========== FORM GRID ========== */
+        .verification-badge.verified {
+            background: rgba(42, 157, 143, 0.15);
+            color: var(--md-secondary);
+            border: 1px solid var(--md-secondary);
+        }
+
+        .verification-badge.unverified {
+            background: rgba(192, 57, 43, 0.15);
+            color: var(--md-tertiary);
+            border: 1px solid var(--md-tertiary);
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+            margin-top: var(--space-md);
+        }
+
+        .member-info-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--md-on-surface-variant);
+            font-size: 0.95rem;
+        }
+
+        .member-info-item .material-icons-round {
+            font-size: 1.2rem;
+            color: var(--md-primary);
+        }
+
+        /* Profile Links Section */
+        .profile-links-section {
+            margin: var(--space-xl) 0;
+            padding: var(--space-lg);
+            background: var(--md-surface-variant);
+            border-radius: var(--radius-xxl);
+        }
+
+        .links-title {
+            font-family: var(--md-font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .links-title .material-icons-round {
+            color: var(--md-primary);
+        }
+
+        .profile-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .profile-link-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: var(--md-on-surface);
+            transition: var(--transition);
+        }
+
+        .profile-link-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--md-primary);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .profile-link-item .link-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .profile-link-item .link-info span:first-child {
+            color: var(--md-primary);
+        }
+
+        .profile-link-item .material-icons-round:last-child {
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateX(-5px);
+            transition: var(--transition);
+        }
+
+        .profile-link-item:hover .material-icons-round:last-child {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Profile Forms Container */
+        .profile-forms-container {
+            margin-top: var(--space-xxl);
+        }
+
+        .forms-title {
+            font-family: var(--md-font-display);
+            font-size: 1.4rem;
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: var(--space-lg);
-            margin-top: var(--space-xl);
         }
+
         .form-group {
             display: flex;
             flex-direction: column;
             gap: var(--space-xs);
         }
+
         .form-label {
             font-weight: 600;
             color: var(--md-on-surface);
             font-family: var(--md-font-display);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
         }
+
+        .form-label .material-icons-round {
+            font-size: 1.1rem;
+            color: var(--md-primary);
+        }
+
         .form-input, .form-select, .form-textarea {
             padding: var(--space-md) var(--space-lg);
             border: 1px solid var(--md-outline);
@@ -706,11 +861,19 @@
             transition: var(--transition);
             font-size: 1rem;
         }
+
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--md-primary);
             box-shadow: 0 0 0 3px rgba(var(--md-primary-rgb), 0.2);
         }
+
+        .form-input:disabled {
+            background: var(--md-surface-variant);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .form-actions {
             grid-column: 1 / -1;
             display: flex;
@@ -719,12 +882,81 @@
             flex-wrap: wrap;
         }
 
+        /* ========== COMING SOON CARD ========== */
+        .coming-soon-card {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-xxxl);
+            padding: var(--space-xxxl) var(--space-xxl);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coming-soon-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-xl);
+            color: white;
+            font-size: 3rem;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .coming-soon-title {
+            font-family: var(--md-font-display);
+            font-size: 2.5rem;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .coming-soon-text {
+            color: var(--md-on-surface-variant);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .floating-elements {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            color: rgba(var(--md-primary-rgb), 0.1);
+            font-size: 2rem;
+            animation: float 10s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
         /* ========== APPS GRID ========== */
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: var(--space-lg);
         }
+
         .app-card {
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
@@ -736,6 +968,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .app-card::before {
             content: '';
             position: absolute;
@@ -745,10 +978,12 @@
             height: 4px;
             background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
         }
+
         .app-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--md-elevation-4);
         }
+
         .app-icon {
             width: 64px;
             height: 64px;
@@ -761,16 +996,19 @@
             font-size: 2rem;
             margin-bottom: var(--space-lg);
         }
+
         .app-title {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: var(--space-xs);
             font-family: var(--md-font-display);
         }
+
         .app-stats {
             color: var(--md-on-surface-variant);
             margin-bottom: var(--space-md);
         }
+
         .app-usage {
             display: flex;
             align-items: center;
@@ -778,38 +1016,39 @@
             font-size: 0.95rem;
         }
 
-        /* ========== ACTIVITY TIMELINE ========== */
-        .timeline {
-            margin-top: var(--space-lg);
-        }
-        .timeline-item {
-            display: flex;
-            gap: var(--space-lg);
-            padding: var(--space-md) 0;
-            border-bottom: 1px solid var(--md-outline);
-        }
-        .timeline-item:last-child {
-            border-bottom: none;
-        }
-        .timeline-time {
-            min-width: 90px;
-            color: var(--md-on-surface-variant);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .timeline-content {
-            flex: 1;
-        }
-        .timeline-title {
-            font-weight: 600;
-            margin-bottom: var(--space-xs);
-        }
-        .timeline-desc {
-            color: var(--md-on-surface-variant);
-            font-size: 0.9rem;
+        /* ========== ACTIVITY PLACEHOLDER ========== */
+        .activity-placeholder {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--radius-xxxl);
+            padding: var(--space-xxl);
+            text-align: center;
         }
 
-        /* ========== CROPPER MODAL ========== */
+        .activity-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .activity-message {
+            font-family: var(--md-font-display);
+            font-size: 1.8rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .activity-submessage {
+            color: var(--md-on-surface-variant);
+        }
+
+        /* ========== CROPPER MODAL - FIXED ========== */
         .modal {
             display: none;
             position: fixed;
@@ -822,9 +1061,11 @@
             z-index: 1000;
             padding: var(--space-md);
         }
+
         .modal.active {
             display: flex;
         }
+
         .modal-content {
             background: var(--md-surface);
             border-radius: var(--radius-xxxl);
@@ -835,17 +1076,20 @@
             padding: var(--space-xl);
             border: 1px solid var(--md-outline);
         }
+
         .modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: var(--space-lg);
         }
+
         .modal-title {
             font-size: 1.6rem;
             font-weight: 700;
             font-family: var(--md-font-display);
         }
+
         .modal-close {
             width: 44px;
             height: 44px;
@@ -859,10 +1103,12 @@
             justify-content: center;
             transition: var(--transition);
         }
+
         .modal-close:hover {
             background: var(--md-tertiary);
             color: white;
         }
+
         .cropper-container {
             max-height: 400px;
             margin: var(--space-lg) 0;
@@ -870,10 +1116,12 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
         }
+
         .cropper-container img {
             max-width: 100%;
             display: block;
         }
+
         .modal-actions {
             display: flex;
             gap: var(--space-md);
@@ -898,23 +1146,28 @@
             font-size: 1rem;
             min-width: 120px;
         }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
             color: white;
         }
+
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-4px);
             box-shadow: var(--md-elevation-4);
         }
+
         .btn-secondary {
             background: var(--md-surface-variant);
             color: var(--md-on-surface);
             border: 1px solid var(--md-outline);
         }
+
         .btn-secondary:hover {
             background: var(--md-surface-dim);
             transform: translateY(-2px);
         }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -939,19 +1192,23 @@
             min-width: 300px;
             max-width: 90%;
         }
+
         .toast.show {
             transform: translateX(-50%) translateY(0);
         }
+
         .toast-success {
             background: var(--md-secondary);
             color: white;
             border: none;
         }
+
         .toast-error {
             background: var(--md-tertiary);
             color: white;
             border: none;
         }
+
         .toast-info {
             background: var(--md-primary);
             color: white;
@@ -970,10 +1227,12 @@
             z-index: 2000;
             transition: opacity 0.5s;
         }
+
         .loading.hidden {
             opacity: 0;
             pointer-events: none;
         }
+
         .spinner {
             width: 60px;
             height: 60px;
@@ -983,7 +1242,9 @@
             animation: spin 1s linear infinite;
             margin-bottom: var(--space-md);
         }
+
         @keyframes spin { to { transform: rotate(360deg); } }
+
         .loading-text {
             font-family: var(--md-font-display);
             font-size: 1.5rem;
@@ -1043,12 +1304,16 @@
                 text-align: center;
             }
             
-            .avatar-container {
-                margin: 0 auto;
+            .profile-name-section {
+                justify-content: center;
             }
             
-            .profile-info {
-                text-align: center;
+            .member-info {
+                justify-content: center;
+            }
+            
+            .profile-links-grid {
+                grid-template-columns: 1fr;
             }
             
             .form-actions {
@@ -1067,15 +1332,6 @@
                 grid-template-columns: 1fr;
             }
             
-            .timeline-item {
-                flex-direction: column;
-                gap: var(--space-xs);
-            }
-            
-            .timeline-time {
-                min-width: auto;
-            }
-            
             .modal-content {
                 padding: var(--space-lg);
             }
@@ -1083,9 +1339,16 @@
             .modal-actions {
                 flex-direction: column;
             }
+            
+            .coming-soon-card {
+                padding: var(--space-xl);
+            }
+            
+            .coming-soon-title {
+                font-size: 1.8rem;
+            }
         }
 
-        /* Small phones */
         @media (max-width: 480px) {
             .welcome-card {
                 padding: var(--space-md);
@@ -1099,14 +1362,6 @@
                 font-size: 1.5rem;
             }
             
-            .stat-label {
-                font-size: 0.8rem;
-            }
-            
-            .section-tabs {
-                top: 80px;
-            }
-            
             .profile-card {
                 padding: var(--space-lg);
             }
@@ -1116,13 +1371,13 @@
                 height: 120px;
             }
             
-            .profile-info h2 {
+            .profile-name-section h2 {
                 font-size: 1.8rem;
             }
             
-            .member-badge {
-                font-size: 0.85rem;
-                padding: var(--space-xs) var(--space-md);
+            .member-info {
+                flex-direction: column;
+                gap: var(--space-sm);
             }
             
             .app-card {
@@ -1133,6 +1388,12 @@
                 width: 52px;
                 height: 52px;
                 font-size: 1.6rem;
+            }
+            
+            .coming-soon-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
             }
         }
     </style>
@@ -1163,11 +1424,9 @@
         </div>
         
         <div class="nav-right">
-            <div id="desktopAvatar"></div>
-            
-            <a href="https://aditya-cmd-max.github.io/signin" class="sign-in-btn" id="signInButton" style="display: none;">
-                <span class="material-icons-round">login</span> Sign In
-            </a>
+            <div class="profile-avatar-btn" id="desktopAvatar">
+                <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile">
+            </div>
             
             <button class="theme-toggle" id="themeToggle">
                 <span class="material-icons-round">dark_mode</span>
@@ -1189,7 +1448,9 @@
             </button>
         </div>
         
-        <div id="mobileAvatarContainer"></div>
+        <div class="profile-avatar-btn" style="margin: 0 auto var(--space-xl); width: 80px; height: 80px;">
+            <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile" id="mobileAvatar">
+        </div>
         
         <div class="mobile-nav-links">
             <a href="https://aditya-cmd-max.github.io/" class="mobile-nav-link">
@@ -1203,6 +1464,12 @@
             </a>
             <a href="https://aditya-cmd-max.github.io/ecosystem" class="mobile-nav-link">
                 <span class="material-icons-round">apps</span> Tools
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="document.querySelector('[data-section=\'profile\']').click(); closeMobileMenu();">
+                <span class="material-icons-round">account_circle</span> My Profile
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="document.querySelector('[data-section=\'apps\']').click(); closeMobileMenu();">
+                <span class="material-icons-round">apps</span> My Apps
             </a>
         </div>
     </div>
@@ -1300,95 +1567,177 @@
                         </div>
                         <div class="stat-value" id="notificationCount">3</div>
                         <div class="stat-label">Notifications</div>
-                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Latest: Profile incomplete</p>
+                        <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);" id="latestNotification">Latest: Welcome to Reverbit!</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Profile Section -->
+            <!-- Profile Section - REDESIGNED -->
             <section class="dashboard-section" id="profile">
-                <h2 class="section-title">Edit Profile</h2>
+                <h2 class="section-title">Profile Management</h2>
                 
                 <div class="profile-card">
+                    <!-- Profile Header with Avatar and Basic Info -->
                     <div class="profile-header">
-                        <div class="avatar-container">
-                            <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile" class="avatar-image" id="profileAvatarLarge">
-                            <div class="avatar-edit" onclick="openCropModal()">
-                                <span class="material-icons-round">edit</span>
+                        <div class="avatar-section">
+                            <div class="avatar-container">
+                                <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff&size=400" alt="Profile" class="avatar-image" id="profileAvatarLarge">
+                                <button class="avatar-edit-btn" onclick="openCropModal()">
+                                    <span class="material-icons-round">edit</span>
+                                </button>
                             </div>
                         </div>
-                        <div class="profile-info">
-                            <h2 id="profileDisplayName">User</h2>
-                            <div class="member-badge">
-                                <span class="material-icons-round">calendar_today</span>
-                                <span id="memberSince">Member since: Loading...</span>
+
+                        <div class="profile-info-section">
+                            <div class="profile-name-section">
+                                <h2 id="profileDisplayName">User</h2>
+                                <span class="verification-badge" id="verificationBadge">
+                                    <span class="material-icons-round" id="verificationIcon">hourglass_empty</span>
+                                    <span id="verificationText">Checking...</span>
+                                </span>
                             </div>
-                            <div class="member-badge" style="margin-top: var(--space-xs);">
-                                <span class="material-icons-round">check_circle</span>
-                                <span>Account verified</span>
+
+                            <div class="member-info">
+                                <div class="member-info-item">
+                                    <span class="material-icons-round">calendar_today</span>
+                                    <span id="memberSince">Member since: Loading...</span>
+                                </div>
+                                <div class="member-info-item">
+                                    <span class="material-icons-round">email</span>
+                                    <span id="profileEmail">Loading...</span>
+                                </div>
+                            </div>
+
+                            <!-- Quick Profile Links -->
+                            <div class="profile-links-section">
+                                <div class="links-title">
+                                    <span class="material-icons-round">link</span>
+                                    Quick Profile Links
+                                </div>
+                                <div class="profile-links-grid">
+                                    <a href="https://aditya-cmd-max.github.io/profile/" class="profile-link-item" target="_blank">
+                                        <div class="link-info">
+                                            <span class="material-icons-round">visibility</span>
+                                            <span>View Public Profile</span>
+                                        </div>
+                                        <span class="material-icons-round">open_in_new</span>
+                                    </a>
+                                    <a href="#" class="profile-link-item" onclick="document.getElementById('settingsLink').click(); return false;">
+                                        <div class="link-info">
+                                            <span class="material-icons-round">settings</span>
+                                            <span>Account Settings</span>
+                                        </div>
+                                        <span class="material-icons-round">chevron_right</span>
+                                    </a>
+                                    <a href="#" class="profile-link-item" onclick="document.getElementById('privacyLink').click(); return false;">
+                                        <div class="link-info">
+                                            <span class="material-icons-round">privacy_tip</span>
+                                            <span>Privacy Settings</span>
+                                        </div>
+                                        <span class="material-icons-round">chevron_right</span>
+                                    </a>
+                                    <a href="#" class="profile-link-item" onclick="document.getElementById('securityLink').click(); return false;">
+                                        <div class="link-info">
+                                            <span class="material-icons-round">security</span>
+                                            <span>Security</span>
+                                        </div>
+                                        <span class="material-icons-round">chevron_right</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <form id="profileForm" class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-input" id="fullName" placeholder="Your full name">
+                    <!-- Edit Profile Form Section -->
+                    <div class="profile-forms-container">
+                        <div class="forms-title">
+                            <span class="material-icons-round">edit</span>
+                            Edit Profile Information
                         </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-input" id="email" disabled>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Bio</label>
-                            <textarea class="form-textarea" id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Country</label>
-                            <select class="form-select" id="country">
-                                <option value="">Select country</option>
-                                <option value="IN">India</option>
-                                <option value="US">United States</option>
-                                <option value="GB">United Kingdom</option>
-                                <option value="CA">Canada</option>
-                                <option value="AU">Australia</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Date of Birth</label>
-                            <input type="date" class="form-input" id="dob">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Gender</label>
-                            <select class="form-select" id="gender">
-                                <option value="">Select gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                                <option value="prefer-not-to-say">Prefer not to say</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
-                                <span class="material-icons-round">save</span>
-                                Save Changes
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
-                                <span class="material-icons-round">undo</span>
-                                Reset
-                            </button>
-                            <a href="https://aditya-cmd-max.github.io/profile/" class="btn btn-secondary" target="_blank">
-                                <span class="material-icons-round">visibility</span>
-                                View Profile
-                            </a>
-                        </div>
-                    </form>
+
+                        <form id="profileForm" class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="material-icons-round">badge</span>
+                                    Full Name
+                                </label>
+                                <input type="text" class="form-input" id="fullName" placeholder="Your full name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="material-icons-round">email</span>
+                                    Email
+                                </label>
+                                <input type="email" class="form-input" id="email" disabled>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="material-icons-round">description</span>
+                                    Bio
+                                </label>
+                                <textarea class="form-textarea" id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="material-icons-round">public</span>
+                                    Country
+                                </label>
+                                <select class="form-select" id="country">
+                                    <option value="">Select country</option>
+                                    <option value="IN">India</option>
+                                    <option value="US">United States</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="material-icons-round">cake</span>
+                                    Date of Birth
+                                </label>
+                                <input type="date" class="form-input" id="dob">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="material-icons-round">wc</span>
+                                    Gender
+                                </label>
+                                <select class="form-select" id="gender">
+                                    <option value="">Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Hidden links for navigation -->
+                            <a href="https://aditya-cmd-max.github.io/settings" id="settingsLink" style="display: none;" target="_blank"></a>
+                            <a href="https://aditya-cmd-max.github.io/privacy" id="privacyLink" style="display: none;" target="_blank"></a>
+                            <a href="https://aditya-cmd-max.github.io/security" id="securityLink" style="display: none;" target="_blank"></a>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="material-icons-round">save</span>
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                    <span class="material-icons-round">undo</span>
+                                    Reset
+                                </button>
+                                <a href="https://aditya-cmd-max.github.io/profile/" class="btn btn-secondary" target="_blank">
+                                    <span class="material-icons-round">visibility</span>
+                                    View Profile
+                                </a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </section>
 
@@ -1405,7 +1754,7 @@
                         <p class="app-stats" id="cloverTime">0 mins this week</p>
                         <div class="app-usage">
                             <span class="material-icons-round" style="color: var(--md-primary);">schedule</span>
-                            <span>Last used: Today</span>
+                            <span id="cloverLastUsed">Last used: Today</span>
                         </div>
                     </a>
                     
@@ -1417,7 +1766,7 @@
                         <p class="app-stats" id="mindscribeTime">0 mins this week</p>
                         <div class="app-usage">
                             <span class="material-icons-round" style="color: var(--md-primary);">schedule</span>
-                            <span>Last used: Yesterday</span>
+                            <span id="mindscribeLastUsed">Last used: Yesterday</span>
                         </div>
                     </a>
                     
@@ -1429,7 +1778,7 @@
                         <p class="app-stats" id="peoTime">0 mins this week</p>
                         <div class="app-usage">
                             <span class="material-icons-round" style="color: var(--md-primary);">schedule</span>
-                            <span>Last used: 2 days ago</span>
+                            <span id="peoLastUsed">Last used: 2 days ago</span>
                         </div>
                     </a>
                     
@@ -1438,12 +1787,27 @@
                             <span class="material-icons-round">visibility</span>
                         </div>
                         <h3 class="app-title">PopOut Pro</h3>
-                        <p class="app-stats">Visual learning tool</p>
+                        <p class="app-stats" id="popoutTime">Visual learning tool</p>
                         <div class="app-usage">
                             <span class="material-icons-round" style="color: var(--md-primary);">star</span>
                             <span>New</span>
                         </div>
                     </a>
+                </div>
+
+                <!-- Coming Soon Card for More Apps -->
+                <div class="coming-soon-card" style="margin-top: var(--space-xl);">
+                    <div class="coming-soon-icon">
+                        <span class="material-icons-round">rocket_launch</span>
+                    </div>
+                    <h3 class="coming-soon-title">More Apps Coming Soon!</h3>
+                    <p class="coming-soon-text">We're working on exciting new tools for you. Stay tuned!</p>
+                    <div class="floating-elements">
+                        <div class="floating-element" style="top: 10%; left: 10%; animation-delay: 0s;">⚡</div>
+                        <div class="floating-element" style="top: 30%; right: 15%; animation-delay: 2s;">✨</div>
+                        <div class="floating-element" style="bottom: 20%; left: 20%; animation-delay: 4s;">🌟</div>
+                        <div class="floating-element" style="bottom: 40%; right: 25%; animation-delay: 6s;">💫</div>
+                    </div>
                 </div>
             </section>
 
@@ -1488,49 +1852,44 @@
                         <p style="margin-top: var(--space-md); color: var(--md-on-surface-variant);">Minutes per day</p>
                     </div>
                 </div>
+
+                <!-- Coming Soon Card for Detailed Analytics -->
+                <div class="coming-soon-card" style="margin-top: var(--space-xl);">
+                    <div class="coming-soon-icon">
+                        <span class="material-icons-round">insights</span>
+                    </div>
+                    <h3 class="coming-soon-title">Detailed Analytics Coming Soon</h3>
+                    <p class="coming-soon-text">We're building advanced analytics to help you understand your usage patterns better.</p>
+                    <div class="floating-elements">
+                        <div class="floating-element" style="top: 15%; left: 15%; animation-delay: 1s;">📊</div>
+                        <div class="floating-element" style="top: 45%; right: 20%; animation-delay: 3s;">📈</div>
+                        <div class="floating-element" style="bottom: 25%; left: 25%; animation-delay: 5s;">📉</div>
+                    </div>
+                </div>
             </section>
 
-            <!-- Activity Section -->
+            <!-- Activity Section - Coming Soon -->
             <section class="dashboard-section" id="activity">
                 <h2 class="section-title">Recent Activity</h2>
                 
-                <div class="profile-card">
-                    <div class="timeline" id="activityTimeline">
-                        <div class="timeline-item">
-                            <div class="timeline-time">Just now</div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">Dashboard Viewed</div>
-                                <div class="timeline-desc">You checked your dashboard</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-time">2h ago</div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">Clover AI Session</div>
-                                <div class="timeline-desc">Completed 3 learning modules</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-time">Yesterday</div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">Profile Updated</div>
-                                <div class="timeline-desc">Changed profile information</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-time">2 days ago</div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">MindScribe Used</div>
-                                <div class="timeline-desc">Created 5 new notes</div>
-                            </div>
-                        </div>
+                <div class="coming-soon-card">
+                    <div class="coming-soon-icon">
+                        <span class="material-icons-round">history</span>
+                    </div>
+                    <h3 class="coming-soon-title">Activity Timeline Coming Soon</h3>
+                    <p class="coming-soon-text">Track your journey with Reverbit. Your activity history will appear here once you start using our apps.</p>
+                    <div class="floating-elements">
+                        <div class="floating-element" style="top: 20%; left: 10%; animation-delay: 0s;">⏰</div>
+                        <div class="floating-element" style="top: 60%; right: 15%; animation-delay: 2s;">📅</div>
+                        <div class="floating-element" style="bottom: 30%; left: 20%; animation-delay: 4s;">🕒</div>
+                        <div class="floating-element" style="bottom: 50%; right: 25%; animation-delay: 6s;">⏱️</div>
                     </div>
                 </div>
             </section>
         </div>
     </div>
 
-    <!-- Image Cropper Modal -->
+    <!-- Image Cropper Modal - FIXED -->
     <div class="modal" id="cropModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1540,7 +1899,7 @@
                 </button>
             </div>
             <div class="cropper-container">
-                <img id="cropImage" src="" alt="Crop" style="max-width: 100%;">
+                <img id="cropImage" src="" alt="Crop" style="max-width: 100%; display: block;">
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeCropModal()">Cancel</button>
@@ -1677,7 +2036,7 @@
             }
         });
 
-        // ==================== CROPPER MODAL ====================
+        // ==================== CROPPER MODAL - FIXED ====================
         function openCropModal() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -1692,26 +2051,56 @@
                         const image = document.getElementById('cropImage');
                         image.src = event.target.result;
                         
-                        if (cropper) cropper.destroy();
+                        // Destroy previous cropper if exists
+                        if (cropper) {
+                            cropper.destroy();
+                            cropper = null;
+                        }
                         
+                        // Initialize cropper with a slight delay to ensure image is loaded
                         setTimeout(() => {
-                            cropper = new Cropper(image, {
-                                aspectRatio: 1,
-                                viewMode: 1,
-                                dragMode: 'move',
-                                autoCropArea: 1,
-                                cropBoxResizable: true,
-                                cropBoxMovable: true,
-                                minContainerWidth: 250,
-                                minContainerHeight: 250,
-                                responsive: true,
-                                background: false,
-                                modal: true,
-                                guides: true,
-                                center: true,
-                                highlight: false,
-                                toggleDragModeOnDblclick: false,
-                            });
+                            if (image.complete) {
+                                cropper = new Cropper(image, {
+                                    aspectRatio: 1,
+                                    viewMode: 1,
+                                    dragMode: 'move',
+                                    autoCropArea: 1,
+                                    cropBoxResizable: true,
+                                    cropBoxMovable: true,
+                                    minContainerWidth: 250,
+                                    minContainerHeight: 250,
+                                    responsive: true,
+                                    background: true,
+                                    modal: true,
+                                    guides: true,
+                                    center: true,
+                                    highlight: false,
+                                    toggleDragModeOnDblclick: false,
+                                    ready: function() {
+                                        console.log('Cropper ready');
+                                    }
+                                });
+                            } else {
+                                image.onload = () => {
+                                    cropper = new Cropper(image, {
+                                        aspectRatio: 1,
+                                        viewMode: 1,
+                                        dragMode: 'move',
+                                        autoCropArea: 1,
+                                        cropBoxResizable: true,
+                                        cropBoxMovable: true,
+                                        minContainerWidth: 250,
+                                        minContainerHeight: 250,
+                                        responsive: true,
+                                        background: true,
+                                        modal: true,
+                                        guides: true,
+                                        center: true,
+                                        highlight: false,
+                                        toggleDragModeOnDblclick: false
+                                    });
+                                };
+                            }
                         }, 100);
                         
                         document.getElementById('cropModal').classList.add('active');
@@ -1728,6 +2117,7 @@
                 cropper.destroy();
                 cropper = null;
             }
+            selectedFile = null;
         }
 
         async function cropAndUpload() {
@@ -1756,26 +2146,30 @@
                 reader.onload = async () => {
                     const base64Image = reader.result;
                     
+                    // Update Firestore
                     await db.collection('users').doc(currentUser.uid).set({
                         photoURL: base64Image,
                         updatedAt: new Date().toISOString()
                     }, { merge: true });
                     
+                    // Update Firebase Auth profile
                     await currentUser.updateProfile({
                         photoURL: base64Image
                     });
                     
+                    // Update all avatar images with cache busting
                     const timestamp = Date.now();
-                    document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge').forEach(img => {
+                    const avatars = document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge, #desktopAvatar img, #mobileAvatar');
+                    avatars.forEach(img => {
                         if (img) img.src = base64Image + '?t=' + timestamp;
                     });
                     
                     closeCropModal();
-                    showToast('Profile picture updated!', 'success');
+                    showToast('Profile picture updated successfully!', 'success');
                 };
             } catch (error) {
                 console.error('Upload error:', error);
-                showToast('Failed to upload image', 'error');
+                showToast('Failed to upload image. Please try again.', 'error');
             } finally {
                 cropButton.disabled = false;
                 cropButton.innerHTML = '<span class="material-icons-round">crop</span> Crop & Upload';
@@ -1795,14 +2189,41 @@
                 document.getElementById('userName').textContent = displayName;
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('profileDisplayName').textContent = displayName;
+                document.getElementById('profileEmail').textContent = user.email;
                 document.getElementById('fullName').value = displayName;
                 document.getElementById('email').value = user.email || '';
                 document.getElementById('bio').value = userData.bio || '';
                 document.getElementById('country').value = userData.country || '';
                 document.getElementById('dob').value = userData.dob || '';
                 document.getElementById('gender').value = userData.gender || '';
-    
-             
+
+                // Check verification status
+                const isVerified = user.emailVerified;
+                const verificationBadge = document.getElementById('verificationBadge');
+                const verificationIcon = document.getElementById('verificationIcon');
+                const verificationText = document.getElementById('verificationText');
+
+                if (isVerified) {
+                    verificationBadge.className = 'verification-badge verified';
+                    verificationIcon.textContent = 'check_circle';
+                    verificationText.textContent = 'Account Verified';
+                } else {
+                    verificationBadge.className = 'verification-badge unverified';
+                    verificationIcon.textContent = 'cancel';
+                    verificationText.textContent = 'Not Verified - Verify Email';
+                    
+                    // Make badge clickable for non-verified users
+                    verificationBadge.style.cursor = 'pointer';
+                    verificationBadge.onclick = async () => {
+                        try {
+                            await user.sendEmailVerification();
+                            showToast('Verification email sent! Check your inbox.', 'success');
+                        } catch (error) {
+                            showToast('Error sending verification email', 'error');
+                        }
+                    };
+                }
+                
                 // Member since
                 const creationTime = user.metadata.creationTime;
                 if (creationTime) {
@@ -1818,7 +2239,8 @@
                 }
                 
                 const timestamp = Date.now();
-                document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge').forEach(img => {
+                const avatars = document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge, #desktopAvatar img, #mobileAvatar');
+                avatars.forEach(img => {
                     if (img) img.src = avatarUrl + '?t=' + timestamp;
                 });
                 
@@ -1831,6 +2253,17 @@
                 
                 document.getElementById('profileCompletion').textContent = completion + '%';
                 document.getElementById('profileProgress').style.width = completion + '%';
+                
+                // Update notification based on verification and profile completion
+                let notificationMsg = '';
+                if (!isVerified) {
+                    notificationMsg = 'Please verify your email';
+                } else if (completion < 100) {
+                    notificationMsg = 'Complete your profile';
+                } else {
+                    notificationMsg = 'All set! Welcome to Reverbit';
+                }
+                document.getElementById('latestNotification').textContent = 'Latest: ' + notificationMsg;
                 
                 await loadUsageData(user.uid);
                 
@@ -1854,6 +2287,12 @@
                 document.getElementById('cloverTime').textContent = `${cloverTime} mins this week`;
                 document.getElementById('mindscribeTime').textContent = `${mindscribeTime} mins this week`;
                 document.getElementById('peoTime').textContent = `${peoTime} mins this week`;
+                
+                // Update last used times (mock data for now)
+                const days = ['Today', 'Yesterday', '2 days ago', '3 days ago'];
+                document.getElementById('cloverLastUsed').textContent = `Last used: ${days[Math.floor(Math.random() * days.length)]}`;
+                document.getElementById('mindscribeLastUsed').textContent = `Last used: ${days[Math.floor(Math.random() * days.length)]}`;
+                document.getElementById('peoLastUsed').textContent = `Last used: ${days[Math.floor(Math.random() * days.length)]}`;
                 
                 const totalMinutes = cloverTime + mindscribeTime + peoTime;
                 const totalHours = (totalMinutes / 60).toFixed(1);
@@ -1883,6 +2322,14 @@
                 
                 const dailyAvg = Math.round(totalMinutes / 7);
                 document.getElementById('dailyAverage').textContent = dailyAvg;
+                
+                // Achievement count based on usage
+                let achievements = 0;
+                if (streak >= 7) achievements++;
+                if (streak >= 30) achievements++;
+                if (totalMinutes >= 100) achievements++;
+                if (usedApps >= 3) achievements++;
+                document.getElementById('achievementCount').textContent = achievements;
                 
             } catch (error) {
                 console.error('Error loading usage data:', error);
@@ -1936,11 +2383,10 @@
                 document.getElementById('country').value = currentProfile.country || '';
                 document.getElementById('dob').value = currentProfile.dob || '';
                 document.getElementById('gender').value = currentProfile.gender || '';
-                showToast('Form reset', 'info');
+                showToast('Form reset to saved values', 'info');
             }
         }
 
-        
         // ==================== AUTH STATE ====================
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
@@ -1953,29 +2399,20 @@
             }
         });
 
-        // ==================== AUTH.JS INTEGRATION ====================
-        function checkAuth() {
-            if (window.ReverbitAuth) {
-                window.ReverbitAuth.addAuthListener((user, profile) => {
-                    if (user) {
-                        document.body.classList.add('user-signed-in');
-                    }
-                });
-            } else {
-                setTimeout(checkAuth, 500);
-            }
-        }
-        checkAuth();
-
         // ==================== EXPOSE GLOBALLY ====================
         window.openCropModal = openCropModal;
         window.closeCropModal = closeCropModal;
         window.cropAndUpload = cropAndUpload;
         window.resetForm = resetForm;
+        window.closeMobileMenu = closeMobileMenu;
+
+        // ==================== UPDATE PAGE TITLE ====================
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                const displayName = user.displayName || user.email?.split('@')[0] || 'User';
+                document.title = `Dashboard - ${displayName}`;
+            }
+        });
     </script>
-<script>
-<script>
-document.title = "Dashboard - " + username;
-</script>
 </body>
 </html>
