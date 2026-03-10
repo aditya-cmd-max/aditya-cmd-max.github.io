@@ -642,7 +642,7 @@
             object-fit: cover;
         }
 
-        /* Fixed avatar for scroll effect */
+        /* Fixed avatar for scroll effect - ALWAYS VISIBLE WHEN SCROLLED */
         .fixed-avatar {
             position: fixed;
             left: 20px;
@@ -658,6 +658,8 @@
             visibility: hidden;
             transition: opacity 0.3s, visibility 0.3s;
             pointer-events: none;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         @media (min-width: 768px) {
@@ -1152,10 +1154,10 @@
             border: 1px solid var(--md-secondary);
         }
 
-        .verification-badge.unverified {
-            background: rgba(192, 57, 43, 0.15);
-            color: var(--md-tertiary);
-            border: 1px solid var(--md-tertiary);
+        .verification-badge.premium {
+            background: linear-gradient(135deg, rgba(181, 101, 29, 0.15), rgba(42, 157, 143, 0.15));
+            color: var(--md-primary);
+            border: 1px solid var(--md-primary);
         }
 
         .verification-badge .material-icons-round {
@@ -1977,7 +1979,6 @@
         
         <div class="nav-right">
             <!-- ONLY ONE avatar - auth.js will inject its own here -->
-            <!-- The div below will be populated by auth.js -->
             <div id="auth-avatar-container"></div>
             
             <a href="https://aditya-cmd-max.github.io/signin" class="sign-in-btn" id="signInButton" style="display: none;">
@@ -2150,9 +2151,9 @@
                         <div class="profile-info-section">
                             <div class="profile-name-section">
                                 <h2 id="profileDisplayName">User</h2>
-                                <span class="verification-badge" id="verificationBadge">
-                                    <span class="material-icons-round" id="verificationIcon">hourglass_empty</span>
-                                    <span id="verificationText">Checking...</span>
+                                <span class="verification-badge" id="verificationBadge" style="display: none;">
+                                    <span class="material-icons-round" id="verificationIcon"></span>
+                                    <span id="verificationText"></span>
                                 </span>
                             </div>
 
@@ -2818,31 +2819,28 @@
                 document.getElementById('dob').value = userData.dob || '';
                 document.getElementById('gender').value = userData.gender || '';
 
-                // Check verification status
+                // Check verification status - ONLY show for verified or premium users
                 const isVerified = user.emailVerified;
+                const isPremium = userData.premiumVerified || userData.verifiedLevel === 'premium';
                 const verificationBadge = document.getElementById('verificationBadge');
                 const verificationIcon = document.getElementById('verificationIcon');
                 const verificationText = document.getElementById('verificationText');
 
-                if (isVerified) {
-                    verificationBadge.className = 'verification-badge verified';
-                    verificationIcon.textContent = 'check_circle';
-                    verificationText.textContent = 'Account Verified';
-                } else {
-                    verificationBadge.className = 'verification-badge unverified';
-                    verificationIcon.textContent = 'cancel';
-                    verificationText.textContent = 'Not Verified - Verify Email';
+                // Only show badge if user is verified OR premium
+                if (isVerified || isPremium) {
+                    verificationBadge.style.display = 'inline-flex';
                     
-                    // Make badge clickable for non-verified users
-                    verificationBadge.style.cursor = 'pointer';
-                    verificationBadge.onclick = async () => {
-                        try {
-                            await user.sendEmailVerification();
-                            showToast('Verification email sent! Check your inbox.', 'success');
-                        } catch (error) {
-                            showToast('Error sending verification email', 'error');
-                        }
-                    };
+                    if (isPremium) {
+                        verificationBadge.className = 'verification-badge premium';
+                        verificationIcon.textContent = 'verified';
+                        verificationText.textContent = 'Premium Verified';
+                    } else if (isVerified) {
+                        verificationBadge.className = 'verification-badge verified';
+                        verificationIcon.textContent = 'check_circle';
+                        verificationText.textContent = 'Verified';
+                    }
+                } else {
+                    verificationBadge.style.display = 'none';
                 }
                 
                 // Member since
@@ -2885,8 +2883,8 @@
                 
                 // Update notification based on verification and profile completion
                 let notificationMsg = '';
-                if (!isVerified) {
-                    notificationMsg = 'Please verify your email';
+                if (!isVerified && !isPremium) {
+                    notificationMsg = 'Verify your email to get verified badge';
                 } else if (completion < 100) {
                     notificationMsg = 'Complete your profile';
                 } else {
