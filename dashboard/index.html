@@ -45,6 +45,10 @@
     <!-- Outfit Font -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -369,7 +373,7 @@
             gap: var(--space-xs);
         }
 
-        /* Profile Avatar - Handled by auth.js */
+        /* Profile Avatar - Only ONE avatar handled by auth.js */
         .profile-avatar-btn {
             width: 36px;
             height: 36px;
@@ -582,7 +586,7 @@
             }
         }
 
-        /* ========== WELCOME CARD - MOBILE OPTIMIZED ========== */
+        /* ========== WELCOME CARD WITH FLOATING AVATAR ========== */
         .welcome-card {
             background: var(--md-surface);
             border: 1px solid var(--md-outline);
@@ -593,6 +597,8 @@
             display: flex;
             flex-direction: column;
             gap: var(--space-lg);
+            position: relative;
+            overflow: hidden;
         }
 
         @media (min-width: 768px) {
@@ -602,6 +608,85 @@
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
+            }
+        }
+
+        /* Floating Profile Avatar in Welcome Card */
+        .welcome-avatar-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .welcome-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--md-primary);
+            box-shadow: var(--md-elevation-3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .welcome-avatar {
+                width: 100px;
+                height: 100px;
+                border-width: 4px;
+            }
+        }
+
+        .welcome-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Fixed avatar for scroll effect */
+        .fixed-avatar {
+            position: fixed;
+            left: 20px;
+            top: 100px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--md-primary);
+            box-shadow: var(--md-elevation-4);
+            overflow: hidden;
+            z-index: 95;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+
+        @media (min-width: 768px) {
+            .fixed-avatar {
+                width: 70px;
+                height: 70px;
+                top: 120px;
+                left: 30px;
+            }
+        }
+
+        .fixed-avatar.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .fixed-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .welcome-text {
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .welcome-text {
+                text-align: left;
             }
         }
 
@@ -1854,15 +1939,14 @@
             }
         }
 
-        /* Hide desktop avatar on mobile initially - will be shown by auth.js */
+        /* Hide duplicate avatar - Only auth.js avatar should be visible */
         #desktopAvatar {
-            display: none;
+            display: none !important;
         }
-
-        @media (min-width: 1024px) {
-            #desktopAvatar {
-                display: block;
-            }
+        
+        /* Auth.js will show its own avatar */
+        .profile-avatar-btn:not(#desktopAvatar) {
+            display: block;
         }
     </style>
 </head>
@@ -1875,7 +1959,7 @@
     <!-- Scroll Progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- Navbar - Same as original -->
+    <!-- Navbar - Same as original, with ONLY auth.js avatar -->
     <nav class="navbar" id="navbar">
         <a href="https://aditya-cmd-max.github.io/" class="nav-brand">
             <div class="nav-logo">
@@ -1892,10 +1976,9 @@
         </div>
         
         <div class="nav-right">
-            <!-- Profile avatar handled by auth.js -->
-            <div class="profile-avatar-btn" id="desktopAvatar">
-                <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile">
-            </div>
+            <!-- ONLY ONE avatar - auth.js will inject its own here -->
+            <!-- The div below will be populated by auth.js -->
+            <div id="auth-avatar-container"></div>
             
             <a href="https://aditya-cmd-max.github.io/signin" class="sign-in-btn" id="signInButton" style="display: none;">
                 <span class="material-icons-round">login</span> Sign In
@@ -1921,10 +2004,8 @@
             </button>
         </div>
         
-        <!-- Mobile avatar handled by auth.js -->
-        <div class="profile-avatar-btn" style="margin: 0 auto var(--space-xl); width: 80px; height: 80px;">
-            <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile" id="mobileAvatar">
-        </div>
+        <!-- Mobile avatar will be handled by auth.js -->
+        <div id="mobile-auth-avatar"></div>
         
         <div class="mobile-nav-links">
             <a href="https://aditya-cmd-max.github.io/" class="mobile-nav-link">
@@ -1942,11 +2023,21 @@
         </div>
     </div>
 
+    <!-- Fixed Avatar that appears on scroll (non-editable) -->
+    <div class="fixed-avatar" id="fixedAvatar">
+        <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile">
+    </div>
+
     <!-- Main Content -->
     <div class="main-wrapper">
         <div class="container">
-            <!-- Welcome Card -->
-            <div class="welcome-card">
+            <!-- Welcome Card with Avatar -->
+            <div class="welcome-card" id="welcomeCard">
+                <div class="welcome-avatar-container">
+                    <div class="welcome-avatar" id="welcomeAvatar">
+                        <img src="https://ui-avatars.com/api/?name=User&background=B5651D&color=fff" alt="Profile">
+                    </div>
+                </div>
                 <div class="welcome-text">
                     <h1>Welcome, <span class="animated-name" id="userName">User</span>!</h1>
                     <p id="userEmail" style="color: var(--md-on-surface-variant);">Loading your dashboard...</p>
@@ -2387,6 +2478,7 @@
         let cropper = null;
         let selectedFile = null;
         let db;
+        let gsapInitialized = false;
 
         // DOM Elements
         const loadingScreen = document.getElementById('loading');
@@ -2400,6 +2492,9 @@
         const mobileNav = document.getElementById('mobileNav');
         const mobileNavOverlay = document.getElementById('mobileNavOverlay');
         const mobileNavClose = document.getElementById('mobileNavClose');
+        const fixedAvatar = document.getElementById('fixedAvatar');
+        const welcomeAvatar = document.getElementById('welcomeAvatar');
+        const welcomeCard = document.getElementById('welcomeCard');
 
         // ==================== URL PARAMETER HANDLING ====================
         function handleUrlParams() {
@@ -2495,20 +2590,33 @@
             });
         });
 
-        // ==================== SCROLL PROGRESS ====================
-        window.addEventListener('scroll', () => {
-            const winScroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        // ==================== GSAP SCROLL ANIMATION ====================
+        function initGSAP() {
+            if (gsapInitialized || !gsap || !welcomeCard || !fixedAvatar) return;
             
-            const navbar = document.getElementById('navbar');
-            if (winScroll > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Create scroll trigger for avatar animation
+            ScrollTrigger.create({
+                trigger: welcomeCard,
+                start: "top 80px",
+                end: "bottom 100px",
+                onEnter: () => {
+                    fixedAvatar.classList.add('visible');
+                },
+                onLeaveBack: () => {
+                    fixedAvatar.classList.remove('visible');
+                },
+                onEnterBack: () => {
+                    fixedAvatar.classList.add('visible');
+                },
+                onLeave: () => {
+                    fixedAvatar.classList.remove('visible');
+                }
+            });
+            
+            gsapInitialized = true;
+        }
 
         // ==================== CROPPER MODAL - FIXED ====================
         function openCropModal() {
@@ -2664,10 +2772,18 @@
                     
                     // Update all avatar images with cache busting
                     const timestamp = Date.now();
-                    const avatars = document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge');
-                    avatars.forEach(img => {
-                        if (img) img.src = base64Image + '?t=' + timestamp;
-                    });
+                    
+                    // Update welcome avatar
+                    const welcomeAvatarImg = welcomeAvatar?.querySelector('img');
+                    if (welcomeAvatarImg) welcomeAvatarImg.src = base64Image + '?t=' + timestamp;
+                    
+                    // Update fixed avatar
+                    const fixedAvatarImg = fixedAvatar?.querySelector('img');
+                    if (fixedAvatarImg) fixedAvatarImg.src = base64Image + '?t=' + timestamp;
+                    
+                    // Update profile avatar
+                    const profileAvatar = document.getElementById('profileAvatarLarge');
+                    if (profileAvatar) profileAvatar.src = base64Image + '?t=' + timestamp;
                     
                     closeCropModal();
                     showToast('Profile picture updated successfully!', 'success');
@@ -2744,10 +2860,18 @@
                 }
                 
                 const timestamp = Date.now();
-                const avatars = document.querySelectorAll('.profile-avatar-btn img, #profileAvatarLarge');
-                avatars.forEach(img => {
-                    if (img) img.src = avatarUrl + '?t=' + timestamp;
-                });
+                
+                // Update welcome avatar
+                const welcomeAvatarImg = welcomeAvatar?.querySelector('img');
+                if (welcomeAvatarImg) welcomeAvatarImg.src = avatarUrl + '?t=' + timestamp;
+                
+                // Update fixed avatar
+                const fixedAvatarImg = fixedAvatar?.querySelector('img');
+                if (fixedAvatarImg) fixedAvatarImg.src = avatarUrl + '?t=' + timestamp;
+                
+                // Update profile avatar
+                const profileAvatar = document.getElementById('profileAvatarLarge');
+                if (profileAvatar) profileAvatar.src = avatarUrl + '?t=' + timestamp;
                 
                 // Profile completion
                 let completion = 0;
@@ -2771,6 +2895,9 @@
                 document.getElementById('latestNotification').textContent = 'Latest: ' + notificationMsg;
                 
                 await loadUsageData(user.uid);
+                
+                // Initialize GSAP after user data is loaded
+                setTimeout(initGSAP, 500);
                 
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -2948,7 +3075,7 @@
         // Wait for auth.js to load and handle profile menu
         function initAuthJS() {
             if (window.ReverbitAuth) {
-                // auth.js will handle the profile menu
+                // auth.js will handle the profile menu - we just need to provide containers
                 console.log('Auth.js loaded');
             } else {
                 setTimeout(initAuthJS, 500);
@@ -2973,6 +3100,19 @@
 
         // ==================== HANDLE BROWSER BACK/FORWARD ====================
         window.addEventListener('popstate', handleUrlParams);
+
+        // ==================== SCROLL EVENT FOR FALLBACK ====================
+        // Fallback in case GSAP doesn't load
+        window.addEventListener('scroll', () => {
+            if (!gsapInitialized && welcomeCard && fixedAvatar) {
+                const rect = welcomeCard.getBoundingClientRect();
+                if (rect.top < 50 && rect.bottom > 0) {
+                    fixedAvatar.classList.add('visible');
+                } else {
+                    fixedAvatar.classList.remove('visible');
+                }
+            }
+        });
     </script>
 </body>
 </html>
