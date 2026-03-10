@@ -1,7 +1,7 @@
 // ====================================================================
 // auth.js 
 // Reverbit Innovations by Aditya Jha
-// ULTIMATE PRODUCTION VERSION - ALL FEATURES RESTORED & FIXED
+// ULTIMATE PRODUCTION VERSION - WITH CAMERA/UPLOAD OPTIONS
 // ====================================================================
 
 class ReverbitAuth {
@@ -33,6 +33,7 @@ class ReverbitAuth {
         this.profilePopup = null;
         this.profileAvatar = null;
         this.avatarUploadInput = null;
+        this.cameraModal = null;
         
         // Theme
         this.currentTheme = 'auto';
@@ -54,7 +55,7 @@ class ReverbitAuth {
         this.profileLoadAttempts = 0;
         this.maxProfileLoadAttempts = 3;
         
-        // Toast control - FIXED: Prevent annoying toasts
+        // Toast control
         this.toastHistory = new Map();
         this.lastToastTime = 0;
         this.toastThrottle = 3000;
@@ -70,6 +71,10 @@ class ReverbitAuth {
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.uploadProfilePicture = this.uploadProfilePicture.bind(this);
         this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
+        this.showPhotoOptions = this.showPhotoOptions.bind(this);
+        this.takePhoto = this.takePhoto.bind(this);
+        this.chooseFromGallery = this.chooseFromGallery.bind(this);
+        this.closeCameraModal = this.closeCameraModal.bind(this);
         this.applyTheme = this.applyTheme.bind(this);
         this.toggleTheme = this.toggleTheme.bind(this);
         this.logout = this.logout.bind(this);
@@ -240,7 +245,7 @@ class ReverbitAuth {
         document.body.appendChild(fallbackDiv);
     }
 
-    // ================= TOAST NOTIFICATIONS - FIXED =================
+    // ================= TOAST NOTIFICATIONS =================
     showToast(message, type = 'info', important = false) {
         // Suppress annoying local storage messages
         if (!important && this.suppressedToasts.some(s => message.includes(s))) {
@@ -320,7 +325,6 @@ class ReverbitAuth {
             if (this.user) {
                 this.syncUserData();
             }
-            // Only show important online notification
             this.showToast('You are back online!', 'success', true);
         } else {
             console.log('Auth: Offline mode activated');
@@ -683,7 +687,6 @@ class ReverbitAuth {
                     
                     console.log('Auth: User fully loaded:', this.user.email);
                     
-                    // Only show welcome message for new users
                     if (this.userProfile?.totalLogins <= 1) {
                         this.showWelcomeMessage();
                     }
@@ -696,20 +699,17 @@ class ReverbitAuth {
                     console.error('Auth: Profile loading failed:', profileError);
                     this.profileLoadAttempts++;
                     
-                    // Try to recover using cached profile
                     const cachedProfile = localStorage.getItem('reverbit_user_profile');
                     if (cachedProfile) {
                         try {
                             this.userProfile = JSON.parse(cachedProfile);
                             console.log('Auth: Using cached profile');
                             this.forceAvatarCreation();
-                            // Don't show toast for cached profile
                         } catch (e) {
                             console.error('Auth: Failed to parse cached profile');
                         }
                     }
                     
-                    // Try to create new profile
                     if (this.profileLoadAttempts <= this.maxProfileLoadAttempts) {
                         console.log('Auth: Attempting to create new profile (attempt', this.profileLoadAttempts, ')');
                         try {
@@ -718,7 +718,6 @@ class ReverbitAuth {
                         } catch (createError) {
                             console.error('Auth: Profile creation failed:', createError);
                             
-                            // Create minimal local profile as last resort
                             this.userProfile = {
                                 uid: user.uid,
                                 email: user.email,
@@ -763,7 +762,6 @@ class ReverbitAuth {
                             
                             this.cacheUserProfile();
                             this.forceAvatarCreation();
-                            // Don't show toast for local save
                         }
                     }
                 }
@@ -775,6 +773,7 @@ class ReverbitAuth {
                 this.clearSession();
                 this.removeProfileAvatar();
                 this.removeProfilePopup();
+                this.closeCameraModal();
                 this.currentTheme = 'auto';
                 this.applyTheme();
             }
@@ -1020,8 +1019,6 @@ class ReverbitAuth {
                 uid: user.uid,
                 profile: userProfile
             });
-            
-            // Don't show toast for local save
         }
     }
 
@@ -1115,18 +1112,11 @@ class ReverbitAuth {
         }
     }
 
-    // ================= VERIFICATION HELPERS - FIXED =================
+    // ================= VERIFICATION HELPERS =================
     getVerificationLevel() {
         if (!this.userProfile) return 'none';
         
-        // Debug log to see actual values
-        console.log('Auth: Checking verification -', {
-            verified: this.userProfile.verified,
-            verifiedLevel: this.userProfile.verifiedLevel,
-            premiumVerified: this.userProfile.premiumVerified
-        });
-        
-        // Check premium verification FIRST (multiple formats)
+        // Check premium verification FIRST
         if (this.userProfile.premiumVerified === true || 
             this.userProfile.premiumVerified === 'true' ||
             this.userProfile.verifiedLevel === 'premium' ||
@@ -1135,7 +1125,7 @@ class ReverbitAuth {
             return 'premium';
         }
         
-        // Check basic verification (multiple formats)
+        // Check basic verification
         if (this.userProfile.verified === true || 
             this.userProfile.verified === 'true' ||
             this.userProfile.verifiedLevel === 'basic' ||
@@ -1270,7 +1260,6 @@ class ReverbitAuth {
         
         avatarContainer.appendChild(avatarImg);
         
-        // Only add badge if user is verified
         if (this.isVerified()) {
             const badgeDiv = document.createElement('div');
             badgeDiv.className = `avatar-verified-badge ${this.getVerificationLevel() === 'premium' ? 'premium' : ''}`;
@@ -1304,7 +1293,7 @@ class ReverbitAuth {
         
         this.profileAvatar.addEventListener('dblclick', (e) => {
             e.stopPropagation();
-            this.handleAvatarUpload();
+            this.showPhotoOptions();
         });
         
         this.profileAvatar.addEventListener('mouseenter', () => {
@@ -1339,7 +1328,6 @@ class ReverbitAuth {
         this.avatarUploadInput = document.createElement('input');
         this.avatarUploadInput.type = 'file';
         this.avatarUploadInput.accept = 'image/*';
-        this.avatarUploadInput.capture = 'user';
         this.avatarUploadInput.style.cssText = `
             position: absolute;
             opacity: 0;
@@ -1405,7 +1393,6 @@ class ReverbitAuth {
             existingBadge.remove();
         }
         
-        // Only add badge if user is verified
         if (this.isVerified()) {
             const badgeDiv = document.createElement('div');
             badgeDiv.className = `avatar-verified-badge ${this.getVerificationLevel() === 'premium' ? 'premium' : ''}`;
@@ -1426,8 +1413,8 @@ class ReverbitAuth {
         contextMenu.className = 'avatar-context-menu';
         
         const menuItems = [
-            { icon: 'fa-upload', text: 'Upload Photo', action: () => this.handleAvatarUpload() },
             { icon: 'fa-camera', text: 'Take Photo', action: () => this.takePhoto() },
+            { icon: 'fa-upload', text: 'Upload from Gallery', action: () => this.chooseFromGallery() },
             { icon: 'fa-user-circle', text: 'View Profile', action: () => this.viewProfile() },
             { icon: 'fa-tachometer-alt', text: 'Dashboard', action: () => this.goToDashboard() },
             { icon: 'fa-cog', text: 'Settings', action: () => this.openSettings() },
@@ -1480,68 +1467,374 @@ class ReverbitAuth {
         }, 100);
     }
 
+    // ================= PHOTO OPTIONS - NEW FEATURE =================
+    showPhotoOptions() {
+        if (!this.user) {
+            this.showToast('Please sign in to upload photos', 'info', true);
+            return;
+        }
+        
+        // Remove any existing options modal
+        const existingModal = document.querySelector('.photo-options-modal');
+        if (existingModal) existingModal.remove();
+        
+        const modal = document.createElement('div');
+        modal.className = 'photo-options-modal';
+        
+        modal.innerHTML = `
+            <div class="photo-options-container">
+                <div class="photo-options-header">
+                    <h3>Profile Picture</h3>
+                    <button class="photo-options-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="photo-options-content">
+                    <button class="photo-option-btn" id="take-photo-btn">
+                        <div class="photo-option-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="photo-option-text">
+                            <span class="photo-option-title">Take Photo</span>
+                            <span class="photo-option-desc">Use your camera to take a photo</span>
+                        </div>
+                    </button>
+                    <button class="photo-option-btn" id="gallery-photo-btn">
+                        <div class="photo-option-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="photo-option-text">
+                            <span class="photo-option-title">Choose from Gallery</span>
+                            <span class="photo-option-desc">Select an existing photo</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add event listeners
+        const closeBtn = modal.querySelector('.photo-options-close');
+        closeBtn.addEventListener('click', () => modal.remove());
+        
+        const takePhotoBtn = modal.querySelector('#take-photo-btn');
+        takePhotoBtn.addEventListener('click', () => {
+            modal.remove();
+            this.takePhoto();
+        });
+        
+        const galleryBtn = modal.querySelector('#gallery-photo-btn');
+        galleryBtn.addEventListener('click', () => {
+            modal.remove();
+            this.chooseFromGallery();
+        });
+        
+        // Close on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+        
+        // Add animation
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    chooseFromGallery() {
+        if (!this.user) {
+            this.showToast('Please sign in to upload photos', 'info', true);
+            return;
+        }
+        
+        if (this.avatarUploadInput) {
+            this.avatarUploadInput.click();
+        }
+    }
+
     async takePhoto() {
+        if (!this.user) {
+            this.showToast('Please sign in to take photos', 'info', true);
+            return;
+        }
+        
+        // Check if camera is supported
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            this.showToast('Camera access not supported', 'error', true);
+            this.showToast('Camera access is not supported on this device/browser', 'error', true);
             return;
         }
         
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            // Show loading state
+            this.showToast('Accessing camera...', 'info', true);
+            
+            const constraints = {
+                video: {
+                    facingMode: 'user',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            };
+            
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
             this.showCameraInterface(stream);
+            
         } catch (error) {
             console.error('Camera error:', error);
-            this.showToast('Camera access denied', 'error', true);
+            
+            if (error.name === 'NotAllowedError') {
+                this.showToast('Camera access denied. Please allow camera permissions.', 'error', true);
+            } else if (error.name === 'NotFoundError') {
+                this.showToast('No camera found on this device', 'error', true);
+            } else if (error.name === 'NotReadableError') {
+                this.showToast('Camera is already in use by another application', 'error', true);
+            } else {
+                this.showToast('Failed to access camera: ' + (error.message || 'Unknown error'), 'error', true);
+            }
         }
     }
 
     showCameraInterface(stream) {
-        const cameraModal = document.createElement('div');
-        cameraModal.className = 'camera-modal';
+        // Remove any existing camera modal
+        this.closeCameraModal();
+        
+        this.cameraModal = document.createElement('div');
+        this.cameraModal.className = 'camera-modal';
         
         const video = document.createElement('video');
         video.autoplay = true;
+        video.playsInline = true;
         video.srcObject = stream;
         
         const controls = document.createElement('div');
         controls.className = 'camera-controls';
         
         const captureBtn = document.createElement('button');
+        captureBtn.className = 'camera-capture-btn';
         captureBtn.innerHTML = '<i class="fas fa-camera"></i> Take Photo';
         
+        const switchBtn = document.createElement('button');
+        switchBtn.className = 'camera-switch-btn';
+        switchBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Switch Camera';
+        switchBtn.style.display = 'none'; // Hide initially, show only if multiple cameras
+        
         const cancelBtn = document.createElement('button');
-        cancelBtn.textContent = 'Cancel';
+        cancelBtn.className = 'camera-cancel-btn';
+        cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+        
+        // Check if device has multiple cameras
+        if (stream.getVideoTracks().length > 0) {
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track.getCapabilities?.();
+            
+            if (capabilities && capabilities.facingMode && capabilities.facingMode.length > 1) {
+                switchBtn.style.display = 'flex';
+                
+                let usingFrontCamera = true;
+                switchBtn.addEventListener('click', () => {
+                    // Stop current stream
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    // Switch camera
+                    const newConstraints = {
+                        video: {
+                            facingMode: usingFrontCamera ? 'environment' : 'user',
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }
+                    };
+                    
+                    usingFrontCamera = !usingFrontCamera;
+                    
+                    navigator.mediaDevices.getUserMedia(newConstraints)
+                        .then(newStream => {
+                            video.srcObject = newStream;
+                            this.currentCameraStream = newStream;
+                        })
+                        .catch(err => {
+                            console.error('Failed to switch camera:', err);
+                            this.showToast('Failed to switch camera', 'error', true);
+                        });
+                });
+            }
+        }
         
         captureBtn.addEventListener('click', () => {
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            canvas.toBlob(async (blob) => {
-                if (blob) {
-                    const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-                    await this.uploadProfilePicture(file);
-                }
-                
-                stream.getTracks().forEach(track => track.stop());
-                cameraModal.remove();
-            }, 'image/jpeg', 0.9);
+            // Show preview
+            this.showPhotoPreview(canvas.toDataURL('image/jpeg', 0.9), stream);
         });
         
         cancelBtn.addEventListener('click', () => {
+            this.closeCameraModal();
             stream.getTracks().forEach(track => track.stop());
-            cameraModal.remove();
         });
         
         controls.appendChild(captureBtn);
+        controls.appendChild(switchBtn);
         controls.appendChild(cancelBtn);
-        cameraModal.appendChild(video);
-        cameraModal.appendChild(controls);
-        document.body.appendChild(cameraModal);
+        
+        this.cameraModal.appendChild(video);
+        this.cameraModal.appendChild(controls);
+        document.body.appendChild(this.cameraModal);
+        
+        // Store stream for cleanup
+        this.currentCameraStream = stream;
+        
+        // Add animation
+        setTimeout(() => this.cameraModal.classList.add('show'), 10);
     }
 
-    // ================= PROFILE POPUP - FIXED =================
+    showPhotoPreview(imageDataUrl, stream) {
+        const previewModal = document.createElement('div');
+        previewModal.className = 'photo-preview-modal';
+        
+        previewModal.innerHTML = `
+            <div class="photo-preview-container">
+                <div class="photo-preview-header">
+                    <h3>Preview Photo</h3>
+                    <button class="photo-preview-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="photo-preview-content">
+                    <img src="${imageDataUrl}" alt="Preview">
+                </div>
+                <div class="photo-preview-actions">
+                    <button class="photo-preview-retake"><i class="fas fa-redo-alt"></i> Retake</button>
+                    <button class="photo-preview-use"><i class="fas fa-check"></i> Use Photo</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(previewModal);
+        
+        const closeBtn = previewModal.querySelector('.photo-preview-close');
+        const retakeBtn = previewModal.querySelector('.photo-preview-retake');
+        const useBtn = previewModal.querySelector('.photo-preview-use');
+        
+        closeBtn.addEventListener('click', () => {
+            previewModal.remove();
+            // Keep camera open
+        });
+        
+        retakeBtn.addEventListener('click', () => {
+            previewModal.remove();
+            // Camera is still open
+        });
+        
+        useBtn.addEventListener('click', async () => {
+            previewModal.remove();
+            this.closeCameraModal();
+            
+            // Convert data URL to file
+            const blob = await (await fetch(imageDataUrl)).blob();
+            const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+            
+            await this.uploadProfilePicture(file);
+        });
+        
+        // Close on backdrop click
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.remove();
+            }
+        });
+        
+        setTimeout(() => previewModal.classList.add('show'), 10);
+    }
+
+    closeCameraModal() {
+        if (this.cameraModal) {
+            this.cameraModal.remove();
+            this.cameraModal = null;
+        }
+        
+        if (this.currentCameraStream) {
+            this.currentCameraStream.getTracks().forEach(track => track.stop());
+            this.currentCameraStream = null;
+        }
+    }
+
+    // ================= AVATAR UPLOAD =================
+    async handleAvatarUpload() {
+        this.showPhotoOptions();
+    }
+
+    async uploadProfilePicture(file) {
+        if (!this.user || !file) return;
+        
+        if (file.size > 10 * 1024 * 1024) {
+            this.showToast('Image must be less than 10MB', 'error', true);
+            return;
+        }
+        
+        if (!file.type.startsWith('image/')) {
+            this.showToast('Please select an image file', 'error', true);
+            return;
+        }
+        
+        try {
+            this.showUploadingState(true);
+            this.showToast('Uploading profile picture...', 'info', true);
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', this.cloudinaryConfig.uploadPreset);
+            formData.append('cloud_name', this.cloudinaryConfig.cloudName);
+            formData.append('folder', this.cloudinaryConfig.folder);
+            
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${this.cloudinaryConfig.cloudName}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) throw new Error('Upload failed');
+            
+            const result = await response.json();
+            const photoURL = result.secure_url;
+            const cloudinaryImageId = result.public_id;
+            
+            await this.db.collection('users').doc(this.user.uid).update({
+                photoURL: photoURL,
+                cloudinaryImageId: cloudinaryImageId,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            await this.auth.currentUser.updateProfile({ photoURL });
+            
+            this.user.photoURL = photoURL;
+            this.userProfile.photoURL = photoURL;
+            this.userProfile.cloudinaryImageId = cloudinaryImageId;
+            
+            this.cacheUserData();
+            this.updateProfileAvatar();
+            
+            if (this.profilePopup && this.popupVisible) {
+                this.updatePopupContent();
+                this.attachPopupEventListeners();
+            }
+            
+            this.showToast('Profile picture updated!', 'success', true);
+            
+        } catch (error) {
+            console.error('Auth: Upload failed:', error);
+            this.showToast('Failed to upload picture', 'error', true);
+        } finally {
+            this.showUploadingState(false);
+        }
+    }
+
+    showUploadingState(show) {
+        if (!this.profileAvatar) return;
+        
+        const loadingSpinner = this.profileAvatar.querySelector('.reverbit-avatar-loading');
+        if (loadingSpinner) {
+            loadingSpinner.style.display = show ? 'block' : 'none';
+        }
+    }
+
+    // ================= PROFILE POPUP =================
     createProfilePopup() {
         console.log('Auth: Creating profile popup...');
         
@@ -1664,7 +1957,6 @@ class ReverbitAuth {
                         <span class="menu-arrow">›</span>
                     </a>
                     
-                    <!-- Verification - ALWAYS VISIBLE to all users (FIXED) -->
                     <a href="${verificationUrl}" target="_blank" class="profile-menu-item" id="profile-verification">
                         <span class="profile-menu-icon">
                             <i class="fas fa-shield-alt"></i>
@@ -1673,7 +1965,6 @@ class ReverbitAuth {
                         <span class="menu-arrow">›</span>
                     </a>
                     
-                    <!-- Settings - ALWAYS VISIBLE to all users (FIXED) -->
                     <button class="profile-menu-item" id="settings-btn">
                         <span class="profile-menu-icon">
                             <i class="fas fa-cog"></i>
@@ -1768,7 +2059,7 @@ class ReverbitAuth {
                 el.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    this.handleAvatarUpload();
+                    this.showPhotoOptions();
                 });
             }
         });
@@ -1779,7 +2070,6 @@ class ReverbitAuth {
             }
         });
         
-        // Add name animation on hover
         const nameElement = this.profilePopup.querySelector('#profile-name');
         if (nameElement) {
             nameElement.addEventListener('mouseenter', () => {
@@ -1939,91 +2229,6 @@ class ReverbitAuth {
         }
         if (this.avatarUploadInput) {
             this.avatarUploadInput.remove();
-        }
-    }
-
-    // ================= AVATAR UPLOAD =================
-    async handleAvatarUpload() {
-        if (!this.user) {
-            this.showToast('Please sign in to upload photos', 'info', true);
-            return;
-        }
-        
-        if (this.avatarUploadInput) {
-            this.avatarUploadInput.click();
-        }
-    }
-
-    async uploadProfilePicture(file) {
-        if (!this.user || !file) return;
-        
-        if (file.size > 10 * 1024 * 1024) {
-            this.showToast('Image must be less than 10MB', 'error', true);
-            return;
-        }
-        
-        if (!file.type.startsWith('image/')) {
-            this.showToast('Please select an image file', 'error', true);
-            return;
-        }
-        
-        try {
-            this.showUploadingState(true);
-            this.showToast('Uploading profile picture...', 'info', true);
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', this.cloudinaryConfig.uploadPreset);
-            formData.append('cloud_name', this.cloudinaryConfig.cloudName);
-            formData.append('folder', this.cloudinaryConfig.folder);
-            
-            const response = await fetch(`https://api.cloudinary.com/v1_1/${this.cloudinaryConfig.cloudName}/image/upload`, {
-                method: 'POST',
-                body: formData
-            });
-            
-            if (!response.ok) throw new Error('Upload failed');
-            
-            const result = await response.json();
-            const photoURL = result.secure_url;
-            const cloudinaryImageId = result.public_id;
-            
-            await this.db.collection('users').doc(this.user.uid).update({
-                photoURL: photoURL,
-                cloudinaryImageId: cloudinaryImageId,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            await this.auth.currentUser.updateProfile({ photoURL });
-            
-            this.user.photoURL = photoURL;
-            this.userProfile.photoURL = photoURL;
-            this.userProfile.cloudinaryImageId = cloudinaryImageId;
-            
-            this.cacheUserData();
-            this.updateProfileAvatar();
-            
-            if (this.profilePopup && this.popupVisible) {
-                this.updatePopupContent();
-                this.attachPopupEventListeners();
-            }
-            
-            this.showToast('Profile picture updated!', 'success', true);
-            
-        } catch (error) {
-            console.error('Auth: Upload failed:', error);
-            this.showToast('Failed to upload picture', 'error', true);
-        } finally {
-            this.showUploadingState(false);
-        }
-    }
-
-    showUploadingState(show) {
-        if (!this.profileAvatar) return;
-        
-        const loadingSpinner = this.profileAvatar.querySelector('.reverbit-avatar-loading');
-        if (loadingSpinner) {
-            loadingSpinner.style.display = show ? 'block' : 'none';
         }
     }
 
@@ -2247,6 +2452,7 @@ class ReverbitAuth {
             await this.auth.signOut();
             
             this.clearSession();
+            this.closeCameraModal();
             
             if (this.updateInterval) {
                 clearInterval(this.updateInterval);
@@ -2337,7 +2543,7 @@ class ReverbitAuth {
                 transition: opacity 0.3s ease;
             }
             
-            /* Avatar Verification Badge - ONLY SHOWS FOR VERIFIED USERS */
+            /* Avatar Verification Badge */
             .avatar-verified-badge {
                 position: absolute;
                 bottom: -2px;
@@ -2436,6 +2642,350 @@ class ReverbitAuth {
             @keyframes avatar-spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
+            }
+            
+            /* Photo Options Modal - NEW */
+            .photo-options-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(5px);
+                z-index: 10002;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .photo-options-modal.show {
+                opacity: 1;
+            }
+            
+            .photo-options-container {
+                background: #F5EDD6;
+                border-radius: 28px;
+                width: 90%;
+                max-width: 400px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(26, 18, 8, 0.3);
+                transform: scale(0.9);
+                transition: transform 0.3s ease;
+            }
+            
+            .dark-theme .photo-options-container {
+                background: #1A1208;
+            }
+            
+            .photo-options-modal.show .photo-options-container {
+                transform: scale(1);
+            }
+            
+            .photo-options-header {
+                padding: 20px 24px;
+                border-bottom: 1px solid rgba(181, 101, 29, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .photo-options-header h3 {
+                font-size: 20px;
+                font-weight: 600;
+                color: #1A1208;
+                margin: 0;
+                font-family: 'Begum', serif;
+            }
+            
+            .dark-theme .photo-options-header h3 {
+                color: #F5EDD6;
+            }
+            
+            .photo-options-close {
+                background: none;
+                border: none;
+                color: #B5651D;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 5px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.2s ease;
+            }
+            
+            .photo-options-close:hover {
+                background: rgba(181, 101, 29, 0.1);
+            }
+            
+            .photo-options-content {
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .photo-option-btn {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 16px;
+                border: 2px solid rgba(181, 101, 29, 0.2);
+                border-radius: 20px;
+                background: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 100%;
+                text-align: left;
+            }
+            
+            .photo-option-btn:hover {
+                border-color: #B5651D;
+                background: rgba(181, 101, 29, 0.05);
+                transform: translateX(4px);
+            }
+            
+            .photo-option-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #B5651D, #2A9D8F);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                flex-shrink: 0;
+            }
+            
+            .photo-option-text {
+                flex: 1;
+            }
+            
+            .photo-option-title {
+                display: block;
+                font-size: 16px;
+                font-weight: 600;
+                color: #1A1208;
+                margin-bottom: 4px;
+            }
+            
+            .dark-theme .photo-option-title {
+                color: #F5EDD6;
+            }
+            
+            .photo-option-desc {
+                display: block;
+                font-size: 13px;
+                color: #2D2010;
+                opacity: 0.7;
+            }
+            
+            .dark-theme .photo-option-desc {
+                color: #D4C49A;
+            }
+            
+            /* Camera Modal */
+            .camera-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                z-index: 10003;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .camera-modal.show {
+                opacity: 1;
+            }
+            
+            .camera-modal video {
+                width: 100%;
+                max-width: 600px;
+                max-height: 70vh;
+                object-fit: contain;
+                background: #000;
+                border-radius: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .camera-controls {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 20px;
+            }
+            
+            .camera-controls button {
+                padding: 14px 28px;
+                border: none;
+                border-radius: 50px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transition: all 0.3s ease;
+            }
+            
+            .camera-capture-btn {
+                background: #B5651D;
+                color: white;
+            }
+            
+            .camera-capture-btn:hover {
+                background: #CD8B45;
+                transform: scale(1.05);
+            }
+            
+            .camera-switch-btn {
+                background: #2A9D8F;
+                color: white;
+            }
+            
+            .camera-switch-btn:hover {
+                background: #3FB3A5;
+                transform: scale(1.05);
+            }
+            
+            .camera-cancel-btn {
+                background: #C0392B;
+                color: white;
+            }
+            
+            .camera-cancel-btn:hover {
+                background: #E74C3C;
+                transform: scale(1.05);
+            }
+            
+            /* Photo Preview Modal */
+            .photo-preview-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                z-index: 10004;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .photo-preview-modal.show {
+                opacity: 1;
+            }
+            
+            .photo-preview-container {
+                background: #F5EDD6;
+                border-radius: 28px;
+                width: 90%;
+                max-width: 500px;
+                overflow: hidden;
+            }
+            
+            .dark-theme .photo-preview-container {
+                background: #1A1208;
+            }
+            
+            .photo-preview-header {
+                padding: 20px 24px;
+                border-bottom: 1px solid rgba(181, 101, 29, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .photo-preview-header h3 {
+                font-size: 20px;
+                font-weight: 600;
+                color: #1A1208;
+                margin: 0;
+            }
+            
+            .dark-theme .photo-preview-header h3 {
+                color: #F5EDD6;
+            }
+            
+            .photo-preview-close {
+                background: none;
+                border: none;
+                color: #B5651D;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 5px;
+            }
+            
+            .photo-preview-content {
+                padding: 24px;
+                text-align: center;
+            }
+            
+            .photo-preview-content img {
+                max-width: 100%;
+                max-height: 50vh;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            }
+            
+            .photo-preview-actions {
+                padding: 0 24px 24px;
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+            }
+            
+            .photo-preview-actions button {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 50px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .photo-preview-retake {
+                background: #EDE0C0;
+                color: #1A1208;
+            }
+            
+            .dark-theme .photo-preview-retake {
+                background: #2D2010;
+                color: #F5EDD6;
+            }
+            
+            .photo-preview-retake:hover {
+                background: #D4C49A;
+                transform: translateY(-2px);
+            }
+            
+            .photo-preview-use {
+                background: linear-gradient(135deg, #B5651D, #2A9D8F);
+                color: white;
+            }
+            
+            .photo-preview-use:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(181, 101, 29, 0.3);
             }
             
             /* Profile Popup */
@@ -2605,7 +3155,6 @@ class ReverbitAuth {
                 color: #CD8B45;
             }
             
-            /* Email Verification Badge */
             .email-verified-badge {
                 color: #2A9D8F;
                 font-size: 14px;
@@ -2616,7 +3165,6 @@ class ReverbitAuth {
                 font-size: 14px;
             }
             
-            /* Popup Verification Badge - ONLY SHOWS FOR VERIFIED USERS */
             .verified-badge-popup {
                 display: inline-flex;
                 align-items: center;
@@ -2997,55 +3545,6 @@ class ReverbitAuth {
                 opacity: 1;
             }
             
-            /* Camera Modal */
-            .camera-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.9);
-                z-index: 10002;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .camera-modal video {
-                width: 90%;
-                max-width: 500px;
-                border-radius: 12px;
-                background: #000;
-            }
-            
-            .camera-controls {
-                margin-top: 20px;
-                display: flex;
-                gap: 16px;
-            }
-            
-            .camera-controls button {
-                padding: 12px 24px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 16px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-            
-            .camera-controls button:first-child {
-                background: #1a73e8;
-                color: white;
-            }
-            
-            .camera-controls button:last-child {
-                background: #5f6368;
-                color: white;
-            }
-            
             /* Auth Fallback */
             .auth-fallback {
                 position: fixed;
@@ -3125,7 +3624,7 @@ class ReverbitAuth {
                 outline-offset: 2px;
             }
             
-            /* Toast Notifications - FIXED: Controlled and throttled */
+            /* Toast Notifications */
             .reverbit-toast {
                 position: fixed;
                 bottom: 24px;
@@ -3238,6 +3737,25 @@ class ReverbitAuth {
                 .reverbit-toast {
                     min-width: 280px;
                     width: calc(100% - 32px);
+                }
+                
+                .camera-controls {
+                    flex-direction: column;
+                    width: 90%;
+                }
+                
+                .camera-controls button {
+                    width: 100%;
+                    justify-content: center;
+                }
+                
+                .photo-preview-actions {
+                    flex-direction: column;
+                }
+                
+                .photo-preview-actions button {
+                    width: 100%;
+                    justify-content: center;
                 }
             }
         `;
@@ -3416,4 +3934,4 @@ window.addEventListener('storage', (e) => {
 // Make auth globally accessible
 window.auth = window.ReverbitAuth;
 
-console.log('Reverbit Enterprise Auth System loaded successfully - All Issues Fixed');
+console.log('Reverbit');
