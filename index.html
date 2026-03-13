@@ -122,13 +122,23 @@
     <!-- ===== WEBMASTER VERIFICATION ===== -->
     <meta name="google-site-verification" content="gVm_Dk4QJW6bhd3nyT3WJPIzHXt9SEgn8Z43IU2t27Y" />
     
-    <!-- ===== FIREBASE SDK (defer for performance) ===== -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js" defer></script>
-    <script src="https://aditya-cmd-max.github.io/js/auth.js" defer></script>
+   <!-- ===== SCRIPTS (NO DEFER - LOAD IN ORDER) ===== -->
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    
+    <!-- Auth.js -->
+    <script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- AOS (remove defer) -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     
     <!-- ===== SCHEMA.ORG / STRUCTURED DATA - ORGANIZATION ===== -->
@@ -4000,12 +4010,7 @@
         });
     </script>
 
-    <!-- ===== GSAP (defer for performance) ===== -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-    
-    <!-- ===== AOS (defer for performance) ===== -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+ 
     
     
 </body>
