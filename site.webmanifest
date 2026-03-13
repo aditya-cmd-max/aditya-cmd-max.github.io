@@ -1,1 +1,61 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "Reverbit - From India, For the Future",
+  "short_name": "Reverbit",
+  "description": "India's next-gen AI-powered educational platform offering innovative tools and transformative tech solutions for curious minds.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#B5651D",
+  "background_color": "#F5EDD6",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "id": "/",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": ["education", "technology", "artificial intelligence"],
+  "shortcuts": [
+    {
+      "name": "Clover AI",
+      "short_name": "Clover",
+      "description": "Intelligent tutoring system",
+      "url": "/cloverai/",
+      "icons": [{ "src": "/clover-icon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "SkyCast",
+      "short_name": "SkyCast",
+      "description": "Environmental science platform",
+      "url": "/exonovaweather/",
+      "icons": [{ "src": "/skycast-icon.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-home.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Reverbit Homepage"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://aditya-cmd-max.github.io/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false
+}
