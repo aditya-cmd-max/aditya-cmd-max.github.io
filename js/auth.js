@@ -1,7 +1,6 @@
 // ====================================================================
 // auth.js 
 // Reverbit Innovations by Aditya Jha
-// ULTIMATE PRODUCTION VERSION - WITH CAMERA/UPLOAD OPTIONS
 // ====================================================================
 
 class ReverbitAuth {
@@ -28,12 +27,15 @@ class ReverbitAuth {
         this.userProfile = null;
         this.initialized = false;
         this.initPromise = null;
+        this.auth = null;
+        this.db = null;
         
         // UI elements
         this.profilePopup = null;
         this.profileAvatar = null;
         this.avatarUploadInput = null;
         this.cameraModal = null;
+        this.currentCameraStream = null;
         
         // Theme
         this.currentTheme = 'auto';
@@ -63,7 +65,8 @@ class ReverbitAuth {
             'DATA SAVED LOCALLY', 
             'Profile saved locally', 
             'Using cached profile',
-            'Will sync when online'
+            'Will sync when online',
+            'Using cached data'
         ];
         
         // Bind methods
@@ -145,18 +148,11 @@ class ReverbitAuth {
             this.setupPeriodicUpdates();
             this.setupConnectivityListeners();
             
-            // Force avatar creation
-            setTimeout(() => {
-                if (this.user) {
-                    this.forceAvatarCreation();
-                }
-            }, 500);
+            // Process offline queue
+            this.processOfflineQueue(true);
             
             this.initialized = true;
             console.log('Auth: Enterprise initialization complete');
-            
-            // Process offline queue silently
-            this.processOfflineQueue(true);
             
             // Notify listeners
             this.notifyAuthListeners();
@@ -390,6 +386,9 @@ class ReverbitAuth {
                 break;
             case 'syncUserData':
                 await this.syncUserData();
+                break;
+            case 'createProfile':
+                await this.db.collection('users').doc(item.data.uid).set(item.data.profile);
                 break;
         }
     }
@@ -739,6 +738,9 @@ class ReverbitAuth {
                                 verified: false,
                                 verifiedLevel: 'none',
                                 premiumVerified: false,
+                                verifiedBy: null,
+                                verifiedAt: null,
+                                verificationNotes: '',
                                 cloudinaryImageId: '',
                                 lastLogin: new Date().toISOString(),
                                 lastActive: new Date().toISOString(),
@@ -1112,26 +1114,41 @@ class ReverbitAuth {
         }
     }
 
-    // ================= VERIFICATION HELPERS =================
+    // ================= VERIFICATION HELPERS - FIXED VERSION =================
     getVerificationLevel() {
         if (!this.userProfile) return 'none';
         
-        // Check premium verification FIRST
+        // Check premium verification FIRST with proper type checking
         if (this.userProfile.premiumVerified === true || 
             this.userProfile.premiumVerified === 'true' ||
             this.userProfile.verifiedLevel === 'premium' ||
             this.userProfile.verifiedLevel === 'Premium' ||
-            this.userProfile.verifiedLevel?.toLowerCase() === 'premium') {
+            this.userProfile.verifiedLevel?.toLowerCase() === 'premium' ||
+            this.userProfile.verified === 'premium' ||
+            this.userProfile.verified === true && this.userProfile.verifiedLevel === 'premium') {
             return 'premium';
         }
         
-        // Check basic verification
+        // Check basic verification with proper type checking
         if (this.userProfile.verified === true || 
             this.userProfile.verified === 'true' ||
             this.userProfile.verifiedLevel === 'basic' ||
             this.userProfile.verifiedLevel === 'Basic' ||
-            this.userProfile.verifiedLevel?.toLowerCase() === 'basic') {
+            this.userProfile.verifiedLevel?.toLowerCase() === 'basic' ||
+            this.userProfile.verified === 'basic') {
             return 'basic';
+        }
+        
+        // Check for string values that might indicate verification
+        if (typeof this.userProfile.verified === 'string') {
+            if (this.userProfile.verified.toLowerCase() === 'premium') {
+                return 'premium';
+            }
+            if (this.userProfile.verified.toLowerCase() === 'basic' || 
+                this.userProfile.verified.toLowerCase() === 'true' ||
+                this.userProfile.verified.toLowerCase() === 'verified') {
+                return 'basic';
+            }
         }
         
         return 'none';
@@ -1158,7 +1175,7 @@ class ReverbitAuth {
         return `
             <div class="verified-badge-popup ${colorClass}" title="${isPremium ? 'Premium Verified Account' : 'Verified Account'}">
                 <i class="fas fa-${icon}"></i>
-                ${text}
+                <span>${text}</span>
             </div>
         `;
     }
@@ -1467,14 +1484,13 @@ class ReverbitAuth {
         }, 100);
     }
 
-    // ================= PHOTO OPTIONS - NEW FEATURE =================
+    // ================= PHOTO OPTIONS =================
     showPhotoOptions() {
         if (!this.user) {
             this.showToast('Please sign in to upload photos', 'info', true);
             return;
         }
         
-        // Remove any existing options modal
         const existingModal = document.querySelector('.photo-options-modal');
         if (existingModal) existingModal.remove();
         
@@ -1512,7 +1528,6 @@ class ReverbitAuth {
         
         document.body.appendChild(modal);
         
-        // Add event listeners
         const closeBtn = modal.querySelector('.photo-options-close');
         closeBtn.addEventListener('click', () => modal.remove());
         
@@ -1528,14 +1543,12 @@ class ReverbitAuth {
             this.chooseFromGallery();
         });
         
-        // Close on backdrop click
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.remove();
             }
         });
         
-        // Add animation
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
@@ -1556,14 +1569,12 @@ class ReverbitAuth {
             return;
         }
         
-        // Check if camera is supported
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             this.showToast('Camera access is not supported on this device/browser', 'error', true);
             return;
         }
         
         try {
-            // Show loading state
             this.showToast('Accessing camera...', 'info', true);
             
             const constraints = {
@@ -1593,7 +1604,6 @@ class ReverbitAuth {
     }
 
     showCameraInterface(stream) {
-        // Remove any existing camera modal
         this.closeCameraModal();
         
         this.cameraModal = document.createElement('div');
@@ -1614,13 +1624,12 @@ class ReverbitAuth {
         const switchBtn = document.createElement('button');
         switchBtn.className = 'camera-switch-btn';
         switchBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Switch Camera';
-        switchBtn.style.display = 'none'; // Hide initially, show only if multiple cameras
+        switchBtn.style.display = 'none';
         
         const cancelBtn = document.createElement('button');
         cancelBtn.className = 'camera-cancel-btn';
         cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
         
-        // Check if device has multiple cameras
         if (stream.getVideoTracks().length > 0) {
             const track = stream.getVideoTracks()[0];
             const capabilities = track.getCapabilities?.();
@@ -1630,10 +1639,8 @@ class ReverbitAuth {
                 
                 let usingFrontCamera = true;
                 switchBtn.addEventListener('click', () => {
-                    // Stop current stream
                     stream.getTracks().forEach(track => track.stop());
                     
-                    // Switch camera
                     const newConstraints = {
                         video: {
                             facingMode: usingFrontCamera ? 'environment' : 'user',
@@ -1663,7 +1670,6 @@ class ReverbitAuth {
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            // Show preview
             this.showPhotoPreview(canvas.toDataURL('image/jpeg', 0.9), stream);
         });
         
@@ -1680,10 +1686,8 @@ class ReverbitAuth {
         this.cameraModal.appendChild(controls);
         document.body.appendChild(this.cameraModal);
         
-        // Store stream for cleanup
         this.currentCameraStream = stream;
         
-        // Add animation
         setTimeout(() => this.cameraModal.classList.add('show'), 10);
     }
 
@@ -1715,26 +1719,22 @@ class ReverbitAuth {
         
         closeBtn.addEventListener('click', () => {
             previewModal.remove();
-            // Keep camera open
         });
         
         retakeBtn.addEventListener('click', () => {
             previewModal.remove();
-            // Camera is still open
         });
         
         useBtn.addEventListener('click', async () => {
             previewModal.remove();
             this.closeCameraModal();
             
-            // Convert data URL to file
             const blob = await (await fetch(imageDataUrl)).blob();
             const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
             
             await this.uploadProfilePicture(file);
         });
         
-        // Close on backdrop click
         previewModal.addEventListener('click', (e) => {
             if (e.target === previewModal) {
                 previewModal.remove();
@@ -2644,7 +2644,7 @@ class ReverbitAuth {
                 100% { transform: rotate(360deg); }
             }
             
-            /* Photo Options Modal - NEW */
+            /* Photo Options Modal */
             .photo-options-modal {
                 position: fixed;
                 top: 0;
@@ -3934,4 +3934,4 @@ window.addEventListener('storage', (e) => {
 // Make auth globally accessible
 window.auth = window.ReverbitAuth;
 
-console.log('Reverbit');
+console.log('Reverbit Auth');
