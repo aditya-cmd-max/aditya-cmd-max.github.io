@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GS6V9ZCN0K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GS6V9ZCN0K');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Reverbit</title>
+    <meta name="description" content="Reverbit Terms of Service - Legal agreement for using our AI tools and services.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Material Design 3 Color System */
+        :root {
+            /* Primary Colors - Blue Theme */
+            --md-primary: #1a73e8;
+            --md-primary-light: #4285f4;
+            --md-primary-dark: #0d47a1;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #d2e3fc;
+            --md-on-primary-container: #001d3d;
+            
+            /* Secondary Colors - Green Theme */
+            --md-secondary: #0d8a72;
+            --md-secondary-light: #34a853;
+            --md-secondary-dark: #0a5c42;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #b8f2e6;
+            --md-on-secondary-container: #00201a;
+            
+            /* Surface Colors */
+            --md-surface: #FFFFFF;
+            --md-on-surface: #202124;
+            --md-surface-variant: #F8F9FA;
+            --md-on-surface-variant: #5f6368;
+            
+            /* Background Colors */
+            --md-background: #FFFFFF;
+            --md-on-background: #202124;
+            
+            /* Outline Colors */
+            --md-outline: #DADCE0;
+            --md-outline-variant: #E8EAED;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            --md-elevation-4: 0 4px 12px rgba(0, 0, 0, 0.1);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-pill: 9999px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            --md-spacing-xxl: 48px;
+            
+            /* Typography */
+            --md-font-logo: 'Playfair Display', serif;
+            --md-font-heading: 'Inter', sans-serif;
+            --md-font-body: 'Lora', serif;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #202124;
+            --md-on-surface: #FFFFFF;
+            --md-surface-variant: #303134;
+            --md-on-surface-variant: #E8EAED;
+            --md-background: #202124;
+            --md-on-background: #FFFFFF;
+            --md-primary: #8ab4f8;
+            --md-primary-light: #aecbfa;
+            --md-primary-container: #174ea6;
+            --md-on-primary-container: #E8EAED;
+            --md-secondary: #81c995;
+            --md-secondary-light: #a8dab5;
+            --md-secondary-container: #0d8a72;
+            --md-on-secondary-container: #E8EAED;
+            --md-outline: #3C4043;
+            --md-outline-variant: #5F6368;
+            --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--md-font-body);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--md-surface);
+            border-bottom: 1px solid var(--md-outline);
+            padding: var(--md-spacing-lg) 0;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--md-spacing-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            text-decoration: none;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-weight: 700;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .site-name {
+            font-family: var(--md-font-logo);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+            letter-spacing: -0.5px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            background: var(--md-surface-variant);
+        }
+
+        .theme-toggle:hover {
+            background: var(--md-primary-container);
+            transform: rotate(15deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--md-spacing-xxl) var(--md-spacing-xl);
+            flex: 1;
+        }
+
+        /* Terms Container */
+        .terms-container {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            border: 1px solid var(--md-outline);
+            overflow: hidden;
+            box-shadow: var(--md-elevation-2);
+            position: relative;
+        }
+
+        .terms-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .terms-header {
+            padding: var(--md-spacing-xxl) var(--md-spacing-xxl) var(--md-spacing-lg);
+            text-align: center;
+            background: var(--md-surface-variant);
+        }
+
+        .terms-title {
+            font-family: var(--md-font-logo);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+            position: relative;
+            display: inline-block;
+        }
+
+        .terms-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+            border-radius: 3px;
+        }
+
+        .last-updated {
+            color: var(--md-on-surface-variant);
+            font-size: 1rem;
+            margin-top: var(--md-spacing-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+        }
+
+        .acceptance-notice {
+            background: var(--md-primary-container);
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            margin-top: var(--md-spacing-lg);
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            border-left: 4px solid var(--md-primary);
+        }
+
+        .acceptance-notice p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--md-on-primary-container);
+        }
+
+        .terms-content {
+            padding: var(--md-spacing-xxl);
+        }
+
+        /* Terms Sections */
+        .terms-section {
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-xl);
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .terms-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: var(--md-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--md-on-surface);
+        }
+
+        .section-subtitle {
+            font-family: var(--md-font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin: var(--md-spacing-lg) 0 var(--md-spacing-md);
+        }
+
+        .section-content {
+            margin-left: calc(48px + var(--md-spacing-md));
+        }
+
+        .section-content p {
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface-variant);
+        }
+
+        .section-content ul, .section-content ol {
+            margin-left: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface-variant);
+        }
+
+        .section-content li {
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .important-note {
+            background: var(--md-primary-container);
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border-left: 4px solid var(--md-primary);
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .important-note p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--md-on-primary-container);
+        }
+
+        .warning-note {
+            background: #FFF3CD;
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border-left: 4px solid #FFC107;
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .dark-theme .warning-note {
+            background: #332701;
+            border-left-color: #FFD54F;
+        }
+
+        .warning-note p {
+            margin: 0;
+            font-weight: 500;
+            color: #856404;
+        }
+
+        .dark-theme .warning-note p {
+            color: #FFD54F;
+        }
+
+        /* Definition List */
+        .definition-list {
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .definition-item {
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .definition-term {
+            font-weight: 700;
+            color: var(--md-primary);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .definition-description {
+            color: var(--md-on-surface-variant);
+            margin-left: var(--md-spacing-md);
+        }
+
+        /* Tool Grid */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--md-spacing-md);
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .tool-item {
+            background: var(--md-surface-variant);
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border: 1px solid var(--md-outline);
+            transition: var(--md-transition);
+        }
+
+        .tool-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .tool-description {
+            font-size: 0.875rem;
+            color: var(--md-on-surface-variant);
+        }
+
+        /* Contact Card */
+        .contact-card {
+            background: var(--md-surface-variant);
+            padding: var(--md-spacing-xl);
+            border-radius: var(--md-radius-large);
+            margin-top: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+        }
+
+        .contact-card h3 {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-sm);
+            color: var(--md-on-surface-variant);
+        }
+
+        .contact-item i {
+            width: 24px;
+            color: var(--md-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--md-surface);
+            border-top: 1px solid var(--md-outline);
+            padding: var(--md-spacing-xl);
+            margin-top: var(--md-spacing-xxl);
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-secondary));
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .footer-link {
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            font-family: var(--md-font-heading);
+            font-size: 0.95rem;
+            transition: var(--md-transition);
+        }
+
+        .footer-link:hover {
+            color: var(--md-primary);
+        }
+
+        .copyright {
+            color: var(--md-on-surface-variant);
+            font-size: 0.875rem;
+            margin-top: var(--md-spacing-md);
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: var(--md-spacing-xl);
+            right: var(--md-spacing-xl);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary);
+            text-decoration: none;
+            box-shadow: var(--md-elevation-2);
+            transition: var(--md-transition);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: var(--md-elevation-4);
+        }
+
+        /* Table of Contents */
+        .toc-container {
+            background: var(--md-surface-variant);
+            padding: var(--md-spacing-xl);
+            border-radius: var(--md-radius-large);
+            margin-bottom: var(--md-spacing-xl);
+            border: 1px solid var(--md-outline);
+        }
+
+        .toc-title {
+            font-family: var(--md-font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-lg);
+            color: var(--md-on-surface);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            columns: 2;
+            column-gap: var(--md-spacing-xl);
+        }
+
+        .toc-item {
+            margin-bottom: var(--md-spacing-sm);
+            break-inside: avoid;
+        }
+
+        .toc-link {
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            transition: var(--md-transition);
+        }
+
+        .toc-link:hover {
+            color: var(--md-primary);
+            transform: translateX(4px);
+        }
+
+        .toc-link i {
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 var(--md-spacing-lg);
+            }
+            
+            .main-content {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .terms-header {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .terms-content {
+                padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--md-spacing-sm);
+            }
+            
+            .section-content {
+                margin-left: 0;
+            }
+            
+            .back-to-top {
+                bottom: var(--md-spacing-lg);
+                right: var(--md-spacing-lg);
+            }
+            
+            .toc-list {
+                columns: 1;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 var(--md-spacing-md);
+            }
+            
+            .main-content {
+                padding: var(--md-spacing-lg) var(--md-spacing-md);
+            }
+            
+            .terms-header {
+                padding: var(--md-spacing-lg) var(--md-spacing-md);
+            }
+            
+            .terms-content {
+                padding: var(--md-spacing-lg) var(--md-spacing-md);
+            }
+            
+            .site-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="https://reverbit.in/reverbit/" class="logo-container">
+                <div class="logo">
+                    <img src="https://reverbit.in/reverbit/logo-insvg.svg" alt="Reverbit Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='R';">
+                </div>
+                <span class="site-name">Reverbit</span>
+            </a>
+            
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="terms-container">
+            <div class="terms-header">
+                <h1 class="terms-title">Terms of Service</h1>
+                <p class="last-updated">
+                    <i class="fas fa-calendar-alt"></i>
+                    Last Updated: January 20, 2024
+                </p>
+                
+                <div class="acceptance-notice">
+                    <p><i class="fas fa-exclamation-circle"></i> By accessing or using Reverbit's website, tools, and services, you agree to be bound by these Terms of Service. Please read them carefully.</p>
+                </div>
+            </div>
+            
+            <!-- Table of Contents -->
+            <div class="toc-container">
+                <h3 class="toc-title"><i class="fas fa-list"></i> Table of Contents</h3>
+                <ul class="toc-list">
+                    <li class="toc-item"><a href="#acceptance" class="toc-link"><i class="fas fa-check-circle"></i> 1. Acceptance of Terms</a></li>
+                    <li class="toc-item"><a href="#services" class="toc-link"><i class="fas fa-tools"></i> 2. Our Services</a></li>
+                    <li class="toc-item"><a href="#accounts" class="toc-link"><i class="fas fa-user"></i> 3. User Accounts</a></li>
+                    <li class="toc-item"><a href="#acceptable-use" class="toc-link"><i class="fas fa-shield-alt"></i> 4. Acceptable Use</a></li>
+                    <li class="toc-item"><a href="#intellectual-property" class="toc-link"><i class="fas fa-copyright"></i> 5. Intellectual Property</a></li>
+                    <li class="toc-item"><a href="#ai-generated-content" class="toc-link"><i class="fas fa-robot"></i> 6. AI-Generated Content</a></li>
+                    <li class="toc-item"><a href="#privacy" class="toc-link"><i class="fas fa-lock"></i> 7. Privacy & Data</a></li>
+                    <li class="toc-item"><a href="#third-party" class="toc-link"><i class="fas fa-external-link-alt"></i> 8. Third-Party Services</a></li>
+                    <li class="toc-item"><a href="#disclaimer" class="toc-link"><i class="fas fa-exclamation-triangle"></i> 9. Disclaimer</a></li>
+                    <li class="toc-item"><a href="#limitation" class="toc-link"><i class="fas fa-balance-scale"></i> 10. Limitation of Liability</a></li>
+                    <li class="toc-item"><a href="#termination" class="toc-link"><i class="fas fa-ban"></i> 11. Termination</a></li>
+                    <li class="toc-item"><a href="#modifications" class="toc-link"><i class="fas fa-edit"></i> 12. Modifications</a></li>
+                    <li class="toc-item"><a href="#governing-law" class="toc-link"><i class="fas fa-gavel"></i> 13. Governing Law</a></li>
+                    <li class="toc-item"><a href="#contact" class="toc-link"><i class="fas fa-envelope"></i> 14. Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="terms-content">
+                <!-- Acceptance of Terms -->
+                <section class="terms-section" id="acceptance">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2 class="section-title">1. Acceptance of Terms</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "you," or "your") and Reverbit ("we," "us," "our," or "Reverbit") regarding your use of our website, services, and AI tools (collectively, the "Services").</p>
+                        
+                        <p>By accessing or using any of our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree with any part of these Terms, you must immediately cease using our Services.</p>
+                        
+                        <div class="important-note">
+                            <p><strong>Age Requirement:</strong> You must be at least 13 years old to use our Services. If you are under 18, you represent that you have obtained parental or guardian consent to use our Services.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Our Services -->
+                <section class="terms-section" id="services">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h2 class="section-title">2. Our Services</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Reverbit provides a suite of AI-powered educational tools and services designed to enhance learning and productivity. Our services include but are not limited to:</p>
+                        
+                        <div class="tool-grid">
+                            <div class="tool-item">
+                                <div class="tool-name">Clover AI</div>
+                                <div class="tool-description">Intelligent tutoring system with personalized learning paths</div>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-name">SkyCast Pro</div>
+                                <div class="tool-description">Environmental science platform with data visualization</div>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-name">PopOut Pro</div>
+                                <div class="tool-description">AI-powered visual learning tool</div>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-name">Peo-TTS</div>
+                                <div class="tool-description">Natural sounding text-to-speech system</div>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-name">Mindscribe</div>
+                                <div class="tool-description">Digital notebook with AI features</div>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-name">Clover Studio</div>
+                                <div class="tool-description">Creative concept transformation tool</div>
+                            </div>
+                        </div>
+                        
+                        <p><strong>Service Availability:</strong> We strive to provide uninterrupted access to our Services but do not guarantee 100% uptime. We may perform maintenance, updates, or improvements that may temporarily affect service availability.</p>
+                        
+                        <div class="warning-note">
+                            <p><i class="fas fa-exclamation-triangle"></i> <strong>Beta Services:</strong> Some of our tools may be labeled as "beta" or "experimental." These services are provided as-is and may contain bugs or undergo significant changes.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- User Accounts -->
+                <section class="terms-section" id="accounts">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h2 class="section-title">3. User Accounts</h2>
+                    </div>
+                    <div class="section-content">
+                        <h3 class="section-subtitle">3.1 Account Creation</h3>
+                        <p>Some of our Services may require you to create a user account. When creating an account, you agree to:</p>
+                        <ul>
+                            <li>Provide accurate, current, and complete information</li>
+                            <li>Maintain and promptly update your account information</li>
+                            <li>Maintain the security of your password</li>
+                            <li>Accept responsibility for all activities under your account</li>
+                            <li>Notify us immediately of any unauthorized use of your account</li>
+                        </ul>
+                        
+                        <h3 class="section-subtitle">3.2 Account Termination</h3>
+                        <p>We reserve the right to suspend or terminate your account if:</p>
+                        <ul>
+                            <li>You violate these Terms</li>
+                            <li>We suspect fraudulent or malicious activity</li>
+                            <li>Required by law or legal process</li>
+                            <li>For prolonged inactivity (typically 12+ months)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Acceptable Use -->
+                <section class="terms-section" id="acceptable-use">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h2 class="section-title">4. Acceptable Use</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>You agree to use our Services only for lawful purposes and in accordance with these Terms. You agree not to:</p>
+                        
+                        <ul>
+                            <li>Use our Services to violate any law, regulation, or third-party rights</li>
+                            <li>Upload, transmit, or distribute viruses, malware, or other harmful code</li>
+                            <li>Attempt to gain unauthorized access to our systems or other users' accounts</li>
+                            <li>Use automated systems (bots, scrapers, etc.) to access our Services without permission</li>
+                            <li>Interfere with or disrupt the integrity or performance of our Services</li>
+                            <li>Use our Services for spamming, phishing, or other abusive activities</li>
+                            <li>Generate or distribute illegal, harmful, or offensive content</li>
+                            <li>Impersonate any person or entity or misrepresent your affiliation</li>
+                        </ul>
+                        
+                        <div class="important-note">
+                            <p><strong>Educational Use:</strong> Our Services are designed primarily for educational purposes. Commercial use may require separate licensing or permissions.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Intellectual Property -->
+                <section class="terms-section" id="intellectual-property">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-copyright"></i>
+                        </div>
+                        <h2 class="section-title">5. Intellectual Property</h2>
+                    </div>
+                    <div class="section-content">
+                        <h3 class="section-subtitle">5.1 Our Intellectual Property</h3>
+                        <p>All rights, title, and interest in and to our Services, including all intellectual property rights, are and will remain the exclusive property of Reverbit and its licensors. This includes:</p>
+                        <ul>
+                            <li>Software, code, and algorithms</li>
+                            <li>Designs, trademarks, and logos</li>
+                            <li>Documentation and training materials</li>
+                            <li>Website content and layout</li>
+                        </ul>
+                        
+                        <h3 class="section-subtitle">5.2 Your Content</h3>
+                        <p>You retain ownership of any content you submit, upload, or create using our Services ("Your Content"). By using our Services, you grant us a worldwide, non-exclusive, royalty-free license to:</p>
+                        <ul>
+                            <li>Use Your Content to provide and improve our Services</li>
+                            <li>Display Your Content to you and other users as intended by the service</li>
+                            <li>Analyze and process Your Content for service improvement (in anonymized form)</li>
+                        </ul>
+                        
+                        <h3 class="section-subtitle">5.3 License to Use</h3>
+                        <p>We grant you a limited, non-exclusive, non-transferable, revocable license to access and use our Services for personal, non-commercial purposes, subject to these Terms.</p>
+                    </div>
+                </section>
+
+                <!-- AI-Generated Content -->
+                <section class="terms-section" id="ai-generated-content">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h2 class="section-title">6. AI-Generated Content</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Our Services use artificial intelligence to generate content. Important considerations:</p>
+                        
+                        <div class="definition-list">
+                            <div class="definition-item">
+                                <span class="definition-term">Accuracy Disclaimer</span>
+                                <span class="definition-description">AI-generated content may contain inaccuracies, errors, or biases. You should verify important information from multiple sources.</span>
+                            </div>
+                            
+                            <div class="definition-item">
+                                <span class="definition-term">No Guarantees</span>
+                                <span class="definition-description">We do not guarantee the accuracy, completeness, or reliability of AI-generated content.</span>
+                            </div>
+                            
+                            <div class="definition-item">
+                                <span class="definition-term">Ownership of Output</span>
+                                <span class="definition-description">You own the output generated by our AI tools, subject to compliance with these Terms and applicable laws.</span>
+                            </div>
+                            
+                            <div class="definition-item">
+                                <span class="definition-term">Third-Party Rights</span>
+                                <span class="definition-description">You are responsible for ensuring that AI-generated content does not infringe third-party intellectual property rights.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="warning-note">
+                            <p><i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Do not use AI-generated content for critical decisions without independent verification. Our Services are educational tools, not professional advice.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Privacy & Data -->
+                <section class="terms-section" id="privacy">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h2 class="section-title">7. Privacy & Data</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your personal information. By using our Services, you agree to our Privacy Policy.</p>
+                        
+                        <div class="important-note">
+                            <p><strong>Data Processing:</strong> When you use our AI tools, we process your input data to generate outputs. We generally do not store this data permanently and process it anonymously where possible.</p>
+                        </div>
+                        
+                        <p><strong>Cookies:</strong> We use cookies and similar technologies as described in our Privacy Policy. You can control cookie settings through your browser or our cookie consent banner.</p>
+                    </div>
+                </section>
+
+                <!-- Third-Party Services -->
+                <section class="terms-section" id="third-party">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                        <h2 class="section-title">8. Third-Party Services</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>Our Services may integrate with or link to third-party services, including:</p>
+                        <ul>
+                            <li>Google Analytics for website analytics</li>
+                            <li>GitHub Pages for hosting</li>
+                            <li>Various AI APIs and services</li>
+                            <li>Social media platforms</li>
+                        </ul>
+                        
+                        <p>We are not responsible for the content, privacy policies, or practices of any third-party services. Your use of third-party services is at your own risk.</p>
+                    </div>
+                </section>
+
+                <!-- Disclaimer -->
+                <section class="terms-section" id="disclaimer">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h2 class="section-title">9. Disclaimer</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>OUR SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY LAW, REVERBIT DISCLAIMS ALL WARRANTIES, INCLUDING:</p>
+                        
+                        <ul>
+                            <li>Warranties of merchantability</li>
+                            <li>Fitness for a particular purpose</li>
+                            <li>Non-infringement</li>
+                            <li>Accuracy, reliability, or completeness of content</li>
+                            <li>Uninterrupted or error-free operation</li>
+                        </ul>
+                        
+                        <div class="warning-note">
+                            <p><strong>Educational Tool Disclaimer:</strong> Our Services are educational tools, not professional advice. We do not provide medical, legal, financial, or other professional advice. Always consult qualified professionals for important decisions.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Limitation of Liability -->
+                <section class="terms-section" id="limitation">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h2 class="section-title">10. Limitation of Liability</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, REVERBIT SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING:</p>
+                        
+                        <ul>
+                            <li>Loss of profits</li>
+                            <li>Loss of data</li>
+                            <li>Business interruption</li>
+                            <li>Personal injury or property damage</li>
+                            <li>Any damages resulting from the use or inability to use our Services</li>
+                        </ul>
+                        
+                        <p>IN NO EVENT SHALL REVERBIT'S TOTAL LIABILITY EXCEED THE AMOUNT YOU HAVE PAID TO REVERBIT IN THE PAST SIX MONTHS, OR $100 IF YOU HAVE NOT PAID ANYTHING.</p>
+                        
+                        <div class="important-note">
+                            <p><strong>Essential Purpose:</strong> This limitation of liability is an essential part of our agreement. Some jurisdictions do not allow limitations of liability, so this may not apply to you.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Termination -->
+                <section class="terms-section" id="termination">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <h2 class="section-title">11. Termination</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We may terminate or suspend your access to our Services immediately, without prior notice or liability, for any reason, including if you breach these Terms.</p>
+                        
+                        <p>Upon termination, your right to use our Services will immediately cease. All provisions of these Terms which by their nature should survive termination shall survive, including ownership provisions, warranty disclaimers, and limitations of liability.</p>
+                    </div>
+                </section>
+
+                <!-- Modifications -->
+                <section class="terms-section" id="modifications">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h2 class="section-title">12. Modifications to Terms</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>We reserve the right to modify these Terms at any time. We will notify you of any changes by posting the new Terms on this page and updating the "Last Updated" date.</p>
+                        
+                        <p>Your continued use of our Services after any modifications constitutes your acceptance of the new Terms. You are advised to review these Terms periodically for any changes.</p>
+                    </div>
+                </section>
+
+                <!-- Governing Law -->
+                <section class="terms-section" id="governing-law">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h2 class="section-title">13. Governing Law</h2>
+                    </div>
+                    <div class="section-content">
+                        <p>These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions.</p>
+                        
+                        <p>Any disputes arising from these Terms or your use of our Services shall be subject to the exclusive jurisdiction of the courts located in India.</p>
+                        
+                        <div class="important-note">
+                            <p><strong>International Users:</strong> Our Services are accessible worldwide. By accessing our Services from outside India, you are responsible for compliance with local laws if and to the extent local laws are applicable.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Information -->
+                <div class="contact-card" id="contact">
+                    <h3>14. Contact Us</h3>
+                    <p>If you have any questions about these Terms of Service, please contact us:</p>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email: <a 
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=reverbit1104@gmail.com" 
+  target="_blank" 
+  rel="noopener">
+  Email us
+</a>
+</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-user"></i>
+                        <span>Legal Contact: Aditya Jha</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Based in India</span>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-globe"></i>
+                        <span>Website: <a href="https://reverbit.in/reverbit/">https://reverbit.in/reverbit/</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://reverbit.in/reverbit/" class="footer-link">Home</a>
+                <a href="https://reverbit.in/reverbit/about/" class="footer-link">About</a>
+                <a href="https://reverbit.in/reverbit/ecosystem" class="footer-link">Tools</a>
+                <a href="https://reverbit.in/reverbit/circuit" class="footer-link">Blogs</a>
+                <a href="https://reverbit.in/reverbit/privacy" class="footer-link">Privacy Policy</a>
+            </div>
+            
+            <p class="copyright">
+                &copy; 2025 Reverbit Innovations. All rights reserved.<br>
+                Made with <i class="fas fa-heart" style="color: #ff4444;"></i> and <i class="fas fa-code"></i> by Aditya Jha
+            </p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('.material-icons-round');
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+                themeIcon.textContent = 'light_mode';
+            }
+        }
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+
+        function toggleBackToTop() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        // Smooth scroll for anchor links (including TOC links)
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Close mobile menu if open
+                        const mobileMenu = document.querySelector('.mobile-menu');
+                        if (mobileMenu && mobileMenu.classList.contains('active')) {
+                            mobileMenu.classList.remove('active');
+                            document.body.style.overflow = 'auto';
+                        }
+                        
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Highlight current section in TOC
+        function highlightCurrentSection() {
+            const sections = document.querySelectorAll('.terms-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSectionId = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSectionId = sectionId;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            loadThemePreference();
+            initSmoothScroll();
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            window.addEventListener('scroll', () => {
+                toggleBackToTop();
+                highlightCurrentSection();
+            });
+            
+            // Initialize back to top visibility
+            toggleBackToTop();
+            
+            // Image fallback handling
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const parent = this.parentElement;
+                    if (parent.classList.contains('logo')) {
+                        parent.innerHTML = 'R';
+                        parent.style.display = 'flex';
+                        parent.style.alignItems = 'center';
+                        parent.style.justifyContent = 'center';
+                        parent.style.fontFamily = 'var(--md-font-logo)';
+                        parent.style.fontWeight = '700';
+                        parent.style.color = 'var(--md-on-primary)';
+                    }
+                });
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Add responsive adjustments if needed
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Theme toggle with Shift+T
+            if (e.shiftKey && e.key === 'T') {
+                toggleTheme();
+            }
+            
+            // Escape key for accessibility
+            if (e.key === 'Escape') {
+                // Close any open modals or menus
+            }
+        });
+
+        // Print-friendly version
+        function initPrintButton() {
+            const printButton = document.createElement('button');
+            printButton.innerHTML = '<i class="fas fa-print"></i> Print Terms';
+            printButton.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                right: 32px;
+                background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 24px;
+                cursor: pointer;
+                font-family: var(--md-font-heading);
+                font-weight: 500;
+                box-shadow: var(--md-elevation-2);
+                z-index: 99;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: var(--md-transition);
+            `;
+            
+            printButton.addEventListener('mouseenter', () => {
+                printButton.style.transform = 'translateY(-2px)';
+                printButton.style.boxShadow = 'var(--md-elevation-4)';
+            });
+            
+            printButton.addEventListener('mouseleave', () => {
+                printButton.style.transform = 'translateY(0)';
+                printButton.style.boxShadow = 'var(--md-elevation-2)';
+            });
+            
+            printButton.addEventListener('click', () => {
+                window.print();
+            });
+            
+            document.body.appendChild(printButton);
+            
+            // Print styles
+            const printStyles = `
+                @media print {
+                    .header, .footer, .back-to-top, button {
+                        display: none !important;
+                    }
+                    
+                    .terms-container {
+                        box-shadow: none !important;
+                        border: 1px solid #ddd !important;
+                    }
+                    
+                    .terms-header {
+                        page-break-after: avoid;
+                    }
+                    
+                    .terms-section {
+                        page-break-inside: avoid;
+                    }
+                    
+                    body {
+                        background: white !important;
+                        color: black !important;
+                    }
+                    
+                    a {
+                        color: #1a73e8 !important;
+                        text-decoration: underline;
+                    }
+                }
+            `;
+            
+            const styleSheet = document.createElement("style");
+            styleSheet.textContent = printStyles;
+            document.head.appendChild(styleSheet);
+        }
+
+        // Initialize print button
+        if (window.innerWidth > 768) {
+            initPrintButton();
+        }
+    </script>
+</body>
+</html>

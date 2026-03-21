@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    
+    <!-- ===== PRIMARY SEO TITLE ===== -->
+    <title>Offline • Reverbit Network - You're Offline</title>
+    
+    <!-- ===== META TAGS ===== -->
+    <meta name="description" content="You're currently offline. Reconnect to access Reverbit's tech articles and coming soon tools.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#B5651D">
+    
+    <!-- ===== OPEN GRAPH META TAGS ===== -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Offline • Reverbit Network">
+    <meta property="og:description" content="You're currently offline. Reconnect to access Reverbit's tech articles and coming soon tools.">
+    <meta property="og:image" content="https://reverbit.in/Reverbit.svg">
+    <meta property="og:site_name" content="Reverbit Innovations">
+    
+    <!-- ===== FAVICONS ===== -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/genfavicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png">
+    
+    <!-- ===== GOOGLE FONTS ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- ===== MATERIAL ICONS ===== -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Reverbit Color Palette */
+            --primary: #B5651D;
+            --primary-light: #D48B4B;
+            --primary-dark: #8B4513;
+            --primary-rgb: 181, 101, 29;
+            
+            --secondary: #2A9D8F;
+            --secondary-light: #4FB3A5;
+            --secondary-dark: #1A6B6B;
+            --secondary-rgb: 42, 157, 143;
+            
+            --accent: #C0392B;
+            
+            /* Light Theme (will be used when online, but we'll detect) */
+            --bg-light: #FDF8F0;
+            --surface-light: #F5EDD6;
+            --text-light: #1A1208;
+            
+            /* Dark Theme (default for offline) */
+            --bg-dark: #0A0A0A;
+            --surface-dark: #1A1510;
+            --surface-variant-dark: #2A2018;
+            --text-dark: #F5EDD6;
+            --text-variant-dark: #C4B5A0;
+            
+            /* Default to dark theme for offline */
+            --bg: var(--bg-dark);
+            --surface: var(--surface-dark);
+            --surface-variant: var(--surface-variant-dark);
+            --text: var(--text-dark);
+            --text-variant: var(--text-variant-dark);
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-3xl: 48px;
+            --radius-full: 9999px;
+            
+            /* Font */
+            --font-primary: 'Outfit', sans-serif;
+            
+            /* Transitions */
+            --transition: all 0.3s ease;
+            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-primary);
+            text-align: center;
+            padding: var(--space-lg);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .offline-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(var(--primary-rgb), 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(var(--secondary-rgb), 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(192, 57, 43, 0.1) 0%, transparent 50%);
+            animation: orbFloat 20s ease infinite alternate;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+            100% { transform: scale(1.2) translate(-2%, -2%); opacity: 1; }
+        }
+
+        .mesh-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, transparent 95%, rgba(var(--primary-rgb), 0.08) 100%),
+                linear-gradient(0deg, transparent 95%, rgba(var(--secondary-rgb), 0.08) 100%);
+            background-size: 50px 50px;
+            animation: meshMove 25s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes meshMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Motifs - Simplified */
+        .motif {
+            position: fixed;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.08;
+            color: var(--primary);
+        }
+
+        .motif-1 {
+            top: 5%;
+            left: 2%;
+            width: 200px;
+            height: 200px;
+            animation: motifFloat1 25s ease-in-out infinite;
+        }
+
+        .motif-2 {
+            bottom: 5%;
+            right: 2%;
+            width: 250px;
+            height: 250px;
+            animation: motifFloat2 30s ease-in-out infinite;
+        }
+
+        @keyframes motifFloat1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(20px, -20px) rotate(5deg); }
+            66% { transform: translate(-15px, 15px) rotate(-5deg); }
+        }
+
+        @keyframes motifFloat2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-20px, 20px) rotate(-5deg); }
+            66% { transform: translate(15px, -15px) rotate(5deg); }
+        }
+
+        /* Main Card */
+        .offline-card {
+            max-width: 600px;
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid rgba(var(--primary-rgb), 0.2);
+            border-radius: var(--radius-3xl);
+            padding: var(--space-2xl) var(--space-xl);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes cardEntrance {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .offline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        /* Logo */
+        .offline-logo {
+            width: min(180px, 40vw);
+            height: auto;
+            margin: 0 auto var(--space-xl);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .offline-logo svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 4px 12px rgba(var(--primary-rgb), 0.3));
+        }
+
+        /* Status Icon */
+        .status-icon {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto var(--space-lg);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            box-shadow: var(--shadow-md);
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3); }
+            50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(var(--primary-rgb), 0.5); }
+        }
+
+        .status-icon .material-icons-round {
+            font-size: 3.5rem;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Text Content */
+        h1 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .offline-message {
+            font-size: 1.2rem;
+            color: var(--text-variant);
+            margin-bottom: var(--space-xl);
+            line-height: 1.7;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Network Status Indicator */
+        .network-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-lg);
+            background: rgba(var(--primary-rgb), 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.2);
+            border-radius: var(--radius-full);
+            margin-bottom: var(--space-xl);
+            font-size: 0.95rem;
+            color: var(--text-variant);
+        }
+
+        .network-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            border: none;
+            min-width: 160px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+            transform: translateY(-3px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Saved Pages Section */
+        .saved-pages {
+            margin-top: var(--space-xl);
+            padding-top: var(--space-xl);
+            border-top: 1px solid rgba(var(--primary-rgb), 0.2);
+        }
+
+        .saved-pages h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .saved-pages h3 .material-icons-round {
+            color: var(--primary);
+        }
+
+        .saved-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .saved-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--surface-variant);
+            border: 1px solid rgba(var(--primary-rgb), 0.15);
+            border-radius: var(--radius-xl);
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .saved-link:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
+
+        .saved-link .material-icons-round {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Connection Status */
+        .connection-status {
+            margin-top: var(--space-lg);
+            font-size: 0.9rem;
+            color: var(--text-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .connection-status .online {
+            color: var(--secondary);
+            animation: none;
+        }
+
+        /* Footer */
+        .offline-footer {
+            margin-top: var(--space-xl);
+            font-size: 0.85rem;
+            color: var(--text-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+        }
+
+        .offline-footer .material-icons-round {
+            color: var(--accent);
+            font-size: 1rem;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .offline-card {
+                padding: var(--space-xl) var(--space-lg);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .saved-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .offline-message {
+                font-size: 1rem;
+            }
+            
+            .motif-1, .motif-2 {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        /* Dark/Light theme detection - but we'll force dark for offline */
+        @media (prefers-color-scheme: light) {
+            /* Keep dark theme for offline regardless */
+            :root {
+                --bg: var(--bg-dark);
+                --surface: var(--surface-dark);
+                --surface-variant: var(--surface-variant-dark);
+                --text: var(--text-dark);
+                --text-variant: var(--text-variant-dark);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="offline-bg">
+        <div class="gradient-orb"></div>
+        <div class="mesh-pattern"></div>
+    </div>
+
+    <!-- Floating Motifs -->
+    <svg class="motif motif-1" viewBox="0 0 100 100">
+        <path d="M20 20 L80 20 L50 80 Z" fill="currentColor"/>
+    </svg>
+    
+    <svg class="motif motif-2" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="30" fill="currentColor"/>
+    </svg>
+
+    <!-- Main Card -->
+    <div class="offline-card">
+        <!-- Logo -->
+        <div class="offline-logo">
+            <svg viewBox="0 0 200 60" fill="none">
+                <path d="M20 30 L40 10 L60 30 L40 50 L20 30Z" fill="url(#grad1)"/>
+                <text x="80" y="40" font-family="Outfit, sans-serif" font-weight="800" font-size="32" fill="url(#grad2)">Reverbit</text>
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#B5651D"/>
+                        <stop offset="100%" stop-color="#2A9D8F"/>
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#B5651D"/>
+                        <stop offset="100%" stop-color="#2A9D8F"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+
+        <!-- Status Icon -->
+        <div class="status-icon">
+            <span class="material-icons-round">wifi_off</span>
+        </div>
+
+        <!-- Text Content -->
+        <h1>You're Offline</h1>
+        
+        <div class="offline-message">
+            No internet connection detected. Don't worry, you can still access saved content or wait for the network to return.
+        </div>
+
+        <!-- Network Status -->
+        <div class="network-indicator">
+            <span class="network-dot"></span>
+            <span>Network disconnected</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="window.location.reload()" id="retryButton">
+                <span class="material-icons-round">refresh</span>
+                Retry Connection
+            </button>
+            <a href="https://reverbit.in/" class="btn btn-outline" id="homeButton">
+                <span class="material-icons-round">home</span>
+                Go to Home
+            </a>
+        </div>
+
+        <!-- Saved Pages (will be populated by JavaScript) -->
+        <div class="saved-pages" id="savedPages" style="display: none;">
+            <h3>
+                <span class="material-icons-round">bookmark</span>
+                Saved Pages
+            </h3>
+            <div class="saved-grid" id="savedGrid">
+                <!-- Saved links will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="connection-status" id="connectionStatus">
+            <span class="material-icons-round">hourglass_empty</span>
+            <span>Waiting for network...</span>
+        </div>
+
+        <!-- Footer -->
+        <div class="offline-footer">
+            <span class="material-icons-round">favorite</span>
+            <span>Reverbit Network • Made in India</span>
+        </div>
+    </div>
+
+    <script>
+        // Check if we're actually offline
+        function updateOnlineStatus() {
+            const retryButton = document.getElementById('retryButton');
+            const connectionStatus = document.getElementById('connectionStatus');
+            
+            if (navigator.onLine) {
+                // We're online! Redirect to home or show different message
+                connectionStatus.innerHTML = `
+                    <span class="material-icons-round online">wifi</span>
+                    <span>You're back online! <a href="https://reverbit.in/" style="color: var(--primary);">Go to home</a></span>
+                `;
+                retryButton.disabled = false;
+                retryButton.textContent = 'Refresh Page';
+            } else {
+                connectionStatus.innerHTML = `
+                    <span class="material-icons-round">hourglass_empty</span>
+                    <span>Waiting for network...</span>
+                `;
+            }
+        }
+
+        // Load saved pages from cache
+        function loadSavedPages() {
+            const savedPages = document.getElementById('savedPages');
+            const savedGrid = document.getElementById('savedGrid');
+            
+            // Check if there are any cached pages
+            if ('caches' in window) {
+                caches.open('reverbit-pages-v1').then(cache => {
+                    cache.keys().then(requests => {
+                        if (requests.length > 0) {
+                            savedPages.style.display = 'block';
+                            
+                            // Clear existing
+                            savedGrid.innerHTML = '';
+                            
+                            // Add each cached page
+                            requests.forEach(request => {
+                                const url = new URL(request.url);
+                                const path = url.pathname;
+                                const name = path.split('/').pop() || 'Home';
+                                
+                                const link = document.createElement('a');
+                                link.href = request.url;
+                                link.className = 'saved-link';
+                                link.innerHTML = `
+                                    <span class="material-icons-round">insert_drive_file</span>
+                                    <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                                    <span class="material-icons-round" style="margin-left: auto;">chevron_right</span>
+                                `;
+                                savedGrid.appendChild(link);
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+        // Attempt to reconnect automatically
+        function attemptReconnect() {
+            if (navigator.onLine) {
+                window.location.reload();
+            } else {
+                setTimeout(attemptReconnect, 5000); // Try every 5 seconds
+            }
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            updateOnlineStatus();
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = 'https://reverbit.in/';
+            }, 2000);
+        });
+
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // Retry button click
+        document.getElementById('retryButton').addEventListener('click', () => {
+            if (navigator.onLine) {
+                window.location.reload();
+            } else {
+                // Visual feedback that we're retrying
+                const btn = document.getElementById('retryButton');
+                btn.innerHTML = '<span class="material-icons-round">sync</span> Retrying...';
+                setTimeout(() => {
+                    btn.innerHTML = '<span class="material-icons-round">refresh</span> Retry Connection';
+                }, 2000);
+            }
+        });
+
+        // Home button - always try to go home
+        document.getElementById('homeButton').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'https://reverbit.in/';
+        });
+
+        // Initialize
+        updateOnlineStatus();
+        loadSavedPages();
+        attemptReconnect();
+
+        // Add some fallback for when the page is loaded but we're actually online
+        if (navigator.onLine) {
+            // If we're online but somehow landed here, redirect
+            window.location.href = 'https://reverbit.in/';
+        }
+
+        // Service worker registration for offline caching (optional)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('Service worker registration failed:', err);
+            });
+        }
+    </script>
+</body>
+</html>
