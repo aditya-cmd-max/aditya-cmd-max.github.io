@@ -12,8 +12,52 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Reverbit · Sign In</title>
-    <meta name="description" content="Sign in to your Reverbit account to access our complete ecosystem of AI-powered tools.">
+    
+    <!-- ===== SEO: No-index but follow (auth pages should not be indexed) ===== -->
+    <meta name="robots" content="noindex, follow">
+    <meta name="googlebot" content="noindex, follow">
+    
+    <!-- ===== CANONICAL URL ===== -->
+    <link rel="canonical" href="https://reverbit.in/signin">
+    
+    <title>Reverbit · Sign In to Your Account</title>
+    <meta name="description" content="Sign in to your Reverbit account to access Clover AI, MindScribe, Peo-TTS, and all Reverbit AI tools. Secure authentication with email or Google.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reverbit.in/signin">
+    <meta property="og:title" content="Reverbit · Sign In">
+    <meta property="og:description" content="Sign in to access Reverbit's complete ecosystem of AI-powered tools.">
+    <meta property="og:image" content="https://reverbit.in/og-signin.jpg">
+    <meta property="og:site_name" content="Reverbit">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Reverbit · Sign In">
+    <meta name="twitter:description" content="Sign in to access Reverbit's AI tools and ecosystem.">
+    <meta name="twitter:image" content="https://reverbit.in/og-signin.jpg">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Reverbit Sign In",
+      "description": "Secure sign in page for Reverbit ecosystem",
+      "url": "https://reverbit.in/signin",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Reverbit",
+        "url": "https://reverbit.in",
+        "logo": "https://reverbit.in/Reverbit.svg",
+        "sameAs": [
+          "https://github.com/aditya-cmd-max",
+          "https://www.linkedin.com/in/aditya-jha-2b0860399/",
+          "https://youtube.com/@Reverbit"
+        ]
+      }
+    }
+    </script>
     
     <!-- Local Font - Begum (Premium) -->
     <style>
@@ -51,15 +95,21 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://reverbit.in/logo-insvg.svg">
+    <link rel="apple-touch-icon" href="https://reverbit.in/apple-touch-icon.png">
     
-    <!-- Firebase -->
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://reverbit.in">
+    
+    <!-- Firebase (latest stable) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
         /* ============================================
-           REVERBIT PREMIUM DESIGN SYSTEM
+           REVERBIT PREMIUM DESIGN SYSTEM (PRESERVED)
            ============================================ */
         
         * {
@@ -897,6 +947,7 @@
             border: 1px solid var(--md-outline);
             box-shadow: var(--md-elevation-6);
             animation: slideInUp 0.3s ease;
+            position: relative;
         }
 
         .modal-content::before {
@@ -1072,11 +1123,11 @@
                 
                 <div class="form-group">
                     <label for="resetEmail" class="form-label">Email Address</label>
-                    <input type="email" id="resetEmail" class="form-input" placeholder="you@example.com">
+                    <input type="email" id="resetEmail" class="form-input" placeholder="you@example.com" aria-label="Email for password reset" aria-required="true">
                 </div>
                 
                 <div class="modal-actions">
-                    <button class="btn btn-secondary" onclick="closeResetModal()">Cancel</button>
+                    <button class="btn btn-secondary" onclick="closeResetModal()" aria-label="Cancel password reset">Cancel</button>
                     <button class="btn btn-primary" onclick="sendPasswordReset()" id="resetBtn">
                         <span>Send Link</span>
                         <div class="loading" id="resetLoading"></div>
@@ -1086,22 +1137,22 @@
             
             <div id="resetSuccessContainer" class="success-state">
                 <div class="success-icon">
-                    <span class="material-icons-round">check_circle</span>
+                    <span class="material-icons-round" aria-hidden="true">check_circle</span>
                 </div>
                 <h3 class="success-title">Email Sent!</h3>
                 <p class="success-message" id="resetSuccessMessage">
                     We've sent a password reset link to your email. Please check your inbox.
                 </p>
-                <button class="btn btn-primary" onclick="closeResetModal()">Close</button>
+                <button class="btn btn-primary" onclick="closeResetModal()" aria-label="Close dialog">Close</button>
             </div>
         </div>
     </div>
 
     <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <a href="https://reverbit.in/" class="nav-brand">
+    <nav class="navbar" id="navbar" aria-label="Main navigation">
+        <a href="https://reverbit.in/" class="nav-brand" aria-label="Reverbit Home">
             <div class="nav-logo">
-                <img src="https://reverbit.in/logo-insvg.svg" alt="Reverbit">
+                <img src="https://reverbit.in/logo-insvg.svg" alt="Reverbit Logo">
             </div>
             <span class="nav-brand-name">Reverbit</span>
         </a>
@@ -1116,50 +1167,50 @@
         </div>
         
         <div class="nav-right">
-            <button class="theme-toggle" id="themeToggle">
-                <span class="material-icons-round">dark_mode</span>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+                <span class="material-icons-round" aria-hidden="true">dark_mode</span>
             </button>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <span class="material-icons-round">menu</span>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open mobile menu">
+                <span class="material-icons-round" aria-hidden="true">menu</span>
             </button>
         </div>
     </nav>
 
     <!-- Mobile Navigation -->
-    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true"></div>
+    <div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Mobile navigation menu">
         <div class="mobile-nav-header">
             <span class="nav-brand-name">Reverbit</span>
-            <button class="mobile-nav-close" id="mobileNavClose">
-                <span class="material-icons-round">close</span>
+            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close mobile menu">
+                <span class="material-icons-round" aria-hidden="true">close</span>
             </button>
         </div>
         
         <div class="mobile-nav-links">
             <a href="https://reverbit.in/" class="mobile-nav-link">
-                <span class="material-icons-round">home</span> Home
+                <span class="material-icons-round" aria-hidden="true">home</span> Home
             </a>
             <a href="https://reverbit.in/circuit" class="mobile-nav-link">
-                <span class="material-icons-round">menu_book</span> Blogs
+                <span class="material-icons-round" aria-hidden="true">menu_book</span> Blogs
             </a>
             <a href="https://reverbit.in/about" class="mobile-nav-link">
-                <span class="material-icons-round">person</span> Creator
+                <span class="material-icons-round" aria-hidden="true">person</span> Creator
             </a>
             <a href="https://reverbit.in/ecosystem" class="mobile-nav-link">
-                <span class="material-icons-round">apps</span> Tools
+                <span class="material-icons-round" aria-hidden="true">apps</span> Tools
             </a>
             <a href="#" class="mobile-nav-link active">
-                <span class="material-icons-round">login</span> Sign In
+                <span class="material-icons-round" aria-hidden="true">login</span> Sign In
             </a>
             <a href="https://reverbit.in/signup" class="mobile-nav-link">
-                <span class="material-icons-round">person_add</span> Sign Up
+                <span class="material-icons-round" aria-hidden="true">person_add</span> Sign Up
             </a>
         </div>
         
         <div class="mobile-theme-toggle">
             <span>Theme</span>
-            <button class="mobile-theme-btn" id="mobileThemeToggle">
-                <span class="material-icons-round">dark_mode</span>
+            <button class="mobile-theme-btn" id="mobileThemeToggle" aria-label="Toggle dark/light mode">
+                <span class="material-icons-round" aria-hidden="true">dark_mode</span>
             </button>
         </div>
     </div>
@@ -1172,7 +1223,7 @@
                 <div class="brand-section">
                     <div class="brand-logo">
                         <div class="brand-icon">
-                            <img src="https://reverbit.in/logo-insvg.svg" alt="Reverbit">
+                            <img src="https://reverbit.in/logo-insvg.svg" alt="Reverbit Icon">
                         </div>
                         <h1 class="brand-title">Welcome Back</h1>
                     </div>
@@ -1182,7 +1233,7 @@
                     <div class="feature-list">
                         <div class="feature-item">
                             <div class="feature-icon">
-                                <span class="material-icons-round">rocket_launch</span>
+                                <span class="material-icons-round" aria-hidden="true">rocket_launch</span>
                             </div>
                             <div class="feature-content">
                                 <h4>Complete Ecosystem</h4>
@@ -1192,7 +1243,7 @@
                         
                         <div class="feature-item">
                             <div class="feature-icon">
-                                <span class="material-icons-round">security</span>
+                                <span class="material-icons-round" aria-hidden="true">security</span>
                             </div>
                             <div class="feature-content">
                                 <h4>Secure & Private</h4>
@@ -1202,7 +1253,7 @@
                         
                         <div class="feature-item">
                             <div class="feature-icon">
-                                <span class="material-icons-round">sync</span>
+                                <span class="material-icons-round" aria-hidden="true">sync</span>
                             </div>
                             <div class="feature-content">
                                 <h4>Seamless Sync</h4>
@@ -1212,7 +1263,7 @@
                         
                         <div class="feature-item">
                             <div class="feature-icon">
-                                <span class="material-icons-round">groups</span>
+                                <span class="material-icons-round" aria-hidden="true">groups</span>
                             </div>
                             <div class="feature-content">
                                 <h4>Join Community</h4>
@@ -1229,35 +1280,35 @@
                         <p class="form-subtitle">Enter your credentials to continue</p>
                     </div>
 
-                    <form class="login-form" id="loginForm">
+                    <form class="login-form" id="loginForm" method="post">
                         <div class="form-group">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                            <input type="email" id="email" class="form-input" placeholder="you@example.com" aria-required="true" required>
                         </div>
 
                         <div class="form-group">
                             <label for="password" class="form-label">Password</label>
                             <div class="input-with-icon">
-                                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-                                <button type="button" class="password-toggle" id="togglePassword">
-                                    <span class="material-icons-round">visibility</span>
+                                <input type="password" id="password" class="form-input" placeholder="Enter your password" aria-required="true" required>
+                                <button type="button" class="password-toggle" id="togglePassword" aria-label="Show/hide password">
+                                    <span class="material-icons-round" aria-hidden="true">visibility</span>
                                 </button>
                             </div>
                         </div>
 
                         <div class="form-options">
                             <div class="checkbox-group">
-                                <input type="checkbox" id="rememberMe">
+                                <input type="checkbox" id="rememberMe" aria-label="Remember me on this device">
                                 <label for="rememberMe">Remember me</label>
                             </div>
-                            <button type="button" class="forgot-link" id="forgotPasswordBtn">
+                            <button type="button" class="forgot-link" id="forgotPasswordBtn" aria-label="Reset forgotten password">
                                 Forgot password?
                             </button>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" id="signInBtn">
+                        <button type="submit" class="btn btn-primary" id="signInBtn" aria-label="Sign in to your account">
                             <span>Sign In</span>
-                            <span class="material-icons-round">arrow_forward</span>
+                            <span class="material-icons-round" aria-hidden="true">arrow_forward</span>
                             <div class="loading" id="submitLoading"></div>
                         </button>
 
@@ -1268,15 +1319,15 @@
                         </div>
 
                         <div class="social-login">
-                            <button type="button" class="social-btn" onclick="googleSignIn()">
-                                <img src="https://www.google.com/favicon.ico" alt="Google">
+                            <button type="button" class="social-btn" onclick="googleSignIn()" aria-label="Sign in with Google">
+                                <img src="https://www.google.com/favicon.ico" alt="Google Icon">
                                 <span>Continue with Google</span>
                             </button>
                         </div>
 
                         <p class="signup-link">
                             Don't have an account?
-                            <a href="https://reverbit.in/signup">Create account</a>
+                            <a href="https://reverbit.in/signup" aria-label="Create new account">Create account</a>
                         </p>
                     </form>
                 </div>
@@ -1289,7 +1340,7 @@
         <div class="footer-content">
             <div class="footer-logo">Reverbit</div>
             <p class="footer-copyright">
-                Made with <i class="fas fa-heart"></i> and <i class="fas fa-code"></i> by Aditya Jha.
+                Made with <i class="fas fa-heart" aria-hidden="true"></i> and <i class="fas fa-code" aria-hidden="true"></i> by Aditya Jha.
                 <br>
                 &copy; 2026 Reverbit Innovations. All Rights Reserved
             </p>
@@ -1307,13 +1358,18 @@
             appId: "1:607495314412:web:8c098f88b0d3b4620f7ec9"
         };
 
-        // Initialize Firebase
+        // Initialize Firebase if not already
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         
         const auth = firebase.auth();
         const db = firebase.firestore();
+        
+        // Set persistence to LOCAL for cross-subdomain sync
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => console.log('Auth persistence set to LOCAL'))
+            .catch(e => console.warn('Persistence error:', e));
 
         // ==================== DOM ELEMENTS ====================
         const themeToggle = document.getElementById('themeToggle');
@@ -1338,10 +1394,72 @@
         const resetSuccessMessage = document.getElementById('resetSuccessMessage');
 
         // ==================== CHECK AUTH STATE ====================
+        // Get return URL from query parameter (for cross-subdomain redirect)
+        function getReturnUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let returnUrl = urlParams.get('return');
+            if (returnUrl) {
+                try {
+                    const decoded = decodeURIComponent(returnUrl);
+                    const urlObj = new URL(decoded);
+                    // Only allow redirects to reverbit.in subdomains
+                    if (urlObj.hostname.includes('reverbit.in')) {
+                        return decoded;
+                    }
+                } catch (e) {
+                    console.warn('Invalid return URL');
+                }
+            }
+            // Check localStorage for stored return URL (from Marina)
+            const stored = localStorage.getItem('reverbit_return_url');
+            const timestamp = localStorage.getItem('reverbit_return_timestamp');
+            if (stored && timestamp && Date.now() - parseInt(timestamp) < 300000) {
+                try {
+                    const urlObj = new URL(stored);
+                    if (urlObj.hostname.includes('reverbit.in')) {
+                        localStorage.removeItem('reverbit_return_url');
+                        localStorage.removeItem('reverbit_return_timestamp');
+                        return stored;
+                    }
+                } catch (e) {}
+            }
+            return 'https://reverbit.in/dashboard';
+        }
+
+        // Set up cross-domain session cookies
+        function setCrossDomainSession(user) {
+            const sessionData = {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                timestamp: Date.now()
+            };
+            const token = btoa(JSON.stringify(sessionData));
+            // Set cookie for .reverbit.in domain
+            const domain = '.reverbit.in';
+            document.cookie = `reverbit_auth=${token}; path=/; max-age=86400; domain=${domain}; SameSite=Lax`;
+            localStorage.setItem('reverbit_auth', token);
+            // Set session flag for cross-domain detection
+            localStorage.setItem('reverbit_session', 'active');
+            // Broadcast to other tabs/windows
+            localStorage.setItem('reverbit_auth_state', JSON.stringify({
+                action: 'login',
+                uid: user.uid,
+                timestamp: Date.now()
+            }));
+            setTimeout(() => {
+                localStorage.removeItem('reverbit_auth_state');
+            }, 1000);
+        }
+
+        // Check if user is already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log('User already logged in, redirecting to dashboard');
-                window.location.href = 'https://reverbit.in/dashboard';
+                console.log('User already logged in, redirecting...');
+                setCrossDomainSession(user);
+                const returnUrl = getReturnUrl();
+                window.location.href = returnUrl;
             }
         });
 
@@ -1485,37 +1603,25 @@
                 const result = await auth.signInWithEmailAndPassword(emailValue, passwordValue);
                 const user = result.user;
 
-                // Store user data in localStorage for SSO
-                localStorage.setItem('reverbit_user', JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    photoURL: user.photoURL
-                }));
+                // Store user data in localStorage and cookies for SSO
+                setCrossDomainSession(user);
 
-                const sessionToken = btoa(JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    timestamp: Date.now()
-                }));
-
-                document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
-                localStorage.setItem('reverbit_auth', sessionToken);
-
-                // Update last login
+                // Update last login in Firestore
                 await db.collection('users').doc(user.uid).set({
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
                     totalLogins: firebase.firestore.FieldValue.increment(1),
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
 
-                // Show success and redirect
+                // Show success
                 signInBtn.querySelector('span').textContent = 'Success!';
                 signInBtn.style.background = 'linear-gradient(135deg, var(--md-secondary), var(--md-secondary-light))';
 
+                // Get return URL and redirect
+                const returnUrl = getReturnUrl();
                 setTimeout(() => {
-                    window.location.href = 'https://reverbit.in/dashboard';
-                }, 1000);
+                    window.location.href = returnUrl;
+                }, 500);
 
             } catch (error) {
                 let errorMessage = 'Login failed. Please try again.';
@@ -1543,32 +1649,21 @@
                 signInBtn.disabled = false;
                 submitLoading.style.display = 'none';
                 signInBtn.querySelector('span').textContent = 'Sign In';
+                signInBtn.style.background = '';
             }
         });
 
         // ==================== GOOGLE SIGN IN ====================
         window.googleSignIn = async function() {
             const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
             
             try {
                 const result = await auth.signInWithPopup(provider);
                 const user = result.user;
 
-                localStorage.setItem('reverbit_user', JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    photoURL: user.photoURL
-                }));
-
-                const sessionToken = btoa(JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    timestamp: Date.now()
-                }));
-
-                document.cookie = `reverbit_auth=${sessionToken}; path=/; max-age=86400; samesite=lax`;
-                localStorage.setItem('reverbit_auth', sessionToken);
+                // Store user data in localStorage and cookies for SSO
+                setCrossDomainSession(user);
 
                 const userRef = db.collection('users').doc(user.uid);
                 const userDoc = await userRef.get();
@@ -1595,7 +1690,8 @@
                     }, { merge: true });
                 }
 
-                window.location.href = 'https://reverbit.in/dashboard';
+                const returnUrl = getReturnUrl();
+                window.location.href = returnUrl;
 
             } catch (error) {
                 console.error('Google sign in error:', error);
