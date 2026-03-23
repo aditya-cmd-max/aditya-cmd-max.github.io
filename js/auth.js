@@ -646,26 +646,47 @@ class ReverbitAuth {
         }
     }
 
-    // ================= AUTH STATE MANAGEMENT =================
-    setupAuthListener() {
-        console.log('Auth: Setting up auth state listener...');
+// ================= AUTH STATE MANAGEMENT =================
+setupAuthListener() {
+    console.log('Auth: Setting up auth state listener...');
+    
+    this.auth.onAuthStateChanged(async (user) => {
+        console.log('Auth: Auth state changed -', user ? 'User logged in' : 'User logged out');
         
-        this.auth.onAuthStateChanged(async (user) => {
-            console.log('Auth: Auth state changed -', user ? 'User logged in' : 'User logged out');
-            
-            if (user) {
-                this.user = {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName || user.email?.split('@')[0] || 'User',
-                    photoURL: user.photoURL,
-                    emailVerified: user.emailVerified,
-                    providerId: user.providerId,
-                    metadata: {
-                        creationTime: user.metadata.creationTime,
-                        lastSignInTime: user.metadata.lastSignInTime
-                    }
-                };
+        if (user) {
+            this.user = {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName || user.email?.split('@')[0] || 'User',
+                photoURL: user.photoURL,
+                emailVerified: user.emailVerified,
+                providerId: user.providerId,
+                metadata: {
+                    creationTime: user.metadata.creationTime,
+                    lastSignInTime: user.metadata.lastSignInTime
+                }
+            };
+
+            // ================= SAVE CROSS-DOMAIN COOKIE =================
+            document.cookie = `reverbit_auth=${this.user.uid}; path=/; domain=.reverbit.in`;
+
+            // ================= UPDATE UI =================
+            this.updateUIAfterLogin();
+            this.forceAvatarCreation();
+
+            // ================= SMART REDIRECT =================
+            this.handlePostLoginRedirect();
+
+        } else {
+            this.user = null;
+
+            // Clear cookie
+            document.cookie = 'reverbit_auth=; path=/; domain=.reverbit.in; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+
+            this.updateUIAfterLogout();
+        }
+    });
+}
                 
                 console.log('Auth: Loading profile for UID:', user.uid);
                 
@@ -783,6 +804,37 @@ class ReverbitAuth {
             this.notifyAuthListeners();
         });
     }
+
+
+handlePostLoginRedirect() {
+    try {
+        const currentHost = window.location.hostname;
+
+        // 🔥 Priority 1: saved redirect (best method)
+        const savedRedirect = localStorage.getItem("reverbit_redirect");
+
+        if (savedRedirect) {
+            console.log("Redirecting to saved page:", savedRedirect);
+            localStorage.removeItem("reverbit_redirect");
+            window.location.href = savedRedirect;
+            return;
+        }
+
+        // 🔥 Priority 2: if on main site → dashboard
+        if (currentHost === "reverbit.in") {
+            window.location.href = "/dashboard";
+            return;
+        }
+
+        // 🔥 Fallback
+        window.location.href = "/dashboard";
+
+    } catch (err) {
+        console.error("Redirect error:", err);
+        window.location.href = "/dashboard";
+    }
+}
+
 
     forceAvatarCreation() {
         const existingAvatar = document.querySelector('.reverbit-profile-avatar');
