@@ -1,6 +1,7 @@
 // ====================================================================
 // auth.js 
 // Reverbit Innovations by Aditya Jha
+// Enhanced with Smart Redirect System & Cross-Subdomain Auth
 // ====================================================================
 
 class ReverbitAuth {
@@ -69,6 +70,14 @@ class ReverbitAuth {
             'Using cached data'
         ];
         
+        // ========== SMART REDIRECT SYSTEM ==========
+        // Store the intended redirect URL (for post-login redirects)
+        this.intendedRedirectUrl = null;
+        // Store the original referrer page (for cross-subdomain return)
+        this.originalReferrer = null;
+        // Flag to track if we're currently processing a redirect (prevent loops)
+        this.isProcessingRedirect = false;
+        
         // Bind methods
         this.toggleProfilePopup = this.toggleProfilePopup.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -83,6 +92,459 @@ class ReverbitAuth {
         this.logout = this.logout.bind(this);
         this.onVisibilityChange = this.onVisibilityChange.bind(this);
         this.handleOnlineStatus = this.handleOnlineStatus.bind(this);
+    }
+
+    // ========== SMART REDIRECT SYSTEM ==========
+    /**
+     * Store the intended redirect URL based on referrer and current page
+     * This is called on signin/signup pages to remember where to go after login
+     */
+    storeRedirectIntent() {
+        try {
+            const currentHost = window.location.hostname;
+            const currentPath = window.location.pathname;
+            const currentUrl = window.location.href;
+            
+            // Check if we're on a login/signup page
+            const isAuthPage = currentPath.includes('signin') || 
+                               currentPath.includes('signup') || 
+                               currentPath.includes('login') ||
+                               currentPath.includes('register');
+            
+            if (!isAuthPage) {
+                // If we're not on an auth page, store the current URL for potential return
+                this.storeCurrentPageForReturn();
+                return;
+            }
+            
+            console.log('Auth: Storing redirect intent from:', currentHost);
+            
+            // Get referrer (where user came from)
+            const referrer = document.referrer;
+            
+            if (referrer) {
+                try {
+                    const referrerUrl = new URL(referrer);
+                    const referrerHost = referrerUrl.hostname;
+                    
+                    // Check if referrer is from our domain (reverbit.in or subdomain)
+                    if (referrerHost.includes('reverbit.in')) {
+                        // User came from our app, redirect back to that page
+                        this.intendedRedirectUrl = referrer;
+                        console.log('Auth: Redirect intent from referrer:', referrer);
+                    } else {
+                        // External referrer, check localStorage fallback
+                        this.checkStoredReturnUrl();
+                    }
+                } catch (e) {
+                    console.warn('Auth: Failed to parse referrer:', e);
+                    this.checkStoredReturnUrl();
+                }
+            } else {
+                // No referrer, check localStorage
+                this.checkStoredReturnUrl();
+            }
+            
+            // If still no intent, check for query parameter (for direct links)
+            if (!this.intendedRedirectUrl) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectParam = urlParams.get('redirect') || urlParams.get('returnUrl');
+                if (redirectParam) {
+                    try {
+                        const decodedUrl = decodeURIComponent(redirectParam);
+                        const urlObj = new URL(decodedUrl, window.location.origin);
+                        // Only allow redirects to our domain
+                        if (urlObj.hostname.includes('reverbit.in')) {
+                            this.intendedRedirectUrl = decodedUrl;
+                            console.log('Auth: Redirect intent from query param:', decodedUrl);
+                        }
+                    } catch (e) {
+                        console.warn('Auth: Invalid redirect param:', e);
+                    }
+                }
+            }
+            
+            // Final fallback: dashboard
+            if (!this.intendedRedirectUrl) {
+                // Check if we're on marina subdomain
+                if (currentHost === 'marina.reverbit.in') {
+                    this.intendedRedirectUrl = 'https://marina.reverbit.in/dashboard';
+                } else {
+                    this.intendedRedirectUrl = 'https://reverbit.in/dashboard';
+                }
+                console.log('Auth: Using fallback redirect:', this.intendedRedirectUrl);
+            }
+            
+            // Store in localStorage as backup
+            if (this.intendedRedirectUrl) {
+                localStorage.setItem('reverbit_redirect_intent', this.intendedRedirectUrl);
+                localStorage.setItem('reverbit_redirect_timestamp', Date.now().toString());
+                
+                // Also set a cookie for cross-subdomain persistence
+                this.setCrossDomainCookie('reverbit_redirect_intent', this.intendedRedirectUrl, 1);
+            }
+            
+        } catch (error) {
+            console.error('Auth: Error storing redirect intent:', error);
+            this.intendedRedirectUrl = this.getDefaultDashboardUrl();
+        }
+    }
+    
+    /**
+     * Store the current page URL for return after login
+     * This is called on non-auth pages to remember where we were
+     */
+    storeCurrentPageForReturn() {
+        try {
+            const currentUrl = window.location.href;
+            const currentHost = window.location.hostname;
+            
+            // Only store if it's a valid page within our domain
+            if (currentHost.includes('reverbit.in') && !this.isAuthPage(currentUrl)) {
+                localStorage.setItem('reverbit_return_url', currentUrl);
+                localStorage.setItem('reverbit_return_timestamp', Date.now().toString());
+                
+                // Also set a cookie for cross-subdomain persistence
+                this.setCrossDomainCookie('reverbit_return_url', currentUrl, 1);
+                console.log('Auth: Stored return URL:', currentUrl);
+            }
+        } catch (error) {
+            console.error('Auth: Error storing return URL:', error);
+        }
+    }
+    
+    /**
+     * Check for stored return URL in localStorage
+     */
+    checkStoredReturnUrl() {
+        try {
+            const storedUrl = localStorage.getItem('reverbit_return_url');
+            const storedTimestamp = localStorage.getItem('reverbit_return_timestamp');
+            
+            if (storedUrl && storedTimestamp) {
+                const age = Date.now() - parseInt(storedTimestamp);
+                // Only use if less than 24 hours old
+                if (age < 24 * 60 * 60 * 1000) {
+                    try {
+                        const urlObj = new URL(storedUrl);
+                        if (urlObj.hostname.includes('reverbit.in')) {
+                            this.intendedRedirectUrl = storedUrl;
+                            console.log('Auth: Found stored return URL:', storedUrl);
+                        }
+                    } catch (e) {
+                        console.warn('Auth: Invalid stored URL:', e);
+                    }
+                } else {
+                    // Clear old stored URL
+                    localStorage.removeItem('reverbit_return_url');
+                    localStorage.removeItem('reverbit_return_timestamp');
+                }
+            }
+        } catch (error) {
+            console.error('Auth: Error checking stored return URL:', error);
+        }
+    }
+    
+    /**
+     * Check for stored redirect intent in localStorage (from cross-subdomain)
+     */
+    checkStoredRedirectIntent() {
+        try {
+            const storedIntent = localStorage.getItem('reverbit_redirect_intent');
+            const storedTimestamp = localStorage.getItem('reverbit_redirect_timestamp');
+            
+            if (storedIntent && storedTimestamp) {
+                const age = Date.now() - parseInt(storedTimestamp);
+                // Only use if less than 5 minutes old (fresh login redirect)
+                if (age < 5 * 60 * 1000) {
+                    try {
+                        const urlObj = new URL(storedIntent);
+                        if (urlObj.hostname.includes('reverbit.in')) {
+                            this.intendedRedirectUrl = storedIntent;
+                            console.log('Auth: Found stored redirect intent:', storedIntent);
+                            
+                            // Clear after reading (one-time use)
+                            localStorage.removeItem('reverbit_redirect_intent');
+                            localStorage.removeItem('reverbit_redirect_timestamp');
+                        }
+                    } catch (e) {
+                        console.warn('Auth: Invalid stored intent:', e);
+                    }
+                } else {
+                    // Clear old stored intent
+                    localStorage.removeItem('reverbit_redirect_intent');
+                    localStorage.removeItem('reverbit_redirect_timestamp');
+                }
+            }
+        } catch (error) {
+            console.error('Auth: Error checking stored redirect intent:', error);
+        }
+    }
+    
+    /**
+     * Set a cookie that works across all .reverbit.in subdomains
+     */
+    setCrossDomainCookie(name, value, days = 7) {
+        try {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            const cookieValue = encodeURIComponent(value) + '; expires=' + expires.toUTCString() + '; path=/; domain=.reverbit.in; SameSite=Lax';
+            
+            // For production, add Secure flag if using HTTPS
+            if (window.location.protocol === 'https:') {
+                document.cookie = name + '=' + cookieValue + '; Secure';
+            } else {
+                document.cookie = name + '=' + cookieValue;
+            }
+            
+            console.log('Auth: Set cross-domain cookie:', name);
+        } catch (error) {
+            console.error('Auth: Error setting cookie:', error);
+        }
+    }
+    
+    /**
+     * Get a cookie value
+     */
+    getCookie(name) {
+        try {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) {
+                return decodeURIComponent(parts.pop().split(';').shift());
+            }
+        } catch (error) {
+            console.error('Auth: Error getting cookie:', error);
+        }
+        return null;
+    }
+    
+    /**
+     * Perform the redirect after successful login
+     */
+    performPostLoginRedirect() {
+        // Prevent multiple redirect loops
+        if (this.isProcessingRedirect) {
+            console.log('Auth: Already processing redirect, skipping');
+            return;
+        }
+        
+        this.isProcessingRedirect = true;
+        
+        try {
+            // First check for stored intent (from cross-subdomain)
+            this.checkStoredRedirectIntent();
+            
+            // If no intent, check for stored return URL
+            if (!this.intendedRedirectUrl) {
+                this.checkStoredReturnUrl();
+            }
+            
+            // If still no intent, use default
+            let redirectUrl = this.intendedRedirectUrl || this.getDefaultDashboardUrl();
+            
+            // Sanitize and validate the redirect URL
+            redirectUrl = this.sanitizeRedirectUrl(redirectUrl);
+            
+            console.log('Auth: Performing post-login redirect to:', redirectUrl);
+            
+            // Clear stored redirect data to prevent reuse
+            localStorage.removeItem('reverbit_redirect_intent');
+            localStorage.removeItem('reverbit_redirect_timestamp');
+            localStorage.removeItem('reverbit_return_url');
+            localStorage.removeItem('reverbit_return_timestamp');
+            
+            // Clear cookies
+            this.setCrossDomainCookie('reverbit_redirect_intent', '', 0);
+            this.setCrossDomainCookie('reverbit_return_url', '', 0);
+            
+            // Perform the redirect
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 100);
+            
+        } catch (error) {
+            console.error('Auth: Error during redirect:', error);
+            // Fallback to dashboard
+            window.location.href = this.getDefaultDashboardUrl();
+        } finally {
+            this.intendedRedirectUrl = null;
+            this.isProcessingRedirect = false;
+        }
+    }
+    
+    /**
+     * Get the default dashboard URL based on current hostname
+     */
+    getDefaultDashboardUrl() {
+        const currentHost = window.location.hostname;
+        if (currentHost === 'marina.reverbit.in') {
+            return 'https://marina.reverbit.in/dashboard';
+        }
+        return 'https://reverbit.in/dashboard';
+    }
+    
+    /**
+     * Check if a URL is an auth page
+     */
+    isAuthPage(url) {
+        return url.includes('signin') || 
+               url.includes('signup') || 
+               url.includes('login') || 
+               url.includes('register');
+    }
+    
+    /**
+     * Sanitize and validate redirect URL to prevent open redirect vulnerabilities
+     */
+    sanitizeRedirectUrl(url) {
+        if (!url) return this.getDefaultDashboardUrl();
+        
+        try {
+            // Parse the URL
+            const parsedUrl = new URL(url, window.location.origin);
+            
+            // Only allow redirects to our domain
+            if (!parsedUrl.hostname.includes('reverbit.in')) {
+                console.warn('Auth: Blocked redirect to external domain:', parsedUrl.hostname);
+                return this.getDefaultDashboardUrl();
+            }
+            
+            // Block redirects to auth pages (prevent loops)
+            if (this.isAuthPage(parsedUrl.pathname)) {
+                console.warn('Auth: Blocked redirect to auth page');
+                return this.getDefaultDashboardUrl();
+            }
+            
+            // Return the sanitized URL
+            return parsedUrl.href;
+            
+        } catch (error) {
+            console.warn('Auth: Invalid redirect URL:', url, error);
+            return this.getDefaultDashboardUrl();
+        }
+    }
+
+    // ========== CROSS-SUBDOMAIN AUTH (SSO-LIKE) ==========
+    /**
+     * Setup cross-subdomain authentication using cookies and localStorage
+     */
+    setupCrossDomainAuth() {
+        try {
+            // Set a cross-domain cookie to indicate authentication status
+            if (this.user && this.user.uid) {
+                this.setCrossDomainCookie('reverbit_auth_uid', this.user.uid, 7);
+                this.setCrossDomainCookie('reverbit_auth_email', this.user.email || '', 7);
+                this.setCrossDomainCookie('reverbit_auth_authenticated', 'true', 7);
+                
+                // Also store in localStorage (for same-domain fallback)
+                localStorage.setItem('reverbit_auth_uid', this.user.uid);
+                localStorage.setItem('reverbit_auth_authenticated', 'true');
+                localStorage.setItem('reverbit_auth_timestamp', Date.now().toString());
+            } else {
+                // Clear auth cookies when logged out
+                this.setCrossDomainCookie('reverbit_auth_uid', '', 0);
+                this.setCrossDomainCookie('reverbit_auth_email', '', 0);
+                this.setCrossDomainCookie('reverbit_auth_authenticated', '', 0);
+            }
+        } catch (error) {
+            console.error('Auth: Error setting cross-domain auth:', error);
+        }
+    }
+    
+    /**
+     * Check for existing cross-domain auth session
+     */
+    async checkCrossDomainSession() {
+        try {
+            // First check if we already have a Firebase session
+            if (this.user) {
+                return true;
+            }
+            
+            // Check for cross-domain cookie
+            const authUid = this.getCookie('reverbit_auth_uid');
+            const authAuthenticated = this.getCookie('reverbit_auth_authenticated');
+            
+            if (authUid && authAuthenticated === 'true') {
+                console.log('Auth: Found cross-domain auth cookie for UID:', authUid);
+                
+                // Try to restore the session using Firebase persistence
+                // Firebase's built-in persistence will handle this automatically
+                // We just need to wait for the auth state to be restored
+                return new Promise((resolve) => {
+                    const checkInterval = setInterval(() => {
+                        if (this.user) {
+                            clearInterval(checkInterval);
+                            resolve(true);
+                        }
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        resolve(false);
+                    }, 5000);
+                });
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Auth: Error checking cross-domain session:', error);
+            return false;
+        }
+    }
+    
+    /**
+     * Broadcast auth state change to other tabs/windows
+     */
+    broadcastAuthState() {
+        try {
+            if (this.user) {
+                localStorage.setItem('reverbit_auth_state', JSON.stringify({
+                    uid: this.user.uid,
+                    email: this.user.email,
+                    timestamp: Date.now(),
+                    action: 'login'
+                }));
+            } else {
+                localStorage.setItem('reverbit_auth_state', JSON.stringify({
+                    action: 'logout',
+                    timestamp: Date.now()
+                }));
+            }
+        } catch (error) {
+            console.error('Auth: Error broadcasting auth state:', error);
+        }
+    }
+    
+    /**
+     * Listen for auth state changes from other tabs/windows
+     */
+    listenForCrossTabAuth() {
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'reverbit_auth_state') {
+                try {
+                    const data = JSON.parse(e.newValue);
+                    if (data && data.timestamp && Date.now() - data.timestamp < 1000) {
+                        console.log('Auth: Cross-tab auth event:', data.action);
+                        
+                        if (data.action === 'login' && !this.user) {
+                            // Another tab logged in, refresh auth state
+                            this.auth.onAuthStateChanged((user) => {
+                                if (user) {
+                                    this.showToast('Session updated from another tab', 'info', true);
+                                }
+                            });
+                        } else if (data.action === 'logout' && this.user) {
+                            // Another tab logged out, sign out here too
+                            this.auth.signOut().catch(console.error);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Auth: Error processing cross-tab event:', error);
+                }
+            }
+        });
     }
 
     // ================= INITIALIZATION =================
@@ -103,6 +565,12 @@ class ReverbitAuth {
     async _initialize() {
         try {
             console.log('Auth: Initializing enterprise system...');
+            
+            // Store redirect intent before anything else (for login pages)
+            this.storeRedirectIntent();
+            
+            // Setup cross-tab listener
+            this.listenForCrossTabAuth();
             
             // Check Firebase availability
             if (typeof firebase === 'undefined') {
@@ -125,7 +593,7 @@ class ReverbitAuth {
                 cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
             });
             
-            // Enable persistence
+            // Enable persistence with cross-tab support
             await this.enablePersistence();
             
             // Initialize Cloudinary
@@ -196,7 +664,7 @@ class ReverbitAuth {
                 synchronizeTabs: true,
                 experimentalForceOwningTab: true 
             });
-            console.log('Auth: Firestore persistence enabled');
+            console.log('Auth: Firestore persistence enabled with tab sync');
         } catch (persistenceError) {
             if (persistenceError.code === 'failed-precondition') {
                 console.warn('Auth: Multiple tabs open, persistence disabled in some tabs');
@@ -205,6 +673,14 @@ class ReverbitAuth {
             } else {
                 console.warn('Auth: Firestore persistence error:', persistenceError);
             }
+        }
+        
+        // Also set Firebase Auth persistence to LOCAL (for cross-tab persistence)
+        try {
+            await this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            console.log('Auth: Firebase auth persistence set to LOCAL');
+        } catch (error) {
+            console.warn('Auth: Failed to set auth persistence:', error);
         }
     }
 
@@ -671,6 +1147,12 @@ class ReverbitAuth {
                     }
                 };
                 
+                // Setup cross-domain auth cookies
+                this.setupCrossDomainAuth();
+                
+                // Broadcast auth state to other tabs
+                this.broadcastAuthState();
+                
                 console.log('Auth: Loading profile for UID:', user.uid);
                 
                 try {
@@ -696,6 +1178,20 @@ class ReverbitAuth {
                     
                     if (!user.emailVerified) {
                         this.checkEmailVerification();
+                    }
+                    
+                    // ========== PERFORM POST-LOGIN REDIRECT ==========
+                    // Only redirect if we're on an auth page (to prevent redirect loops)
+                    const isOnAuthPage = window.location.pathname.includes('signin') || 
+                                         window.location.pathname.includes('signup') ||
+                                         window.location.pathname.includes('login') ||
+                                         window.location.pathname.includes('register');
+                    
+                    if (isOnAuthPage) {
+                        console.log('Auth: User logged in on auth page, performing redirect...');
+                        this.performPostLoginRedirect();
+                    } else {
+                        console.log('Auth: User already on app page, no redirect needed');
                     }
                     
                 } catch (profileError) {
@@ -774,6 +1270,13 @@ class ReverbitAuth {
                 
             } else {
                 console.log('Auth: User signed out');
+                
+                // Clear cross-domain auth cookies
+                this.setupCrossDomainAuth();
+                
+                // Broadcast logout to other tabs
+                this.broadcastAuthState();
+                
                 this.user = null;
                 this.userProfile = null;
                 this.clearSession();
@@ -863,7 +1366,12 @@ class ReverbitAuth {
         localStorage.removeItem('reverbit_user_profile');
         localStorage.removeItem('reverbit_auth');
         
-        document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        // Clear cross-domain cookies
+        this.setCrossDomainCookie('reverbit_auth_uid', '', 0);
+        this.setCrossDomainCookie('reverbit_auth_email', '', 0);
+        this.setCrossDomainCookie('reverbit_auth_authenticated', '', 0);
+        this.setCrossDomainCookie('reverbit_redirect_intent', '', 0);
+        this.setCrossDomainCookie('reverbit_return_url', '', 0);
     }
 
     checkEmailVerification() {
@@ -2263,7 +2771,8 @@ class ReverbitAuth {
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 metadata: {
                     platform: this.getPlatform(),
-                    userAgent: navigator.userAgent
+                    userAgent: navigator.userAgent,
+                    hostname: window.location.hostname
                 }
             });
             
@@ -2455,7 +2964,12 @@ class ReverbitAuth {
             
             await this.updateLastActive();
             
-            document.cookie = 'reverbit_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            // Clear all cross-domain cookies
+            this.setCrossDomainCookie('reverbit_auth_uid', '', 0);
+            this.setCrossDomainCookie('reverbit_auth_email', '', 0);
+            this.setCrossDomainCookie('reverbit_auth_authenticated', '', 0);
+            this.setCrossDomainCookie('reverbit_redirect_intent', '', 0);
+            this.setCrossDomainCookie('reverbit_return_url', '', 0);
             
             await this.auth.signOut();
             
@@ -2470,11 +2984,21 @@ class ReverbitAuth {
                 this.themeObserver.disconnect();
             }
             
-            setTimeout(() => {
-                window.location.href = 'https://reverbit.in/signin';
-            }, 300);
-            
             this.showToast('Signed out successfully', 'success', true);
+            
+            // Check if we should redirect to signin page
+            const currentPath = window.location.pathname;
+            const isAuthPage = currentPath.includes('signin') || 
+                               currentPath.includes('signup') ||
+                               currentPath.includes('login') ||
+                               currentPath.includes('register');
+            
+            if (!isAuthPage) {
+                setTimeout(() => {
+                    window.location.href = 'https://reverbit.in/signin';
+                }, 300);
+            }
+            
             return true;
             
         } catch (error) {
@@ -3845,6 +4369,7 @@ window.debugAuth = function() {
     console.log('Queue:', auth.offlineQueue.length);
     console.log('Popup Visible:', auth.popupVisible);
     console.log('Avatar Element:', document.querySelector('.reverbit-profile-avatar'));
+    console.log('Intended Redirect:', auth.intendedRedirectUrl);
     console.log('=== END DEBUG ===');
 };
 
@@ -3942,4 +4467,4 @@ window.addEventListener('storage', (e) => {
 // Make auth globally accessible
 window.auth = window.ReverbitAuth;
 
-console.log('Reverbit Auth');
+console.log('Reverbit Auth: Enhanced with Smart Redirect System & Cross-Subdomain Auth');
