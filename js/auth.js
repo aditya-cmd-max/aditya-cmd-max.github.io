@@ -475,6 +475,37 @@ class ReverbitAuth {
         });
     }
 
+
+
+handlePostLoginRedirect() {
+    try {
+        const currentHost = window.location.hostname;
+
+        // 🔥 Priority 1: saved redirect (best method)
+        const savedRedirect = localStorage.getItem("reverbit_redirect");
+
+        if (savedRedirect) {
+            console.log("Redirecting to saved page:", savedRedirect);
+            localStorage.removeItem("reverbit_redirect");
+            window.location.href = savedRedirect;
+            return;
+        }
+
+        // 🔥 Priority 2: if on main site → dashboard
+        if (currentHost === "reverbit.in") {
+            window.location.href = "/dashboard";
+            return;
+        }
+
+        // 🔥 Fallback
+        window.location.href = "/dashboard";
+
+    } catch (err) {
+        console.error("Redirect error:", err);
+        window.location.href = "/dashboard";
+    }
+}
+    
     setupThemeObserver() {
         this.themeObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
