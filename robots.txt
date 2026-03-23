@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://reverbit.in/reverbit/sitemap.xml
+Sitemap: https://reverbit.in/sitemap.xml
